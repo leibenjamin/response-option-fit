@@ -22,17 +22,19 @@ export function SpecimenRail({ specimens, activeId, onSelect }: Props) {
                 data-testid={`rail-${s.id}`}
                 onClick={() => onSelect(s.id)}
               >
-                <span className="rail-num">{s.number}</span>
+                <span className="rail-num" aria-hidden="true">
+                  {s.number}
+                </span>
                 <span className="rail-body">
                   <span className="rail-label">{s.railLabel}</span>
                   <span className="rail-pattern">{s.patternLabel}</span>
                 </span>
-                <span className="rail-tick" aria-hidden="true" />
               </button>
             </li>
           );
         })}
       </ol>
+      <p className="rail-foot">Click a specimen to load its route.</p>
     </nav>
   );
 }

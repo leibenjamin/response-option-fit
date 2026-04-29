@@ -9,22 +9,35 @@ export function SourceAppendix({ specimens }: { specimens: Specimen[] }) {
     >
       <details className="appendix-details">
         <summary className="appendix-summary">
-          <span className="section-eyebrow">Source appendix</span>
-          <span className="section-title" id="appendix-title">
-            Direct links to the public testing materials
+          <span className="appendix-summary-text">
+            <span className="section-eyebrow">Source appendix</span>
+            <span className="section-title" id="appendix-title">
+              Direct links to the public testing materials
+            </span>
+            <span className="section-lede">
+              Each specimen above cites a single passage in one public Census
+              report. Use these direct links to read the original context.
+            </span>
           </span>
-          <span className="appendix-summary-hint" aria-hidden="true">
-            expand
+          <span className="appendix-summary-toggle" aria-hidden="true">
+            <span className="appendix-summary-toggle-label">Show all sources</span>
+            <span className="appendix-summary-toggle-icon">+</span>
           </span>
         </summary>
         <ol className="appendix-list">
           {specimens.map((s) => (
             <li key={s.id} className="appendix-item">
-              <p className="appendix-num">{s.number}</p>
+              <p className="appendix-num" aria-hidden="true">
+                {s.number}
+              </p>
               <div className="appendix-body">
                 <p className="appendix-title">{s.source.reportTitle}</p>
                 <p className="appendix-meta">
-                  {s.source.year} · {s.source.sectionOrPage}
+                  <span>{s.source.year}</span>
+                  <span className="appendix-meta-sep" aria-hidden="true">
+                    ·
+                  </span>
+                  <span>{s.source.sectionOrPage}</span>
                 </p>
                 <a
                   className="appendix-link"

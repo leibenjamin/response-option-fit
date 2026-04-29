@@ -36,20 +36,34 @@ export function PatternGlossary({ activePattern }: { activePattern: FailurePatte
         <h2 className="section-title" id="glossary-title">
           Five ways a response route can break
         </h2>
+        <p className="section-lede">
+          Each specimen demonstrates one of these patterns. The active
+          specimen’s pattern is highlighted.
+        </p>
       </header>
-      <dl className="glossary-list">
-        {items.map((it) => (
-          <div
-            key={it.key}
-            className={`glossary-item ${
-              it.key === activePattern ? "is-active" : ""
-            }`}
-          >
-            <dt className="glossary-term">{it.label}</dt>
-            <dd className="glossary-def">{it.body}</dd>
-          </div>
-        ))}
-      </dl>
+      <ol className="glossary-grid">
+        {items.map((it, i) => {
+          const active = it.key === activePattern;
+          return (
+            <li
+              key={it.key}
+              className={`glossary-card ${active ? "is-active" : ""}`}
+              aria-current={active ? "true" : undefined}
+            >
+              <p className="glossary-card-num" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <p className="glossary-card-label">{it.label}</p>
+              <p className="glossary-card-body">{it.body}</p>
+              {active && (
+                <p className="glossary-card-flag" aria-hidden="true">
+                  Active specimen
+                </p>
+              )}
+            </li>
+          );
+        })}
+      </ol>
     </section>
   );
 }
