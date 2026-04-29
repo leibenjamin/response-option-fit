@@ -1,0 +1,20 @@
+export function MethodNotes() {
+  return (
+    <section className="method" aria-labelledby="method-title">
+      <header className="section-head">
+        <p className="section-eyebrow">Method note</p>
+        <h2 className="section-title" id="method-title">
+          What this exhibit is doing
+        </h2>
+      </header>
+      <p className="method-body">
+        These examples are intentionally narrow. The lab uses short substantive
+        wording excerpts from public testing materials to show one kind of
+        measurement failure: the respondent has an answer, but the response
+        route does not hold it cleanly. The exhibit does not reproduce full
+        instruments, validate revised wording, or claim the selected examples
+        generalize to every survey mode.
+      </p>
+    </section>
+  );
+}
