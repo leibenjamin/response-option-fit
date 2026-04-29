@@ -7,14 +7,19 @@ export function MethodNotes() {
           What this exhibit is doing
         </h2>
       </header>
-      <p className="method-body">
-        These examples are intentionally narrow. The lab uses short substantive
-        wording excerpts from public testing materials to show one kind of
-        measurement failure: the respondent has an answer, but the response
-        route does not hold it cleanly. The exhibit does not reproduce full
-        instruments, validate revised wording, or claim the selected examples
-        generalize to every survey mode.
-      </p>
+      <div className="method-grid">
+        <p className="method-body">
+          These examples are intentionally narrow. The lab uses short
+          substantive wording excerpts from public testing materials to show
+          one kind of measurement failure: the respondent has an answer, but
+          the response route does not hold it cleanly.
+        </p>
+        <p className="method-body method-body--quiet">
+          The exhibit does not reproduce full instruments, validate revised
+          wording, or claim the selected examples generalize to every survey
+          mode.
+        </p>
+      </div>
     </section>
   );
 }

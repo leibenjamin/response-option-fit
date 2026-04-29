@@ -11,7 +11,14 @@ import { SourceAppendix } from "./components/SourceAppendix";
 
 export default function App() {
   const [activeId, setActiveId] = useState(specimens[0].id);
-  const active = specimens.find((s) => s.id === activeId) ?? specimens[0];
+  const activeIndex = Math.max(
+    0,
+    specimens.findIndex((s) => s.id === activeId)
+  );
+  const active = specimens[activeIndex] ?? specimens[0];
+  const prev = activeIndex > 0 ? specimens[activeIndex - 1] : undefined;
+  const next =
+    activeIndex < specimens.length - 1 ? specimens[activeIndex + 1] : undefined;
 
   return (
     <div className="lab">
@@ -30,20 +37,33 @@ export default function App() {
           onSelect={setActiveId}
         />
         <ResponseRouteBoard specimen={active} />
-        <SourceMargin specimen={active} />
+        <SourceMargin
+          specimen={active}
+          prev={prev}
+          next={next}
+          onSelect={setActiveId}
+        />
       </main>
-      <section className="lower">
+
+      <section className="lower" aria-label="Reference and method">
         <PatternGlossary activePattern={active.pattern} />
-        <MethodNotes />
-        <ClaimBoundary />
+        <div className="lower-pair">
+          <MethodNotes />
+          <ClaimBoundary />
+        </div>
         <SourceAppendix specimens={specimens} />
       </section>
+
       <footer className="foot">
-        <p>
+        <p className="foot-line">
           Static exhibit. No backend, no runtime AI, no upload, no survey
-          analyzer. Built for editorial study of response-option fit.
+          analyzer.
+        </p>
+        <p className="foot-line foot-line--quiet">
+          Built for editorial study of response-option fit.
         </p>
       </footer>
+
       <div
         className="sr-only"
         role="status"

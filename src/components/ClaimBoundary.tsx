@@ -27,7 +27,12 @@ export function ClaimBoundary() {
       </header>
       <div className="claims-grid">
         <div className="claims-col claims-col--allowed">
-          <p className="claims-key">Allowed</p>
+          <p className="claims-key">
+            <span className="claims-key-mark" aria-hidden="true">
+              ✓
+            </span>
+            What is allowed
+          </p>
           <ul className="claims-list">
             {allowed.map((c) => (
               <li key={c}>{c}</li>
@@ -35,7 +40,12 @@ export function ClaimBoundary() {
           </ul>
         </div>
         <div className="claims-col claims-col--not">
-          <p className="claims-key">Not allowed</p>
+          <p className="claims-key">
+            <span className="claims-key-mark" aria-hidden="true">
+              ×
+            </span>
+            What is not
+          </p>
           <ul className="claims-list">
             {notAllowed.map((c) => (
               <li key={c}>{c}</li>
