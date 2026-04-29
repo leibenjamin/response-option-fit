@@ -6,11 +6,15 @@ playwright-report/
 test-results/
 reports/
 coverage/
+.playwright-mcp/
 .env
 .env.*
 !.env.example
 .DS_Store
 Thumbs.db
+
+# Local viewport/screenshot captures. Put public app images under public/ or src/.
+/*.png
 *.zip
 *.tar.gz
 *.tgz
