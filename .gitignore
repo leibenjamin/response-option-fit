@@ -1,0 +1,27 @@
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+playwright-report/
+test-results/
+reports/
+coverage/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+*.zip
+*.tar.gz
+*.tgz
+
+# Local-only assistant artifacts and backup bundles.
+.claude/
+.codex
+response-option-fit-bundles-and-backups/
+final_review.md
+playwright_review.md
+bundle_manifest.md
+
+# The tracked Playwright config lives in tests/.
+/playwright.config.ts
