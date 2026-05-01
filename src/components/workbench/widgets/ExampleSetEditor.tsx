@@ -1,6 +1,6 @@
-import { useState } from "react";
 import type { ExampleSetEditorConfig, Vignette } from "../../../types/workbench";
 import type { ExampleSetEditorState } from "../../../lib/diagnostics";
+import { useAnnouncer } from "../../../lib/announcer";
 
 type Props = {
   config: ExampleSetEditorConfig;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export function ExampleSetEditor({ config, state, vignettes, onStateChange }: Props) {
-  const [message, setMessage] = useState("Examples ready.");
+  const announce = useAnnouncer();
 
   const labelFor = (id: string) =>
     config.candidates.find((candidate) => candidate.id === id)?.label ?? id;
@@ -20,7 +20,12 @@ export function ExampleSetEditor({ config, state, vignettes, onStateChange }: Pr
       ? state.activeExampleIds.filter((exampleId) => exampleId !== id)
       : [...state.activeExampleIds, id];
     onStateChange({ kind: "example_set_editor", activeExampleIds: nextIds });
-    setMessage(`${active ? "Removed" : "Added"} ${labelFor(id)}.`);
+    const label = labelFor(id);
+    if (active) {
+      announce.removed(label);
+    } else {
+      announce.added(label);
+    }
   };
 
   return (
@@ -29,9 +34,7 @@ export function ExampleSetEditor({ config, state, vignettes, onStateChange }: Pr
       data-testid="widget-example-set-editor"
       aria-label={`${vignettes.length} vignette example-set editor`}
     >
-      <div className="widget-live sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {message}
-      </div>
+      {announce.status}
       <pre hidden data-testid="widget-state">
         {JSON.stringify(state)}
       </pre>

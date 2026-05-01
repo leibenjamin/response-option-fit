@@ -28,11 +28,6 @@ export function RevealBeat({ specimen }: Props) {
           <p className="reveal-card-body">
             {specimen.reveal.addresses.revisionDescription}
           </p>
-          {specimen.reveal.addresses.sourceQuote && (
-            <blockquote className="reveal-source-quote">
-              <p>{specimen.reveal.addresses.sourceQuote}</p>
-            </blockquote>
-          )}
           <p className="reveal-source-ref">
             {specimen.reveal.addresses.sourcePageRef}
           </p>

@@ -2,12 +2,12 @@
 
 ## Source Posture
 
-- All examples are drawn from public U.S. Census Bureau questionnaire-testing
-  reports.
+- Examples are drawn from public questionnaire-testing and recommendation
+  reports from the U.S. Census Bureau and the Office for National Statistics.
 - The exhibit uses short substantive wording excerpts and report references for
   editorial study.
-- No Census logos, screenshots, or PDF imagery are reproduced.
-- No Census endorsement is implied.
+- No agency logos, screenshots, or PDF imagery are reproduced.
+- No source-agency endorsement is implied.
 - The original reports remain authoritative for context, findings, and
   recommendations.
 
@@ -16,7 +16,7 @@
 Each specimen carries the report title, publication year, section or page
 reference, and a direct public PDF URL:
 
-`Source: U.S. Census Bureau, <Report Title> (<Year>), <Section / Page>.`
+`Source: <Agency>, <Report Title> (<Year>), <Section / Page>.`
 
 ## Source List
 
@@ -41,6 +41,27 @@ reference, and a direct public PDF URL:
    the Current Population Survey: Findings and Recommendations* (2025),
    section 3.4.2, pp. 49-54.
    https://www2.census.gov/library/working-papers/2025/adrm/cbsm/rsm2025-03.pdf
+7. **Notebook computer** - *Cognitive Pretesting of the National
+   Telecommunications and Information Administration's 2021 Internet Use
+   Survey* (2022), section 3.1.1, p. 10.
+   https://www2.census.gov/adrm/CBSM/rsm2022-08.pdf
+8. **Kashmiri** - *Kashmiri Research Project Final Report* (2009), sections
+   5.1, 6.1, and 6.2, pp. 13, 16-17, 33-34.
+   https://www.ons.gov.uk/file?uri=%2Fcensus%2F2011census%2Fhowourcensusworks%2Fhowweplannedthe2011census%2Fquestionnairedevelopment%2Ffinalisingthe2011questionnaire%2Fkashmiri-research-project-2011-final-report_tcm77-183996.pdf
+9. **Sump pump** - *Cognitive Pretesting of 2023 American Housing Survey
+   Modules* (2022), section 4.5.8 OUTFLOOD, pp. 57-59.
+   https://www2.census.gov/adrm/CBSM/rsm2022-11.pdf
+10. **Ethnic-group heading** - *Final Recommended Questions for the 2011
+    Census in England and Wales: Ethnic Group* (2009), section 6.4.3,
+    pp. 36-37.
+    https://www.ons.gov.uk/file?uri=%2Fcensus%2F2011census%2Fhowourcensusworks%2Fhowweplannedthe2011census%2Fquestionnairedevelopment%2Ffinalisingthe2011questionnaire%2Ffinal-recommended-questions-2011-ethnic-group_tcm77-183998.pdf
+11. **Avoid natural disasters** - *Cognitive Pretesting of 2025 American
+    Housing Survey Modules* (2024), section 4.8.5 WMDISAS, pp. 92-93.
+    https://www2.census.gov/library/working-papers/2024/adrm/cbsm/rsm2024-11.pdf
+12. **ACS weeks worked** - *Cognitive Testing of the 2016 American Community
+    Survey Content Test Items: Briefing Report for Round 1 Interviews* (2016),
+    sections 4.7.1 and 4.7.3, pp. 100-108.
+    https://www.census.gov/content/dam/Census/library/working-papers/2016/acs/2016_Westat_02.pdf
 
 ## Wording Notes
 

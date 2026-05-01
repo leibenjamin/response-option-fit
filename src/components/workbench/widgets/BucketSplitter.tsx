@@ -1,6 +1,6 @@
-import { useState } from "react";
 import type { BucketSplitterConfig, Vignette } from "../../../types/workbench";
 import type { BucketSplitterState } from "../../../lib/diagnostics";
+import { useAnnouncer } from "../../../lib/announcer";
 
 type Props = {
   config: BucketSplitterConfig;
@@ -10,18 +10,21 @@ type Props = {
 };
 
 export function BucketSplitter({ config, state, vignettes, onStateChange }: Props) {
-  const [message, setMessage] = useState("Bucket split ready.");
+  const announce = useAnnouncer();
 
   const applySplit = (splitIndex: number) => {
     const before = config.items[splitIndex - 1]?.label ?? "";
     const after = config.items[splitIndex]?.label ?? "";
     onStateChange({ kind: "bucket_splitter", splitIndex });
-    setMessage(`Split inserted between ${before} and ${after}.`);
+    announce.split(before, after);
   };
 
   const removeSplit = () => {
+    if (state.splitIndex === null) return;
+    const before = config.items[state.splitIndex - 1]?.label ?? "";
+    const after = config.items[state.splitIndex]?.label ?? "";
     onStateChange({ kind: "bucket_splitter", splitIndex: null });
-    setMessage("Split removed.");
+    announce.unsplit(before, after);
   };
 
   return (
@@ -30,9 +33,7 @@ export function BucketSplitter({ config, state, vignettes, onStateChange }: Prop
       data-testid="widget-bucket-splitter"
       aria-label={`${vignettes.length} vignette bucket splitter`}
     >
-      <div className="widget-live sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {message}
-      </div>
+      {announce.status}
       <pre hidden data-testid="widget-state">
         {JSON.stringify(state)}
       </pre>

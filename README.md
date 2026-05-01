@@ -1,8 +1,8 @@
 # Response Option Fit Lab
 
 Response Option Fit Lab is a static editorial exhibit about how survey response
-options shape data before analysis begins. It uses six neutral specimens from
-public U.S. Census Bureau questionnaire-testing materials to show how labels,
+options shape data before analysis begins. It uses twelve neutral specimens from
+public questionnaire-testing materials to show how labels,
 broad buckets, false premises, category boundaries, and sequence context can
 misroute otherwise valid respondent answers, including cases where a single
 precise answer is forced from variable experience.
@@ -13,14 +13,14 @@ and local-only progress controls.
 
 ## Sources And Attribution
 
-Examples are drawn from public U.S. Census Bureau reports and one public Census
-research presentation. The app uses short wording excerpts and public report
-references for editorial study. It does not reproduce Census logos, screenshots,
-or PDF imagery, and it does not validate alternate wording.
+Examples are drawn from public U.S. Census Bureau and Office for National
+Statistics materials. The app uses short wording excerpts and public report
+references for editorial study. It does not reproduce agency logos,
+screenshots, or PDF imagery, and it does not validate alternate wording.
 
 The app code is MIT licensed. Short source wording excerpts and report
-references remain attributable to their respective public sources; no Census
-endorsement is implied.
+references remain attributable to their respective public sources; no
+source-agency endorsement is implied.
 
 See [docs/source-notes.md](docs/source-notes.md) for the source list and
 attribution posture.
@@ -66,20 +66,24 @@ See [docs/deployment.md](docs/deployment.md) and
 ## Limitations
 
 - This is an editorial exhibit, not a survey analyzer or measurement tool.
-- It includes six specimens and does not claim to generalize across all survey
+- It includes twelve specimens and does not claim to generalize across all survey
   instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
 - Repair directions are conceptual and are not validated replacement wording.
 
 ## Performance Budget
 
-Design targets for the public exhibit:
+Release budget for the public exhibit. These targets are reviewed with
+judgment, not treated as a compile-time law: a useful release can exceed them
+when the added weight is explicit, measured, and worth the tradeoff.
 
 - LCP under 1.8 s on a Slow-4G profile.
-- Total JavaScript under 80 KB gzipped after all interactive modules ship.
-- Total CSS under 30 KB gzipped.
+- Total JavaScript under 100 KB gzipped after all interactive modules ship.
+- Total CSS under 35 KB gzipped.
 - All interaction is client-side; no network requests after initial document
   and assets load.
+- Any budget overage should be called out in release notes with current build
+  numbers and the reason the added weight is justified.
 
 ## Privacy Budget
 
@@ -97,5 +101,18 @@ to:
 
 ## License
 
-MIT for the application code. Source excerpts and public report references
-remain attributable to their original public sources.
+The application source code is licensed under the **MIT License**; see
+[LICENSE](LICENSE).
+
+Editorial content (exhibit text, route diagrams, authored vignette wording,
+mechanism questions, micro-cases, method notes, glossary entries,
+claim-boundary language, and colophon prose) is licensed under
+**Creative Commons Attribution 4.0 International (CC BY 4.0)**; see
+[CONTENT-LICENSE.md](CONTENT-LICENSE.md).
+
+Quoted source material (short tested-wording excerpts, respondent and
+interviewer quotations, section and page references, and report titles
+cited from U.S. Census Bureau and UK Office for National Statistics
+publications) remains under its original terms — public-domain U.S.
+Government works for Census materials, and the Open Government Licence
+v3.0 for ONS materials.

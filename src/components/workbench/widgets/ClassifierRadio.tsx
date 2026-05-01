@@ -1,6 +1,7 @@
-import { useId, useState } from "react";
+import { useId } from "react";
 import type { ClassifierRadioConfig, Vignette } from "../../../types/workbench";
 import type { ClassifierRadioState } from "../../../lib/diagnostics";
+import { useAnnouncer } from "../../../lib/announcer";
 
 type Props = {
   config: ClassifierRadioConfig;
@@ -10,12 +11,12 @@ type Props = {
 };
 
 export function ClassifierRadio({ config, state, vignettes, onStateChange }: Props) {
-  const [message, setMessage] = useState("Classification feature ready.");
+  const announce = useAnnouncer();
   const groupName = useId();
 
   const updateFeature = (featureId: string, label: string) => {
     onStateChange({ kind: "classifier_radio", selectedFeatureId: featureId });
-    setMessage(`Classifier selected: ${label}.`);
+    announce.selected(label);
   };
 
   return (
@@ -25,9 +26,7 @@ export function ClassifierRadio({ config, state, vignettes, onStateChange }: Pro
       aria-label={`${vignettes.length} vignette classifier radio`}
     >
       <legend className="widget-subtitle">Classification feature</legend>
-      <div className="widget-live sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {message}
-      </div>
+      {announce.status}
       <pre hidden data-testid="widget-state">
         {JSON.stringify(state)}
       </pre>

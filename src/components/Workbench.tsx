@@ -148,6 +148,23 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
             revealedNeighborContrast={state.revealedNeighborContrast}
             onRevealNeighborContrast={() => dispatch({ type: "reveal_neighbor_contrast" })}
           />
+          {specimen.methodNote && (
+            <section
+              className="workbench-beat workbench-beat--method-note"
+              aria-label={`Method note for ${specimen.title}`}
+              data-testid={`method-note-${specimen.id}`}
+            >
+              <details className="method-note-details">
+                <summary className="method-note-summary">
+                  Why this specimen is here
+                </summary>
+                <div className="method-note-body">
+                  <p>{specimen.methodNote.whyHere}</p>
+                  <p>{specimen.methodNote.whatOmitted}</p>
+                </div>
+              </details>
+            </section>
+          )}
           <ProbeBeat
             specimen={specimen}
             widgetState={state.widgetState}

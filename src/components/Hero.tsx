@@ -7,13 +7,15 @@ export function Hero() {
           Editorial exhibit
           <span className="hero-eyebrow-sep" aria-hidden="true">/</span>
           <span className="hero-eyebrow-kind">
-            Census questionnaire-testing review
+            Census + ONS questionnaire-testing review
           </span>
         </p>
       </div>
 
       <div className="hero-main">
-        <h1 className="hero-title">Response Option Fit Lab</h1>
+        <h1 className="hero-title" id="exhibit-title" tabIndex={-1}>
+          Response Option Fit Lab
+        </h1>
         <p className="hero-subtitle">The answer is real. The route is wrong.</p>
 
         <div className="hero-body-wrap">
@@ -35,10 +37,10 @@ export function Hero() {
       >
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
-            <span className="hero-scope-val">6</span>
-            <span className="hero-scope-unit"> official specimens</span>
+            <span className="hero-scope-val">12</span>
+            <span className="hero-scope-unit"> specimens</span>
           </p>
-          <p className="hero-scope-note">from public Census reports</p>
+          <p className="hero-scope-note">from public reports</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
