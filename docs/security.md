@@ -4,9 +4,13 @@ The application is a static, client-rendered React app.
 
 ## Runtime Surface
 
-- No backend, API, authentication, database, analytics, cookies, service worker,
-  or browser storage.
-- No freeform text inputs, file uploads, or contenteditable regions.
+- No backend, API, authentication, database, analytics, cookies, or service
+  worker.
+- Optional progress persistence uses browser-local storage only when enabled by
+  the reader.
+- No freeform text inputs or contenteditable regions.
+- The settings drawer can import a local JSON progress file, but import parsing
+  happens in the browser and does not transmit the file.
 - No remote fonts, images, iframes, or third-party runtime requests.
 - Outbound report links use HTTPS and open with `target="_blank"` plus
   `rel="noopener noreferrer"`.
@@ -39,7 +43,7 @@ The document sets:
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 ```
 
-The five outbound source links also include `noreferrer`, so those clicks do not
+The six outbound source links also include `noreferrer`, so those clicks do not
 send a referrer.
 
 ## Development Server
@@ -48,9 +52,9 @@ The Vite dev server is bound to `127.0.0.1:5173` with `strictPort: true`. This
 keeps local development on loopback and avoids exposing the dev server on other
 network interfaces by default.
 
-## Accessibility And Privacy Tests
+## Accessibility And Privacy Review
 
-The Playwright suite checks security and accessibility invariants including:
+The public app is designed around these review targets:
 
 - no inline event handlers or inline scripts;
 - no third-party network requests on load;

@@ -24,6 +24,10 @@ export function ClaimBoundary() {
         <h2 className="section-title" id="claims-title">
           What this exhibit claims, and what it does not
         </h2>
+        <p className="section-lede">
+          Explicit limits on what this page asserts about wording, instruments,
+          and respondents.
+        </p>
       </header>
       <div className="claims-grid">
         <div className="claims-col claims-col--allowed">

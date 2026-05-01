@@ -1,6 +1,6 @@
-import type { Specimen } from "../types/specimen";
+import type { WorkbenchSpecimen } from "../types/workbench";
 
-export function SourceAppendix({ specimens }: { specimens: Specimen[] }) {
+export function SourceAppendix({ specimens }: { specimens: WorkbenchSpecimen[] }) {
   return (
     <section
       className="appendix"
@@ -15,8 +15,8 @@ export function SourceAppendix({ specimens }: { specimens: Specimen[] }) {
               Direct links to the public testing materials
             </span>
             <span className="section-lede">
-              Each specimen above cites a single passage in one public Census
-              report. Use these direct links to read the original context.
+              Each specimen cites a specific passage in a public testing report.
+              Use these links to read the original context.
             </span>
           </span>
           <span className="appendix-summary-toggle" aria-hidden="true">
@@ -32,6 +32,11 @@ export function SourceAppendix({ specimens }: { specimens: Specimen[] }) {
               </p>
               <div className="appendix-body">
                 <p className="appendix-title">{s.source.reportTitle}</p>
+                <p className="source-chip-row" aria-label="Source receipt markers">
+                  <span className="source-chip">{s.source.agency}</span>
+                  <span className="source-chip">{s.source.documentCode}</span>
+                  <span className="source-chip">Verified {s.source.verifiedDate}</span>
+                </p>
                 <p className="appendix-meta">
                   <span>{s.source.year}</span>
                   <span className="appendix-meta-sep" aria-hidden="true">
