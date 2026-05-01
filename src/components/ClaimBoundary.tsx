@@ -8,7 +8,7 @@ const notAllowed = [
   "This exhibit does not validate alternative wording.",
   "This exhibit does not evaluate full questionnaire quality.",
   "This exhibit does not estimate real response distributions.",
-  "This exhibit does not imply U.S. Census Bureau endorsement.",
+  "This exhibit does not imply source-agency endorsement.",
   "This exhibit does not replace cognitive testing, pilot testing, or expert survey review."
 ];
 

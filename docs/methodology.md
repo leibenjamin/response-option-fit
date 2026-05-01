@@ -6,9 +6,10 @@ options do not match how respondents understand their situation.
 
 ## Specimen Selection
 
-The six specimens were selected from public U.S. Census Bureau testing
-materials because each shows a distinct response-option fit problem without
-requiring sensitive personal examples or full-instrument critique:
+The twelve specimens were selected from public U.S. Census Bureau and Office
+for National Statistics testing materials because each shows a distinct
+response-option fit problem without requiring sensitive personal examples or
+full-instrument critique:
 
 - **Label ambiguity:** respondents may attach different meanings to the same
   response label.
@@ -45,5 +46,5 @@ can be compared in a single interface.
 
 The exhibit can support claims about how response options affect interpretation
 and why questionnaire testing matters. It does not support claims that alternate
-wording is validated, that the six examples generalize to all surveys, or that
+wording is validated, that the twelve examples generalize to all surveys, or that
 the summarized findings replace the cited reports.

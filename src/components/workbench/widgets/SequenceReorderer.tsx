@@ -1,6 +1,7 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import type { SequenceReordererConfig, Vignette } from "../../../types/workbench";
 import type { SequenceReordererState } from "../../../lib/diagnostics";
+import { useAnnouncer } from "../../../lib/announcer";
 
 type Props = {
   config: SequenceReordererConfig;
@@ -10,7 +11,7 @@ type Props = {
 };
 
 export function SequenceReorderer({ config, state, vignettes, onStateChange }: Props) {
-  const [message, setMessage] = useState("Sequence order ready.");
+  const announce = useAnnouncer();
   const switchId = useId();
   const rowRefs = useRef<Record<string, HTMLLIElement | null>>({});
   const pendingFocusId = useRef<string | null>(null);
@@ -35,16 +36,21 @@ export function SequenceReorderer({ config, state, vignettes, onStateChange }: P
     nextOrder[index] = target;
     pendingFocusId.current = id;
     onStateChange({ ...state, order: nextOrder });
-    setMessage(`${labelFor(id)} moved ${direction} to position ${targetIndex + 1}.`);
+    const label = labelFor(id);
+    if (direction === "up") {
+      announce.movedUp(label, targetIndex + 1, state.order.length);
+    } else {
+      announce.movedDown(label, targetIndex + 1, state.order.length);
+    }
   };
 
   const updateMulti = (allowMulti: boolean) => {
     onStateChange({ ...state, allowMulti });
-    setMessage(
-      allowMulti
-        ? "Respondents may pick all that apply."
-        : "Respondents may not pick all that apply."
-    );
+    if (allowMulti) {
+      announce.toggledOn("Multiple response selection");
+    } else {
+      announce.toggledOff("Multiple response selection");
+    }
   };
 
   return (
@@ -53,9 +59,7 @@ export function SequenceReorderer({ config, state, vignettes, onStateChange }: P
       data-testid="widget-sequence-reorderer"
       aria-label={`${vignettes.length} vignette sequence reorderer`}
     >
-      <div className="widget-live sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {message}
-      </div>
+      {announce.status}
       <pre hidden data-testid="widget-state">
         {JSON.stringify(state)}
       </pre>

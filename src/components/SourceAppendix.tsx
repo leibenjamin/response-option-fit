@@ -1,5 +1,9 @@
 import type { WorkbenchSpecimen } from "../types/workbench";
 
+function sourceAttribution(s: WorkbenchSpecimen): string {
+  return `Source: ${s.source.agency}, ${s.source.reportTitle} (${s.source.year}), ${s.source.sectionOrPage}.`;
+}
+
 export function SourceAppendix({ specimens }: { specimens: WorkbenchSpecimen[] }) {
   return (
     <section
@@ -35,7 +39,7 @@ export function SourceAppendix({ specimens }: { specimens: WorkbenchSpecimen[] }
                 <p className="source-chip-row" aria-label="Source receipt markers">
                   <span className="source-chip">{s.source.agency}</span>
                   <span className="source-chip">{s.source.documentCode}</span>
-                  <span className="source-chip">Verified {s.source.verifiedDate}</span>
+                  <span className="source-chip">Retrieved {s.source.retrievalDate}</span>
                 </p>
                 <p className="appendix-meta">
                   <span>{s.source.year}</span>
@@ -56,17 +60,16 @@ export function SourceAppendix({ specimens }: { specimens: WorkbenchSpecimen[] }
                   className="appendix-attr"
                   data-testid={`appendix-attribution-${s.id}`}
                 >
-                  {s.source.attribution}
+                  {sourceAttribution(s)}
                 </p>
               </div>
             </li>
           ))}
         </ol>
         <p className="appendix-note">
-          No Census logos, screenshots, or PDF imagery are reproduced. Excerpts
+          No agency logos, screenshots, or PDF imagery are reproduced. Excerpts
           are short substantive wording for editorial study. Mention of these
-          reports does not imply U.S. Census Bureau endorsement of this
-          exhibit.
+          reports does not imply source-agency endorsement of this exhibit.
         </p>
       </details>
     </section>

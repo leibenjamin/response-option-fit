@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { workbenchSpecimens } from "./data/workbench-specimens";
+import { Colophon } from "./components/Colophon";
 import { Hero } from "./components/Hero";
 import { PatternCatalog } from "./components/PatternCatalog";
 import { Workbench } from "./components/Workbench";
@@ -11,6 +12,26 @@ import { SourceAppendix } from "./components/SourceAppendix";
 import { SettingsButton } from "./components/SettingsButton";
 import { SettingsDrawer } from "./components/SettingsDrawer";
 import { SettingsProvider } from "./lib/settings";
+
+type HashRoute = "exhibit" | "colophon";
+
+function currentHashRoute(): HashRoute {
+  if (typeof window === "undefined") return "exhibit";
+  const normalized = window.location.hash.replace(/^#\/?/, "").toLowerCase();
+  return normalized === "colophon" ? "colophon" : "exhibit";
+}
+
+function useHashRoute() {
+  const [route, setRoute] = useState<HashRoute>(() => currentHashRoute());
+
+  useEffect(() => {
+    const syncRoute = () => setRoute(currentHashRoute());
+    window.addEventListener("hashchange", syncRoute);
+    return () => window.removeEventListener("hashchange", syncRoute);
+  }, []);
+
+  return route;
+}
 
 function AppInner() {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -92,6 +113,11 @@ function AppInner() {
         <p className="foot-line foot-line--quiet">
           Built for editorial study of response-option fit.
         </p>
+        <p className="foot-line foot-line--quiet">
+          <a className="foot-link" href="#colophon">
+            Colophon
+          </a>
+        </p>
       </footer>
 
       <div
@@ -101,7 +127,7 @@ function AppInner() {
         aria-atomic="true"
         data-testid="specimen-announcer"
       >
-        Six Workbenches are available in the main exhibit.
+        12 workbenches.
       </div>
 
       <SettingsDrawer
@@ -113,9 +139,46 @@ function AppInner() {
 }
 
 export default function App() {
+  const route = useHashRoute();
+  const firstRouteEffectRef = useRef(true);
+  const [routeAnnouncement, setRouteAnnouncement] = useState("");
+
+  useEffect(() => {
+    const isColophon = route === "colophon";
+    const isFirstRun = firstRouteEffectRef.current;
+    const hasHash = typeof window !== "undefined" && window.location.hash !== "";
+    const shouldMoveFocus = !isFirstRun || hasHash;
+
+    firstRouteEffectRef.current = false;
+    document.title = isColophon
+      ? "Colophon — Response Option Fit Lab"
+      : "Response Option Fit Lab";
+
+    if (!shouldMoveFocus) return;
+
+    setRouteAnnouncement(isColophon ? "Loaded colophon." : "Loaded exhibit.");
+    const frame = window.requestAnimationFrame(() => {
+      const heading = document.getElementById(
+        isColophon ? "colophon-title" : "exhibit-title"
+      );
+      heading?.focus({ preventScroll: true });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [route]);
+
   return (
     <SettingsProvider>
-      <AppInner />
+      {route === "colophon" ? <Colophon /> : <AppInner />}
+      <div
+        className="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        data-testid="route-announcer"
+      >
+        {routeAnnouncement}
+      </div>
     </SettingsProvider>
   );
 }

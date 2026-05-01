@@ -11,6 +11,8 @@ coverage/
 .DS_Store
 Thumbs.db
 
+/tests/
+
 # Local viewport/screenshot captures. Put public app images under public/ or src/.
 /*.png
 *.zip

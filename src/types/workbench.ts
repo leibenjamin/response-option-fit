@@ -16,7 +16,7 @@ export type FailurePattern =
   | "forced_precision";
 
 /* Vignettes are the load-bearing pedagogical content. Each one is either
-   a verbatim or close paraphrase from a public Census cognitive-testing
+   a verbatim or close paraphrase from a public questionnaire-testing
    report (provenance: "direct_quote") or an explicit editorial illustration
    constructed by us based on the report's findings (provenance: "editorial").
    The Workbench renders a visible badge on every vignette so the distinction
@@ -169,11 +169,10 @@ export type WidgetConfig =
 
 /* Reveal beat splits into two visibly separate blocks, both required. The
    "remainsUntested" block must name at least one residual risk by string
-   so the page never reads as endorsement of the user's edit or the Census
+   so the page never reads as endorsement of the user's edit or the source
    team's revision. */
 export type RevealAddresses = {
   revisionDescription: string;
-  sourceQuote?: string;
   sourcePageRef: string;
 };
 
@@ -242,8 +241,23 @@ export type SourceReceipt = {
   year: string;
   sectionOrPage: string;
   directUrl: string;
-  verifiedDate: string;
-  attribution: string;
+  retrievalDate: string;
+};
+
+export type CanonicalCitation = {
+  author: string;
+  year: number;
+  locator: string;
+};
+
+export type VerifiedAgainstSource = {
+  date: string;
+  method: "manual_pdf_check" | "automated";
+};
+
+export type MethodNote = {
+  whyHere: string;
+  whatOmitted: string;
 };
 
 /* The Workbench specimen. Every beat's content lives here; the component
@@ -255,7 +269,8 @@ export type WorkbenchSpecimen = {
   railLabel: string;
   pattern: FailurePattern;
   patternLabel: string;
-  canonicalLabel?: string;
+  canonicalSubtitle: string;
+  canonicalCitations: [CanonicalCitation, ...CanonicalCitation[]];
 
   /* Frame beat */
   title: string;
@@ -288,6 +303,8 @@ export type WorkbenchSpecimen = {
 
   /* Source */
   source: SourceReceipt;
+  verifiedAgainstSource?: VerifiedAgainstSource;
+  methodNote?: MethodNote | null;
 
   /* Optional counterexample */
   counterexample?: Counterexample;

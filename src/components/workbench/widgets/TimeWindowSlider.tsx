@@ -1,6 +1,7 @@
-import { useId, useState } from "react";
+import { useId } from "react";
 import type { TimeWindowSliderConfig, Vignette } from "../../../types/workbench";
 import type { TimeWindowSliderState } from "../../../lib/diagnostics";
+import { useAnnouncer } from "../../../lib/announcer";
 
 type Props = {
   config: TimeWindowSliderConfig;
@@ -10,7 +11,7 @@ type Props = {
 };
 
 export function TimeWindowSlider({ config, state, vignettes, onStateChange }: Props) {
-  const [message, setMessage] = useState("Recall window ready.");
+  const announce = useAnnouncer();
   const sliderId = useId();
   const currentIndex = Math.max(
     0,
@@ -21,7 +22,7 @@ export function TimeWindowSlider({ config, state, vignettes, onStateChange }: Pr
   const updateWindow = (index: number) => {
     const nextWindow = config.windows[index] ?? config.windows[0];
     onStateChange({ kind: "time_window_slider", windowId: nextWindow.id });
-    setMessage(`Time window set to ${nextWindow.label}.`);
+    announce.window(nextWindow.label);
   };
 
   return (
@@ -30,9 +31,7 @@ export function TimeWindowSlider({ config, state, vignettes, onStateChange }: Pr
       data-testid="widget-time-window-slider"
       aria-label={`${vignettes.length} vignette time-window slider`}
     >
-      <div className="widget-live sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {message}
-      </div>
+      {announce.status}
       <pre hidden data-testid="widget-state">
         {JSON.stringify(state)}
       </pre>

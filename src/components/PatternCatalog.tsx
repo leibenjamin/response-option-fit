@@ -1,5 +1,10 @@
 import { workbenchSpecimens } from "../data/workbench-specimens";
 
+const catalogSpecimens = workbenchSpecimens.filter(
+  (specimen, index, specimens) =>
+    specimens.findIndex((candidate) => candidate.pattern === specimen.pattern) === index
+);
+
 export function PatternCatalog() {
   return (
     <section
@@ -17,15 +22,13 @@ export function PatternCatalog() {
         </p>
       </header>
       <ol className="pattern-catalog-grid">
-        {workbenchSpecimens.map((specimen) => (
+        {catalogSpecimens.map((specimen) => (
           <li key={specimen.id} className="pattern-catalog-card">
             <p className="pattern-catalog-num" aria-hidden="true">
               {specimen.number}
             </p>
             <h3 className="pattern-catalog-label">{specimen.patternLabel}</h3>
-            {specimen.canonicalLabel && (
-              <p className="pattern-catalog-canonical">{specimen.canonicalLabel}</p>
-            )}
+            <p className="pattern-catalog-canonical">{specimen.canonicalSubtitle}</p>
             <p className="pattern-catalog-body">{specimen.prerequisiteVocab}</p>
           </li>
         ))}

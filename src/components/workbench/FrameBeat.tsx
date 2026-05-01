@@ -5,7 +5,15 @@ type Props = {
   titleId: string;
 };
 
+function verificationMethodLabel(
+  method: NonNullable<WorkbenchSpecimen["verifiedAgainstSource"]>["method"]
+) {
+  return method === "manual_pdf_check" ? "manual PDF check" : "automated";
+}
+
 export function FrameBeat({ specimen, titleId }: Props) {
+  const verification = specimen.verifiedAgainstSource;
+
   return (
     <section className="workbench-beat workbench-beat--frame" aria-labelledby={titleId}>
       <header className="beat-head">
@@ -43,11 +51,52 @@ export function FrameBeat({ specimen, titleId }: Props) {
           <div className="frame-source-receipt">
             <dt>Source receipt</dt>
             <dd>
-              <span className="source-chip-row">
-                <span className="source-chip">{specimen.source.agency}</span>
-                <span className="source-chip">{specimen.source.documentCode}</span>
-                <span className="source-chip">Verified {specimen.source.verifiedDate}</span>
-              </span>
+              <details
+                className="source-manifest"
+                data-testid={`source-manifest-${specimen.id}`}
+              >
+                <summary className="source-manifest-summary">
+                  <span className="source-manifest-summary-label">
+                    Full source manifest
+                  </span>
+                  <span className="source-chip-row" aria-label="Source receipt markers">
+                    <span className="source-chip">{specimen.source.agency}</span>
+                    <span className="source-chip">{specimen.source.documentCode}</span>
+                    <span className="source-chip">{specimen.source.year}</span>
+                  </span>
+                </summary>
+                <dl className="source-manifest-list">
+                  <dt>Report title</dt>
+                  <dd>{specimen.source.reportTitle}</dd>
+                  <dt>Agency</dt>
+                  <dd>{specimen.source.agency}</dd>
+                  <dt>Year</dt>
+                  <dd>{specimen.source.year}</dd>
+                  <dt>Section/page reference</dt>
+                  <dd>{specimen.source.sectionOrPage}</dd>
+                  <dt>Retrieval URL</dt>
+                  <dd>
+                    <a
+                      className="source-manifest-link"
+                      href={specimen.source.directUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {specimen.source.directUrl}
+                    </a>
+                  </dd>
+                  <dt>Retrieval date</dt>
+                  <dd>{specimen.source.retrievalDate}</dd>
+                  {verification && (
+                    <>
+                      <dt>Verification stamp</dt>
+                      <dd>checked against cited PDF on {verification.date}</dd>
+                      <dt>Method</dt>
+                      <dd>{verificationMethodLabel(verification.method)}</dd>
+                    </>
+                  )}
+                </dl>
+              </details>
             </dd>
           </div>
         </dl>

@@ -43,7 +43,7 @@ The document sets:
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 ```
 
-The six outbound source links also include `noreferrer`, so those clicks do not
+The twelve outbound source links also include `noreferrer`, so those clicks do not
 send a referrer.
 
 ## Development Server
