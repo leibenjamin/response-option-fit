@@ -1,10 +1,8 @@
-import type { Specimen } from "../types/specimen";
+import type { RouteStage } from "../types/workbench";
 
-type Props = { specimen: Specimen };
+type Props = { routeStages: RouteStage[] };
 
-export function RouteSnapshot({ specimen }: Props) {
-  const stages = specimen.routeStages;
-
+export function RouteSnapshot({ routeStages }: Props) {
   return (
     <section
       className="snapshot"
@@ -14,13 +12,17 @@ export function RouteSnapshot({ specimen }: Props) {
       <header className="snapshot-head">
         <p className="snapshot-eyebrow">Route at a glance</p>
         <h3 className="snapshot-title" id="snapshot-title">
-          From respondent reality to data consequence
+          Response route snapshot
         </h3>
       </header>
 
-      <ol className="snapshot-track" aria-label="Compact response route diagram">
-        {stages.map((stage, i) => {
+      <ol
+        className="snapshot-track"
+        aria-label="Compact response route diagram"
+      >
+        {routeStages.map((stage, i) => {
           const stageNum = String(i + 1).padStart(2, "0");
+          const isLast = i === routeStages.length - 1;
           return (
             <li
               key={stage.id}
@@ -29,7 +31,7 @@ export function RouteSnapshot({ specimen }: Props) {
             >
               <div className="snapshot-rail" aria-hidden="true">
                 <span className="snapshot-dot" />
-                <span className="snapshot-line" />
+                {!isLast && <span className="snapshot-line" />}
               </div>
               <div className="snapshot-card">
                 <p className="snapshot-card-num" aria-hidden="true">

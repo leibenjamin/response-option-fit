@@ -6,6 +6,10 @@ export function MethodNotes() {
         <h2 className="section-title" id="method-title">
           What this exhibit is doing
         </h2>
+        <p className="section-lede">
+          How and why the exhibit was built the way it was, and what it is not
+          trying to be.
+        </p>
       </header>
       <div className="method-grid">
         <p className="method-body">

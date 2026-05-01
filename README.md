@@ -1,15 +1,15 @@
 # Response Option Fit Lab
 
 Response Option Fit Lab is a static editorial exhibit about how survey response
-options shape data before analysis begins. It uses five neutral specimens from
+options shape data before analysis begins. It uses six neutral specimens from
 public U.S. Census Bureau questionnaire-testing materials to show how labels,
 broad buckets, false premises, category boundaries, and sequence context can
-misroute otherwise valid respondent answers.
+misroute otherwise valid respondent answers, including cases where a single
+precise answer is forced from variable experience.
 
 The project demonstrates a source-backed React and TypeScript interface with a
-route diagram, specimen rail, source appendix, claim boundary, static security
-headers, and Playwright coverage for desktop, mobile, attribution, accessibility,
-and privacy-facing invariants.
+Specimen Workbench, source appendix, claim boundary, static security headers,
+and local-only progress controls.
 
 ## Sources And Attribution
 
@@ -52,17 +52,6 @@ npm run build:subpath
 For another mount path, set `VITE_BASE_PATH` to the public path with leading and
 trailing slashes, then run `npm run build`.
 
-## Test
-
-```bash
-npx playwright install chromium
-npm run test:e2e
-```
-
-The Playwright suite covers load behavior, specimen switching, source links,
-claim boundaries, no freeform text inputs, security-header expectations,
-keyboard affordances, contrast, reduced motion, and desktop/mobile layout.
-
 ## Deployment
 
 The app is a static Vite build. `public/_headers` provides Cloudflare Pages and
@@ -77,10 +66,34 @@ See [docs/deployment.md](docs/deployment.md) and
 ## Limitations
 
 - This is an editorial exhibit, not a survey analyzer or measurement tool.
-- It includes five specimens and does not claim to generalize across all survey
+- It includes six specimens and does not claim to generalize across all survey
   instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
 - Repair directions are conceptual and are not validated replacement wording.
+
+## Performance Budget
+
+Design targets for the public exhibit:
+
+- LCP under 1.8 s on a Slow-4G profile.
+- Total JavaScript under 80 KB gzipped after all interactive modules ship.
+- Total CSS under 30 KB gzipped.
+- All interaction is client-side; no network requests after initial document
+  and assets load.
+
+## Privacy Budget
+
+The exhibit is static and runs entirely in the browser. The project commits
+to:
+
+- No backend, no analytics, no cookies, no third-party origins in the runtime
+  bundle.
+- No PII collected or transmitted under any condition.
+- Any future progress persistence is opt-in, on-device only (`localStorage`),
+  with one-click export to JSON, one-click import, and one-click clear. The
+  Settings surface shows the exact stored keys and values for transparency.
+- No user input is sent off-device. The exhibit deliberately contains no
+  freeform text inputs.
 
 ## License
 

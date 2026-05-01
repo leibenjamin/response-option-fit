@@ -6,7 +6,7 @@ options do not match how respondents understand their situation.
 
 ## Specimen Selection
 
-The five specimens were selected from public U.S. Census Bureau testing
+The six specimens were selected from public U.S. Census Bureau testing
 materials because each shows a distinct response-option fit problem without
 requiring sensitive personal examples or full-instrument critique:
 
@@ -19,6 +19,8 @@ requiring sensitive personal examples or full-instrument critique:
   classification rules.
 - **Sequence overlap:** the meaning of an option can depend on the preceding
   question path.
+- **Forced precision:** a single exact-looking answer can be required from
+  variable or episodic experience.
 
 ## Route Model
 
@@ -43,5 +45,5 @@ can be compared in a single interface.
 
 The exhibit can support claims about how response options affect interpretation
 and why questionnaire testing matters. It does not support claims that alternate
-wording is validated, that the five examples generalize to all surveys, or that
+wording is validated, that the six examples generalize to all surveys, or that
 the summarized findings replace the cited reports.
