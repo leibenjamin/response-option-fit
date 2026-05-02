@@ -18,3 +18,6 @@ Thumbs.db
 *.zip
 *.tar.gz
 *.tgz
+
+# Local docs and tests for handoff. Put public docs at the root or under public/ or src/.
+docs/
