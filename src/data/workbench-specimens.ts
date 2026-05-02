@@ -955,10 +955,10 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "bare-label",
-          text: "The label was unfamiliar but named only one possible class.",
+          text: "The item assumed respondents owned a vehicle they could classify.",
           isCorrect: false,
           explanation:
-            "The issue is not just an unfamiliar term. The classes themselves overlap under everyday vehicle reasoning."
+            "The item is reached only after an upstream vehicle-ownership question. The cited failure is sorting an owned vehicle among overlapping technical classes."
         },
         {
           id: "open-bucket",
@@ -1144,10 +1144,10 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "owner-agent-listing",
-        text: "A respondent found the home through an agent's listing, with no owner advertising involved.",
+        text: "A respondent found the home through an internet listing not posted by the owner, with no owner advertising involved.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the RMOVHS need to separate internet listings from owner advertising routes.",
+          "Editorial illustration based on the RMOVHS need to separate internet listings (HEARSHSNET) from owner advertising routes.",
         expectedOutcome: "not_covered"
       },
       {
@@ -1178,10 +1178,10 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "missing-exposure",
-          text: "The question assumed every respondent saw owner advertising.",
+          text: "The phrase 'other advertising by the owner' had several plausible everyday meanings.",
           isCorrect: false,
           explanation:
-            "Respondents can answer No. The trouble is whether a prior Yes already covered the same event."
+            "The phrase is interpretable. The cited failure is overlap with the prior internet-site category, not ambiguity inside this label."
         }
       ]
     },
@@ -1404,17 +1404,17 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "open-construct",
-          text: "The field mixed business type and industry level.",
+          text: "The field combined paid hours, unpaid breaks, and travel time into one number.",
           isCorrect: false,
           explanation:
-            "That is a broad-bucket problem. Here the construct is hours, and the strain is numeric aggregation."
+            "That would be a broad-bucket problem. Here the construct is hours of work, and the cited strain is producing one number from variable weeks."
         },
         {
           id: "missing-na",
-          text: "The item lacked a not-applicable response for people without jobs.",
+          text: "A prior question about overtime hours changed how respondents read 'usually'.",
           isCorrect: false,
           explanation:
-            "The cited failure concerns workers with irregular schedules, not respondents outside the job path."
+            "No prior item is at issue. The documented strain is reducing variable weeks of work into one number, not carryover from a previous answer."
         }
       ]
     },
@@ -1979,9 +1979,10 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "sump-technical-term",
-          text: "The only issue was that sump pump is a technical term.",
+          text: "The phrase 'sump pump' is a technical term respondents may not recognize.",
           isCorrect: false,
-          explanation: "The deeper documented issue is the absent-equipment premise."
+          explanation:
+            "Even when the term is recognized, the documented failure remains: a plain No can hide no equipment, no failure event, or no flooding."
         },
         {
           id: "sump-order",
@@ -2172,10 +2173,10 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "heading-multiple-ticks",
-        text: "A respondent who first ticks the wrong section leaves multiple marks because several labels fit.",
+        text: "A respondent searches for a 'Black' cue, ticks the wrong section first, then adds a second mark when they find the right one.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the ONS wrong-section and multiple-tick finding.",
+          "Editorial illustration based on the ONS finding that respondents missed the embedded 'Black' label, ticked the wrong section first, and corrected with a second mark.",
         expectedOutcome: "ambiguous"
       }
     ],
@@ -2609,17 +2610,17 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "weeks-subgroup",
-          text: "A broad ethnicity bucket hid a specific subgroup.",
+          text: "The field combined paid hours, paid days, and weeks of work into one number.",
           isCorrect: false,
           explanation:
-            "That is a broad-bucket issue. Here the answer is a numeric count from variable behavior."
+            "That would be a broad-bucket problem. The field requests one construct: weeks. The cited failure is the exact-count expectation, not multiple constructs sharing a field."
         },
         {
           id: "weeks-assumption",
-          text: "The item assumed respondents owned equipment they might not have.",
+          text: "The item assumed every respondent had worked for pay during the year.",
           isCorrect: false,
           explanation:
-            "The cited problem is not a hidden equipment premise; it is constructing a week total."
+            "ACS gates this question on prior employment items, so the assumption is upheld upstream. The documented failure is among workers with irregular schedules constructing an exact count, not among non-workers."
         }
       ]
     },
