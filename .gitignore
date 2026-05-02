@@ -1,8 +1,14 @@
 node_modules/
 dist/
 .vite/
+.local/
+.claude/
+.codex
+.codex/
+.playwright-mcp/
 *.tsbuildinfo
 test-results/
+playwright-report/
 reports/
 coverage/
 .env
@@ -12,6 +18,7 @@ coverage/
 Thumbs.db
 
 /tests/
+/playwright.config.ts
 
 # Local viewport/screenshot captures. Put public app images under public/ or src/.
 /*.png
@@ -19,5 +26,8 @@ Thumbs.db
 *.tar.gz
 *.tgz
 
-# Local docs and tests for handoff. Put public docs at the root or under public/ or src/.
-docs/
+# Local handoff and research material. Curated public docs belong in docs/.
+docs/handoff.md
+docs/research/
+*.docx
+*:Zone.Identifier
