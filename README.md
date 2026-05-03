@@ -8,8 +8,8 @@ misroute otherwise valid respondent answers, including cases where a single
 precise answer is forced from variable experience.
 
 The project demonstrates a source-backed React and TypeScript interface with a
-Specimen Workbench, source appendix, claim boundary, static security headers,
-and local-only settings controls.
+Specimen Workbench, full item-context answer frames, source appendix, claim
+boundary, static security headers, and local-only settings controls.
 
 ## Sources And Attribution
 
@@ -69,6 +69,8 @@ See [docs/deployment.md](docs/deployment.md) and
 - It includes twelve specimens and does not claim to generalize across all survey
   instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
+- The fit labels are teaching labels: **Clean fit**, **Unclear fit**, and
+  **Wrong path** describe the highlighted answer path in the Workbench frame.
 - Repair directions are conceptual and are not validated replacement wording.
 
 ## Performance Budget
@@ -105,8 +107,8 @@ to:
 The application source code is licensed under the **MIT License**; see
 [LICENSE](LICENSE).
 
-Editorial content (exhibit text, route diagrams, authored vignette wording,
-mechanism questions, micro-cases, method notes, glossary entries,
+Editorial content (exhibit text, answer frames, route diagrams, authored
+vignette wording, mechanism questions, micro-cases, method notes, glossary entries,
 claim-boundary language, and colophon prose) is licensed under
 **Creative Commons Attribution 4.0 International (CC BY 4.0)**; see
 [CONTENT-LICENSE.md](CONTENT-LICENSE.md).

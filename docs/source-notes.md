@@ -6,6 +6,8 @@
   reports from the U.S. Census Bureau and the Office for National Statistics.
 - The exhibit uses short substantive wording excerpts and report references for
   editorial study.
+- The exhibit also adds answer frames: compact surrounding item context and the
+  highlighted answer path needed to make each teaching scenario fair.
 - No agency logos, screenshots, or PDF imagery are reproduced.
 - No source-agency endorsement is implied.
 - The original reports remain authoritative for context, findings, and
@@ -67,7 +69,11 @@ reference, and a direct public PDF URL:
 
 - Direct source material is limited to short tested-wording excerpts, report
   titles, years, section/page references, and URLs.
-- Exhibit titles, route-stage summaries, data-consequence descriptions, repair
-  directions, and takeaways are editorial paraphrases.
+- Exhibit titles, answer frames, scenario rationales, route-stage summaries,
+  data-consequence descriptions, repair directions, and takeaways are editorial
+  paraphrases.
+- Provenance labels use **Source-backed finding** for cited findings,
+  quotations, or close paraphrases, and **Authored scenario** for constructed
+  cases grounded in the cited report's mechanism.
 - Repair directions identify the type of clarification suggested by the source
   finding; they are not validated replacement questions.

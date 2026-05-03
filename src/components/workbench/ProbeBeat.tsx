@@ -121,8 +121,13 @@ export function ProbeBeat({ specimen, widgetState, onWidgetStateChange }: Props)
                   data-testid="edit-outcome-badge"
                 >
                   Under your edit:{" "}
-                  {outcome === "covered" ? "likely covered" : "still not cleanly covered"}
+                  {outcome === "covered" ? "likely resolved" : "still unresolved"}
                 </span>
+                <p className="probe-rationale" data-testid="probe-rationale">
+                  {outcome === "covered"
+                    ? vignette.probeRationale.covered
+                    : vignette.probeRationale.notCovered}
+                </p>
               </li>
             );
           })}

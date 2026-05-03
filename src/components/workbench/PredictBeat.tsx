@@ -3,6 +3,7 @@ import type {
   VignetteOutcome,
   WorkbenchSpecimen
 } from "../../types/workbench";
+import { outcomeDescriptions, outcomeLabels } from "../../lib/outcomes";
 
 type PredictionMap = Record<string, VignetteOutcome | null>;
 
@@ -20,23 +21,23 @@ type Props = {
 };
 
 const predictionChoices: Array<{ value: VignetteOutcome; label: string }> = [
-  { value: "covered", label: "Covered" },
-  { value: "ambiguous", label: "Ambiguous" },
-  { value: "not_covered", label: "Not covered" }
+  { value: "covered", label: outcomeLabels.covered },
+  { value: "ambiguous", label: outcomeLabels.ambiguous },
+  { value: "not_covered", label: outcomeLabels.not_covered }
 ];
 
 const predictionLegend = [
   {
-    label: "Covered",
-    body: "the wording captures this cleanly"
+    label: outcomeLabels.covered,
+    body: outcomeDescriptions.covered
   },
   {
-    label: "Ambiguous",
-    body: "could route more than one way"
+    label: outcomeLabels.ambiguous,
+    body: outcomeDescriptions.ambiguous
   },
   {
-    label: "Not covered",
-    body: "no option fits cleanly"
+    label: outcomeLabels.not_covered,
+    body: outcomeDescriptions.not_covered
   }
 ];
 
@@ -47,13 +48,13 @@ const confidenceChoices: Array<{ value: ConfidenceLevel; label: string }> = [
 ];
 
 function provenanceLabel(provenance: WorkbenchSpecimen["vignettes"][number]["provenance"]) {
-  return provenance === "direct_quote" ? "Direct quote" : "Editorial illustration";
+  return provenance === "direct_quote" ? "Source-backed finding" : "Authored scenario";
 }
 
 function provenanceDescription(provenance: WorkbenchSpecimen["vignettes"][number]["provenance"]) {
   return provenance === "direct_quote"
-    ? "Verbatim or close paraphrase from a public cognitive-testing transcript."
-    : "Constructed by us, anchored to a specific report finding (see attribution note below the vignette text).";
+    ? "Finding, quotation, or close paraphrase from a cited public testing report."
+    : "Constructed by us, anchored to a specific report finding.";
 }
 
 export function PredictBeat({
@@ -77,9 +78,10 @@ export function PredictBeat({
       <header className="beat-head">
         <p className="beat-eyebrow">Predict</p>
         <h3 className="beat-title" id={`${specimen.id}-predict-title`}>
-          Mark how the published wording would route each respondent below.
+          Mark whether the highlighted answer path fits each respondent scenario.
           Reveal the diagnosis after you commit.
         </h3>
+        <p className="beat-lede">{specimen.answerFrame.taskPrompt}</p>
       </header>
 
       <div className="prediction-mini-legend" aria-label="Prediction terms">

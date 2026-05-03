@@ -1,4 +1,5 @@
 import { workbenchSpecimens } from "../../data/workbench-specimens";
+import { outcomeLabel } from "../../lib/outcomes";
 import type { VignetteOutcome, WorkbenchSpecimen } from "../../types/workbench";
 import { RouteSnapshot } from "../RouteSnapshot";
 
@@ -43,7 +44,7 @@ export function DiagnoseBeat({
         </h3>
       </header>
 
-      <ol className="diagnosis-list" aria-label="Published wording diagnosis">
+      <ol className="diagnosis-list" aria-label="Answer-key diagnosis">
         {specimen.vignettes.map((vignette) => (
           <li key={vignette.id} className="diagnosis-card">
             <p className="diagnosis-text">{vignette.text}</p>
@@ -52,12 +53,15 @@ export function DiagnoseBeat({
                 className={`outcome-badge outcome-badge--${vignette.expectedOutcome}`}
                 data-testid="published-outcome-badge"
               >
-                Published wording: {vignette.expectedOutcome} for this respondent
+                Answer key: {outcomeLabel(vignette.expectedOutcome)}
               </span>
               <span className="outcome-badge outcome-badge--user">
-                You said: {predictions[vignette.id] ?? "not marked"}
+                You said: {outcomeLabel(predictions[vignette.id])}
               </span>
             </div>
+            <p className="diagnosis-rationale" data-testid="diagnosis-rationale">
+              {vignette.outcomeRationale}
+            </p>
           </li>
         ))}
       </ol>

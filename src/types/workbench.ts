@@ -46,6 +46,42 @@ export type Vignette = {
      the specimen's tested wording. Revealed in the Diagnose beat. Ternary
      because Diagnose reports evidence, not inference. */
   expectedOutcome: VignetteOutcome;
+  /* Short answer-key explanation shown after reveal. */
+  outcomeRationale: string;
+  /* Dynamic probe explanations keyed to the user's hypothetical edit result.
+     Probe outcomes are binary, so these two strings explain why the live
+     widget currently appears to resolve or not resolve the same vignette. */
+  probeRationale: {
+    covered: string;
+    notCovered: string;
+  };
+};
+
+export type AnswerFrameTargetKind =
+  | "response_option"
+  | "text_field"
+  | "heading"
+  | "yes_no_path"
+  | "sequence_item"
+  | "numeric_field";
+
+export type AnswerFrameLine = {
+  id: string;
+  text: string;
+  isTarget?: boolean;
+  note?: string;
+};
+
+export type AnswerFrame = {
+  eyebrow: string;
+  prompt: string;
+  context: [string, ...string[]];
+  targetKind: AnswerFrameTargetKind;
+  targetLabel: string;
+  targetText: string;
+  responseOptions?: [AnswerFrameLine, ...AnswerFrameLine[]];
+  taskPrompt: string;
+  methodNote?: string;
 };
 
 /* Predict beat: the user marks each vignette covered/ambiguous/not_covered,
@@ -276,6 +312,7 @@ export type WorkbenchSpecimen = {
   title: string;
   subtitle: string;
   testedWording: string;
+  answerFrame: AnswerFrame;
   intendedConstruct: string;
   /* A short narrative anchor for informed-guessing scaffolding. */
   sampleRespondent: string;
