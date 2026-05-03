@@ -6,10 +6,10 @@ The application is a static, client-rendered React app.
 
 - No backend, API, authentication, database, analytics, cookies, or service
   worker.
-- Optional progress persistence uses browser-local storage only when enabled by
-  the reader.
+- Optional settings persistence uses browser-local storage only when enabled by
+  the reader. Workbench progress is not persisted in this release.
 - No freeform text inputs or contenteditable regions.
-- The settings drawer can import a local JSON progress file, but import parsing
+- The settings drawer can import a local JSON settings file, but import parsing
   happens in the browser and does not transmit the file.
 - No remote fonts, images, iframes, or third-party runtime requests.
 - Outbound report links use HTTPS and open with `target="_blank"` plus
@@ -17,9 +17,12 @@ The application is a static, client-rendered React app.
 
 ## HTML And Script Safety
 
-The source does not use `dangerouslySetInnerHTML`, `innerHTML` writes, `eval`,
-`Function`, or `document.write`. Displayed content is rendered through React
-text nodes and component props.
+The source uses one allowlisted static template path for the colophon:
+`Colophon.tsx` reads the authored `#colophon-template` from `index.html` and
+renders it with `dangerouslySetInnerHTML`. That path does not include imported,
+stored, or user-authored content. The application does not use `eval`,
+`Function`, or `document.write`; interactive exhibit content is rendered through
+React text nodes and component props.
 
 ## Content Security Policy
 

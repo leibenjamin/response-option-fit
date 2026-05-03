@@ -1,6 +1,7 @@
 const PREFIX = "rofl:v1:";
 const SCHEMA_VERSION = 1 as const;
 const STORAGE_CHANGE_EVENT = "rofl-storage-change";
+const SETTINGS_STORAGE_KEY = `${PREFIX}settings`;
 
 export type Snapshot = {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -82,6 +83,21 @@ function serializeJSON(value: unknown): string | null {
   } catch {
     return null;
   }
+}
+
+function validateSnapshotEntry(key: string, value: unknown): string | null {
+  if (key !== SETTINGS_STORAGE_KEY) {
+    return `Snapshot key "${key}" is not recognized by this release.`;
+  }
+
+  if (
+    !isPlainObject(value) ||
+    typeof (value as { remember?: unknown }).remember !== "boolean"
+  ) {
+    return `Snapshot value for "${SETTINGS_STORAGE_KEY}" must be an object with a boolean remember field.`;
+  }
+
+  return null;
 }
 
 export function isAvailable(): boolean {
@@ -201,6 +217,11 @@ export function importSnapshot(snapshot: unknown): ImportResult {
       return { ok: false, reason: `Snapshot key "${key}" is outside the rofl:v1: namespace.` };
     }
 
+    const schemaError = validateSnapshotEntry(key, value);
+    if (schemaError) {
+      return { ok: false, reason: schemaError };
+    }
+
     const encoded = serializeJSON(value);
     if (encoded === null) {
       return { ok: false, reason: `Snapshot value for "${key}" is not JSON-serializable.` };
@@ -235,13 +256,13 @@ export function importSnapshot(snapshot: unknown): ImportResult {
         store.setItem(item.key, item.value);
       } catch {
         restore();
-        return { ok: false, reason: "Could not import progress. Your browser may be out of storage space." };
+        return { ok: false, reason: "Could not import stored data. Your browser may be out of storage space." };
       }
     }
 
     notifyStorageChange();
     return { ok: true };
   } catch {
-    return { ok: false, reason: "Could not import progress from this file." };
+    return { ok: false, reason: "Could not import stored data from this file." };
   }
 }

@@ -9,7 +9,7 @@ precise answer is forced from variable experience.
 
 The project demonstrates a source-backed React and TypeScript interface with a
 Specimen Workbench, source appendix, claim boundary, static security headers,
-and local-only progress controls.
+and local-only settings controls.
 
 ## Sources And Attribution
 
@@ -93,9 +93,10 @@ to:
 - No backend, no analytics, no cookies, no third-party origins in the runtime
   bundle.
 - No PII collected or transmitted under any condition.
-- Any future progress persistence is opt-in, on-device only (`localStorage`),
-  with one-click export to JSON, one-click import, and one-click clear. The
-  Settings surface shows the exact stored keys and values for transparency.
+- Current persistence is limited to opt-in, on-device settings data
+  (`localStorage`). The Settings surface supports JSON export/import/clear and
+  shows the exact stored keys and values for transparency. Workbench progress is
+  not persisted in this release.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs.
 

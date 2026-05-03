@@ -177,14 +177,14 @@ export function SettingsDrawer({ open, onClose }: Props) {
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
-      anchor.download = `rofl-progress-${new Date().toISOString().slice(0, 10)}.json`;
+      anchor.download = `rofl-local-data-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.append(anchor);
       anchor.click();
       anchor.remove();
       window.setTimeout(() => URL.revokeObjectURL(url), 0);
-      setStatus({ kind: "success", message: "Progress export prepared locally." });
+      setStatus({ kind: "success", message: "Stored data export prepared locally." });
     } catch {
-      setStatus({ kind: "error", message: "Could not export progress from this browser." });
+      setStatus({ kind: "error", message: "Could not export stored data from this browser." });
     }
   };
 
@@ -204,7 +204,7 @@ export function SettingsDrawer({ open, onClose }: Props) {
         const parsed: unknown = JSON.parse(text);
         const result = importSnapshot(parsed);
         if (result.ok) {
-          setStatus({ kind: "success", message: "Progress imported locally." });
+          setStatus({ kind: "success", message: "Stored data imported locally." });
           refreshStorageView();
         } else {
           setStatus({ kind: "error", message: result.reason });
@@ -230,7 +230,7 @@ export function SettingsDrawer({ open, onClose }: Props) {
   const handleClearConfirm = () => {
     clearAll();
     setConfirmingClear(false);
-    setStatus({ kind: "success", message: "Stored progress cleared." });
+    setStatus({ kind: "success", message: "Stored local data cleared." });
     refreshStorageView();
   };
 
@@ -277,10 +277,10 @@ export function SettingsDrawer({ open, onClose }: Props) {
             </span>
             <span className="settings-toggle-body">
               <span className="settings-toggle-label">
-                Remember my progress on this device
+                Remember local settings on this device
               </span>
               <span className="settings-toggle-sub">
-                Stored only in this browser. No data leaves your device.
+                Stores this settings choice only in this browser. Workbench progress is not saved yet.
               </span>
             </span>
           </label>
@@ -295,7 +295,7 @@ export function SettingsDrawer({ open, onClose }: Props) {
               data-testid="settings-export"
               onClick={handleExport}
             >
-              Export progress (.json)
+              Export stored data (.json)
             </button>
             <button
               type="button"
@@ -303,7 +303,7 @@ export function SettingsDrawer({ open, onClose }: Props) {
               data-testid="settings-import"
               onClick={handleImportButton}
             >
-              Import progress (.json)
+              Import stored data (.json)
             </button>
             <button
               type="button"
@@ -311,7 +311,7 @@ export function SettingsDrawer({ open, onClose }: Props) {
               data-testid="settings-clear"
               onClick={handleClearRequest}
             >
-              Clear all stored progress
+              Clear stored local data
             </button>
           </div>
           <input
@@ -319,13 +319,13 @@ export function SettingsDrawer({ open, onClose }: Props) {
             className="settings-file-input"
             type="file"
             accept="application/json"
-            aria-label="Import progress JSON file"
+            aria-label="Import stored data JSON file"
             data-testid="settings-import-input"
             onChange={handleImportFile}
           />
           {confirmingClear ? (
             <div className="settings-confirm" data-testid="settings-clear-confirm">
-              <p className="settings-confirm-text">Clear all stored progress from this browser?</p>
+              <p className="settings-confirm-text">Clear all stored local data from this browser?</p>
               <div className="settings-confirm-actions">
                 <button
                   type="button"
