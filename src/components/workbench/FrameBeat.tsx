@@ -13,6 +13,7 @@ function verificationMethodLabel(
 
 export function FrameBeat({ specimen, titleId }: Props) {
   const verification = specimen.verifiedAgainstSource;
+  const { answerFrame } = specimen;
 
   return (
     <section className="workbench-beat workbench-beat--frame" aria-labelledby={titleId}>
@@ -34,6 +35,46 @@ export function FrameBeat({ specimen, titleId }: Props) {
           <blockquote className="tested-wording-quote">
             <p>{specimen.testedWording}</p>
           </blockquote>
+          <div
+            className="answer-frame"
+            aria-labelledby={`${specimen.id}-answer-frame-title`}
+            data-testid={`answer-frame-${specimen.id}`}
+          >
+            <p className="answer-frame-eyebrow">{answerFrame.eyebrow}</p>
+            <h3 className="answer-frame-title" id={`${specimen.id}-answer-frame-title`}>
+              Full item context
+            </h3>
+            <p className="answer-frame-prompt">{answerFrame.prompt}</p>
+            <ul className="answer-frame-context">
+              {answerFrame.context.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+            {answerFrame.responseOptions && (
+              <ol className="answer-frame-options" aria-label="Relevant answer choices">
+                {answerFrame.responseOptions.map((option) => (
+                  <li
+                    key={option.id}
+                    className={`answer-frame-option ${option.isTarget ? "is-target" : ""}`}
+                  >
+                    <span>{option.text}</span>
+                    {option.note && <span className="answer-frame-option-note">{option.note}</span>}
+                  </li>
+                ))}
+              </ol>
+            )}
+            <p className="answer-frame-target" data-testid={`answer-frame-target-${specimen.id}`}>
+              <span>{answerFrame.targetLabel}</span>
+              <mark>{answerFrame.targetText}</mark>
+            </p>
+            <p className="answer-frame-task">{answerFrame.taskPrompt}</p>
+            {answerFrame.methodNote && (
+              <details className="answer-frame-details">
+                <summary>Advanced note</summary>
+                <p>{answerFrame.methodNote}</p>
+              </details>
+            )}
+          </div>
         </div>
         <dl className="frame-meta">
           <div>

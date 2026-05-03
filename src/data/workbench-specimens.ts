@@ -242,6 +242,35 @@ const authoredWorkbenchSpecimens: Array<
     title: "When a commute label has two mental maps",
     subtitle: "The respondent knows the trip. The category asks them to classify the service.",
     testedWording: "Taxi or ride-hailing services",
+    answerFrame: {
+      eyebrow: "ACS means-of-transportation item",
+      prompt: "Using this list, LAST WEEK, how did you USUALLY get to work?",
+      context: [
+        "The respondent chooses one main commute mode from a transportation list.",
+        "The workbench isolates the response option that was probed for ride-hailing comprehension."
+      ],
+      targetKind: "response_option",
+      targetLabel: "Highlighted response option",
+      targetText: "Taxi or ride-hailing services",
+      responseOptions: [
+        { id: "car", text: "Car, truck, or van" },
+        { id: "bus", text: "Bus" },
+        { id: "subway", text: "Subway or elevated rail" },
+        { id: "train", text: "Long-distance train or commuter rail" },
+        { id: "light-rail", text: "Light rail, streetcar, or trolley" },
+        { id: "ferry", text: "Ferryboat" },
+        { id: "taxi-ride-hailing", text: "Taxi or ride-hailing services", isTarget: true },
+        { id: "motorcycle", text: "Motorcycle" },
+        { id: "bicycle", text: "Bicycle" },
+        { id: "walked", text: "Walked" },
+        { id: "home", text: "Worked from this address" },
+        { id: "other", text: "Other Method" }
+      ],
+      taskPrompt:
+        "For each scenario, decide whether this highlighted commute option is a clean fit, an unclear fit, or the wrong path.",
+      methodNote:
+        "The source also discusses working-from-home placement. This specimen narrows the task to the ride-hailing label."
+    },
     intendedConstruct: "Commute mode or service category.",
     sampleRespondent:
       "A respondent who used an app-based ride to get to work recognizes the trip but still has to decide whether the survey label means app service, taxi, vehicle type, or shared ride.",
@@ -249,55 +278,95 @@ const authoredWorkbenchSpecimens: Array<
     vignettes: [
       {
         id: "ride-uber-lyft",
-        text: "A respondent maps ride-hailing to app-based services such as Uber and Lyft.",
+        text: "A respondent usually got to work in an app-based ride and maps ride-hailing to services such as Uber and Lyft.",
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound3Title,
           page: "pp. 36-37",
           permalink: acsRound3Url
         },
-        expectedOutcome: "covered"
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "The respondent's commute is the intended app-based service, and their interpretation lands on the highlighted option.",
+        probeRationale: {
+          covered:
+            "Your examples name app-based services, so this respondent has a clear route into the highlighted option.",
+          notCovered:
+            "Without an app-based example, this respondent may still have to infer that Uber or Lyft belongs here."
+        }
       },
       {
         id: "ride-taxi-only",
-        text: "A respondent reads the category as taxis only and does not bring app-based services into the label.",
+        text: "A respondent usually got to work by Lyft but reads the highlighted option as taxis only.",
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound3Title,
           page: "pp. 36-37",
           permalink: acsRound3Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The real commute belongs in the intended category, but the respondent's taxi-only reading can push the same trip away from it.",
+        probeRationale: {
+          covered:
+            "Pairing taxi with Uber/Lyft or app-based service makes the intended category visible beside the older taxi label.",
+          notCovered:
+            "The edit still leaves the respondent to decide whether a Lyft trip is outside a taxi-only reading."
+        }
       },
       {
         id: "ride-shared-ride",
-        text: "A participant chose the category because he understood it as a shared ride.",
+        text: "A respondent hears ride-hailing as a pooled or shared ride cue, not specifically as an on-demand paid app service.",
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound3Title,
           page: "pp. 36-37",
           permalink: acsRound3Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The phrase can still point toward sharing rather than service arrangement, so the highlighted option is not stable.",
+        probeRationale: {
+          covered:
+            "Naming app-based or Uber/Lyft service reduces the chance that shared ride becomes the organizing rule.",
+          notCovered:
+            "The edit still lets shared ride compete with the intended app-service meaning."
+        }
       },
       {
         id: "ride-lyft-work",
-        text: "A participant said he would sometimes take Lyft to work.",
+        text: "A participant said that when he was working, he would sometimes take Lyft to work several times a week.",
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound3Title,
           page: "pp. 36-37",
           permalink: acsRound3Url
         },
-        expectedOutcome: "covered"
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "Lyft is the intended ride-hailing case, so the highlighted option fits if the respondent recognizes it.",
+        probeRationale: {
+          covered:
+            "Your examples explicitly include Lyft or app-based service, so the route is recoverable.",
+          notCovered:
+            "The edit does not yet make Lyft visible enough as part of the highlighted answer path."
+        }
       },
       {
         id: "ride-carpool",
         text: "A respondent rode with a neighbor and hears shared ride as a cue to include the commute.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the ACS Round 3 finding that one participant mapped ride-hailing to a shared-ride idea.",
-        expectedOutcome: "not_covered"
+          "Based on the ACS Round 3 finding that one participant mapped ride-hailing to a shared-ride idea.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "A neighbor carpool belongs with car, truck, or van or another non-ride-hailing path, not the highlighted paid-service option.",
+        probeRationale: {
+          covered:
+            "The edit correctly keeps neighbor carpool outside the ride-hailing option.",
+          notCovered:
+            "Leaving carpool out keeps the highlighted option from absorbing neighbor rides."
+        }
       }
     ],
     mechanismQuestion: {
@@ -476,6 +545,28 @@ const authoredWorkbenchSpecimens: Array<
     title: "When one field holds business and industry",
     subtitle: "The respondent may know both answers, but the prompt makes them choose the level.",
     testedWording: "What kind of business or industry is this?",
+    answerFrame: {
+      eyebrow: "CPS employment-details field",
+      prompt: "What kind of business or industry is this?",
+      context: [
+        "The item is a text-entry field for a job held during the CPS reference period.",
+        "The instruction asks for the main activity, product, or service provided where employed."
+      ],
+      targetKind: "text_field",
+      targetLabel: "Highlighted answer path",
+      targetText: "Text field for kind of business or industry",
+      responseOptions: [
+        {
+          id: "industry-field",
+          text: "Text entry: main activity, product, or service provided where employed",
+          isTarget: true
+        }
+      ],
+      taskPrompt:
+        "Judge whether the text field tells this respondent the right level of answer to give.",
+      methodNote:
+        "The source's Round 2 examples clarified answer level; this workbench focuses on the field's broad response task."
+    },
     intendedConstruct: "Employer industry or line of business for a job.",
     sampleRespondent:
       "A respondent who works in a hospital can separate the establishment from the broader health care industry, but the single field asks for both at once.",
@@ -490,7 +581,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 3.4.5, pp. 69-75",
           permalink: cpsSelfResponseUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "Hospital and health care are both plausible responses, but they name different levels of the same workplace.",
+        probeRationale: {
+          covered:
+            "Your split separates establishment type from broader industry, so the answer level is easier to see.",
+          notCovered:
+            "The field still accepts both hospital and health care as seemingly responsive answers."
+        }
       },
       {
         id: "industry-food-delivery",
@@ -501,31 +600,63 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 3.4.5, pp. 69-75",
           permalink: cpsSelfResponseUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "Food delivery can be read as service line, platform work, or business type, so the field does not fully control the response level.",
+        probeRationale: {
+          covered:
+            "Your split makes service line a distinct answer level instead of leaving it mixed with business type.",
+          notCovered:
+            "The edit still lets food delivery float between service, business, and work activity."
+        }
       },
       {
         id: "industry-grocery-store",
         text: "A respondent writes grocery store for a job in a supermarket.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the CPS finding that added examples clarified the type and level of answer wanted.",
-        expectedOutcome: "covered"
+          "Based on the CPS finding that added examples clarified the type and level of answer wanted.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "Grocery store is a kind of business at a usable level for the field.",
+        probeRationale: {
+          covered:
+            "Your split leaves establishment or business type available as a clean answer level.",
+          notCovered:
+            "The field does not yet make grocery store visibly acceptable as the intended level."
+        }
       },
       {
         id: "industry-job-title",
         text: "A respondent writes cashier because that is the work they did at the business.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the CPS finding that respondents needed clearer examples of the expected answer type.",
-        expectedOutcome: "not_covered"
+          "Based on the CPS finding that respondents needed clearer examples of the expected answer type.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "Cashier is an occupation or task, not the kind of business or industry.",
+        probeRationale: {
+          covered:
+            "The edit resolves this only by separating occupation from the business/industry field.",
+          notCovered:
+            "Keeping occupation separate prevents the business/industry field from absorbing job titles."
+        }
       },
       {
         id: "industry-business-name",
         text: "A respondent writes the employer's name instead of the kind of business.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the CPS recommendation to add examples that show the level of detail expected.",
-        expectedOutcome: "ambiguous"
+          "Based on the CPS recommendation to add examples that show the level of detail expected.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "An employer name may be familiar, but it is not the kind of business, activity, product, or service requested.",
+        probeRationale: {
+          covered:
+            "The edit resolves this only if employer name is separated from kind of business.",
+          notCovered:
+            "The edit keeps names outside the field and asks for a class of business instead."
+        }
       }
     ],
     mechanismQuestion: {
@@ -606,7 +737,7 @@ const authoredWorkbenchSpecimens: Array<
         "industry-food-delivery": { cleanAt: [2] },
         "industry-grocery-store": { cleanAt: [1, 2] },
         "industry-job-title": { cleanAt: [3] },
-        "industry-business-name": { cleanAt: [1] }
+        "industry-business-name": { cleanAt: [] }
       }
     },
     probePrompt: "Explore where the answer bucket needs a boundary.",
@@ -674,6 +805,26 @@ const authoredWorkbenchSpecimens: Array<
     title: "When No hides no medicine",
     subtitle: "A yes/no item can assume the household has the thing it asks about.",
     testedWording: "Did any refrigerated medicine spoil?",
+    answerFrame: {
+      eyebrow: "AHS outage-effects item",
+      prompt: "During the outage period, did any refrigerated medicine spoil?",
+      context: [
+        "The item is asked in a power-outage module.",
+        "The response path must distinguish medicine that did not spoil from households without refrigerated medicine."
+      ],
+      targetKind: "yes_no_path",
+      targetLabel: "Highlighted response path",
+      targetText: "Yes / No / No refrigerated medicine response set",
+      responseOptions: [
+        { id: "yes", text: "Yes", isTarget: true },
+        { id: "no", text: "No", isTarget: true },
+        { id: "no-medicine", text: "No refrigerated medicine", isTarget: true }
+      ],
+      taskPrompt:
+        "Judge whether this response path cleanly separates spoilage, no spoilage, and no refrigerated medicine.",
+      methodNote:
+        "The source recommended keeping the no-medicine option and adding a follow-up after No because some respondents did not volunteer the inapplicable state."
+    },
     intendedConstruct: "Spoilage of refrigerated medicine during a power outage.",
     sampleRespondent:
       "A respondent who does not keep refrigerated medicine can answer No even though a No refrigerated medicine option is present. The survey still has to distinguish a substantive No from a missed applicability cue.",
@@ -688,39 +839,79 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.5.4, pp. 58-59",
           permalink: ahs2023Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "No is a true answer form, but here it mixes no spoilage with no refrigerated medicine.",
+        probeRationale: {
+          covered:
+            "A screener or follow-up separates no refrigerated medicine from a substantive No.",
+          notCovered:
+            "The current path still lets a household without refrigerated medicine disappear inside No."
+        }
       },
       {
         id: "medicine-volunteers-no-med",
         text: "A respondent notices the No refrigerated medicine option and uses it directly.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the AHS 2023 OUTMED recommendation to keep the No refrigerated medicine option for respondents who volunteer that information.",
-        expectedOutcome: "covered"
+          "Based on the AHS 2023 OUTMED recommendation to keep the No refrigerated medicine option for respondents who volunteer that information.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "This respondent uses the explicit inapplicable option, so No does not have to carry that meaning.",
+        probeRationale: {
+          covered:
+            "A visible not-applicable route keeps this respondent out of the No path.",
+          notCovered:
+            "Without a visible not-applicable route, this respondent may still need to improvise."
+        }
       },
       {
         id: "medicine-spoiled",
         text: "A respondent had refrigerated medicine and it spoiled during the outage.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the AHS 2023 OUTMED construct: spoilage of refrigerated medicine during an outage.",
-        expectedOutcome: "covered"
+          "Based on the AHS 2023 OUTMED construct: spoilage of refrigerated medicine during an outage.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "The household is in scope and the event occurred; the clean route is Yes, not the highlighted No.",
+        probeRationale: {
+          covered:
+            "The edit preserves a clear Yes route for in-scope spoilage.",
+          notCovered:
+            "This case should stay outside No because the medicine did spoil."
+        }
       },
       {
         id: "medicine-did-not-spoil",
         text: "A respondent had refrigerated medicine, kept it cold, and no medicine spoiled.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the AHS 2023 OUTMED distinction between substantive No and no refrigerated medicine.",
-        expectedOutcome: "covered"
+          "Based on the AHS 2023 OUTMED distinction between substantive No and no refrigerated medicine.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "This is the substantive No the item is trying to measure: medicine existed, but did not spoil.",
+        probeRationale: {
+          covered:
+            "The edit leaves a clean No route for in-scope households with no spoilage.",
+          notCovered:
+            "The No path remains hard to interpret if it is not separated from no-medicine households."
+        }
       },
       {
         id: "medicine-not-outage",
         text: "A respondent had refrigerated medicine spoil after a refrigerator problem unrelated to a power outage.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the AHS 2023 OUTMED recommendation to add the timeframe and as-a-result-of-a-power-outage wording.",
-        expectedOutcome: "not_covered"
+          "Based on the AHS 2023 OUTMED recommendation to add the timeframe and as-a-result-of-a-power-outage wording.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "The spoilage is outside the power-outage construct, so it should not be counted by this item.",
+        probeRationale: {
+          covered:
+            "The edit resolves this by keeping non-outage spoilage outside the outage item.",
+          notCovered:
+            "The edit keeps refrigerator problems unrelated to the outage outside the target path."
+        }
       }
     ],
     mechanismQuestion: {
@@ -888,6 +1079,25 @@ const authoredWorkbenchSpecimens: Array<
     title: "When everyday categories blur technical ones",
     subtitle: "People may classify a vehicle by marketing language, fuel source, or charging behavior.",
     testedWording: "Another type of electric vehicle?",
+    answerFrame: {
+      eyebrow: "ACS electric-vehicle sequence",
+      prompt: "Are any of the following types of electric vehicles kept at home for use by members of this household?",
+      context: [
+        "Version 1 asked first about a plug-in electric vehicle.",
+        "The workbench isolates the second response item, which was meant to capture other electric vehicles such as hybrids."
+      ],
+      targetKind: "response_option",
+      targetLabel: "Highlighted response item",
+      targetText: "Another type of electric vehicle?",
+      responseOptions: [
+        { id: "plug-in", text: "A plug-in electric vehicle?" },
+        { id: "another-ev", text: "Another type of electric vehicle?", isTarget: true }
+      ],
+      taskPrompt:
+        "Judge whether the highlighted item gives each vehicle a clean home, or whether plug-in, hybrid, gasoline, and everyday electric labels compete.",
+      methodNote:
+        "The later version named plug-in electric vehicle and hybrid electric vehicle directly. This specimen evaluates the earlier broader label."
+    },
     intendedConstruct: "Vehicle technology type.",
     sampleRespondent:
       "A respondent who owns or recognizes a hybrid vehicle may sort it by whether it plugs in, whether it uses gasoline, or whether it feels electric in everyday speech.",
@@ -902,7 +1112,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "pp. 272-273",
           permalink: acsRound12Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent links plug-ins and hybrids, so the boundary between the first item and the highlighted item is unstable.",
+        probeRationale: {
+          covered:
+            "Classifying by plug-in status or gas-plus-battery makes the boundary rule explicit.",
+          notCovered:
+            "The edit still lets plug-in and hybrid meanings overlap without saying which feature controls."
+        }
       },
       {
         id: "ev-does-not-plug",
@@ -913,7 +1131,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "pp. 272-273",
           permalink: acsRound12Url
         },
-        expectedOutcome: "not_covered"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The vehicle is the kind the item hoped to capture, but the word electric can make a non-plug-in hybrid feel out of scope.",
+        probeRationale: {
+          covered:
+            "A gas-plus-battery rule gives the hybrid a clean route even when it does not plug in.",
+          notCovered:
+            "The edit still lets no plug mean not electric, so the highlighted item remains unstable."
+        }
       },
       {
         id: "ev-electric-means-plug",
@@ -924,23 +1150,63 @@ const authoredWorkbenchSpecimens: Array<
           page: "pp. 272-273",
           permalink: acsRound12Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The highlighted item depends on electric meaning more than plug-in, but the respondent reads electric as plug-in.",
+        probeRationale: {
+          covered:
+            "A plug-in rule separates the first item from non-plug-in hybrid vehicles.",
+          notCovered:
+            "The edit still leaves electric as an everyday plug-in cue."
+        }
       },
       {
         id: "ev-battery-only",
         text: "A respondent has a battery-only vehicle that charges from an outlet and uses no gasoline.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the ACS electric-vehicle distinction between plug-in and hybrid vehicle types.",
-        expectedOutcome: "covered"
+          "Based on the ACS electric-vehicle distinction between plug-in and hybrid vehicle types.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "A battery-only plug-in vehicle belongs in the first item, not the highlighted other-electric item.",
+        probeRationale: {
+          covered:
+            "A plug-in rule routes this vehicle away from the highlighted other-electric item.",
+          notCovered:
+            "Keeping plug-in vehicles separate prevents the other-electric item from absorbing them."
+        }
       },
       {
         id: "ev-plug-in-hybrid",
         text: "A respondent has a plug-in hybrid that charges from an outlet and also uses gasoline.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the ACS finding that plug-in and hybrid boundaries were blurred by respondents.",
-        expectedOutcome: "ambiguous"
+          "Based on the ACS finding that plug-in and hybrid boundaries were blurred by respondents.",
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "A plug-in hybrid can satisfy both plug-in and hybrid rules unless the question names the controlling category.",
+        probeRationale: {
+          covered:
+            "Your selected feature gives the plug-in hybrid a declared rule for classification.",
+          notCovered:
+            "The edit still does not say whether plug-in status or hybrid status controls."
+        }
+      },
+      {
+        id: "ev-non-plug-hybrid",
+        text: "A respondent has a non-plug-in hybrid and understands it as another electric vehicle because it uses a battery with gasoline.",
+        provenance: "editorial",
+        attributionNote:
+          "Based on the ACS finding that most participants reporting another electric vehicle referred to a hybrid.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "This is the intended clean route for the highlighted item: a hybrid electric vehicle that is not the plug-in item.",
+        probeRationale: {
+          covered:
+            "A gas-plus-battery rule gives this non-plug-in hybrid a clean home.",
+          notCovered:
+            "The edit still does not make the intended hybrid route clear enough."
+        }
       }
     ],
     mechanismQuestion: {
@@ -1031,7 +1297,8 @@ const authoredWorkbenchSpecimens: Array<
         "ev-does-not-plug": { cleanFeatureIds: ["gas-and-battery"] },
         "ev-electric-means-plug": { cleanFeatureIds: ["plugs-in"] },
         "ev-battery-only": { cleanFeatureIds: ["plugs-in", "everyday-electric"] },
-        "ev-plug-in-hybrid": { cleanFeatureIds: ["plugs-in", "gas-and-battery"] }
+        "ev-plug-in-hybrid": { cleanFeatureIds: ["plugs-in", "gas-and-battery"] },
+        "ev-non-plug-hybrid": { cleanFeatureIds: ["gas-and-battery"] }
       }
     },
     probePrompt: "Explore which vehicle feature carries the classification.",
@@ -1107,6 +1374,32 @@ const authoredWorkbenchSpecimens: Array<
     title: "When the previous answer leaks into the next category",
     subtitle: "A response option can fail because of the question sequence around it.",
     testedWording: "Through some other advertising by the owner?",
+    answerFrame: {
+      eyebrow: "AHS housing-search sequence",
+      prompt: "Did you find your home through any of these routes?",
+      context: [
+        "The respondent has already answered an internet-site item.",
+        "The next item asks whether some other owner advertising also helped."
+      ],
+      targetKind: "sequence_item",
+      targetLabel: "Highlighted sequence item",
+      targetText: "Through some other advertising by the owner?",
+      responseOptions: [
+        {
+          id: "internet",
+          text: "Did you find your home on an internet site such as craigslist, apartment.com, realtor.com, or Zillow?"
+        },
+        {
+          id: "owner",
+          text: "Through some other advertising by the owner?",
+          isTarget: true
+        }
+      ],
+      taskPrompt:
+        "Judge whether the highlighted owner-advertising item captures a distinct route, or whether the prior internet-site answer changes its meaning.",
+      methodNote:
+        "The issue is not that respondents could not define owner advertising; it is that the same listing can look relevant to two adjacent items."
+    },
     intendedConstruct: "Housing-search source or route.",
     sampleRespondent:
       "A respondent who already reported an internet listing can still see the same listing as owner advertising when the owner posted it.",
@@ -1121,7 +1414,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.8.7 RMOVHS, pp. 98-99",
           permalink: ahs2025Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent sees the highlighted item as a repeat of the prior internet-site answer rather than a distinct route.",
+        probeRationale: {
+          covered:
+            "Putting an all-that-helped instruction first makes multiple Yes answers permissible before the sequence begins.",
+          notCovered:
+            "The sequence still asks the respondent to decide whether the same listing is being counted twice."
+        }
       },
       {
         id: "owner-zillow-changed",
@@ -1132,31 +1433,63 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.8.7 RMOVHS, pp. 98-99",
           permalink: ahs2025Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "One event is doing two jobs: it is an internet listing and owner advertising, so the highlighted item is not separable.",
+        probeRationale: {
+          covered:
+            "An upfront all-that-helped rule tells the respondent whether overlapping routes should both be reported.",
+          notCovered:
+            "The edit still leaves the Zillow listing stranded between two adjacent items."
+        }
       },
       {
         id: "owner-yard-sign",
         text: "A respondent found the home through a sign placed by the owner, not through an internet site.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the RMOVHS owner-advertising category after the internet-site question.",
-        expectedOutcome: "covered"
+          "Based on the RMOVHS owner-advertising category after the internet-site question.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "A physical sign placed by the owner is a distinct owner-advertising route.",
+        probeRationale: {
+          covered:
+            "The highlighted item remains a clean fit for owner advertising outside the internet-site path.",
+          notCovered:
+            "The edit should preserve this distinct owner-advertising route."
+        }
       },
       {
         id: "owner-agent-listing",
         text: "A respondent found the home through an internet listing not posted by the owner, with no owner advertising involved.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the RMOVHS need to separate internet listings (HEARSHSNET) from owner advertising routes.",
-        expectedOutcome: "not_covered"
+          "Based on the RMOVHS need to separate internet listings (HEARSHSNET) from owner advertising routes.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "The highlighted owner-advertising item is the wrong path when the owner was not involved.",
+        probeRationale: {
+          covered:
+            "The edit resolves this by keeping internet listings not posted by the owner outside owner advertising.",
+          notCovered:
+            "Keeping owner involvement explicit keeps this internet-only route outside the highlighted item."
+        }
       },
       {
         id: "owner-craigslist-owner",
         text: "A respondent found the home through a Craigslist post written by the owner and already counted the internet site.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the RMOVHS finding that an internet listing can also feel like owner advertising.",
-        expectedOutcome: "ambiguous"
+          "Based on the RMOVHS finding that an internet listing can also feel like owner advertising.",
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The same Craigslist post is both internet-mediated and owner-authored, so the sequence creates overlap.",
+        probeRationale: {
+          covered:
+            "The upfront multi-route instruction makes the overlap intentional rather than accidental.",
+          notCovered:
+            "The edit still does not tell the respondent whether to count the owner-authored internet post again."
+        }
       }
     ],
     mechanismQuestion: {
@@ -1337,6 +1670,24 @@ const authoredWorkbenchSpecimens: Array<
     title: "When usual hours demand one number",
     subtitle: "The item creates aggregation strain: variable weeks have to become a single usual-hours answer.",
     testedWording: "How many hours per week do you USUALLY work at your <MAIN> job?",
+    answerFrame: {
+      eyebrow: "CPS usual-hours item",
+      prompt: "How many hours per week do you USUALLY work at your main job?",
+      context: [
+        "The item is asked of respondents who worked during the CPS reference period.",
+        "The response is one numeric value for usual weekly hours at the main job."
+      ],
+      targetKind: "numeric_field",
+      targetLabel: "Highlighted answer path",
+      targetText: "One usual-hours number",
+      responseOptions: [
+        { id: "hours", text: "Usual hours worked each week: [number]", isTarget: true }
+      ],
+      taskPrompt:
+        "Judge whether one usual-hours number is recoverable, or whether the respondent must choose an unstated recipe such as average, most common week, or recent week.",
+      methodNote:
+        "Averaging is not automatically wrong. The fit problem is that different respondents may use different recipes while entering the same clean-looking field."
+    },
     intendedConstruct: "Usual weekly hours at the respondent's main job.",
     sampleRespondent:
       "A respondent whose hours change from week to week can remember several real schedules, but the item asks those memories to collapse into one usual number.",
@@ -1351,7 +1702,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 3.4.2, pp. 49-54",
           permalink: cpsSelfResponseUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent can provide a number, but the field does not say whether average is the intended recipe.",
+        probeRationale: {
+          covered:
+            "A declared window or recipe makes this average interpretable as the intended answer.",
+          notCovered:
+            "The edit still lets average, usual, and recent-week logic compete."
+        }
       },
       {
         id: "hours-ninety-percent",
@@ -1362,7 +1721,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 3.4.2, pp. 49-54",
           permalink: cpsSelfResponseUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The answer is plausible, but the respondent is choosing a dominance rule that the field does not make explicit.",
+        probeRationale: {
+          covered:
+            "A usual-pattern rule can make a most-of-the-period answer recoverable.",
+          notCovered:
+            "The edit still does not specify whether most-of-period should control the number."
+        }
       },
       {
         id: "hours-variable-average",
@@ -1373,23 +1740,47 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 3.4.2, pp. 49-54",
           permalink: cpsSelfResponseUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The numeric answer hides which weeks were included and how they were aggregated.",
+        probeRationale: {
+          covered:
+            "A shorter or explicit window makes the averaging recipe more inspectable.",
+          notCovered:
+            "The edit still turns several week types into one number without naming the recipe."
+        }
       },
       {
         id: "hours-stable-forty",
         text: "A respondent works the same forty-hour schedule each week.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the CPS usual-hours construct, where stable schedules make the single answer recoverable.",
-        expectedOutcome: "covered"
+          "Based on the CPS usual-hours construct, where stable schedules make the single answer recoverable.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "With a stable schedule, one usual-hours number is recoverable without extra calculation.",
+        probeRationale: {
+          covered:
+            "Any reasonable window preserves the same forty-hour answer.",
+          notCovered:
+            "The edit should not make a stable forty-hour schedule harder to report."
+        }
       },
       {
         id: "hours-no-usual-week",
         text: "A respondent's hours swing between short and long weeks with no week that feels usual.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the CPS finding that irregular workers collapsed separately remembered weeks into one number.",
-        expectedOutcome: "not_covered"
+          "Based on the CPS finding that irregular workers collapsed separately remembered weeks into one number.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "The requested answer shape is wrong for a worker who has no stable usual week.",
+        probeRationale: {
+          covered:
+            "A concrete recent window can turn the task into a reportable period instead of a false usual week.",
+          notCovered:
+            "The edit still asks for a usual week that the respondent does not experience."
+        }
       }
     ],
     mechanismQuestion: {
@@ -1540,6 +1931,26 @@ const authoredWorkbenchSpecimens: Array<
     subtitle: "The respondent may own the device, but the label sends them to another product family.",
     testedWording:
       "What about a laptop or notebook? [Do you/Does anyone in this household] use a laptop or notebook computer?",
+    answerFrame: {
+      eyebrow: "NTIA Internet Use Survey device item",
+      prompt:
+        "What about a laptop or notebook? Do you or does anyone in this household use a laptop or notebook computer?",
+      context: [
+        "The item asks about household use of a portable personal computer.",
+        "Help text defined a laptop as portable with a built-in keyboard and screen."
+      ],
+      targetKind: "response_option",
+      targetLabel: "Highlighted device label",
+      targetText: "Laptop or notebook computer",
+      responseOptions: [
+        { id: "yes", text: "Yes, someone uses a laptop or notebook computer", isTarget: true },
+        { id: "no", text: "No" }
+      ],
+      taskPrompt:
+        "Judge whether the label gives the respondent a clean route to portable-computer use, or whether notebook points to another device family.",
+      methodNote:
+        "The report found laptop was understood, while notebook sent several respondents to tablet-like or lower-function devices."
+    },
     intendedConstruct:
       "Use of a portable personal computer with a built-in keyboard and screen.",
     sampleRespondent:
@@ -1555,7 +1966,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 3.1.1, p. 10",
           permalink: ntia2021Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "Lower functionality is a plausible device distinction, but it does not match the survey's laptop synonym.",
+        probeRationale: {
+          covered:
+            "Removing notebook or pairing laptop with a clearer portable-computer label reduces this side meaning.",
+          notCovered:
+            "The edit still lets notebook imply a weaker device rather than a laptop."
+        }
       },
       {
         id: "notebook-chromebook",
@@ -1566,7 +1985,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 3.1.1, p. 10",
           permalink: ntia2021Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "A Chromebook may be in scope or may be treated as a separate product family, so the label does not settle the answer.",
+        probeRationale: {
+          covered:
+            "Naming Chromebook or a clearer laptop class can bring this case into a declared route.",
+          notCovered:
+            "The edit still leaves Chromebook hovering between laptop and another device family."
+        }
       },
       {
         id: "notebook-tablet",
@@ -1577,15 +2004,47 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 3.1.1, p. 10",
           permalink: ntia2021Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "Tablet-like interpretation sends the label toward a neighboring device category before the respondent answers.",
+        probeRationale: {
+          covered:
+            "A laptop-only or built-in-keyboard frame keeps tablet-like readings from controlling the answer.",
+          notCovered:
+            "The edit still lets notebook point toward a tablet."
+        }
       },
       {
         id: "notebook-plain-laptop",
         text: "A respondent with a conventional laptop recognizes laptop when notebook is not foregrounded.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the Round 2 finding that deleting notebook removed confusion.",
-        expectedOutcome: "covered"
+          "Based on the Round 2 finding that deleting notebook removed confusion.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "A conventional laptop is the intended clean case for the item.",
+        probeRationale: {
+          covered:
+            "The edited label preserves laptop as the clear route for this respondent.",
+          notCovered:
+            "The edit should not make a conventional laptop harder to report."
+        }
+      },
+      {
+        id: "notebook-tablet-only",
+        text: "A household has only a tablet, and the respondent says Yes because notebook sounds tablet-like.",
+        provenance: "editorial",
+        attributionNote:
+          "Based on the NTIA finding that some respondents mapped notebook to tablet-like devices.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "A tablet-only household is outside the laptop/notebook construct, so Yes would be the wrong path.",
+        probeRationale: {
+          covered:
+            "The edit resolves this by keeping tablet-only households outside the laptop path.",
+          notCovered:
+            "Removing notebook keeps tablet-only households from entering the laptop path."
+        }
       }
     ],
     mechanismQuestion: {
@@ -1663,7 +2122,8 @@ const authoredWorkbenchSpecimens: Array<
         "notebook-tablet": { coveredBy: [["laptop"]] },
         "notebook-plain-laptop": {
           coveredBy: [["laptop"], ["laptop", "notebook"], ["laptop", "two-in-one"]]
-        }
+        },
+        "notebook-tablet-only": { coveredBy: [] }
       }
     },
     probePrompt: "Explore whether removing or replacing notebook narrows the label.",
@@ -1738,6 +2198,27 @@ const authoredWorkbenchSpecimens: Array<
     subtitle: "A close-enough category and a write-in path do not behave like a visible box.",
     testedWording:
       "What is your ethnic group? Asian / Asian British ... Pakistani ... Kashmiri ... Any other Asian background, write in.",
+    answerFrame: {
+      eyebrow: "ONS ethnic-group answer architecture",
+      prompt: "What is your ethnic group?",
+      context: [
+        "The comparison concerns whether Kashmiri identity is available as a visible tick-box or only through a broader category and write-in route.",
+        "The workbench evaluates the form architecture for reporting a specific subgroup, not the legitimacy of any identity."
+      ],
+      targetKind: "response_option",
+      targetLabel: "Highlighted reporting path",
+      targetText: "Visible Kashmiri tick-box or explicit write-in path",
+      responseOptions: [
+        { id: "heading", text: "Asian / Asian British heading" },
+        { id: "broad", text: "Indian or Pakistani broad tick-boxes" },
+        { id: "kashmiri", text: "Kashmiri tick-box", isTarget: true },
+        { id: "write-in", text: "Any other Asian background, write in", isTarget: true }
+      ],
+      taskPrompt:
+        "Judge whether the answer architecture lets a Kashmiri respondent report the specific identity cleanly, or whether broad boxes and write-in effort change the route.",
+      methodNote:
+        "The source found higher Kashmiri identification with a tick-box, while also weighing comparability and parallel-subgroup tradeoffs."
+    },
     intendedConstruct:
       "Specific ethnic identity reporting for respondents who identify as Kashmiri.",
     sampleRespondent:
@@ -1753,7 +2234,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "sections 6.1-6.2, pp. 16-17 and 33-34",
           permalink: onsKashmiriUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent may have a specific identity to report, but visible broad boxes make the easier route compete with precision.",
+        probeRationale: {
+          covered:
+            "Separating a visible Kashmiri box from broad national boxes reduces the effort gap.",
+          notCovered:
+            "The edit still makes the specific answer more work than a broad tick-box."
+        }
       },
       {
         id: "kashmiri-not-completed",
@@ -1764,7 +2253,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 6.2, pp. 33-34",
           permalink: onsKashmiriUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "A write-in path exists, but respondents may read it as less official or less complete than a tick-box.",
+        probeRationale: {
+          covered:
+            "A visible subgroup box makes the specific answer look like a normal completion path.",
+          notCovered:
+            "The edit still relies on a write-in path that can feel unofficial."
+        }
       },
       {
         id: "kashmiri-broad-habit",
@@ -1772,16 +2269,48 @@ const authoredWorkbenchSpecimens: Array<
           "A Kashmiri respondent who is used to broader categories ticks Indian or Pakistani out of habit, even with the Kashmiri tick-box visible.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the ONS finding that some respondents defaulted to broader categories despite a more specific box.",
-        expectedOutcome: "ambiguous"
+          "Based on the ONS finding that some respondents defaulted to broader categories despite a more specific box.",
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The specific box helps, but learned broad-category habits can still compete with it.",
+        probeRationale: {
+          covered:
+            "A clearer subgroup separation improves the chance that the specific answer is seen in time.",
+          notCovered:
+            "The edit still does not overcome the broad-category habit."
+        }
       },
       {
         id: "kashmiri-specific-box",
         text: "A Kashmiri respondent finds a visible Kashmiri tick-box and reports the subgroup directly.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the split-sample finding that tick-box identification was higher.",
-        expectedOutcome: "covered"
+          "Based on the split-sample finding that tick-box identification was higher.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "The visible subgroup box provides a clean route to the intended specific reporting.",
+        probeRationale: {
+          covered:
+            "The edit keeps the specific subgroup route visible and separate from broad boxes.",
+          notCovered:
+            "The edit should not hide a respondent who is ready to report the subgroup directly."
+        }
+      },
+      {
+        id: "kashmiri-broad-only",
+        text: "A Kashmiri respondent wants the specific identity recorded but only sees broad national boxes and does not use the write-in.",
+        provenance: "editorial",
+        attributionNote:
+          "Based on the ONS finding that write-in-only reporting recovered fewer Kashmiri identifications than a tick-box.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "The broad tick-box route records a less specific answer than the target subgroup identity.",
+        probeRationale: {
+          covered:
+            "Adding a visible subgroup path gives this respondent a place to report the intended identity.",
+          notCovered:
+            "The edit still records the respondent only through a broader category."
+        }
       }
     ],
     mechanismQuestion: {
@@ -1858,7 +2387,8 @@ const authoredWorkbenchSpecimens: Array<
         "kashmiri-easier-tick": { cleanAt: [2] },
         "kashmiri-not-completed": { cleanAt: [2] },
         "kashmiri-broad-habit": { cleanAt: [2] },
-        "kashmiri-specific-box": { cleanAt: [2] }
+        "kashmiri-specific-box": { cleanAt: [2] },
+        "kashmiri-broad-only": { cleanAt: [2] }
       }
     },
     probePrompt: "Explore where the form separates broad categories from subgroup reporting.",
@@ -1926,6 +2456,27 @@ const authoredWorkbenchSpecimens: Array<
     subtitle: "No can mean no flooding, no pump, or no pump failure unless the path separates them.",
     testedWording:
       "In the last 12 months/since you've lived here, did water collect in your basement or crawl space because your sump pump stopped working properly?",
+    answerFrame: {
+      eyebrow: "AHS outage flooding item",
+      prompt:
+        "Did water collect in your basement or crawl space because your sump pump stopped working properly as a result of a power outage?",
+      context: [
+        "The item includes Yes, No, and No sump pump paths.",
+        "The disputed repair was a follow-up after No to distinguish no pump from no pump failure."
+      ],
+      targetKind: "yes_no_path",
+      targetLabel: "Highlighted response path",
+      targetText: "Yes / No / No sump pump response set",
+      responseOptions: [
+        { id: "yes", text: "Yes", isTarget: true },
+        { id: "no", text: "No", isTarget: true },
+        { id: "no-pump", text: "No sump pump", isTarget: true }
+      ],
+      taskPrompt:
+        "Judge whether this response path separates no flooding, no pump, no pump failure, and out-of-scope water causes.",
+      methodNote:
+        "The final wording adopted the outage wording but did not adopt the proposed follow-up after No."
+    },
     intendedConstruct:
       "Flooding caused by an existing sump pump failing during a power outage.",
     sampleRespondent:
@@ -1941,31 +2492,63 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.5.8 OUTFLOOD, pp. 57-59",
           permalink: ahs2023Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent lacks the assumed equipment, so the item needs a strong path out of the failure premise.",
+        probeRationale: {
+          covered:
+            "A screener or not-applicable path lets no-sump-pump households bypass the failure event.",
+          notCovered:
+            "The response path still relies on the respondent escaping a premise about equipment they do not have."
+        }
       },
       {
         id: "sump-no-pump-no",
         text: "A respondent with no sump pump answers No because the assumed equipment is absent.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the OUTFLOOD no-sump-pump disambiguator.",
-        expectedOutcome: "ambiguous"
+          "Based on the OUTFLOOD no-sump-pump disambiguator.",
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "No could mean no pump, no failure, or no water, so the answer is not analytically clean.",
+        probeRationale: {
+          covered:
+            "A no-pump route or follow-up keeps this respondent from being coded as a substantive No.",
+          notCovered:
+            "The edit still lets no equipment hide inside No."
+        }
       },
       {
         id: "sump-failed-outage",
         text: "A respondent with a sump pump reports water collecting because the pump failed.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the OUTFLOOD sump-pump-failure construct.",
-        expectedOutcome: "covered"
+          "Based on the OUTFLOOD sump-pump-failure construct.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "The respondent has the equipment, the failure occurred, and water collected for the intended reason.",
+        probeRationale: {
+          covered:
+            "The edit preserves a clean Yes route for in-scope pump-failure flooding.",
+          notCovered:
+            "The edit should not block the core failure event from being reported."
+        }
       },
       {
         id: "sump-water-other-cause",
         text: "A respondent with a sump pump reports water for a cause unrelated to pump failure.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the OUTFLOOD outage-and-pump-failure scope.",
-        expectedOutcome: "not_covered"
+          "Based on the OUTFLOOD outage-and-pump-failure scope.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "Water from another cause is outside the pump-failure path.",
+        probeRationale: {
+          covered:
+            "The edit resolves this by keeping other water causes outside sump-pump failure.",
+          notCovered:
+            "The edit keeps other water causes outside the target construct."
+        }
       }
     ],
     mechanismQuestion: {
@@ -2132,6 +2715,28 @@ const authoredWorkbenchSpecimens: Array<
     title: "When a heading scrambles the category boundary",
     subtitle: "The section label sends respondents searching by different cues.",
     testedWording: "African/Caribbean/Black/Black British",
+    answerFrame: {
+      eyebrow: "ONS ethnic-group heading test",
+      prompt: "Choose the section and tick-box that best describes your ethnic group.",
+      context: [
+        "The issue is the section heading that respondents scan before choosing a more specific box.",
+        "The tested heading placed African and Caribbean before Black."
+      ],
+      targetKind: "heading",
+      targetLabel: "Highlighted section heading",
+      targetText: "African/Caribbean/Black/Black British",
+      responseOptions: [
+        { id: "white", text: "White" },
+        { id: "mixed", text: "Mixed / multiple ethnic groups" },
+        { id: "asian", text: "Asian / Asian British" },
+        { id: "black-heading", text: "African/Caribbean/Black/Black British", isTarget: true },
+        { id: "other", text: "Other ethnic group" }
+      ],
+      taskPrompt:
+        "Judge whether the highlighted heading helps the respondent find the right section, or whether color and geography cues make several sections partly plausible.",
+      methodNote:
+        "The ONS recommendation reordered the heading to put Black first; this specimen focuses on navigation through section cues."
+    },
     intendedConstruct:
       "A heading that lets respondents find the right boxes without resolving a race-versus-geography conflict.",
     sampleRespondent:
@@ -2147,7 +2752,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 6.4.3, pp. 36-37",
           permalink: onsEthnicGroupUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The familiar combined cue is not visible in the same order, so the respondent must reconcile the heading before choosing.",
+        probeRationale: {
+          covered:
+            "Leading with Black brings the respondent's search cue to the front of the heading.",
+          notCovered:
+            "The edit still makes the respondent search through competing heading cues."
+        }
       },
       {
         id: "heading-looking-black",
@@ -2158,7 +2771,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 6.4.3, pp. 36-37",
           permalink: onsEthnicGroupUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent eventually finds a path, but only after the heading order sends them through a different cue first.",
+        probeRationale: {
+          covered:
+            "A Black-first heading aligns the visible section with the respondent's first search cue.",
+          notCovered:
+            "The edit still requires a respondent looking for Black to notice it after other cues."
+        }
       },
       {
         id: "heading-white-african",
@@ -2169,15 +2790,47 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 6.4.3, pp. 36-37",
           permalink: onsEthnicGroupUrl
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "The highlighted heading is the wrong path if geography pulls a White African respondent away from the White section.",
+        probeRationale: {
+          covered:
+            "An explicit White African path can keep geography from pulling the respondent into the highlighted section.",
+          notCovered:
+            "The edit still does not resolve the cross-cutting White and African cues."
+        }
       },
       {
         id: "heading-multiple-ticks",
         text: "A respondent searches for a 'Black' cue, ticks the wrong section first, then adds a second mark when they find the right one.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the ONS finding that respondents missed the embedded 'Black' label, ticked the wrong section first, and corrected with a second mark.",
-        expectedOutcome: "ambiguous"
+          "Based on the ONS finding that respondents missed the embedded 'Black' label, ticked the wrong section first, and corrected with a second mark.",
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "Multiple marks show that the heading did not give the respondent a stable first route.",
+        probeRationale: {
+          covered:
+            "A stronger lead cue reduces wrong-section scanning before the respondent reaches the intended box.",
+          notCovered:
+            "The edit still allows wrong-section searching before correction."
+        }
+      },
+      {
+        id: "heading-black-british-clean",
+        text: "A respondent identifies as Black British and sees that exact cue in the highlighted heading.",
+        provenance: "editorial",
+        attributionNote:
+          "Based on the ONS goal of preserving Black and Black British recognition in the heading.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "The heading contains the respondent's cue directly, so the section can be a clean fit.",
+        probeRationale: {
+          covered:
+            "The edit keeps Black or Black British visible as a direct navigation cue.",
+          notCovered:
+            "The edit should not hide an exact cue for a respondent who identifies as Black British."
+        }
       }
     ],
     mechanismQuestion: {
@@ -2264,7 +2917,8 @@ const authoredWorkbenchSpecimens: Array<
         "heading-black-african": { cleanFeatureIds: ["black-first"] },
         "heading-looking-black": { cleanFeatureIds: ["black-first"] },
         "heading-white-african": { cleanFeatureIds: ["white-african-path"] },
-        "heading-multiple-ticks": { cleanFeatureIds: ["black-first", "white-african-path"] }
+        "heading-multiple-ticks": { cleanFeatureIds: ["black-first", "white-african-path"] },
+        "heading-black-british-clean": { cleanFeatureIds: ["black-first"] }
       }
     },
     probePrompt: "Explore which cue should carry the category boundary.",
@@ -2339,6 +2993,25 @@ const authoredWorkbenchSpecimens: Array<
     subtitle: "Each item may be clear alone, but the sequence can make Yes feel too strong.",
     testedWording:
       "Did you move to avoid natural disasters, such as wildfires, earthquakes, tornados, hurricanes, landslides, and floods?",
+    answerFrame: {
+      eyebrow: "AHS moving-reasons series",
+      prompt: "For each reason, answer whether it was a reason you moved.",
+      context: [
+        "The item appears in a series of yes/no moving-reason questions.",
+        "The intended construct is any influence, not only the primary reason."
+      ],
+      targetKind: "sequence_item",
+      targetLabel: "Highlighted reason item",
+      targetText: "Avoid natural disasters",
+      responseOptions: [
+        { id: "other-reasons", text: "Other moving-reason items in the series" },
+        { id: "disaster", text: "Did you move to avoid natural disasters?", isTarget: true }
+      ],
+      taskPrompt:
+        "Judge whether the highlighted Yes path means any influence or whether the sequence makes it feel like a main-reason answer.",
+      methodNote:
+        "The report found that the item text was not the main issue; the sequence needed an all-influences instruction."
+    },
     intendedConstruct:
       "Whether avoiding natural disasters was any reason for the move, not the sole or dominant reason.",
     sampleRespondent:
@@ -2354,7 +3027,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.8.5 WMDISAS, pp. 92-93",
           permalink: ahs2025Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent sees disaster risk as real but secondary, while the Yes path feels primary.",
+        probeRationale: {
+          covered:
+            "An all-influences instruction makes a secondary disaster motive eligible for Yes.",
+          notCovered:
+            "The edit still lets Yes feel stronger than the respondent's secondary motive."
+        }
       },
       {
         id: "disaster-part-reason",
@@ -2365,7 +3046,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.8.5 WMDISAS, pp. 92-93",
           permalink: ahs2025Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "Part-of-the-reason fits the intended construct, but not if the series is read as primary-reason reporting.",
+        probeRationale: {
+          covered:
+            "The all-that-influenced framing makes part-of-the-reason a clean Yes.",
+          notCovered:
+            "The edit still does not tell the respondent that non-primary reasons count."
+        }
       },
       {
         id: "disaster-forced-yes",
@@ -2376,15 +3065,63 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.8.5 WMDISAS, pp. 92-93",
           permalink: ahs2025Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "Forced Yes language signals that the answer path does not match the respondent's strength of reason.",
+        probeRationale: {
+          covered:
+            "A clear any-influence instruction reduces the feeling that Yes overstates the reason.",
+          notCovered:
+            "The edit still makes the respondent choose between overstatement and underreporting."
+        }
       },
       {
         id: "disaster-primary-only",
         text: "A respondent treating the series as main-reason reporting says No when disaster avoidance was one influence.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the WMDISAS any-reason versus primary-reason finding.",
-        expectedOutcome: "ambiguous"
+          "Based on the WMDISAS any-reason versus primary-reason finding.",
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent's No would underreport a real secondary influence because the series implies primary reason.",
+        probeRationale: {
+          covered:
+            "The all-influences rule makes the secondary motive count before the respondent reaches the item.",
+          notCovered:
+            "The edit still lets a real secondary motive be lost as No."
+        }
+      },
+      {
+        id: "disaster-primary-clean",
+        text: "A respondent moved mainly because repeated wildfire risk made the prior location unacceptable.",
+        provenance: "editorial",
+        attributionNote:
+          "Based on the WMDISAS construct of moving to avoid natural disasters.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "Disaster avoidance is clearly a reason for the move, so Yes is a clean fit.",
+        probeRationale: {
+          covered:
+            "The edit preserves a clean Yes route for a primary disaster-avoidance motive.",
+          notCovered:
+            "The edit should not block an obvious disaster-avoidance reason."
+        }
+      },
+      {
+        id: "disaster-no-influence",
+        text: "A respondent moved for rent and household-size reasons, with no disaster risk involved.",
+        provenance: "editorial",
+        attributionNote:
+          "Based on the WMDISAS distinction between disaster avoidance and other moving reasons.",
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "The highlighted disaster-avoidance item is the wrong path when disaster risk was not a reason.",
+        probeRationale: {
+          covered:
+            "The edit resolves this by keeping unrelated moving reasons outside the disaster item.",
+          notCovered:
+            "The edit keeps unrelated moving reasons outside the disaster item."
+        }
       }
     ],
     mechanismQuestion: {
@@ -2483,6 +3220,24 @@ const authoredWorkbenchSpecimens: Array<
             ["all-influenced", "natural-disasters", "moving-reasons"]
           ],
           requiresMulti: true
+        },
+        "disaster-primary-clean": {
+          cleanOrders: [
+            ["moving-reasons", "natural-disasters", "all-influenced"],
+            ["natural-disasters", "moving-reasons", "all-influenced"],
+            ["all-influenced", "moving-reasons", "natural-disasters"],
+            ["all-influenced", "natural-disasters", "moving-reasons"]
+          ],
+          requiresMulti: false
+        },
+        "disaster-no-influence": {
+          cleanOrders: [
+            ["moving-reasons", "natural-disasters", "all-influenced"],
+            ["natural-disasters", "moving-reasons", "all-influenced"],
+            ["all-influenced", "moving-reasons", "natural-disasters"],
+            ["all-influenced", "natural-disasters", "moving-reasons"]
+          ],
+          requiresMulti: false
         }
       }
     },
@@ -2550,6 +3305,25 @@ const authoredWorkbenchSpecimens: Array<
     subtitle: "Respondents remember work history in spells, months, days, and rough schedules.",
     testedWording:
       "Over the past 52 weeks, how many WEEKS did this person work, even for a few hours, including any paid time off?",
+    answerFrame: {
+      eyebrow: "ACS weeks-worked item",
+      prompt:
+        "Over the past 52 weeks, how many weeks did this person work, even for a few hours, including any paid time off?",
+      context: [
+        "The answer is a numeric count of weeks worked during a 52-week reference period.",
+        "The instruction treats a week as in scope even if the person worked only a few hours."
+      ],
+      targetKind: "numeric_field",
+      targetLabel: "Highlighted answer path",
+      targetText: "One numeric weeks-worked count",
+      responseOptions: [
+        { id: "weeks", text: "Weeks worked: [number]", isTarget: true }
+      ],
+      taskPrompt:
+        "Judge whether the respondent can recover one weeks-worked count, or whether the field invites rounding, conversion, or a wrong counting rule.",
+      methodNote:
+        "This specimen is about the burden and recipe behind an exact-looking number, not about whether annual work-duration data are useful."
+    },
     intendedConstruct:
       "Annual work-duration reporting without exactness that irregular work histories cannot support.",
     sampleRespondent:
@@ -2565,7 +3339,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.7.1, pp. 100-106",
           permalink: acs2016Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "The respondent may be able to answer approximately, but the field asks for exact weeks that memory does not support.",
+        probeRationale: {
+          covered:
+            "A months-first or less exact recipe can make the work spell easier to recover.",
+          notCovered:
+            "The edit still asks for a precision the respondent says they do not know."
+        }
       },
       {
         id: "weeks-rounded-guess",
@@ -2576,7 +3358,15 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.7.1, pp. 100-106",
           permalink: acs2016Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "ambiguous",
+        outcomeRationale:
+          "A rounded guess may be the best available answer, but the field records it like a count.",
+        probeRationale: {
+          covered:
+            "This case remains hard even after edits; it needs a recoverable reporting recipe, not only a shorter label.",
+          notCovered:
+            "The edit still converts variable work into an exact-looking number."
+        }
       },
       {
         id: "weeks-days-divided",
@@ -2587,15 +3377,31 @@ const authoredWorkbenchSpecimens: Array<
           page: "section 4.7.1, pp. 100-106",
           permalink: acs2016Url
         },
-        expectedOutcome: "ambiguous"
+        expectedOutcome: "not_covered",
+        outcomeRationale:
+          "Dividing days by a five-day workweek can undercount calendar weeks when short work spells span more weeks.",
+        probeRationale: {
+          covered:
+            "A partial-week cue can prevent the five-days-equals-one-week conversion.",
+          notCovered:
+            "The edit still lets the respondent convert workdays instead of counting calendar weeks with any work."
+        }
       },
       {
         id: "weeks-full-year-stable",
         text: "A respondent with a stable all-year schedule can map 52 weeks to a recoverable count.",
         provenance: "editorial",
         attributionNote:
-          "Editorial illustration based on the ACS 50-plus-week path and partial-week cue.",
-        expectedOutcome: "covered"
+          "Based on the ACS 50-plus-week path and partial-week cue.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "A stable all-year worker can recover 52 weeks cleanly.",
+        probeRationale: {
+          covered:
+            "The edit preserves the obvious all-year count.",
+          notCovered:
+            "The edit should not make a stable 52-week answer harder to report."
+        }
       }
     ],
     mechanismQuestion: {
