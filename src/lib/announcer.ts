@@ -1,13 +1,13 @@
 import { createElement, useEffect, useRef, useState, type ReactElement } from "react";
 
 export const LEXICON = {
-  added: "{thing} added. Undo available.",
-  removed: "{thing} removed. Undo available.",
+  added: "{thing} added.",
+  removed: "{thing} removed.",
   movedUp: "{thing} moved up to position {n} of {N}.",
   movedDown: "{thing} moved down to position {n} of {N}.",
   toggledOn: "{setting} turned on.",
   toggledOff: "{setting} turned off.",
-  split: "Split inserted between {A} and {B}. Undo available.",
+  split: "Split inserted between {A} and {B}.",
   unsplit: "Split removed between {A} and {B}.",
   window: "Time window set to: {label}.",
   selected: "Classifier selected: {feature}."
