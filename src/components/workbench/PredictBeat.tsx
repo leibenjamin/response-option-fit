@@ -20,25 +20,10 @@ type Props = {
   onReveal: () => void;
 };
 
-const predictionChoices: Array<{ value: VignetteOutcome; label: string }> = [
-  { value: "covered", label: outcomeLabels.covered },
-  { value: "ambiguous", label: outcomeLabels.ambiguous },
-  { value: "not_covered", label: outcomeLabels.not_covered }
-];
-
-const predictionLegend = [
-  {
-    label: outcomeLabels.covered,
-    body: outcomeDescriptions.covered
-  },
-  {
-    label: outcomeLabels.ambiguous,
-    body: outcomeDescriptions.ambiguous
-  },
-  {
-    label: outcomeLabels.not_covered,
-    body: outcomeDescriptions.not_covered
-  }
+const predictionOutcomes: VignetteOutcome[] = [
+  "covered",
+  "ambiguous",
+  "not_covered"
 ];
 
 const confidenceChoices: Array<{ value: ConfidenceLevel; label: string }> = [
@@ -72,13 +57,21 @@ export function PredictBeat({
   const selectedMechanism = specimen.mechanismQuestion.choices.find(
     (choice) => choice.id === mechanismChoiceId
   );
+  const predictionChoices = predictionOutcomes.map((value) => ({
+    value,
+    label: specimen.predictionCopy[value]?.label ?? outcomeLabels[value]
+  }));
+  const predictionLegend = predictionOutcomes.map((value) => ({
+    label: specimen.predictionCopy[value]?.label ?? outcomeLabels[value],
+    body: specimen.predictionCopy[value]?.description ?? outcomeDescriptions[value]
+  }));
 
   return (
     <section className="workbench-beat workbench-beat--predict" aria-labelledby={`${specimen.id}-predict-title`}>
       <header className="beat-head">
         <p className="beat-eyebrow">Predict</p>
         <h3 className="beat-title" id={`${specimen.id}-predict-title`}>
-          Mark whether the highlighted answer path fits each respondent scenario.
+          Mark how the highlighted answer path routes each respondent scenario.
           Reveal the diagnosis after you commit.
         </h3>
         <p className="beat-lede">{specimen.answerFrame.taskPrompt}</p>

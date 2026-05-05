@@ -39,6 +39,7 @@ export function RouteSnapshot({ routeStages }: Props) {
                 </p>
                 <p className="snapshot-card-eyebrow">{stage.eyebrow}</p>
                 <p className="snapshot-card-title">{stage.title}</p>
+                <p className="snapshot-card-detail">{stage.detail}</p>
               </div>
             </li>
           );

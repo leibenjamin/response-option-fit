@@ -25,6 +25,14 @@ export type VignetteProvenance = "direct_quote" | "editorial";
 
 export type VignetteOutcome = "covered" | "ambiguous" | "not_covered";
 
+export type PredictionCopy = Record<
+  VignetteOutcome,
+  {
+    label: string;
+    description: string;
+  }
+>;
+
 export type Vignette = {
   id: string;
   text: string;
@@ -107,6 +115,7 @@ export type MechanismQuestion = {
    the contrast is concrete, not generic. */
 export type NeighborContrast = {
   pattern: FailurePattern;
+  neighborSpecimenId: string;
   contrastText: string;
 };
 
@@ -229,6 +238,8 @@ export type MicroCaseKind = "near_transfer" | "distractor";
 
 type MicroCaseBase = {
   id: string;
+  context: string;
+  questionPrompt: string;
   wording: string;
   pattern: FailurePattern;
   featureChoices: string[];
@@ -321,6 +332,7 @@ export type WorkbenchSpecimen = {
   prerequisiteVocab: string;
 
   /* Predict beat */
+  predictionCopy: PredictionCopy;
   vignettes: Vignette[];
   mechanismQuestion: MechanismQuestion;
 

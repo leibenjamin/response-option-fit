@@ -29,22 +29,32 @@ full-instrument critique:
 Each specimen is rendered in five teaching beats:
 
 1. Frame: full item context and highlighted answer path.
-2. Predict: clean fit, unclear fit, or wrong path for each scenario.
+2. Predict: specimen-specific route judgments for each scenario.
 3. Diagnose: source-bounded answer key and route snapshot.
 4. Probe: a small edit with live rationales for each scenario.
 5. Reveal: what the source-supported revision addresses and what remains untested.
 
-The route snapshot still uses four explanatory stages: respondent reality,
-tested wording, route break, and data consequence. This structure is not a
-statistical model and does not estimate respondent counts, error rates, or
-distributional effects.
+The prediction labels are authored per specimen so the learner sees local,
+concrete language instead of generic fit terms. Every label set still maps to
+the same three route judgments: the highlighted path covers the scenario, the
+visible wording can route the scenario more than one way, or the scenario
+belongs outside the highlighted path.
+
+The route snapshot uses four explanatory stages: respondent reality, tested
+wording, route break, and data consequence. Each stage includes short detail
+copy from the respondent's perspective. This structure is not a statistical
+model and does not estimate respondent counts, error rates, or distributional
+effects.
 
 ## Authored Versus Source Material
 
 The source reports provide the public evidence base, tested-wording excerpts,
 report citations, and direct PDF links. The exhibit adds neutral framing,
-answer frames, route-stage summaries, fit labels, pattern labels, and concise
+answer frames, route-stage summaries, prediction labels, pattern labels, and concise
 takeaways so the examples can be compared in a single interface.
+
+See [specimen-red-team.md](specimen-red-team.md) for the current ambiguity
+audit, copy decisions, and future-wave risks.
 
 The provenance badges distinguish source-backed findings from authored
 scenarios. A source-backed finding may be a reported finding, quotation, or
