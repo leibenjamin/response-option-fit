@@ -19,6 +19,11 @@ function patternLabel(pattern: WorkbenchSpecimen["pattern"]) {
   );
 }
 
+function specimenNumber(specimenId: string) {
+  const neighbor = workbenchSpecimens.find((specimen) => specimen.id === specimenId);
+  return neighbor ? `Specimen ${neighbor.number}` : "Related specimen";
+}
+
 export function DiagnoseBeat({
   specimen,
   predictions,
@@ -53,10 +58,10 @@ export function DiagnoseBeat({
                 className={`outcome-badge outcome-badge--${vignette.expectedOutcome}`}
                 data-testid="published-outcome-badge"
               >
-                Answer key: {outcomeLabel(vignette.expectedOutcome)}
+                Answer key: {outcomeLabel(vignette.expectedOutcome, specimen.predictionCopy)}
               </span>
               <span className="outcome-badge outcome-badge--user">
-                You said: {outcomeLabel(predictions[vignette.id])}
+                You said: {outcomeLabel(predictions[vignette.id], specimen.predictionCopy)}
               </span>
             </div>
             <p className="diagnosis-rationale" data-testid="diagnosis-rationale">
@@ -86,7 +91,8 @@ export function DiagnoseBeat({
           <div className="neighbor-contrast-card">
             <p className="neighbor-contrast-eyebrow">Nearest neighbor</p>
             <p className="neighbor-contrast-title">
-              {patternLabel(specimen.neighborContrast.pattern)}
+              {patternLabel(specimen.neighborContrast.pattern)} in{" "}
+              {specimenNumber(specimen.neighborContrast.neighborSpecimenId)}
             </p>
             <p className="neighbor-contrast-body">
               {specimen.neighborContrast.contrastText}

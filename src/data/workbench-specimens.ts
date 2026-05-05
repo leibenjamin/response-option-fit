@@ -92,6 +92,18 @@ const prerequisiteVocabByPattern = {
     "Forced precision: the wording requires a single exact-looking answer from a reality that is variable, episodic, or only partly stable."
 } satisfies Record<FailurePattern, string>;
 
+function predictionCopy(
+  covered: [label: string, description: string],
+  ambiguous: [label: string, description: string],
+  notCovered: [label: string, description: string]
+): WorkbenchSpecimen["predictionCopy"] {
+  return {
+    covered: { label: covered[0], description: covered[1] },
+    ambiguous: { label: ambiguous[0], description: ambiguous[1] },
+    not_covered: { label: notCovered[0], description: notCovered[1] }
+  };
+}
+
 const acsRound3Title =
   "Cognitive Testing for the 2022 ACS Content Test Round 3 Briefing and Recommendations Report";
 const acsRound3Url =
@@ -239,8 +251,9 @@ const authoredWorkbenchSpecimens: Array<
     patternLabel: "Label ambiguity",
     canonicalSubtitle: canonicalSubtitleByPattern.label_ambiguity,
     canonicalCitations: canonicalCitationByPattern.label_ambiguity,
-    title: "When a commute label has two mental maps",
-    subtitle: "The respondent knows the trip. The category asks them to classify the service.",
+    title: "When one commute option can mean taxi, app ride, or shared ride",
+    subtitle:
+      "The respondent knows how they got to work. The answer option asks which paid-service category that trip belongs to.",
     testedWording: "Taxi or ride-hailing services",
     answerFrame: {
       eyebrow: "ACS means-of-transportation item",
@@ -267,18 +280,33 @@ const authoredWorkbenchSpecimens: Array<
         { id: "other", text: "Other Method" }
       ],
       taskPrompt:
-        "For each scenario, decide whether this highlighted commute option is a clean fit, an unclear fit, or the wrong path.",
+        "For each scenario, decide whether this highlighted commute option names the intended paid ride service, could be read multiple ways, or should not include the trip.",
       methodNote:
         "The source also discusses working-from-home placement. This specimen narrows the task to the ride-hailing label."
     },
-    intendedConstruct: "Commute mode or service category.",
+    intendedConstruct:
+      "Main commute mode, specifically whether the trip was a paid taxi or app-based ride service.",
     sampleRespondent:
-      "A respondent who used an app-based ride to get to work recognizes the trip but still has to decide whether the survey label means app service, taxi, vehicle type, or shared ride.",
+      "A respondent who used Lyft to get to work can report the trip, but still has to decide whether Taxi or ride-hailing services includes Lyft, only taxi cabs, or any shared ride.",
     prerequisiteVocab: prerequisiteVocabByPattern.label_ambiguity,
+    predictionCopy: predictionCopy(
+      [
+        "Matches intended paid service",
+        "The highlighted option clearly covers a paid taxi or app-based ride service."
+      ],
+      [
+        "Label meaning can shift",
+        "The same trip could be routed differently because Taxi or ride-hailing services is being read in different ways."
+      ],
+      [
+        "Not this paid-service option",
+        "The trip should use another commute path, not the highlighted taxi/app-ride option."
+      ]
+    ),
     vignettes: [
       {
         id: "ride-uber-lyft",
-        text: "A respondent usually got to work in an app-based ride and maps ride-hailing to services such as Uber and Lyft.",
+        text: "A respondent usually got to work using Uber or Lyft and understands ride-hailing to mean an app-based paid ride service.",
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound3Title,
@@ -287,7 +315,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "covered",
         outcomeRationale:
-          "The respondent's commute is the intended app-based service, and their interpretation lands on the highlighted option.",
+          "The respondent's commute is the intended app-based paid service, and their reading of Taxi or ride-hailing services points to that option.",
         probeRationale: {
           covered:
             "Your examples name app-based services, so this respondent has a clear route into the highlighted option.",
@@ -297,7 +325,7 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "ride-taxi-only",
-        text: "A respondent usually got to work by Lyft but reads the highlighted option as taxis only.",
+        text: "A respondent usually got to work by Lyft but reads Taxi or ride-hailing services as taxi cabs only.",
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound3Title,
@@ -306,7 +334,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The real commute belongs in the intended category, but the respondent's taxi-only reading can push the same trip away from it.",
+          "The real commute belongs in the intended app-ride category, but a taxi-only reading can push the same Lyft trip away from the highlighted option.",
         probeRationale: {
           covered:
             "Pairing taxi with Uber/Lyft or app-based service makes the intended category visible beside the older taxi label.",
@@ -316,7 +344,7 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "ride-shared-ride",
-        text: "A respondent hears ride-hailing as a pooled or shared ride cue, not specifically as an on-demand paid app service.",
+        text: "A respondent reads ride-hailing as a pooled or shared-ride cue, not specifically as an on-demand paid app ride.",
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound3Title,
@@ -325,7 +353,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The phrase can still point toward sharing rather than service arrangement, so the highlighted option is not stable.",
+          "The phrase can point toward sharing the vehicle rather than arranging a paid app ride, so the highlighted option is not stable.",
         probeRationale: {
           covered:
             "Naming app-based or Uber/Lyft service reduces the chance that shared ride becomes the organizing rule.",
@@ -344,7 +372,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "covered",
         outcomeRationale:
-          "Lyft is the intended ride-hailing case, so the highlighted option fits if the respondent recognizes it.",
+          "Lyft is the intended app-based ride case, so the highlighted option works when the respondent recognizes Lyft as ride-hailing.",
         probeRationale: {
           covered:
             "Your examples explicitly include Lyft or app-based service, so the route is recoverable.",
@@ -354,13 +382,13 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "ride-carpool",
-        text: "A respondent rode with a neighbor and hears shared ride as a cue to include the commute.",
+        text: "A respondent rode with a neighbor in an informal carpool and treats shared ride as a cue to include that commute.",
         provenance: "editorial",
         attributionNote:
           "Based on the ACS Round 3 finding that one participant mapped ride-hailing to a shared-ride idea.",
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "A neighbor carpool belongs with car, truck, or van or another non-ride-hailing path, not the highlighted paid-service option.",
+          "A neighbor carpool is not a paid taxi or app-ride service, so it should not be absorbed into the highlighted option.",
         probeRationale: {
           covered:
             "The edit correctly keeps neighbor carpool outside the ride-hailing option.",
@@ -370,28 +398,29 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the ride-hailing failure?",
+      prompt:
+        "Why can Taxi or ride-hailing services send similar commuters to different answers?",
       choices: [
         {
           id: "label-range",
-          text: "The label carried several plausible service meanings.",
+          text: "Ride-hailing can mean app rides, taxi-like paid service, or shared rides.",
           isCorrect: true,
           explanation:
-            "The trouble sits in the category label itself: app rides, taxis, and shared rides were all live interpretations."
+            "The trouble sits in the answer option. Respondents were not just choosing a known trip; they were deciding what Taxi or ride-hailing services includes."
         },
         {
           id: "technical-boundary",
-          text: "The item asked respondents to classify a technical vehicle type.",
+          text: "The option asks people to sort technical vehicle types.",
           isCorrect: false,
           explanation:
-            "Vehicle technology is not the contested boundary here. The category is a commute service label."
+            "Vehicle technology is not the contested boundary here. The issue is whether the words include Lyft, taxi cabs, pooled rides, or informal shared rides."
         },
         {
           id: "missing-filter",
-          text: "The item assumed every respondent had used the service.",
+          text: "The question assumes every respondent used a taxi or app ride.",
           isCorrect: false,
           explanation:
-            "The wording does not require service use. It becomes unstable when people who did use a service map the label differently."
+            "The wording does not require taxi or app-ride use. It becomes unstable when people who did use a relevant service map the words differently."
         }
       ]
     },
@@ -401,22 +430,24 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Used an app-based ride",
-        detail: "The trip was a car ride arranged through a ride-hailing service."
+        detail:
+          "The respondent can remember the commute: a Lyft/Uber-style paid ride arranged through an app."
       },
       {
         id: "ride-wording",
         kind: "tested_wording",
         eyebrow: "Tested label",
         title: "Taxi or ride-hailing services",
-        detail: "The label combines an older service category with a newer one."
+        detail:
+          "The visible answer option pairs taxi cabs with the newer ride-hailing term, but gives no examples in the option itself."
       },
       {
         id: "ride-break",
         kind: "route_break",
         eyebrow: "Route break",
-        title: "Service, vehicle, or sharing?",
+        title: "App ride, taxi cab, or shared ride?",
         detail:
-          "Some respondents may classify by the service, some by the vehicle, and some by the idea of a shared ride."
+          "The respondent has to infer whether ride-hailing means an app-based paid service, a taxi-like service, or any ride shared with someone else."
       },
       {
         id: "ride-consequence",
@@ -424,13 +455,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "Commute categories can mix mental models",
         detail:
-          "The answer can become inconsistent if respondents do not share the intended meaning of ride-hailing."
+          "Two people with similar app-ride commutes can choose different answers if they assign different meanings to the highlighted option."
       }
     ],
     neighborContrast: {
       pattern: "category_boundary_blur",
+      neighborSpecimenId: "electric-vehicle-type",
       contrastText:
-        "This is label ambiguity NOT category boundary blur because the unstable feature is the commute-service label, not a technical boundary between vehicle classes."
+        "This specimen is label ambiguity because the contested step is what Taxi or ride-hailing services means. The neighbor pattern is category boundary blur, where the words may be understood but the line between neighboring classes is unclear."
     },
     widget: {
       kind: "example_set_editor",
@@ -480,7 +512,8 @@ const authoredWorkbenchSpecimens: Array<
         "ride-carpool": { coveredBy: [] }
       }
     },
-    probePrompt: "Explore how examples change the label's reach.",
+    probePrompt:
+      "Explore whether examples make Uber/Lyft and app-based paid rides visible without inviting informal carpools.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -498,20 +531,28 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ride-near-delivery",
         kind: "near_transfer",
+        context:
+          "A transportation-adjacent service survey asks how a package or meal reached the respondent. One case used DoorDash; another used a local courier company.",
+        questionPrompt:
+          "Which wording feature would most likely route those cases differently?",
         wording: "Food delivery or courier app service",
         pattern: "label_ambiguity",
         featureChoices: [
-          "A label that mixes everyday and platform meanings",
+          "App service can mean a platform app, a courier business, or any person delivering food",
           "A missing eligibility screener",
           "A forced numeric average"
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This is the same pattern because courier app service could mean a delivery platform, a courier company, or any person carrying food. It is not false premise because no eligibility state is being hidden."
+          "This is the same pattern as Specimen 1: the respondent may know what happened, but the service label can point to platform apps, courier companies, or informal delivery."
       },
       {
         id: "ride-distractor-vehicle",
         kind: "distractor",
+        context:
+          "A vehicle item asks households to classify a small electric vehicle. Respondents understand the device but may not know whether it belongs with bicycles, scooters, or a broader micromobility class.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "An electric bicycle, a motorized scooter, or another micromobility vehicle",
         pattern: "category_boundary_blur",
         featureChoices: [
@@ -521,7 +562,7 @@ const authoredWorkbenchSpecimens: Array<
         ],
         correctFeatureIndex: 1,
         explanation:
-          "This may look like label ambiguity, but the key problem is drawing a boundary between vehicle classes. That makes its category boundary blur."
+          "This is the nearest-neighbor pattern: the respondent may understand each vehicle word, but the boundary between small vehicle classes is hard to draw."
       }
     ],
     source: sourceReceipt(
@@ -571,6 +612,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent who works in a hospital can separate the establishment from the broader health care industry, but the single field asks for both at once.",
     prerequisiteVocab: prerequisiteVocabByPattern.broad_bucket,
+    predictionCopy: predictionCopy(
+      [
+        "Right answer level visible",
+        "The field gives this respondent a clear kind-of-business or industry answer."
+      ],
+      [
+        "Answer level floats",
+        "The field lets more than one level of workplace description look responsive."
+      ],
+      [
+        "Wrong level for this field",
+        "The answer belongs in a different field, such as occupation or employer name."
+      ]
+    ),
     vignettes: [
       {
         id: "industry-hospital-health-care",
@@ -660,7 +715,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the business-or-industry failure?",
+      prompt:
+        "Why can What kind of business or industry is this? produce answers at different levels?",
       choices: [
         {
           id: "two-levels",
@@ -674,7 +730,7 @@ const authoredWorkbenchSpecimens: Array<
           text: "The prompt forced a precise number from variable weeks.",
           isCorrect: false,
           explanation:
-            "No numeric estimate is being compressed here. The failure is about the scope of an open response bucket."
+            "No numeric estimate is being compressed here. The issue is the scope of an open response bucket."
         },
         {
           id: "sequence-leak",
@@ -691,14 +747,16 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Business and industry split apart",
-        detail: "A job can sit inside a named establishment, a broad industry, and a specific service line."
+        detail:
+          "The respondent may know the workplace name, the establishment type, the broad sector, and the service line."
       },
       {
         id: "industry-wording",
         kind: "tested_wording",
         eyebrow: "Tested wording",
         title: "What kind of business or industry is this?",
-        detail: "The field names two related levels without saying which answer shape to use."
+        detail:
+          "The field asks for business or industry, but those words can cue different levels of the same job."
       },
       {
         id: "industry-break",
@@ -706,7 +764,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "Which level belongs in the box?",
         detail:
-          "Respondents may answer with the establishment, the sector, the service, or the work activity."
+          "The respondent has to decide whether hospital, health care, food delivery, cashier, or the employer name is the expected shape."
       },
       {
         id: "industry-consequence",
@@ -714,13 +772,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "Unlike answers can look complete",
         detail:
-          "The data can contain usable-looking text that still mixes levels the survey meant to keep interpretable."
+          "The data can contain complete-looking text while mixing levels that coders or analysts need to interpret consistently."
       }
     ],
     neighborContrast: {
       pattern: "forced_precision",
+      neighborSpecimenId: "usual-hours",
       contrastText:
-        "This is broad bucket NOT forced precision because the field is too wide across constructs; it is not asking for one numeric value from variable time."
+        "This specimen is broad bucket because one text field spans several answer levels. The forced-precision neighbor asks respondents to compress variable experience into one exact-looking number."
     },
     widget: {
       kind: "bucket_splitter",
@@ -758,6 +817,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "industry-near-business",
         kind: "near_transfer",
+        context:
+          "An employment form asks about a gig job. The respondent could answer app company, delivery service, restaurant delivery, or self-employed courier.",
+        questionPrompt:
+          "Which wording feature would make those answers hard to compare?",
         wording: "What kind of company, agency, or line of work was this?",
         pattern: "broad_bucket",
         featureChoices: [
@@ -772,6 +835,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "industry-distractor-hours",
         kind: "distractor",
+        context:
+          "A worker's hours change from week to week. The form still asks for one usual weekly number.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "How many hours do you usually work in a week with changing shifts?",
         pattern: "forced_precision",
         featureChoices: [
@@ -829,6 +896,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent who does not keep refrigerated medicine can answer No even though a No refrigerated medicine option is present. The survey still has to distinguish a substantive No from a missed applicability cue.",
     prerequisiteVocab: prerequisiteVocabByPattern.false_premise,
+    predictionCopy: predictionCopy(
+      [
+        "Applicability is separated",
+        "The response path clearly separates spoilage, no spoilage, or no refrigerated medicine."
+      ],
+      [
+        "No can hide no medicine",
+        "A No answer could mean no spoilage or that the household had no refrigerated medicine."
+      ],
+      [
+        "Outside outage construct",
+        "The scenario should not be counted as refrigerated medicine spoilage caused by the outage."
+      ]
+    ),
     vignettes: [
       {
         id: "medicine-no-medicine-no",
@@ -915,7 +996,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the refrigerated-medicine failure?",
+      prompt:
+        "Why can Did any refrigerated medicine spoil? make No hard to interpret?",
       choices: [
         {
           id: "missing-applicability",
@@ -946,14 +1028,16 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "No refrigerated medicine",
-        detail: "Some households do not keep medicine that depends on refrigeration, and may still answer No."
+        detail:
+          "The respondent may have no refrigerated medicine at all, which is different from having medicine that stayed usable."
       },
       {
         id: "medicine-wording",
         kind: "tested_wording",
         eyebrow: "Tested wording",
         title: "Did any refrigerated medicine spoil?",
-        detail: "The original item offered Yes, No, and No refrigerated medicine."
+        detail:
+          "The response set includes No refrigerated medicine, but the yes/no wording still makes No feel available."
       },
       {
         id: "medicine-break",
@@ -961,7 +1045,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "No response or missed inapplicable option?",
         detail:
-          "When respondents do not volunteer the inapplicable state, No can still absorb households with no refrigerated medicine."
+          "The respondent may choose No as the closest answer instead of noticing or using the inapplicable route."
       },
       {
         id: "medicine-consequence",
@@ -969,13 +1053,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "No loses its denominator",
         detail:
-          "Without a follow-up after No, the result can mix households with no damage and households outside the construct."
+          "Without a follow-up, analysts cannot tell whether No means in-scope no spoilage or out-of-scope no refrigerated medicine."
       }
     ],
     neighborContrast: {
       pattern: "sequence_overlap",
+      neighborSpecimenId: "owner-advertising",
       contrastText:
-        "This is false premise NOT sequence overlap because the failure is a missing applicability path, not a previous answer leaking into the next item."
+        "This specimen is false premise because No can hide an inapplicable household. The sequence-overlap neighbor is different: a previous answer changes how the next response option is read."
     },
     widget: {
       kind: "filter_path_toggle",
@@ -1032,6 +1117,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "medicine-near-basement",
         kind: "near_transfer",
+        context:
+          "A storm-damage module asks about basement flooding. Some households have sump pumps; others do not have that equipment at all.",
+        questionPrompt:
+          "Which wording feature would make a plain No hard to interpret?",
         wording: "Did your sump pump fail during the outage?",
         pattern: "false_premise",
         featureChoices: [
@@ -1046,6 +1135,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "medicine-distractor-owner-ad",
         kind: "distractor",
+        context:
+          "A rental-search series first records that the respondent found the listing on an app, then asks about other advertising by the owner.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "After saying you found the rental on an app, did you find it through other advertising by the owner?",
         pattern: "sequence_overlap",
         featureChoices: [
@@ -1102,6 +1195,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent who owns or recognizes a hybrid vehicle may sort it by whether it plugs in, whether it uses gasoline, or whether it feels electric in everyday speech.",
     prerequisiteVocab: prerequisiteVocabByPattern.category_boundary_blur,
+    predictionCopy: predictionCopy(
+      [
+        "Belongs in other-EV item",
+        "The highlighted item clearly covers this vehicle under the intended hybrid/non-plug-in route."
+      ],
+      [
+        "Vehicle boundary unclear",
+        "Plug-in, hybrid, gasoline, and everyday electric cues point to more than one route."
+      ],
+      [
+        "Belongs elsewhere in sequence",
+        "The vehicle should be captured by another EV item, not the highlighted other-EV item."
+      ]
+    ),
     vignettes: [
       {
         id: "ev-plug-ins-hybrids",
@@ -1210,7 +1317,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the electric-vehicle failure?",
+      prompt:
+        "Why can Another type of electric vehicle? be hard to answer for hybrids and plug-ins?",
       choices: [
         {
           id: "class-boundary",
@@ -1224,7 +1332,7 @@ const authoredWorkbenchSpecimens: Array<
           text: "The item assumed respondents owned a vehicle they could classify.",
           isCorrect: false,
           explanation:
-            "The item is reached only after an upstream vehicle-ownership question. The cited failure is sorting an owned vehicle among overlapping technical classes."
+            "The item is reached only after an upstream vehicle-ownership question. The cited issue is sorting an owned vehicle among overlapping technical classes."
         },
         {
           id: "open-bucket",
@@ -1241,7 +1349,8 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Battery, gas, plug, or label?",
-        detail: "Everyday vehicle categories can be organized by different features."
+        detail:
+          "The respondent may know the vehicle but organize it by fuel source, outlet charging, battery use, or marketing label."
       },
       {
         id: "ev-wording",
@@ -1249,7 +1358,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Tested wording",
         title: "Another type of electric vehicle",
         detail:
-          "The first version asked respondents whether a non-plug-in hybrid belonged under another electric vehicle."
+          "The item follows plug-in electric vehicle, then asks for another electric vehicle without naming hybrid directly."
       },
       {
         id: "ev-break",
@@ -1257,20 +1366,22 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "The boundary is not obvious",
         detail:
-          "Respondents may treat electric as plug-in only, blur plug-ins and hybrids, or misread the line as another vehicle type."
+          "The respondent has to decide whether plug-in status, hybrid status, gasoline use, or the everyday electric label controls the answer."
       },
       {
         id: "ev-consequence",
         kind: "data_consequence",
         eyebrow: "Data consequence",
         title: "Vehicle type may be mapped inconsistently",
-        detail: "A familiar category can still fail when everyday and technical classification rules diverge."
+        detail:
+          "The same vehicle can be reported differently when households apply different rules to neighboring vehicle categories."
       }
     ],
     neighborContrast: {
       pattern: "label_ambiguity",
+      neighborSpecimenId: "ride-hailing",
       contrastText:
-        "This is category boundary blur NOT label ambiguity because the uncertainty is where plug-in, hybrid, gasoline, and electric classes divide, not only what one label means."
+        "This specimen is category boundary blur because the respondent may understand the words but not where plug-in, hybrid, gasoline, and electric classes divide. The label-ambiguity neighbor turns on what one answer label means."
     },
     widget: {
       kind: "classifier_radio",
@@ -1319,6 +1430,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ev-near-tv",
         kind: "near_transfer",
+        context:
+          "A device survey asks which TV-connected devices a household uses. A smart TV, streaming box, and game console can all play streaming video through a television.",
+        questionPrompt:
+          "Which wording feature would make these device routes overlap?",
         wording: "A smart TV, a streaming box, or another device that plays through a TV",
         pattern: "category_boundary_blur",
         featureChoices: [
@@ -1333,6 +1448,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ev-distractor-notebook",
         kind: "distractor",
+        context:
+          "A household technology item asks about laptop or notebook computers. Some respondents use notebook to mean a paper notebook or a smaller device family.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "A laptop or notebook computer",
         pattern: "label_ambiguity",
         featureChoices: [
@@ -1404,6 +1523,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent who already reported an internet listing can still see the same listing as owner advertising when the owner posted it.",
     prerequisiteVocab: prerequisiteVocabByPattern.sequence_overlap,
+    predictionCopy: predictionCopy(
+      [
+        "Distinct owner route",
+        "The highlighted owner-advertising item covers a route not already handled by the prior internet item."
+      ],
+      [
+        "Prior answer overlaps",
+        "The same listing can look like both the earlier internet route and the highlighted owner-advertising route."
+      ],
+      [
+        "Not owner advertising",
+        "The route should stay outside the highlighted owner-advertising item."
+      ]
+    ),
     vignettes: [
       {
         id: "owner-zillow-already",
@@ -1493,7 +1626,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the owner-advertising failure?",
+      prompt:
+        "Why can Through some other advertising by the owner? feel repetitive after an internet-site answer?",
       choices: [
         {
           id: "prior-overlap",
@@ -1514,7 +1648,7 @@ const authoredWorkbenchSpecimens: Array<
           text: "The phrase 'other advertising by the owner' had several plausible everyday meanings.",
           isCorrect: false,
           explanation:
-            "The phrase is interpretable. The cited failure is overlap with the prior internet-site category, not ambiguity inside this label."
+            "The phrase is interpretable. The cited issue is overlap with the prior internet-site category, not ambiguity inside this label."
         }
       ]
     },
@@ -1524,21 +1658,24 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "One listing, multiple labels",
-        detail: "The same housing listing can feel like an internet site and owner advertising."
+        detail:
+          "The respondent may have one concrete listing in mind, such as Zillow or Craigslist, that was also posted by the owner."
       },
       {
         id: "owner-wording",
         kind: "tested_wording",
         eyebrow: "Tested label",
         title: "Some other advertising by the owner",
-        detail: "The item appears after another internet-site question."
+        detail:
+          "The highlighted item appears after the respondent has already answered about internet listing sites."
       },
       {
         id: "owner-break",
         kind: "route_break",
         eyebrow: "Route break",
         title: "Does this count again?",
-        detail: "The previous answer changes how the respondent interprets the next category."
+        detail:
+          "The respondent has to decide whether the owner-authored internet listing should be counted again or treated as already reported."
       },
       {
         id: "owner-consequence",
@@ -1546,13 +1683,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "Sequence can create overlap",
         detail:
-          "If respondents double-count or reinterpret the same event, the category no longer cleanly separates search routes."
+          "Responses no longer cleanly separate search routes if some people double-report the same listing and others refuse to count it twice."
       }
     ],
     neighborContrast: {
       pattern: "broad_bucket",
+      neighborSpecimenId: "business-industry",
       contrastText:
-        "This is sequence overlap NOT broad bucket because the overlap is created by adjacent questions, not by one oversized response field."
+        "This specimen is sequence overlap because adjacent questions make one listing fit twice. The broad-bucket neighbor is different: one field is too wide even before question order matters."
     },
     widget: {
       kind: "sequence_reorderer",
@@ -1623,6 +1761,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "owner-near-disaster",
         kind: "near_transfer",
+        context:
+          "A moving-reason module asks several yes/no reason items in a row. The respondent had a secondary reason but already answered other reason questions.",
+        questionPrompt:
+          "Which wording feature changes how the next Yes answer feels?",
         wording: "After several moving-reason questions, did you move to avoid natural disasters?",
         pattern: "sequence_overlap",
         featureChoices: [
@@ -1637,6 +1779,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "owner-distractor-utilities",
         kind: "distractor",
+        context:
+          "A housing-cost form asks for one payment amount that can include electricity, gas, phone, and other utilities.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "How much did you pay for electricity, gas, telephone, and other utilities?",
         pattern: "broad_bucket",
         featureChoices: [
@@ -1692,6 +1838,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent whose hours change from week to week can remember several real schedules, but the item asks those memories to collapse into one usual number.",
     prerequisiteVocab: prerequisiteVocabByPattern.forced_precision,
+    predictionCopy: predictionCopy(
+      [
+        "One number recoverable",
+        "The respondent can give one usual-hours number without choosing a hidden calculation rule."
+      ],
+      [
+        "Recipe is unstated",
+        "The respondent can enter a number, but average, most common week, and recent week remain competing recipes."
+      ],
+      [
+        "No usual number",
+        "The respondent's work pattern does not support the single usual-hours answer shape."
+      ]
+    ),
     vignettes: [
       {
         id: "hours-more-average",
@@ -1784,7 +1944,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the usual-hours failure?",
+      prompt:
+        "Why can one usual-hours number be hard to recover from changing weekly schedules?",
       choices: [
         {
           id: "single-number",
@@ -1815,14 +1976,16 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Weeks do not match",
-        detail: "A worker may have several recent week patterns rather than one stable schedule."
+        detail:
+          "The respondent may remember short weeks, long weeks, and recent schedule changes instead of one stable weekly pattern."
       },
       {
         id: "hours-wording",
         kind: "tested_wording",
         eyebrow: "Tested wording",
         title: "How many hours per week do you USUALLY work?",
-        detail: "The item asks for one number that represents usual weekly hours."
+        detail:
+          "The numeric field accepts one clean-looking number and does not show the calculation rule used to make it."
       },
       {
         id: "hours-break",
@@ -1830,7 +1993,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "Average, mode, or recent pattern?",
         detail:
-          "Respondents may average across weeks, choose the most common week, or anchor on a recent schedule."
+          "The respondent has to choose whether usual means average, most common schedule, current schedule, or most of the reference period."
       },
       {
         id: "hours-consequence",
@@ -1838,13 +2001,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "The number can hide its recipe",
         detail:
-          "A clean numeric answer may mask different aggregation rules used by respondents with variable schedules."
+          "Two respondents can both enter plausible numbers while using different recipes that the data field cannot recover."
       }
     ],
     neighborContrast: {
       pattern: "broad_bucket",
+      neighborSpecimenId: "business-industry",
       contrastText:
-        "This is forced precision NOT broad bucket because the pressure is a single usual-hours number from variable weeks, not a broad open response scope."
+        "This specimen is forced precision because changing weeks must become one number. The broad-bucket neighbor is different: the field is too wide across answer concepts or levels."
     },
     widget: {
       kind: "time_window_slider",
@@ -1883,6 +2047,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "hours-near-income",
         kind: "near_transfer",
+        context:
+          "A worker earns a base wage plus tips that vary by week. The form asks for one usual weekly earnings amount.",
+        questionPrompt:
+          "Which wording feature would make the answer recipe unstable?",
         wording: "How much do you usually earn in a week when your tips change?",
         pattern: "forced_precision",
         featureChoices: [
@@ -1897,6 +2065,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "hours-distractor-main-reason",
         kind: "distractor",
+        context:
+          "A labor-force item asks for the main reason someone was not looking for work, even when several reasons applied.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "What is the main reason you were not looking for work?",
         pattern: "broad_bucket",
         featureChoices: [
@@ -1956,6 +2128,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent who owns a portable computer hears notebook as another device family. The answer goes wrong before the yes/no option matters.",
     prerequisiteVocab: prerequisiteVocabByPattern.label_ambiguity,
+    predictionCopy: predictionCopy(
+      [
+        "Laptop route visible",
+        "The highlighted label clearly points to the intended portable-computer construct."
+      ],
+      [
+        "Notebook meaning shifts",
+        "Notebook can send the respondent toward a non-laptop or borderline device meaning."
+      ],
+      [
+        "Not a laptop computer",
+        "The household device should not be counted through the laptop/notebook path."
+      ]
+    ),
     vignettes: [
       {
         id: "notebook-lower-function",
@@ -2048,19 +2234,22 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the notebook-computer failure?",
+      prompt:
+        "Why can Laptop or notebook computer send respondents away from the intended laptop route?",
       choices: [
         {
           id: "notebook-label",
           text: "The notebook label had several plausible everyday device meanings.",
           isCorrect: true,
-          explanation: "Notebook sent respondents to non-laptop device meanings."
+          explanation:
+            "Notebook sent respondents toward lower-function, Chromebook-like, or tablet-like device meanings before the yes/no answer was chosen."
         },
         {
           id: "notebook-no-equipment",
           text: "The item assumed everyone owned a portable computer.",
           isCorrect: false,
-          explanation: "The failure is label interpretation, not a hidden inapplicable path."
+          explanation:
+            "The issue is label interpretation, not a hidden inapplicable path."
         },
         {
           id: "notebook-sequence",
@@ -2076,14 +2265,16 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Owns a portable computer",
-        detail: "The device is recoverable, but the label may not match the survey synonym."
+        detail:
+          "The respondent may own a laptop-like device and still use everyday device categories that differ from the survey's synonym."
       },
       {
         id: "notebook-wording",
         kind: "tested_wording",
         eyebrow: "Tested wording",
         title: "Laptop or notebook",
-        detail: "The wording treats notebook as a familiar equivalent to laptop."
+        detail:
+          "The item treats notebook as another name for laptop, while some respondents treat it as a different product family."
       },
       {
         id: "notebook-break",
@@ -2091,20 +2282,22 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "Notebook points elsewhere",
         detail:
-          "Respondents can route notebook toward a smaller, weaker, or tablet-like device."
+          "The respondent has to decide whether notebook means a laptop, a smaller computer, a Chromebook-like device, or a tablet-like device."
       },
       {
         id: "notebook-consequence",
         kind: "data_consequence",
         eyebrow: "Data consequence",
         title: "Device use can be underreported or misclassified",
-        detail: "Known household technology can be answered through the wrong product taxonomy."
+        detail:
+          "Households can report the wrong answer even when they know what devices they use, because the label redirects the classification."
       }
     ],
     neighborContrast: {
       pattern: "category_boundary_blur",
+      neighborSpecimenId: "electric-vehicle-type",
       contrastText:
-        "This is label ambiguity NOT category boundary blur because notebook is misunderstood on entry."
+        "This specimen is label ambiguity because notebook itself redirects the respondent before classification begins. The category-boundary neighbor is different: neighboring classes overlap even when the labels are understood."
     },
     widget: {
       kind: "example_set_editor",
@@ -2144,6 +2337,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "notebook-near-router",
         kind: "near_transfer",
+        context:
+          "A home-internet item asks about equipment. Some households have one combined box; others use separate modem and router devices.",
+        questionPrompt:
+          "Which wording feature would make respondents map the same equipment differently?",
         wording: "Do you use a gateway, modem, or router at home?",
         pattern: "label_ambiguity",
         featureChoices: [
@@ -2157,6 +2354,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "notebook-distractor-smart-tv",
         kind: "distractor",
+        context:
+          "A media-device item asks households to choose among smart TVs, streaming boxes, and other TV-connected devices that can perform similar functions.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "A smart TV, streaming box, or another device that plays through a TV",
         pattern: "category_boundary_blur",
         featureChoices: [
@@ -2224,6 +2425,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent who identifies as Kashmiri sees broader pre-coded answers that feel easier than write-in. Because the broad bucket is close enough, they move on.",
     prerequisiteVocab: prerequisiteVocabByPattern.broad_bucket,
+    predictionCopy: predictionCopy(
+      [
+        "Specific path visible",
+        "The form gives a Kashmiri respondent a clear way to report the specific identity."
+      ],
+      [
+        "Broad path competes",
+        "A broader visible category or write-in effort can pull the respondent away from the specific identity."
+      ],
+      [
+        "Specific identity hidden",
+        "The route records only a broader category when the respondent wants the subgroup identity counted."
+      ]
+    ),
     vignettes: [
       {
         id: "kashmiri-easier-tick",
@@ -2314,13 +2529,15 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the Kashmiri reporting failure?",
+      prompt:
+        "Why can a Kashmiri respondent be under-routed when broad tick-boxes are easier than write-in?",
       choices: [
         {
           id: "kashmiri-level",
           text: "The response task made a broad visible category compete with a specific subgroup identity.",
           isCorrect: true,
-          explanation: "The broad umbrella plus write-in path did not recover the subgroup at the same rate."
+          explanation:
+            "The broad umbrella plus write-in path did not recover the subgroup at the same rate as a visible Kashmiri tick-box."
         },
         {
           id: "kashmiri-word",
@@ -2342,14 +2559,16 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Specific subgroup identity",
-        detail: "A specific ethnic identity can sit under or near broader visible categories."
+        detail:
+          "The respondent may identify specifically as Kashmiri while also recognizing broader Asian, Indian, or Pakistani routes."
       },
       {
         id: "kashmiri-wording",
         kind: "tested_wording",
         eyebrow: "Tested wording",
         title: "Broad boxes and a write-in path",
-        detail: "The test compared a visible Kashmiri box with write-in-only reporting."
+        detail:
+          "The form architecture determines whether Kashmiri appears as a normal tick-box or must be supplied through a write-in route."
       },
       {
         id: "kashmiri-break",
@@ -2357,7 +2576,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "Specific answer costs more effort",
         detail:
-          "The broader answer can look easier or safer than writing in the more precise identity."
+          "The respondent has to decide whether to take the easy broad box, trust the write-in, or look for a visible subgroup box."
       },
       {
         id: "kashmiri-consequence",
@@ -2365,13 +2584,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "Subgroup counts depend on answer architecture",
         detail:
-          "The report found 8.4% Kashmiri identification with the tick-box versus 1.9% with write-in only."
+          "The source found more Kashmiri identification with a visible tick-box than with write-in only, while also documenting design tradeoffs."
       }
     ],
     neighborContrast: {
       pattern: "category_boundary_blur",
+      neighborSpecimenId: "ons-ethnic-group-heading",
       contrastText:
-        "This is broad bucket NOT category boundary blur because a specific identity is hidden inside a broader level."
+        "This specimen is broad bucket because a specific identity is nested under broader, easier reporting levels. The category-boundary neighbor is different: several visible headings can all look partly right."
     },
     widget: {
       kind: "bucket_splitter",
@@ -2410,6 +2630,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "kashmiri-near-industry",
         kind: "near_transfer",
+        context:
+          "An employment form lets someone describe a workplace as a broad sector, establishment type, clinic type, or service line.",
+        questionPrompt:
+          "Which wording feature makes several answer levels look responsive?",
         wording: "What kind of workplace was this: health care, hospital, clinic, or other service?",
         pattern: "broad_bucket",
         featureChoices: [
@@ -2423,6 +2647,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "kashmiri-distractor-black-heading",
         kind: "distractor",
+        context:
+          "An ethnic-group form uses a heading that combines geographic and colour terms, and some respondents search by different parts of that heading.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "African / Caribbean / Black / Black British",
         pattern: "category_boundary_blur",
         featureChoices: [
@@ -2482,6 +2710,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent without a sump pump hears a question that assumes the failure mechanism exists. They answer by escaping the premise.",
     prerequisiteVocab: prerequisiteVocabByPattern.false_premise,
+    predictionCopy: predictionCopy(
+      [
+        "Pump-failure path clear",
+        "The response path separates in-scope pump-failure flooding from other states."
+      ],
+      [
+        "No can hide no pump",
+        "A No answer could mean no sump pump, no pump failure, or no water collection."
+      ],
+      [
+        "Outside pump-failure cause",
+        "The water event should not be counted as sump-pump failure during an outage."
+      ]
+    ),
     vignettes: [
       {
         id: "sump-help-very",
@@ -2552,7 +2794,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the sump-pump failure?",
+      prompt:
+        "Why can a No answer be hard to interpret when the sump-pump item asks about failure first?",
       choices: [
         {
           id: "sump-assumption",
@@ -2565,7 +2808,7 @@ const authoredWorkbenchSpecimens: Array<
           text: "The phrase 'sump pump' is a technical term respondents may not recognize.",
           isCorrect: false,
           explanation:
-            "Even when the term is recognized, the documented failure remains: a plain No can hide no equipment, no failure event, or no flooding."
+            "Even when the term is recognized, the documented issue remains: a plain No can hide no equipment, no failure event, or no flooding."
         },
         {
           id: "sump-order",
@@ -2582,14 +2825,16 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "May not have a sump pump",
-        detail: "Some homes cannot experience a sump-pump failure because the equipment is absent."
+        detail:
+          "The respondent may live in a home with no sump pump, which is different from having a pump that did not fail."
       },
       {
         id: "sump-wording",
         kind: "tested_wording",
         eyebrow: "Tested wording",
         title: "Because your sump pump stopped working",
-        detail: "The causal frame presupposes the equipment before a clear inapplicable path."
+        detail:
+          "The causal frame names sump-pump failure before confirming that the household has a sump pump."
       },
       {
         id: "sump-break",
@@ -2597,7 +2842,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "No event or no equipment?",
         detail:
-          "The same No can mean no pump, no failure, or no water."
+          "The respondent has to decide whether No is the closest escape from the equipment premise or a substantive no-flooding answer."
       },
       {
         id: "sump-consequence",
@@ -2605,13 +2850,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "The denominator remains unclear",
         detail:
-          "Without the follow-up, analysts may not know which households had a sump pump at risk."
+          "Without a follow-up, analysts may not know which No households had equipment at risk and which were never in scope."
       }
     ],
     neighborContrast: {
       pattern: "label_ambiguity",
+      neighborSpecimenId: "notebook-computer",
       contrastText:
-        "This is false premise NOT label ambiguity because the causal frame assumes the household has a sump pump."
+        "This specimen is false premise because the wording assumes equipment before separating inapplicable households. The label-ambiguity neighbor is different: one word itself points respondents to multiple meanings."
     },
     widget: {
       kind: "filter_path_toggle",
@@ -2660,6 +2906,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "sump-near-generator",
         kind: "near_transfer",
+        context:
+          "An outage module asks about backup-generator failure. Some households have a generator; others have no generator at all.",
+        questionPrompt:
+          "Which wording feature would make a plain No hard to interpret?",
         wording: "Did your backup generator stop working during the outage?",
         pattern: "false_premise",
         featureChoices: [
@@ -2673,6 +2923,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "sump-distractor-notebook",
         kind: "distractor",
+        context:
+          "A household technology item asks about laptop or notebook computers, and notebook may cue non-laptop devices.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "Do you use a laptop or notebook computer?",
         pattern: "label_ambiguity",
         featureChoices: [
@@ -2742,6 +2996,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent scans for their usual cue and lands in the wrong place. Another sees White and African as both relevant.",
     prerequisiteVocab: prerequisiteVocabByPattern.category_boundary_blur,
+    predictionCopy: predictionCopy(
+      [
+        "Heading cue works",
+        "The highlighted heading clearly gives this respondent the intended navigation route."
+      ],
+      [
+        "Heading cues compete",
+        "Colour, geography, or combined identity cues make more than one section seem plausible."
+      ],
+      [
+        "Wrong section cue",
+        "The highlighted heading would pull this respondent away from the better section route."
+      ]
+    ),
     vignettes: [
       {
         id: "heading-black-african",
@@ -2834,7 +3102,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the ethnic-heading failure?",
+      prompt:
+        "Why can African/Caribbean/Black/Black British send respondents through the wrong section cue?",
       choices: [
         {
           id: "heading-boundary",
@@ -2863,14 +3132,16 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Searches by identity cue",
-        detail: "Respondents may look for color, geography, or a familiar combined label."
+        detail:
+          "The respondent may scan for Black, African, White African, or a familiar combined label before reading every box."
       },
       {
         id: "heading-wording",
         kind: "tested_wording",
         eyebrow: "Tested heading",
         title: "African/Caribbean/Black/Black British",
-        detail: "The original heading placed Black after African and Caribbean."
+        detail:
+          "The heading stacks geographic and colour cues, with Black appearing after African and Caribbean."
       },
       {
         id: "heading-break",
@@ -2878,20 +3149,22 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "Which cue controls the section?",
         detail:
-          "Some searched for Black, some saw African first, and White African respondents found the partition imperfect."
+          "The respondent has to decide whether colour, geography, or the combined phrase should control the section choice."
       },
       {
         id: "heading-consequence",
         kind: "data_consequence",
         eyebrow: "Data consequence",
         title: "Navigation errors can become data errors",
-        detail: "The report documents wrong-section searching and multiple marks."
+        detail:
+          "The source documents wrong-section searching and multiple marks, showing that navigation friction can affect recorded answers."
       }
     ],
     neighborContrast: {
       pattern: "broad_bucket",
+      neighborSpecimenId: "ons-kashmiri",
       contrastText:
-        "This is category boundary blur NOT broad bucket because several category cues seem partly right."
+        "This specimen is category boundary blur because several visible heading cues seem partly right. The broad-bucket neighbor is different: a specific answer is hidden under a broader reporting route."
     },
     widget: {
       kind: "classifier_radio",
@@ -2939,6 +3212,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "heading-near-device",
         kind: "near_transfer",
+        context:
+          "A device survey asks about TV-connected devices. Smart TVs and streaming boxes can both run apps and play video through the TV.",
+        questionPrompt:
+          "Which wording feature makes the category route unstable?",
         wording: "A smart TV, a streaming box, or another device that plays through a TV",
         pattern: "category_boundary_blur",
         featureChoices: [
@@ -2952,6 +3229,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "heading-distractor-kashmiri",
         kind: "distractor",
+        context:
+          "An ethnic-group form gives broad Asian / Asian British categories and a write-in route, while a respondent wants to report a specific Kashmiri identity.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "Asian / Asian British, Pakistani, Any other Asian background, write in",
         pattern: "broad_bucket",
         featureChoices: [
@@ -3017,6 +3298,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent remembers disaster risk as one factor among several motives. They pause because the yes/no sequence makes Yes feel primary.",
     prerequisiteVocab: prerequisiteVocabByPattern.sequence_overlap,
+    predictionCopy: predictionCopy(
+      [
+        "Yes means any influence",
+        "The highlighted disaster item clearly covers this reason under the intended any-influence rule."
+      ],
+      [
+        "Yes feels primary",
+        "The sequence makes the respondent unsure whether a secondary reason is enough for Yes."
+      ],
+      [
+        "No disaster influence",
+        "The move should not be counted as influenced by natural-disaster avoidance."
+      ]
+    ),
     vignettes: [
       {
         id: "disaster-small-factor",
@@ -3125,7 +3420,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the disaster-avoidance failure?",
+      prompt:
+        "Why can Did you move to avoid natural disasters? undercount secondary disaster motives?",
       choices: [
         {
           id: "disaster-sequence",
@@ -3153,21 +3449,24 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Several motives influenced the move",
-        detail: "Disaster risk can be one factor without being the primary factor."
+        detail:
+          "The respondent may remember disaster risk as one real influence among rent, household, job, or location motives."
       },
       {
         id: "disaster-wording",
         kind: "tested_wording",
         eyebrow: "Tested wording",
         title: "Avoid natural disasters",
-        detail: "The item appears inside a yes/no series of moving reasons."
+        detail:
+          "The item appears as one yes/no reason in a series, after the respondent has already considered other motives."
       },
       {
         id: "disaster-break",
         kind: "route_break",
         eyebrow: "Route break",
         title: "Any reason or main reason?",
-        detail: "The sequence can make each Yes feel primary even when the construct is any influence."
+        detail:
+          "The respondent has to decide whether Yes means any influence, a major influence, or the main reason for the move."
       },
       {
         id: "disaster-consequence",
@@ -3175,13 +3474,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "Secondary motives can disappear",
         detail:
-          "Respondents may underreport real but non-primary motives."
+          "Respondents may say No to avoid overstating a real but non-primary motive."
       }
     ],
     neighborContrast: {
       pattern: "forced_precision",
+      neighborSpecimenId: "acs-weeks-worked",
       contrastText:
-        "This is sequence overlap NOT forced precision because the strain is whether Yes means any or primary reason."
+        "This specimen is sequence overlap because the prior reason series changes how Yes is interpreted. The forced-precision neighbor is different: the respondent must convert irregular experience into one exact-looking value."
     },
     widget: {
       kind: "sequence_reorderer",
@@ -3259,6 +3559,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "disaster-near-owner",
         kind: "near_transfer",
+        context:
+          "A housing-search sequence first records an online listing, then asks whether owner advertising also helped with the same home search.",
+        questionPrompt:
+          "Which wording feature changes whether the next Yes is allowed?",
         wording: "After saying you found the home online, did owner advertising also help?",
         pattern: "sequence_overlap",
         featureChoices: [
@@ -3272,6 +3576,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "disaster-distractor-weeks",
         kind: "distractor",
+        context:
+          "A work-history item asks a respondent to count weeks worked across an irregular 52-week period.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "How many weeks did you work over the past 52 weeks?",
         pattern: "forced_precision",
         featureChoices: [
@@ -3329,6 +3637,20 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent remembers working most of the year, about three months, or on an inconsistent schedule. They convert or round to a plausible week count.",
     prerequisiteVocab: prerequisiteVocabByPattern.forced_precision,
+    predictionCopy: predictionCopy(
+      [
+        "Week count recoverable",
+        "The respondent can recover a calendar-week count that matches the intended rule."
+      ],
+      [
+        "Count recipe unstable",
+        "The respondent can answer, but the number may be a conversion, rounded estimate, or uncertain count."
+      ],
+      [
+        "Wrong counting rule",
+        "The respondent's route produces a number that should not stand in for weeks worked."
+      ]
+    ),
     vignettes: [
       {
         id: "weeks-not-exactly",
@@ -3405,7 +3727,8 @@ const authoredWorkbenchSpecimens: Array<
       }
     ],
     mechanismQuestion: {
-      prompt: "Which wording feature most likely caused the weeks-worked failure?",
+      prompt:
+        "Why can How many weeks over the past 52 weeks? produce exact-looking but unstable counts?",
       choices: [
         {
           id: "weeks-exact-count",
@@ -3419,14 +3742,14 @@ const authoredWorkbenchSpecimens: Array<
           text: "The field combined paid hours, paid days, and weeks of work into one number.",
           isCorrect: false,
           explanation:
-            "That would be a broad-bucket problem. The field requests one construct: weeks. The cited failure is the exact-count expectation, not multiple constructs sharing a field."
+            "That would be a broad-bucket problem. The field requests one construct: weeks. The cited issue is the exact-count expectation, not multiple constructs sharing a field."
         },
         {
           id: "weeks-assumption",
           text: "The item assumed every respondent had worked for pay during the year.",
           isCorrect: false,
           explanation:
-            "ACS gates this question on prior employment items, so the assumption is upheld upstream. The documented failure is among workers with irregular schedules constructing an exact count, not among non-workers."
+            "ACS gates this question on prior employment items, so the assumption is upheld upstream. The documented issue is among workers with irregular schedules constructing an exact count, not among non-workers."
         }
       ]
     },
@@ -3436,14 +3759,16 @@ const authoredWorkbenchSpecimens: Array<
         kind: "respondent_reality",
         eyebrow: "Respondent reality",
         title: "Work history is stored unevenly",
-        detail: "A respondent may remember jobs, months, days, partial weeks, and breaks."
+        detail:
+          "The respondent may remember work spells as jobs, months, days worked, partial weeks, paid leave, or breaks."
       },
       {
         id: "weeks-wording",
         kind: "tested_wording",
         eyebrow: "Tested wording",
         title: "How many weeks over the past 52 weeks?",
-        detail: "The item asks for one week count and keeps short work weeks in scope."
+        detail:
+          "The numeric field asks for one week count, while the instruction says even a few hours in a week should count."
       },
       {
         id: "weeks-break",
@@ -3451,7 +3776,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Route break",
         title: "Count, convert, or round?",
         detail:
-          "Respondents may convert months, divide days, or round when exact weeks are not recoverable."
+          "The respondent has to decide whether to count calendar weeks, convert months, divide days by five, or round from memory."
       },
       {
         id: "weeks-consequence",
@@ -3459,13 +3784,14 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Data consequence",
         title: "The number hides its recipe",
         detail:
-          "A clean numeric entry can be a real count, a conversion, or a rounded guess."
+          "The same clean numeric field can hold a true week count, a conversion, or a rounded guess with different meaning."
       }
     ],
     neighborContrast: {
       pattern: "broad_bucket",
+      neighborSpecimenId: "business-industry",
       contrastText:
-        "This is forced precision NOT broad bucket because the failure is an exact-looking week count from irregular history."
+        "This specimen is forced precision because irregular history must become one exact-looking count. The broad-bucket neighbor is different: one field spans multiple concepts or levels."
     },
     widget: {
       kind: "time_window_slider",
@@ -3503,6 +3829,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "weeks-near-arrival",
         kind: "near_transfer",
+        context:
+          "A commute or work-schedule item asks for one usual arrival time, but the respondent arrived at different times across the week.",
+        questionPrompt:
+          "Which wording feature would make the answer recipe unstable?",
         wording: "Last week, what time did this person usually arrive at work?",
         pattern: "forced_precision",
         featureChoices: [
@@ -3516,6 +3846,10 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "weeks-distractor-sump",
         kind: "distractor",
+        context:
+          "An outage module asks whether a sump pump failed, even though some households do not have a sump pump.",
+        questionPrompt:
+          "Which wording feature is doing the work in this distractor?",
         wording: "Did your sump pump fail during the outage?",
         pattern: "false_premise",
         featureChoices: [

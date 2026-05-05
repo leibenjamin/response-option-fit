@@ -30,10 +30,11 @@ export function MicroCaseBeat({
         <h4 className="microcase-title" id={`${microCase.id}-title`}>
           {microCase.wording}
         </h4>
+        <p className="microcase-context">{microCase.context}</p>
       </header>
 
       <fieldset className="microcase-fieldset">
-        <legend>Failing wording feature</legend>
+        <legend>{microCase.questionPrompt}</legend>
         <div className="radio-card-list">
           {microCase.featureChoices.map((choice, choiceIndex) => (
             <label key={choice} className="radio-card">

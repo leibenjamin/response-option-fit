@@ -13,7 +13,7 @@ const provenanceNotes = [
 
 const beatNotes = [
   "Frame: read the full item context and highlighted answer path.",
-  "Predict: judge whether that path cleanly fits each scenario.",
+  "Predict: judge whether that path covers, splits, or excludes each scenario.",
   "Diagnose: see the source-bounded answer key beside your prediction.",
   "Probe: probe a small edit against the route break.",
   "Reveal: compare the tested change with what remains untested."
@@ -21,16 +21,16 @@ const beatNotes = [
 
 const outcomeNotes = [
   {
-    label: "Clean fit",
-    body: "the highlighted answer path fits this scenario without extra interpretation"
+    label: "Covered by target path",
+    body: "the highlighted answer path clearly covers this scenario"
   },
   {
-    label: "Unclear fit",
-    body: "the same scenario could route more than one way"
+    label: "Could route two ways",
+    body: "the visible wording leaves more than one plausible answer path"
   },
   {
-    label: "Wrong path",
-    body: "the highlighted path is not where this scenario belongs"
+    label: "Outside target path",
+    body: "the highlighted answer path should not absorb this scenario"
   }
 ];
 
@@ -48,7 +48,8 @@ export function HowToRead() {
         </h2>
         <p className="how-to-read-lede">
           Each Workbench shows the surrounding item first, then asks whether
-          the highlighted answer path fits a respondent scenario cleanly.
+          the highlighted answer path covers each respondent scenario. The
+          three prediction labels are customized inside each specimen.
         </p>
       </header>
 
@@ -82,8 +83,12 @@ export function HowToRead() {
 
         <section className="how-to-read-block how-to-read-block--wide" aria-labelledby="how-to-read-outcomes">
           <h3 className="how-to-read-subtitle" id="how-to-read-outcomes">
-            What clean / unclear / wrong mean
+            How prediction labels work
           </h3>
+          <p className="how-to-read-label-note">
+            The exact button text changes by specimen, but every set maps to
+            these three route judgments.
+          </p>
           <dl className="how-to-read-outcomes">
             {outcomeNotes.map((note) => (
               <div className="how-to-read-outcome" key={note.label}>

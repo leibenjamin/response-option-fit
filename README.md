@@ -69,8 +69,9 @@ See [docs/deployment.md](docs/deployment.md) and
 - It includes twelve specimens and does not claim to generalize across all survey
   instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
-- The fit labels are teaching labels: **Clean fit**, **Unclear fit**, and
-  **Wrong path** describe the highlighted answer path in the Workbench frame.
+- Prediction labels are specimen-specific teaching labels. Each Workbench
+  defines its own three route judgments for whether the highlighted answer path
+  covers the scenario, can route more than one way, or belongs elsewhere.
 - Repair directions are conceptual and are not validated replacement wording.
 
 ## Performance Budget
