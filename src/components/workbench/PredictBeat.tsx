@@ -69,15 +69,17 @@ export function PredictBeat({
   return (
     <section className="workbench-beat workbench-beat--predict" aria-labelledby={`${specimen.id}-predict-title`}>
       <header className="beat-head">
-        <p className="beat-eyebrow">Predict</p>
+        <p className="beat-eyebrow">Step 1 / Make a judgment</p>
         <h3 className="beat-title" id={`${specimen.id}-predict-title`}>
-          Mark how the highlighted answer path routes each respondent scenario.
-          Reveal the diagnosis after you commit.
+          For each scenario, choose what the highlighted answer choice would do.
         </h3>
-        <p className="beat-lede">{specimen.answerFrame.taskPrompt}</p>
+        <p className="beat-lede">
+          {specimen.answerFrame.taskPrompt} After that, choose the part of the
+          wording that causes the problem.
+        </p>
       </header>
 
-      <div className="prediction-mini-legend" aria-label="Prediction terms">
+      <div className="prediction-mini-legend" aria-label="What each judgment means">
         {predictionLegend.map((item) => (
           <span className="prediction-mini-chip" key={item.label}>
             <strong>{item.label}</strong>
@@ -86,7 +88,7 @@ export function PredictBeat({
         ))}
       </div>
 
-      <ol className="vignette-list" aria-label="Prediction vignettes">
+      <ol className="vignette-list" aria-label="Prediction scenarios">
         {specimen.vignettes.map((vignette) => (
           <li key={vignette.id} className="vignette-card">
             <div className="vignette-card-head">
@@ -172,11 +174,11 @@ export function PredictBeat({
           disabled={!canReveal || revealed}
           onClick={onReveal}
         >
-          {revealed ? "Diagnosis revealed" : "Reveal diagnosis"}
+          {revealed ? "Explanation shown" : "Show explanation"}
         </button>
         {!canReveal && (
           <p className="reveal-gate-note">
-            Mark every vignette and choose a mechanism to reveal the diagnosis.
+            Mark every scenario and choose a part of the wording before showing the explanation.
           </p>
         )}
       </div>

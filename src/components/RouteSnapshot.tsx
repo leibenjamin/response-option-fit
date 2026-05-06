@@ -10,15 +10,15 @@ export function RouteSnapshot({ routeStages }: Props) {
       data-testid="route-snapshot"
     >
       <header className="snapshot-head">
-        <p className="snapshot-eyebrow">Route at a glance</p>
+        <p className="snapshot-eyebrow">Answer choice at a glance</p>
         <h3 className="snapshot-title" id="snapshot-title">
-          Response route snapshot
+          How the answer choice can stop fitting
         </h3>
       </header>
 
       <ol
         className="snapshot-track"
-        aria-label="Compact response route diagram"
+        aria-label="Compact diagram of the answer-choice problem"
       >
         {routeStages.map((stage, i) => {
           const stageNum = String(i + 1).padStart(2, "0");
@@ -47,9 +47,9 @@ export function RouteSnapshot({ routeStages }: Props) {
       </ol>
 
       <p className="snapshot-howto">
-        Read each specimen as a route: what the respondent knows, what the
-        survey asks them to choose, where the mapping breaks, and what
-        interpretation becomes less safe.
+        Read each example as four steps: what the person knows, what the survey
+        asks them to choose, where the answer choice stops fitting, and what the
+        recorded answer can no longer show clearly.
       </p>
     </section>
   );

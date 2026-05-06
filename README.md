@@ -1,14 +1,13 @@
 # Response Option Fit Lab
 
-Response Option Fit Lab is a static editorial exhibit about how survey response
-options shape data before analysis begins. It uses twelve neutral specimens from
-public questionnaire-testing materials to show how labels,
-broad buckets, false premises, category boundaries, and sequence context can
-misroute otherwise valid respondent answers, including cases where a single
-precise answer is forced from variable experience.
+Response Option Fit Lab is the project name for a static editorial exhibit about
+survey answer choices that do not match what people know. The public page now
+leads with the literal title "When survey answer choices don't match real
+answers" and uses twelve worked examples from public questionnaire-testing
+materials to show six recurring answer-choice problems.
 
 The project demonstrates a source-backed React and TypeScript interface with a
-Specimen Workbench, full item-context answer frames, source appendix, claim
+worked-example flow, surrounding question context, source appendix, claim
 boundary, static security headers, and local-only settings controls.
 
 ## Sources And Attribution
@@ -66,12 +65,13 @@ See [docs/deployment.md](docs/deployment.md) and
 ## Limitations
 
 - This is an editorial exhibit, not a survey analyzer or measurement tool.
-- It includes twelve specimens and does not claim to generalize across all survey
+- It includes twelve worked examples and does not claim to generalize across all survey
   instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
-- Prediction labels are specimen-specific teaching labels. Each Workbench
-  defines its own three route judgments for whether the highlighted answer path
-  covers the scenario, can route more than one way, or belongs elsewhere.
+- Prediction labels are example-specific teaching labels. Each worked example
+  defines its own three plain-language judgments for whether the highlighted
+  answer choice fits the scenario, could be marked more than one way, or belongs
+  elsewhere.
 - Repair directions are conceptual and are not validated replacement wording.
 
 ## Performance Budget
@@ -98,7 +98,7 @@ to:
 - No PII collected or transmitted under any condition.
 - Current persistence is limited to opt-in, on-device settings data
   (`localStorage`). The Settings surface supports JSON export/import/clear and
-  shows the exact stored keys and values for transparency. Workbench progress is
+  shows the exact stored keys and values for transparency. Worked-example progress is
   not persisted in this release.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs.
@@ -108,8 +108,8 @@ to:
 The application source code is licensed under the **MIT License**; see
 [LICENSE](LICENSE).
 
-Editorial content (exhibit text, answer frames, route diagrams, authored
-vignette wording, mechanism questions, micro-cases, method notes, glossary entries,
+Editorial content (exhibit text, answer frames, answer-choice diagrams, authored
+scenario wording, wording-feature questions, quick-practice cases, method notes, glossary entries,
 claim-boundary language, and colophon prose) is licensed under
 **Creative Commons Attribution 4.0 International (CC BY 4.0)**; see
 [CONTENT-LICENSE.md](CONTENT-LICENSE.md).

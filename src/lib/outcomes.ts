@@ -1,15 +1,15 @@
 import type { PredictionCopy, VignetteOutcome } from "../types/workbench";
 
 export const outcomeLabels = {
-  covered: "Fits target path",
-  ambiguous: "Can route two ways",
-  not_covered: "Outside target path"
+  covered: "Answer choice fits",
+  ambiguous: "Could be marked more than one way",
+  not_covered: "Needs a different answer"
 } satisfies Record<VignetteOutcome, string>;
 
 export const outcomeDescriptions = {
-  covered: "the highlighted answer path covers this scenario",
-  ambiguous: "the same scenario could reasonably use more than one path",
-  not_covered: "the highlighted answer path should not cover this scenario"
+  covered: "the highlighted answer choice works for this scenario",
+  ambiguous: "the same scenario could reasonably be marked more than one way",
+  not_covered: "the highlighted answer choice should not be used for this scenario"
 } satisfies Record<VignetteOutcome, string>;
 
 export function outcomeLabel(

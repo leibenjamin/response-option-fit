@@ -3,15 +3,15 @@ import type { FailurePattern } from "../types/workbench";
 
 const glossaryBodies = {
   label_ambiguity:
-    "Respondents may understand the response label using different everyday categories.",
+    "People may read the same answer-choice words in different everyday ways.",
   broad_bucket:
-    "One answer field combines items respondents store, remember, or pay for separately.",
-  false_premise: "The question assumes a condition that may not apply.",
+    "One answer field asks for too many levels of detail at once.",
+  false_premise: "The question assumes something is true before asking whether it applies.",
   category_boundary_blur:
-    "The survey's technical distinction does not match everyday classification.",
-  sequence_overlap: "A prior question changes how the next answer category is interpreted.",
+    "Neighboring answer choices share features, so the dividing line is hard to see.",
+  sequence_overlap: "An earlier question changes how the next answer choice is read.",
   forced_precision:
-    "One exact-looking answer is required from variable or unstable experience."
+    "The form asks for one exact-looking answer from a situation that varies."
 } satisfies Record<FailurePattern, string>;
 
 const items = workbenchSpecimens
@@ -30,11 +30,11 @@ export function PatternGlossary() {
       <header className="section-head">
         <p className="section-eyebrow">Pattern glossary</p>
         <h2 className="section-title" id="glossary-title">
-          Six ways a response route can break
+          Six ways answer choices can miss real situations
         </h2>
         <p className="section-lede">
-          Each Workbench demonstrates one of these patterns. The catalog above
-          introduces them before the diagnostic loop.
+          Each worked example demonstrates one of these problem types. The
+          plain-language description comes first; the method label is secondary.
         </p>
       </header>
       <ol className="glossary-grid">

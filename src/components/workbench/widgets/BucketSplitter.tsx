@@ -31,7 +31,7 @@ export function BucketSplitter({ config, state, vignettes, onStateChange }: Prop
     <div
       className="widget widget--bucket-splitter"
       data-testid="widget-bucket-splitter"
-      aria-label={`${vignettes.length} vignette bucket splitter`}
+      aria-label={`${vignettes.length} scenario field splitter`}
     >
       {announce.status}
       <pre hidden data-testid="widget-state">

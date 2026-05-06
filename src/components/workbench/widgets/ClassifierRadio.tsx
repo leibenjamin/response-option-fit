@@ -23,7 +23,7 @@ export function ClassifierRadio({ config, state, vignettes, onStateChange }: Pro
     <fieldset
       className="widget widget--classifier-radio"
       data-testid="widget-classifier-radio"
-      aria-label={`${vignettes.length} vignette classifier radio`}
+      aria-label={`${vignettes.length} scenario classification choices`}
     >
       <legend className="widget-subtitle">Classification feature</legend>
       {announce.status}

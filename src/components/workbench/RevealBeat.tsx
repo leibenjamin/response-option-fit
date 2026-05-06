@@ -12,14 +12,15 @@ export function RevealBeat({ specimen }: Props) {
       data-testid={`reveal-${specimen.id}`}
     >
       <header className="beat-head">
-        <p className="beat-eyebrow">Reveal</p>
+        <p className="beat-eyebrow">Step 4 / What the source supports</p>
         <h3 className="beat-title" id={`${specimen.id}-reveal-title`}>
-          Source-bounded revision evidence
+          What the cited report says the revision addressed
         </h3>
       </header>
 
       <p className="reveal-orientation">
-        Read both cards: one names what the revision addresses; one names what still needs evidence.
+        Read both cards: one names what the source-supported revision addresses;
+        one names what still needs testing.
       </p>
 
       <div className="reveal-card-grid">
@@ -34,7 +35,7 @@ export function RevealBeat({ specimen }: Props) {
         </article>
 
         <article className="reveal-card" data-testid="reveal-untested-card">
-          <p className="reveal-card-eyebrow">What remains untested</p>
+          <p className="reveal-card-eyebrow">What still needs testing</p>
           <ul className="reveal-risk-list">
             {specimen.reveal.remainsUntested.residualRisks.map((risk) => (
               <li key={risk}>{risk}</li>

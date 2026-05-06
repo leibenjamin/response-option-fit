@@ -21,7 +21,7 @@ function patternLabel(pattern: WorkbenchSpecimen["pattern"]) {
 
 function specimenNumber(specimenId: string) {
   const neighbor = workbenchSpecimens.find((specimen) => specimen.id === specimenId);
-  return neighbor ? `Specimen ${neighbor.number}` : "Related specimen";
+  return neighbor ? `Example ${neighbor.number}` : "Related example";
 }
 
 export function DiagnoseBeat({
@@ -43,13 +43,13 @@ export function DiagnoseBeat({
       data-testid={`diagnose-${specimen.id}`}
     >
       <header className="beat-head">
-        <p className="beat-eyebrow">Diagnose</p>
+        <p className="beat-eyebrow">Step 2 / Compare with the report</p>
         <h3 className="beat-title" id={`${specimen.id}-diagnose-title`}>
-          Compare your prediction with the documented route
+          Compare your choices with the report-based explanation
         </h3>
       </header>
 
-      <ol className="diagnosis-list" aria-label="Answer-key diagnosis">
+      <ol className="diagnosis-list" aria-label="Answer-key explanation">
         {specimen.vignettes.map((vignette) => (
           <li key={vignette.id} className="diagnosis-card">
             <p className="diagnosis-text">{vignette.text}</p>
@@ -58,7 +58,7 @@ export function DiagnoseBeat({
                 className={`outcome-badge outcome-badge--${vignette.expectedOutcome}`}
                 data-testid="published-outcome-badge"
               >
-                Answer key: {outcomeLabel(vignette.expectedOutcome, specimen.predictionCopy)}
+                Report-based answer: {outcomeLabel(vignette.expectedOutcome, specimen.predictionCopy)}
               </span>
               <span className="outcome-badge outcome-badge--user">
                 You said: {outcomeLabel(predictions[vignette.id], specimen.predictionCopy)}
@@ -73,12 +73,12 @@ export function DiagnoseBeat({
 
       {selectedMechanism && correctMechanism && (
         <div className="mechanism-result">
-          <p className="mechanism-result-eyebrow">Mechanism check</p>
+          <p className="mechanism-result-eyebrow">Why the wording broke down</p>
           <p className="mechanism-result-body">
             You chose: {selectedMechanism.text}
           </p>
           <p className="mechanism-result-body">
-            Authored key: {correctMechanism.text}
+            Report-based explanation: {correctMechanism.text}
           </p>
           <p className="mechanism-result-note">{selectedMechanism.explanation}</p>
         </div>
@@ -104,7 +104,7 @@ export function DiagnoseBeat({
             className="neighbor-contrast-button"
             onClick={onRevealNeighborContrast}
           >
-            Reveal neighbor contrast
+            Compare with a similar problem type
           </button>
         )}
       </div>

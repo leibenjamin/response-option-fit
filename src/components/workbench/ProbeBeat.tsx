@@ -16,17 +16,17 @@ type Props = {
 function widgetLabel(kind: WorkbenchSpecimen["widget"]["kind"]) {
   switch (kind) {
     case "example_set_editor":
-      return "Example set editor";
+      return "Examples to add to the wording";
     case "bucket_splitter":
-      return "Bucket splitter";
+      return "Where to split one answer field";
     case "filter_path_toggle":
-      return "Filter path toggle";
+      return "Who should answer this question";
     case "classifier_radio":
-      return "Classifier radio";
+      return "Which feature classifies the answer";
     case "sequence_reorderer":
-      return "Sequence reorderer";
+      return "Question order";
     case "time_window_slider":
-      return "Time window slider";
+      return "Time period to ask about";
   }
 }
 
@@ -97,11 +97,15 @@ export function ProbeBeat({ specimen, widgetState, onWidgetStateChange }: Props)
       data-testid={`probe-${specimen.id}`}
     >
       <header className="beat-head">
-        <p className="beat-eyebrow">Probe</p>
+        <p className="beat-eyebrow">Step 3 / Try one wording change</p>
         <h3 className="beat-title" id={`${specimen.id}-probe-title`}>
-          Test the wording feature
+          See how a small wording change affects each scenario
         </h3>
-        <p className="beat-lede">{specimen.probePrompt}</p>
+        <p className="beat-lede">
+          {specimen.probePrompt} This is a sketch, not a tested fix: the page
+          shows how the change might clarify each scenario, but it does not
+          validate replacement wording.
+        </p>
       </header>
 
       <div className="probe-grid">
@@ -110,7 +114,7 @@ export function ProbeBeat({ specimen, widgetState, onWidgetStateChange }: Props)
           {renderWidget()}
         </div>
 
-        <ol className="probe-outcome-list" aria-label="Live diagnostic outcomes">
+        <ol className="probe-outcome-list" aria-label="Live exploratory outcomes">
           {specimen.vignettes.map((vignette) => {
             const outcome = evaluateDiagnostic(widgetState, vignette.id, specimen.widget);
             return (
@@ -121,7 +125,9 @@ export function ProbeBeat({ specimen, widgetState, onWidgetStateChange }: Props)
                   data-testid="edit-outcome-badge"
                 >
                   Under your edit:{" "}
-                  {outcome === "covered" ? "likely resolved" : "still unresolved"}
+                  {outcome === "covered"
+                    ? "clearer for this scenario"
+                    : "still unclear for this scenario"}
                 </span>
                 <p className="probe-rationale" data-testid="probe-rationale">
                   {outcome === "covered"
