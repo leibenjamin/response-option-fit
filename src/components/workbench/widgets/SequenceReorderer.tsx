@@ -57,7 +57,7 @@ export function SequenceReorderer({ config, state, vignettes, onStateChange }: P
     <div
       className="widget widget--sequence-reorderer"
       data-testid="widget-sequence-reorderer"
-      aria-label={`${vignettes.length} vignette sequence reorderer`}
+      aria-label={`${vignettes.length} scenario question-order controls`}
     >
       {announce.status}
       <pre hidden data-testid="widget-state">

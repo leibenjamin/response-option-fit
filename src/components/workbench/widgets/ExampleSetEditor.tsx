@@ -32,7 +32,7 @@ export function ExampleSetEditor({ config, state, vignettes, onStateChange }: Pr
     <div
       className="widget widget--example-set"
       data-testid="widget-example-set-editor"
-      aria-label={`${vignettes.length} vignette example-set editor`}
+      aria-label={`${vignettes.length} scenario example editor`}
     >
       {announce.status}
       <pre hidden data-testid="widget-state">

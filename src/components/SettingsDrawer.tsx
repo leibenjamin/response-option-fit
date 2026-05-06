@@ -280,7 +280,7 @@ export function SettingsDrawer({ open, onClose }: Props) {
                 Remember local settings on this device
               </span>
               <span className="settings-toggle-sub">
-                Stores this settings choice only in this browser. Workbench progress is not saved yet.
+                Stores this settings choice only in this browser. Worked-example progress is not saved yet.
               </span>
             </span>
           </label>

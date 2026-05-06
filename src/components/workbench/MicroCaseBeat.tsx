@@ -25,7 +25,7 @@ export function MicroCaseBeat({
     >
       <header className="microcase-head">
         <p className="microcase-eyebrow">
-          Micro-case {index + 1} / {microCase.kind === "near_transfer" ? "Near transfer" : "Distractor"}
+          Practice {index + 1} / {microCase.kind === "near_transfer" ? "Same problem type" : "Nearby problem type"}
         </p>
         <h4 className="microcase-title" id={`${microCase.id}-title`}>
           {microCase.wording}
@@ -65,9 +65,9 @@ export function MicroCaseBeat({
 
       {submitted && (
         <div className="microcase-explanation" data-testid="microcase-explanation">
-          <p className="microcase-explanation-label">Why this is the match</p>
+          <p className="microcase-explanation-label">Why this choice fits</p>
           <p className="microcase-result">
-            Correct feature: {microCase.featureChoices[microCase.correctFeatureIndex]}
+            What about the wording: {microCase.featureChoices[microCase.correctFeatureIndex]}
           </p>
           <p>{microCase.explanation}</p>
         </div>

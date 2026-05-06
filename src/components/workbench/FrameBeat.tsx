@@ -19,7 +19,7 @@ export function FrameBeat({ specimen, titleId }: Props) {
     <section className="workbench-beat workbench-beat--frame" aria-labelledby={titleId}>
       <header className="beat-head">
         <p className="beat-eyebrow">
-          <span>Specimen {specimen.number}</span>
+          <span>Example {specimen.number}</span>
           <span aria-hidden="true">/</span>
           <span>{specimen.patternLabel}</span>
         </p>
@@ -42,7 +42,7 @@ export function FrameBeat({ specimen, titleId }: Props) {
           >
             <p className="answer-frame-eyebrow">{answerFrame.eyebrow}</p>
             <h3 className="answer-frame-title" id={`${specimen.id}-answer-frame-title`}>
-              Full item context
+              Survey question and answer choices
             </h3>
             <p className="answer-frame-prompt">{answerFrame.prompt}</p>
             <ul className="answer-frame-context">
@@ -70,7 +70,7 @@ export function FrameBeat({ specimen, titleId }: Props) {
             <p className="answer-frame-task">{answerFrame.taskPrompt}</p>
             {answerFrame.methodNote && (
               <details className="answer-frame-details">
-                <summary>Advanced note</summary>
+                <summary>Background from the source</summary>
                 <p>{answerFrame.methodNote}</p>
               </details>
             )}
@@ -78,19 +78,19 @@ export function FrameBeat({ specimen, titleId }: Props) {
         </div>
         <dl className="frame-meta">
           <div>
-            <dt>Intended construct</dt>
+            <dt>What the survey wanted to measure</dt>
             <dd>{specimen.intendedConstruct}</dd>
           </div>
           <div>
-            <dt>Respondent reality</dt>
+            <dt>What the person knows</dt>
             <dd>{specimen.sampleRespondent}</dd>
           </div>
           <div>
-            <dt>Pre-vocabulary</dt>
+            <dt>Problem type in plain language</dt>
             <dd>{specimen.prerequisiteVocab}</dd>
           </div>
           <div className="frame-source-receipt">
-            <dt>Source receipt</dt>
+            <dt>Source details</dt>
             <dd>
               <details
                 className="source-manifest"
@@ -98,9 +98,9 @@ export function FrameBeat({ specimen, titleId }: Props) {
               >
                 <summary className="source-manifest-summary">
                   <span className="source-manifest-summary-label">
-                    Full source manifest
+                    Full source details
                   </span>
-                  <span className="source-chip-row" aria-label="Source receipt markers">
+                  <span className="source-chip-row" aria-label="Source detail markers">
                     <span className="source-chip">{specimen.source.agency}</span>
                     <span className="source-chip">{specimen.source.documentCode}</span>
                     <span className="source-chip">{specimen.source.year}</span>

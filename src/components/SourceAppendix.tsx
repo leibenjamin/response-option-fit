@@ -19,7 +19,7 @@ export function SourceAppendix({ specimens }: { specimens: WorkbenchSpecimen[] }
               Direct links to the public testing materials
             </span>
             <span className="section-lede">
-              Each specimen cites a specific passage in a public testing report.
+              Each worked example cites a specific passage in a public testing report.
               Use these links to read the original context.
             </span>
           </span>
@@ -36,7 +36,7 @@ export function SourceAppendix({ specimens }: { specimens: WorkbenchSpecimen[] }
               </p>
               <div className="appendix-body">
                 <p className="appendix-title">{s.source.reportTitle}</p>
-                <p className="source-chip-row" aria-label="Source receipt markers">
+                <p className="source-chip-row" aria-label="Source detail markers">
                   <span className="source-chip">{s.source.agency}</span>
                   <span className="source-chip">{s.source.documentCode}</span>
                   <span className="source-chip">Retrieved {s.source.retrievalDate}</span>

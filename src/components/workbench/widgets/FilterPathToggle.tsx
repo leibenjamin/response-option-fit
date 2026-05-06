@@ -29,9 +29,9 @@ export function FilterPathToggle({ state, vignettes, onStateChange }: Props) {
     <fieldset
       className="widget widget--filter-path"
       data-testid="widget-filter-path-toggle"
-      aria-label={`${vignettes.length} vignette filter path toggle`}
+      aria-label={`${vignettes.length} scenario applicability controls`}
     >
-      <legend className="widget-subtitle">Applicability path</legend>
+      <legend className="widget-subtitle">Applicability choices</legend>
       {announce.status}
       <pre hidden data-testid="widget-state">
         {JSON.stringify(state)}

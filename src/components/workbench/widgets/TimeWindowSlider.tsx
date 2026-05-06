@@ -29,7 +29,7 @@ export function TimeWindowSlider({ config, state, vignettes, onStateChange }: Pr
     <div
       className="widget widget--time-window"
       data-testid="widget-time-window-slider"
-      aria-label={`${vignettes.length} vignette time-window slider`}
+      aria-label={`${vignettes.length} scenario reporting-window slider`}
     >
       {announce.status}
       <pre hidden data-testid="widget-state">

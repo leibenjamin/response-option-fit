@@ -13,19 +13,22 @@ export function Hero() {
       </div>
 
       <div className="hero-main">
+        <p className="hero-kicker">Response Option Fit Lab</p>
         <h1 className="hero-title" id="exhibit-title" tabIndex={-1}>
-          Response Option Fit Lab
+          When survey answer choices don't match real answers.
         </h1>
-        <p className="hero-subtitle">The answer is real. The route is wrong.</p>
+        <p className="hero-subtitle">
+          A person can know their answer, but the available survey choices can
+          still push that answer into the wrong place.
+        </p>
 
         <div className="hero-body-wrap">
           <p className="hero-body">
-            Survey response options are measurement infrastructure. When the
-            offered categories do not match how respondents understand their
-            situation, the later chart can look tidy while the data route is
-            already bent — and the question is part of the data pipeline, so
-            later analysis cannot recover distinctions the instrument never
-            captured.
+            This page walks through public questionnaire-testing examples from
+            the U.S. Census Bureau and the Office for National Statistics. In
+            each worked example, you read the survey question, look at a few
+            realistic respondent situations, and see where an answer choice
+            records something different from what the person meant.
           </p>
         </div>
       </div>
@@ -38,30 +41,30 @@ export function Hero() {
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
             <span className="hero-scope-val">12</span>
-            <span className="hero-scope-unit"> specimens</span>
+            <span className="hero-scope-unit"> examples</span>
           </p>
           <p className="hero-scope-note">from public reports</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
             <span className="hero-scope-val">6</span>
-            <span className="hero-scope-unit"> failure patterns</span>
+            <span className="hero-scope-unit"> problem types</span>
           </p>
-          <p className="hero-scope-note">cataloged below the exhibit</p>
+          <p className="hero-scope-note">defined before the examples</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
             <span className="hero-scope-val">0</span>
             <span className="hero-scope-unit"> survey scores</span>
           </p>
-          <p className="hero-scope-note">no quality grade is assigned</p>
+          <p className="hero-scope-note">no question is graded</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
             <span className="hero-scope-val">0</span>
             <span className="hero-scope-unit"> generated rewrites</span>
           </p>
-          <p className="hero-scope-note">no AI output, no model in the loop</p>
+          <p className="hero-scope-note">no AI output, no model behind the page</p>
         </li>
       </ul>
     </header>

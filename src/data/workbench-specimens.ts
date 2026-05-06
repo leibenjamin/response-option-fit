@@ -1,15 +1,15 @@
 import type { FailurePattern, WorkbenchSpecimen } from "../types/workbench";
 
 const claimBoundaryNote =
-  "This is one path the survey team took. Your edit may have addressed the issue differently. We do not validate alternative wording here.";
+  "This is one change the survey team considered or used. Your edit may address the issue differently. This page does not validate replacement wording.";
 
 const canonicalSubtitleByPattern = {
-  label_ambiguity: "Lexical ambiguity",
-  broad_bucket: "Vague concept / response-task mismatch",
-  false_premise: "Inappropriate assumption",
-  category_boundary_blur: "Overlapping or vague response categories",
-  sequence_overlap: "Question-order carryover",
-  forced_precision: "Assumes constant behavior"
+  label_ambiguity: "Same words, several meanings",
+  broad_bucket: "One answer field covers too much",
+  false_premise: "Question assumes too much",
+  category_boundary_blur: "Categories overlap",
+  sequence_overlap: "Earlier question changes the next answer",
+  forced_precision: "One exact answer required"
 } satisfies Record<FailurePattern, string>;
 
 const canonicalCitationByPattern = {
@@ -79,17 +79,17 @@ const canonicalCitationByPattern = {
 
 const prerequisiteVocabByPattern = {
   label_ambiguity:
-    "Label ambiguity: one response label points to more than one plausible meaning, so respondents can classify the same reality by different rules.",
+    "Label ambiguity means one answer-choice label can point to more than one everyday meaning.",
   broad_bucket:
-    "Broad bucket: one response field spans more than one construct or level of detail, so unlike answers can all look responsive.",
+    "Broad bucket means one answer field accepts several levels of detail, so unlike answers can all look acceptable.",
   false_premise:
-    "False premise: a question assumes a condition is true, or makes the inapplicable path weak enough that No absorbs it.",
+    "False premise means the question assumes something applies before making that clear.",
   category_boundary_blur:
-    "Category boundary blur: neighboring classes use overlapping features, so respondents cannot tell which side their case belongs on.",
+    "Category boundary blur means nearby answer choices share features, so the dividing line is not obvious.",
   sequence_overlap:
-    "Sequence overlap: a prior item changes how the next response option is interpreted, so the same event can fit twice.",
+    "Sequence overlap means an earlier question changes how the next answer choice is read.",
   forced_precision:
-    "Forced precision: the wording requires a single exact-looking answer from a reality that is variable, episodic, or only partly stable."
+    "Forced precision means the form asks for one exact-looking answer from a situation that changes or is hard to count exactly."
 } satisfies Record<FailurePattern, string>;
 
 function predictionCopy(
@@ -168,73 +168,73 @@ const methodNotesById: Partial<
 > = {
   "ride-hailing": {
     whyHere:
-      "This specimen isolates label ambiguity because app-service, taxi, and shared-ride readings all remain plausible from the same category label.",
+      "This example shows label ambiguity because app-service, taxi, and shared-ride meanings can all come from the same answer-choice words.",
     whatOmitted:
-      "It leaves out the broader commute taxonomy and any claim about downstream travel estimates."
+      "It leaves out the broader list of commute options and any claim about downstream travel estimates."
   },
   "business-industry": {
     whyHere:
-      "This specimen shows a broad bucket because establishment type, industry, product line, and work activity can all look responsive in one answer field.",
+      "This example shows the broad bucket pattern because workplace type, industry, product line, and work activity can all look acceptable in one answer field.",
     whatOmitted:
-      "It leaves out occupation coding questions and the full CPS instrument flow around the item."
+      "It leaves out occupation coding questions and the rest of the Current Population Survey flow around the item."
   },
   "refrigerated-medicine": {
     whyHere:
-      "This specimen anchors false premise because No can hide both a substantive no-spoilage answer and a no-medicine household.",
+      "This example shows a false premise because No can hide both no spoilage and no refrigerated medicine.",
     whatOmitted:
-      "It leaves out the broader outage module and does not estimate how common either route is."
+      "It leaves out the rest of the outage section in the same survey and does not estimate how common either answer meaning is."
   },
   "electric-vehicle-type": {
     whyHere:
-      "This specimen shows category boundary blur because everyday electric-vehicle labels and technical classes do not line up cleanly.",
+      "This example shows category boundary blur because everyday electric-vehicle labels and technical classes do not line up cleanly.",
     whatOmitted:
-      "It leaves out a validated EV taxonomy rewrite and any claim about which vehicle taxonomy should replace the tested wording."
+      "It leaves out a validated EV category rewrite and any claim about which vehicle categories should replace the tested wording."
   },
   "owner-advertising": {
     whyHere:
-      "This specimen demonstrates sequence overlap because the earlier internet-listing item changes how later 'other advertising' is interpreted.",
+      "This example shows sequence overlap because the earlier internet-listing question changes how later 'other advertising' is read.",
     whatOmitted:
-      "It leaves out the full housing-sale routing path and does not model which advertising channel actually caused a sale."
+      "It leaves out the full housing-search section and does not model which advertising channel actually caused a sale."
   },
   "usual-hours": {
     whyHere:
-      "This specimen anchors forced precision because variable weeks are compressed into one usual-hours number.",
+      "This example shows forced precision because changing weekly schedules are compressed into one usual-hours number.",
     whatOmitted:
       "It leaves out validation of alternate time windows and does not claim that any one window is the correct replacement."
   },
   "notebook-computer": {
     whyHere:
-      "This specimen pinpoints label ambiguity because notebook routes some respondents to non-laptop product families before any answer is given.",
+      "This example shows label ambiguity because notebook sends some people toward non-laptop device meanings before they answer Yes or No.",
     whatOmitted:
-      "It leaves out the broader IUS device taxonomy and any claim about generation-level device adoption rates."
+      "It leaves out the broader list of devices in the same Internet Use Survey and any claim about generation-level device adoption rates."
   },
   "ons-kashmiri": {
     whyHere:
-      "This specimen shows a broad bucket because a specific subgroup identity sits under a broader Asian/Asian British category and a write-in path.",
+      "This example shows the broad bucket pattern because a specific subgroup identity sits under a broader Asian/Asian British category and a write-in option.",
     whatOmitted:
       "It leaves out the comparability and parallel-subgroup tradeoffs the ONS report weighed when recommending against the tick-box, which the colophon and Reveal cards summarize separately."
   },
   "sump-pump": {
     whyHere:
-      "This specimen anchors false premise because No can absorb no equipment, no failure event, and no flooding inside one yes/no item.",
+      "This example shows a false premise because No can absorb no equipment, no pump failure, and no flooding inside one yes/no question.",
     whatOmitted:
-      "It leaves out the broader OUTFLOOD module and does not estimate how common no-pump households are."
+      "It leaves out the rest of the outage section in the same survey and does not estimate how common no-pump households are."
   },
   "ons-ethnic-group-heading": {
     whyHere:
-      "This specimen shows category boundary blur because a section heading mixes colour and geographic cues, so several headings can look partly right.",
+      "This example shows category boundary blur because a section heading mixes colour and geographic cues, so several headings can look partly right.",
     whatOmitted:
       "It leaves out the full 2011 ethnic-group recommendation set and any claim about which heading order should generalize beyond England and Wales."
   },
   "avoid-natural-disasters": {
     whyHere:
-      "This specimen anchors sequence overlap because a yes/no reasons series can make Yes feel primary even when the construct is any-influence.",
+      "This example shows sequence overlap because a yes/no reasons series can make Yes feel like the main reason even when the survey wants any influence.",
     whatOmitted:
       "It leaves out the rest of the AHS moving-reasons module and does not model how often secondary motives drive moves."
   },
   "acs-weeks-worked": {
     whyHere:
-      "This specimen shows forced precision because variable work histories are compressed into one exact-looking week count.",
+      "This example shows forced precision because irregular work histories are compressed into one exact-looking week count.",
     whatOmitted:
       "It leaves out validation of any specific replacement window and does not claim the ACS partial-week cue solved the problem."
   }
@@ -260,10 +260,10 @@ const authoredWorkbenchSpecimens: Array<
       prompt: "Using this list, LAST WEEK, how did you USUALLY get to work?",
       context: [
         "The respondent chooses one main commute mode from a transportation list.",
-        "The workbench isolates the response option that was probed for ride-hailing comprehension."
+        "The worked example isolates the response option that was probed for ride-hailing comprehension."
       ],
       targetKind: "response_option",
-      targetLabel: "Highlighted response option",
+      targetLabel: "Highlighted answer choice",
       targetText: "Taxi or ride-hailing services",
       responseOptions: [
         { id: "car", text: "Car, truck, or van" },
@@ -282,7 +282,7 @@ const authoredWorkbenchSpecimens: Array<
       taskPrompt:
         "For each scenario, decide whether this highlighted commute option names the intended paid ride service, could be read multiple ways, or should not include the trip.",
       methodNote:
-        "The source also discusses working-from-home placement. This specimen narrows the task to the ride-hailing label."
+        "The source also discusses working-from-home placement. This example narrows the task to the ride-hailing label."
     },
     intendedConstruct:
       "Main commute mode, specifically whether the trip was a paid taxi or app-based ride service.",
@@ -296,11 +296,11 @@ const authoredWorkbenchSpecimens: Array<
       ],
       [
         "Label meaning can shift",
-        "The same trip could be routed differently because Taxi or ride-hailing services is being read in different ways."
+        "The same trip could lead to different answers because Taxi or ride-hailing services is being read in different ways."
       ],
       [
         "Not this paid-service option",
-        "The trip should use another commute path, not the highlighted taxi/app-ride option."
+        "The trip should use another commute option, not the highlighted taxi/app-ride option."
       ]
     ),
     vignettes: [
@@ -318,7 +318,7 @@ const authoredWorkbenchSpecimens: Array<
           "The respondent's commute is the intended app-based paid service, and their reading of Taxi or ride-hailing services points to that option.",
         probeRationale: {
           covered:
-            "Your examples name app-based services, so this respondent has a clear route into the highlighted option.",
+            "Your examples name app-based services, so this respondent has a clear place in the highlighted option.",
           notCovered:
             "Without an app-based example, this respondent may still have to infer that Uber or Lyft belongs here."
         }
@@ -375,9 +375,9 @@ const authoredWorkbenchSpecimens: Array<
           "Lyft is the intended app-based ride case, so the highlighted option works when the respondent recognizes Lyft as ride-hailing.",
         probeRationale: {
           covered:
-            "Your examples explicitly include Lyft or app-based service, so the route is recoverable.",
+            "Your examples explicitly include Lyft or app-based service, so the answer is easier to place.",
           notCovered:
-            "The edit does not yet make Lyft visible enough as part of the highlighted answer path."
+            "The edit does not yet make Lyft visible enough as part of the highlighted answer choice."
         }
       },
       {
@@ -428,7 +428,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ride-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Used an app-based ride",
         detail:
           "The respondent can remember the commute: a Lyft/Uber-style paid ride arranged through an app."
@@ -436,7 +436,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ride-wording",
         kind: "tested_wording",
-        eyebrow: "Tested label",
+        eyebrow: "Survey wording",
         title: "Taxi or ride-hailing services",
         detail:
           "The visible answer option pairs taxi cabs with the newer ride-hailing term, but gives no examples in the option itself."
@@ -444,7 +444,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ride-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "App ride, taxi cab, or shared ride?",
         detail:
           "The respondent has to infer whether ride-hailing means an app-based paid service, a taxi-like service, or any ride shared with someone else."
@@ -452,7 +452,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ride-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "Commute categories can mix mental models",
         detail:
           "Two people with similar app-ride commutes can choose different answers if they assign different meanings to the highlighted option."
@@ -462,7 +462,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "category_boundary_blur",
       neighborSpecimenId: "electric-vehicle-type",
       contrastText:
-        "This specimen is label ambiguity because the contested step is what Taxi or ride-hailing services means. The neighbor pattern is category boundary blur, where the words may be understood but the line between neighboring classes is unclear."
+        "This example is label ambiguity because the contested step is what Taxi or ride-hailing services means. The neighbor pattern is category boundary blur, where the words may be understood but the line between neighboring classes is unclear."
     },
     widget: {
       kind: "example_set_editor",
@@ -534,7 +534,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A transportation-adjacent service survey asks how a package or meal reached the respondent. One case used DoorDash; another used a local courier company.",
         questionPrompt:
-          "Which wording feature would most likely route those cases differently?",
+          "Which part of the wording would most likely make those cases get different answers?",
         wording: "Food delivery or courier app service",
         pattern: "label_ambiguity",
         featureChoices: [
@@ -544,7 +544,7 @@ const authoredWorkbenchSpecimens: Array<
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This is the same pattern as Specimen 1: the respondent may know what happened, but the service label can point to platform apps, courier companies, or informal delivery."
+          "This is the same pattern as Example 1: the respondent may know what happened, but the service label can point to platform apps, courier companies, or informal delivery."
       },
       {
         id: "ride-distractor-vehicle",
@@ -552,11 +552,11 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A vehicle item asks households to classify a small electric vehicle. Respondents understand the device but may not know whether it belongs with bicycles, scooters, or a broader micromobility class.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "An electric bicycle, a motorized scooter, or another micromobility vehicle",
         pattern: "category_boundary_blur",
         featureChoices: [
-          "A broad bucket that asks for too many services",
+          "A broad answer field that asks for too many services",
           "A boundary between neighboring vehicle classes",
           "A prior question that changes the next answer"
         ],
@@ -594,7 +594,7 @@ const authoredWorkbenchSpecimens: Array<
         "The instruction asks for the main activity, product, or service provided where employed."
       ],
       targetKind: "text_field",
-      targetLabel: "Highlighted answer path",
+      targetLabel: "Highlighted answer field",
       targetText: "Text field for kind of business or industry",
       responseOptions: [
         {
@@ -606,11 +606,11 @@ const authoredWorkbenchSpecimens: Array<
       taskPrompt:
         "Judge whether the text field tells this respondent the right level of answer to give.",
       methodNote:
-        "The source's Round 2 examples clarified answer level; this workbench focuses on the field's broad response task."
+        "The source's Round 2 examples clarified answer level; this worked example focuses on the field's broad response task."
     },
     intendedConstruct: "Employer industry or line of business for a job.",
     sampleRespondent:
-      "A respondent who works in a hospital can separate the establishment from the broader health care industry, but the single field asks for both at once.",
+      "A respondent who works in a hospital can separate the workplace from the broader health care industry, but the single field asks for both at once.",
     prerequisiteVocab: prerequisiteVocabByPattern.broad_bucket,
     predictionCopy: predictionCopy(
       [
@@ -641,7 +641,7 @@ const authoredWorkbenchSpecimens: Array<
           "Hospital and health care are both plausible responses, but they name different levels of the same workplace.",
         probeRationale: {
           covered:
-            "Your split separates establishment type from broader industry, so the answer level is easier to see.",
+            "Your split separates workplace type from broader industry, so the answer level is easier to see.",
           notCovered:
             "The field still accepts both hospital and health care as seemingly responsive answers."
         }
@@ -676,7 +676,7 @@ const authoredWorkbenchSpecimens: Array<
           "Grocery store is a kind of business at a usable level for the field.",
         probeRationale: {
           covered:
-            "Your split leaves establishment or business type available as a clean answer level.",
+            "Your split leaves workplace or business type available as a clean answer level.",
           notCovered:
             "The field does not yet make grocery store visibly acceptable as the intended level."
         }
@@ -723,14 +723,14 @@ const authoredWorkbenchSpecimens: Array<
           text: "The prompt put business type and industry level into one answer space.",
           isCorrect: true,
           explanation:
-            "The single field can accept establishment type, broad industry, product line, or work activity without saying which level is intended."
+            "The single field can accept workplace type, broad industry, product line, or work activity without saying which level is intended."
         },
         {
           id: "too-precise",
           text: "The prompt forced a precise number from variable weeks.",
           isCorrect: false,
           explanation:
-            "No numeric estimate is being compressed here. The issue is the scope of an open response bucket."
+            "No numeric estimate is being compressed here. The issue is the scope of an open response field."
         },
         {
           id: "sequence-leak",
@@ -745,15 +745,15 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "industry-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Business and industry split apart",
         detail:
-          "The respondent may know the workplace name, the establishment type, the broad sector, and the service line."
+          "The respondent may know the workplace name, the workplace type, the broad sector, and the service line."
       },
       {
         id: "industry-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
+        eyebrow: "Survey wording",
         title: "What kind of business or industry is this?",
         detail:
           "The field asks for business or industry, but those words can cue different levels of the same job."
@@ -761,7 +761,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "industry-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "Which level belongs in the box?",
         detail:
           "The respondent has to decide whether hospital, health care, food delivery, cashier, or the employer name is the expected shape."
@@ -769,7 +769,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "industry-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "Unlike answers can look complete",
         detail:
           "The data can contain complete-looking text while mixing levels that coders or analysts need to interpret consistently."
@@ -779,12 +779,12 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "forced_precision",
       neighborSpecimenId: "usual-hours",
       contrastText:
-        "This specimen is broad bucket because one text field spans several answer levels. The forced-precision neighbor asks respondents to compress variable experience into one exact-looking number."
+        "This example is a broad-answer-field problem because one text field spans several answer levels. The forced-precision neighbor asks respondents to compress variable experience into one exact-looking number."
     },
     widget: {
       kind: "bucket_splitter",
       items: [
-        { id: "establishment", label: "establishment or business type" },
+        { id: "establishment", label: "workplace or business type" },
         { id: "industry", label: "industry or sector" },
         { id: "service", label: "product or service line" },
         { id: "occupation", label: "job title or task" }
@@ -799,7 +799,7 @@ const authoredWorkbenchSpecimens: Array<
         "industry-business-name": { cleanAt: [] }
       }
     },
-    probePrompt: "Explore where the answer bucket needs a boundary.",
+    probePrompt: "Explore where the answer field needs a boundary.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -808,7 +808,7 @@ const authoredWorkbenchSpecimens: Array<
       },
       remainsUntested: {
         residualRisks: [
-          "Examples may clarify common jobs while leaving platform, multi-client, or mixed-establishment work hard to classify."
+          "Examples may clarify common jobs while leaving platform, multi-client, or mixed-workplace work hard to classify."
         ],
         claimBoundaryNote
       }
@@ -820,7 +820,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "An employment form asks about a gig job. The respondent could answer app company, delivery service, restaurant delivery, or self-employed courier.",
         questionPrompt:
-          "Which wording feature would make those answers hard to compare?",
+          "Which part of the wording would make those answers hard to compare?",
         wording: "What kind of company, agency, or line of work was this?",
         pattern: "broad_bucket",
         featureChoices: [
@@ -838,7 +838,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A worker's hours change from week to week. The form still asks for one usual weekly number.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "How many hours do you usually work in a week with changing shifts?",
         pattern: "forced_precision",
         featureChoices: [
@@ -848,7 +848,7 @@ const authoredWorkbenchSpecimens: Array<
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This can look like a broad bucket because much experience is compressed, but the distinguishing feature is the forced single number."
+          "This can look like a broad-answer-field problem because much experience is compressed, but the distinguishing feature is the forced single number."
       }
     ],
     source: sourceReceipt(
@@ -877,18 +877,18 @@ const authoredWorkbenchSpecimens: Array<
       prompt: "During the outage period, did any refrigerated medicine spoil?",
       context: [
         "The item is asked in a power-outage module.",
-        "The response path must distinguish medicine that did not spoil from households without refrigerated medicine."
+        "The answer choices must distinguish medicine that did not spoil from households without refrigerated medicine."
       ],
       targetKind: "yes_no_path",
-      targetLabel: "Highlighted response path",
-      targetText: "Yes / No / No refrigerated medicine response set",
+      targetLabel: "Highlighted answer choices",
+      targetText: "Yes / No / No refrigerated medicine answer choices",
       responseOptions: [
         { id: "yes", text: "Yes", isTarget: true },
         { id: "no", text: "No", isTarget: true },
         { id: "no-medicine", text: "No refrigerated medicine", isTarget: true }
       ],
       taskPrompt:
-        "Judge whether this response path cleanly separates spoilage, no spoilage, and no refrigerated medicine.",
+        "Judge whether these answer choices separate spoilage, no spoilage, and no refrigerated medicine.",
       methodNote:
         "The source recommended keeping the no-medicine option and adding a follow-up after No because some respondents did not volunteer the inapplicable state."
     },
@@ -899,14 +899,14 @@ const authoredWorkbenchSpecimens: Array<
     predictionCopy: predictionCopy(
       [
         "Applicability is separated",
-        "The response path clearly separates spoilage, no spoilage, or no refrigerated medicine."
+        "The answer choices clearly separate spoilage, no spoilage, or no refrigerated medicine."
       ],
       [
         "No can hide no medicine",
         "A No answer could mean no spoilage or that the household had no refrigerated medicine."
       ],
       [
-        "Outside outage construct",
+        "Outside outage item",
         "The scenario should not be counted as refrigerated medicine spoilage caused by the outage."
       ]
     ),
@@ -927,7 +927,7 @@ const authoredWorkbenchSpecimens: Array<
           covered:
             "A screener or follow-up separates no refrigerated medicine from a substantive No.",
           notCovered:
-            "The current path still lets a household without refrigerated medicine disappear inside No."
+            "The current answer choices still let a household without refrigerated medicine disappear inside No."
         }
       },
       {
@@ -941,9 +941,9 @@ const authoredWorkbenchSpecimens: Array<
           "This respondent uses the explicit inapplicable option, so No does not have to carry that meaning.",
         probeRationale: {
           covered:
-            "A visible not-applicable route keeps this respondent out of the No path.",
+            "A visible not-applicable option keeps this respondent out of the No answer.",
           notCovered:
-            "Without a visible not-applicable route, this respondent may still need to improvise."
+            "Without a visible not-applicable option, this respondent may still need to improvise."
         }
       },
       {
@@ -951,13 +951,13 @@ const authoredWorkbenchSpecimens: Array<
         text: "A respondent had refrigerated medicine and it spoiled during the outage.",
         provenance: "editorial",
         attributionNote:
-          "Based on the AHS 2023 OUTMED construct: spoilage of refrigerated medicine during an outage.",
+          "Based on the AHS 2023 OUTMED target: spoilage of refrigerated medicine during an outage.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "The household is in scope and the event occurred; the clean route is Yes, not the highlighted No.",
+          "The household is in scope and the event occurred; the correct answer is Yes, not the highlighted No.",
         probeRationale: {
           covered:
-            "The edit preserves a clear Yes route for in-scope spoilage.",
+            "The edit preserves a clear Yes answer for in-scope spoilage.",
           notCovered:
             "This case should stay outside No because the medicine did spoil."
         }
@@ -973,9 +973,9 @@ const authoredWorkbenchSpecimens: Array<
           "This is the substantive No the item is trying to measure: medicine existed, but did not spoil.",
         probeRationale: {
           covered:
-            "The edit leaves a clean No route for in-scope households with no spoilage.",
+            "The edit leaves a clear No answer for in-scope households with no spoilage.",
           notCovered:
-            "The No path remains hard to interpret if it is not separated from no-medicine households."
+            "The No answer remains hard to interpret if it is not separated from no-medicine households."
         }
       },
       {
@@ -986,12 +986,12 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the AHS 2023 OUTMED recommendation to add the timeframe and as-a-result-of-a-power-outage wording.",
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "The spoilage is outside the power-outage construct, so it should not be counted by this item.",
+          "The spoilage is outside the power-outage target, so it should not be counted by this item.",
         probeRationale: {
           covered:
             "The edit resolves this by keeping non-outage spoilage outside the outage item.",
           notCovered:
-            "The edit keeps refrigerator problems unrelated to the outage outside the target path."
+            "The edit keeps refrigerator problems unrelated to the outage outside the highlighted answer choice."
         }
       }
     ],
@@ -1001,7 +1001,7 @@ const authoredWorkbenchSpecimens: Array<
       choices: [
         {
           id: "missing-applicability",
-          text: "The No answer competed with a weak inapplicable path.",
+          text: "The No answer competed with a weakly visible not-applicable option.",
           isCorrect: true,
           explanation:
             "No refrigerated medicine was available, but two respondents still answered No; the report recommended a follow-up after No."
@@ -1011,7 +1011,7 @@ const authoredWorkbenchSpecimens: Array<
           text: "A prior outage question changed the meaning of medicine.",
           isCorrect: false,
           explanation:
-            "The problem is not leakage from a previous answer. It is the missing applicability state inside this item."
+            "The problem is not leakage from a previous answer. It is the weakly visible not-applicable state inside this item."
         },
         {
           id: "category-boundary",
@@ -1026,7 +1026,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "medicine-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "No refrigerated medicine",
         detail:
           "The respondent may have no refrigerated medicine at all, which is different from having medicine that stayed usable."
@@ -1034,23 +1034,23 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "medicine-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
+        eyebrow: "Survey wording",
         title: "Did any refrigerated medicine spoil?",
         detail:
-          "The response set includes No refrigerated medicine, but the yes/no wording still makes No feel available."
+          "The answer choices include No refrigerated medicine, but the yes/no wording still makes No feel available."
       },
       {
         id: "medicine-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "No response or missed inapplicable option?",
         detail:
-          "The respondent may choose No as the closest answer instead of noticing or using the inapplicable route."
+          "The respondent may choose No as the closest answer instead of noticing or using the not-applicable option."
       },
       {
         id: "medicine-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "No loses its denominator",
         detail:
           "Without a follow-up, analysts cannot tell whether No means in-scope no spoilage or out-of-scope no refrigerated medicine."
@@ -1060,7 +1060,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "sequence_overlap",
       neighborSpecimenId: "owner-advertising",
       contrastText:
-        "This specimen is false premise because No can hide an inapplicable household. The sequence-overlap neighbor is different: a previous answer changes how the next response option is read."
+        "This example is false premise because No can hide an inapplicable household. The sequence-overlap neighbor is different: a previous answer changes how the next response option is read."
     },
     widget: {
       kind: "filter_path_toggle",
@@ -1120,7 +1120,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A storm-damage module asks about basement flooding. Some households have sump pumps; others do not have that equipment at all.",
         questionPrompt:
-          "Which wording feature would make a plain No hard to interpret?",
+          "Which part of the wording would make a plain No hard to interpret?",
         wording: "Did your sump pump fail during the outage?",
         pattern: "false_premise",
         featureChoices: [
@@ -1130,7 +1130,7 @@ const authoredWorkbenchSpecimens: Array<
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This is the same pattern because households without a sump pump need an applicability path. It is not sequence overlap because no prior response is changing the category."
+          "This is the same pattern because households without a sump pump need an applicability option. It is not sequence overlap because no prior response is changing the category."
       },
       {
         id: "medicine-distractor-owner-ad",
@@ -1138,17 +1138,17 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A rental-search series first records that the respondent found the listing on an app, then asks about other advertising by the owner.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "After saying you found the rental on an app, did you find it through other advertising by the owner?",
         pattern: "sequence_overlap",
         featureChoices: [
           "A missing not-applicable option",
           "A previous answer overlaps the next category",
-          "A broad field spans several constructs"
+          "A broad field spans several topics"
         ],
         correctFeatureIndex: 1,
         explanation:
-          "This may look like a missing path, but the distinguishing feature is the earlier app answer changing how the later owner-advertising item reads."
+          "This may look like a missing not-applicable option, but the distinguishing feature is the earlier app answer changing how the later owner-advertising item reads."
       }
     ],
     source: sourceReceipt(
@@ -1177,10 +1177,10 @@ const authoredWorkbenchSpecimens: Array<
       prompt: "Are any of the following types of electric vehicles kept at home for use by members of this household?",
       context: [
         "Version 1 asked first about a plug-in electric vehicle.",
-        "The workbench isolates the second response item, which was meant to capture other electric vehicles such as hybrids."
+        "The worked example isolates the second response item, which was meant to capture other electric vehicles such as hybrids."
       ],
       targetKind: "response_option",
-      targetLabel: "Highlighted response item",
+      targetLabel: "Highlighted answer choice",
       targetText: "Another type of electric vehicle?",
       responseOptions: [
         { id: "plug-in", text: "A plug-in electric vehicle?" },
@@ -1189,20 +1189,21 @@ const authoredWorkbenchSpecimens: Array<
       taskPrompt:
         "Judge whether the highlighted item gives each vehicle a clean home, or whether plug-in, hybrid, gasoline, and everyday electric labels compete.",
       methodNote:
-        "The later version named plug-in electric vehicle and hybrid electric vehicle directly. This specimen evaluates the earlier broader label."
+        "The later version named plug-in electric vehicle and hybrid electric vehicle directly. This example evaluates the earlier broader label."
     },
-    intendedConstruct: "Vehicle technology type.",
+    intendedConstruct:
+      "What technology the vehicle uses (battery only, gasoline, or both).",
     sampleRespondent:
       "A respondent who owns or recognizes a hybrid vehicle may sort it by whether it plugs in, whether it uses gasoline, or whether it feels electric in everyday speech.",
     prerequisiteVocab: prerequisiteVocabByPattern.category_boundary_blur,
     predictionCopy: predictionCopy(
       [
         "Belongs in other-EV item",
-        "The highlighted item clearly covers this vehicle under the intended hybrid/non-plug-in route."
+        "The highlighted item clearly covers this vehicle under the intended hybrid or non-plug-in answer."
       ],
       [
         "Vehicle boundary unclear",
-        "Plug-in, hybrid, gasoline, and everyday electric cues point to more than one route."
+        "Plug-in, hybrid, gasoline, and everyday electric cues point to more than one answer choice."
       ],
       [
         "Belongs elsewhere in sequence",
@@ -1243,7 +1244,7 @@ const authoredWorkbenchSpecimens: Array<
           "The vehicle is the kind the item hoped to capture, but the word electric can make a non-plug-in hybrid feel out of scope.",
         probeRationale: {
           covered:
-            "A gas-plus-battery rule gives the hybrid a clean route even when it does not plug in.",
+            "A gas-plus-battery rule gives the hybrid a clear place even when it does not plug in.",
           notCovered:
             "The edit still lets no plug mean not electric, so the highlighted item remains unstable."
         }
@@ -1278,7 +1279,7 @@ const authoredWorkbenchSpecimens: Array<
           "A battery-only plug-in vehicle belongs in the first item, not the highlighted other-electric item.",
         probeRationale: {
           covered:
-            "A plug-in rule routes this vehicle away from the highlighted other-electric item.",
+            "A plug-in rule puts this vehicle in the first plug-in item instead of the highlighted other-electric item.",
           notCovered:
             "Keeping plug-in vehicles separate prevents the other-electric item from absorbing them."
         }
@@ -1307,12 +1308,12 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the ACS finding that most participants reporting another electric vehicle referred to a hybrid.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "This is the intended clean route for the highlighted item: a hybrid electric vehicle that is not the plug-in item.",
+          "This is the intended clear case for the highlighted item: a hybrid electric vehicle that is not the plug-in item.",
         probeRationale: {
           covered:
             "A gas-plus-battery rule gives this non-plug-in hybrid a clean home.",
           notCovered:
-            "The edit still does not make the intended hybrid route clear enough."
+            "The edit still does not make the intended hybrid answer clear enough."
         }
       }
     ],
@@ -1336,10 +1337,10 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "open-bucket",
-          text: "The item put several unrelated constructs into one text field.",
+          text: "The item put several unrelated topics into one text field.",
           isCorrect: false,
           explanation:
-            "This is not an open text bucket. Respondents are sorting a vehicle among neighboring technical classes."
+            "This is not an open text-field problem. Respondents are sorting a vehicle among neighboring technical classes."
         }
       ]
     },
@@ -1347,7 +1348,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ev-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Battery, gas, plug, or label?",
         detail:
           "The respondent may know the vehicle but organize it by fuel source, outlet charging, battery use, or marketing label."
@@ -1355,7 +1356,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ev-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
+        eyebrow: "Survey wording",
         title: "Another type of electric vehicle",
         detail:
           "The item follows plug-in electric vehicle, then asks for another electric vehicle without naming hybrid directly."
@@ -1363,7 +1364,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ev-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "The boundary is not obvious",
         detail:
           "The respondent has to decide whether plug-in status, hybrid status, gasoline use, or the everyday electric label controls the answer."
@@ -1371,7 +1372,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "ev-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "Vehicle type may be mapped inconsistently",
         detail:
           "The same vehicle can be reported differently when households apply different rules to neighboring vehicle categories."
@@ -1381,7 +1382,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "label_ambiguity",
       neighborSpecimenId: "ride-hailing",
       contrastText:
-        "This specimen is category boundary blur because the respondent may understand the words but not where plug-in, hybrid, gasoline, and electric classes divide. The label-ambiguity neighbor turns on what one answer label means."
+        "This example is category boundary blur because the respondent may understand the words but not where plug-in, hybrid, gasoline, and electric classes divide. The label-ambiguity neighbor turns on what one answer label means."
     },
     widget: {
       kind: "classifier_radio",
@@ -1433,7 +1434,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A device survey asks which TV-connected devices a household uses. A smart TV, streaming box, and game console can all play streaming video through a television.",
         questionPrompt:
-          "Which wording feature would make these device routes overlap?",
+          "Which part of the wording would make these device categories overlap?",
         wording: "A smart TV, a streaming box, or another device that plays through a TV",
         pattern: "category_boundary_blur",
         featureChoices: [
@@ -1451,7 +1452,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A household technology item asks about laptop or notebook computers. Some respondents use notebook to mean a paper notebook or a smaller device family.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "A laptop or notebook computer",
         pattern: "label_ambiguity",
         featureChoices: [
@@ -1474,7 +1475,7 @@ const authoredWorkbenchSpecimens: Array<
       acsRound12Url
     ),
     counterexample: {
-      eyebrow: "Iterated wording",
+      eyebrow: "Updated wording",
       beforeWording: "Another type of electric vehicle?",
       afterWording: "A hybrid electric vehicle? A plug-in electric vehicle?",
       evidenceOfImprovement:
@@ -1495,13 +1496,13 @@ const authoredWorkbenchSpecimens: Array<
     testedWording: "Through some other advertising by the owner?",
     answerFrame: {
       eyebrow: "AHS housing-search sequence",
-      prompt: "Did you find your home through any of these routes?",
+      prompt: "Did you find your home through any of these ways?",
       context: [
         "The respondent has already answered an internet-site item.",
         "The next item asks whether some other owner advertising also helped."
       ],
       targetKind: "sequence_item",
-      targetLabel: "Highlighted sequence item",
+      targetLabel: "Highlighted answer choice in the series",
       targetText: "Through some other advertising by the owner?",
       responseOptions: [
         {
@@ -1515,26 +1516,26 @@ const authoredWorkbenchSpecimens: Array<
         }
       ],
       taskPrompt:
-        "Judge whether the highlighted owner-advertising item captures a distinct route, or whether the prior internet-site answer changes its meaning.",
+        "Judge whether the highlighted owner-advertising item captures a separate way the home was found, or whether the prior internet-site answer changes its meaning.",
       methodNote:
         "The issue is not that respondents could not define owner advertising; it is that the same listing can look relevant to two adjacent items."
     },
-    intendedConstruct: "Housing-search source or route.",
+    intendedConstruct: "How the person found the home.",
     sampleRespondent:
       "A respondent who already reported an internet listing can still see the same listing as owner advertising when the owner posted it.",
     prerequisiteVocab: prerequisiteVocabByPattern.sequence_overlap,
     predictionCopy: predictionCopy(
       [
-        "Distinct owner route",
-        "The highlighted owner-advertising item covers a route not already handled by the prior internet item."
+        "Distinct owner source",
+        "The highlighted owner-advertising item covers a source not already handled by the prior internet item."
       ],
       [
         "Prior answer overlaps",
-        "The same listing can look like both the earlier internet route and the highlighted owner-advertising route."
+        "The same listing can look like both the earlier internet source and the highlighted owner-advertising source."
       ],
       [
         "Not owner advertising",
-        "The route should stay outside the highlighted owner-advertising item."
+        "The scenario should stay outside the highlighted owner-advertising item."
       ]
     ),
     vignettes: [
@@ -1549,7 +1550,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent sees the highlighted item as a repeat of the prior internet-site answer rather than a distinct route.",
+          "The respondent sees the highlighted item as a repeat of the prior internet-site answer rather than a separate source.",
         probeRationale: {
           covered:
             "Putting an all-that-helped instruction first makes multiple Yes answers permissible before the sequence begins.",
@@ -1571,7 +1572,7 @@ const authoredWorkbenchSpecimens: Array<
           "One event is doing two jobs: it is an internet listing and owner advertising, so the highlighted item is not separable.",
         probeRationale: {
           covered:
-            "An upfront all-that-helped rule tells the respondent whether overlapping routes should both be reported.",
+            "An upfront all-that-helped rule tells the respondent whether overlapping sources should both be reported.",
           notCovered:
             "The edit still leaves the Zillow listing stranded between two adjacent items."
         }
@@ -1584,12 +1585,12 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the RMOVHS owner-advertising category after the internet-site question.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "A physical sign placed by the owner is a distinct owner-advertising route.",
+          "A physical sign placed by the owner is a distinct owner-advertising source.",
         probeRationale: {
           covered:
-            "The highlighted item remains a clean fit for owner advertising outside the internet-site path.",
+            "The highlighted item remains a clear fit for owner advertising outside the internet-site answer.",
           notCovered:
-            "The edit should preserve this distinct owner-advertising route."
+            "The edit should preserve this distinct owner-advertising source."
         }
       },
       {
@@ -1597,15 +1598,15 @@ const authoredWorkbenchSpecimens: Array<
         text: "A respondent found the home through an internet listing not posted by the owner, with no owner advertising involved.",
         provenance: "editorial",
         attributionNote:
-          "Based on the RMOVHS need to separate internet listings (HEARSHSNET) from owner advertising routes.",
+          "Based on the RMOVHS need to separate internet listings (HEARSHSNET) from owner advertising sources.",
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "The highlighted owner-advertising item is the wrong path when the owner was not involved.",
+          "The highlighted owner-advertising item is the wrong answer when the owner was not involved.",
         probeRationale: {
           covered:
             "The edit resolves this by keeping internet listings not posted by the owner outside owner advertising.",
           notCovered:
-            "Keeping owner involvement explicit keeps this internet-only route outside the highlighted item."
+            "Keeping owner involvement explicit keeps this internet-only listing outside the highlighted item."
         }
       },
       {
@@ -1619,7 +1620,7 @@ const authoredWorkbenchSpecimens: Array<
           "The same Craigslist post is both internet-mediated and owner-authored, so the sequence creates overlap.",
         probeRationale: {
           covered:
-            "The upfront multi-route instruction makes the overlap intentional rather than accidental.",
+            "The upfront instruction to mark every source that helped makes the overlap intentional rather than accidental.",
           notCovered:
             "The edit still does not tell the respondent whether to count the owner-authored internet post again."
         }
@@ -1638,7 +1639,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "one-large-bucket",
-          text: "One answer bucket combined unrelated housing-search routes.",
+          text: "One answer field combined unrelated housing-search sources.",
           isCorrect: false,
           explanation:
             "The issue appears across adjacent items, not inside one oversized response field."
@@ -1656,7 +1657,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "owner-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "One listing, multiple labels",
         detail:
           "The respondent may have one concrete listing in mind, such as Zillow or Craigslist, that was also posted by the owner."
@@ -1664,7 +1665,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "owner-wording",
         kind: "tested_wording",
-        eyebrow: "Tested label",
+        eyebrow: "Survey wording",
         title: "Some other advertising by the owner",
         detail:
           "The highlighted item appears after the respondent has already answered about internet listing sites."
@@ -1672,7 +1673,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "owner-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "Does this count again?",
         detail:
           "The respondent has to decide whether the owner-authored internet listing should be counted again or treated as already reported."
@@ -1680,24 +1681,24 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "owner-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "Sequence can create overlap",
         detail:
-          "Responses no longer cleanly separate search routes if some people double-report the same listing and others refuse to count it twice."
+          "Responses no longer cleanly separate search sources if some people double-report the same listing and others refuse to count it twice."
       }
     ],
     neighborContrast: {
       pattern: "broad_bucket",
       neighborSpecimenId: "business-industry",
       contrastText:
-        "This specimen is sequence overlap because adjacent questions make one listing fit twice. The broad-bucket neighbor is different: one field is too wide even before question order matters."
+        "This example is sequence overlap because adjacent questions make one listing fit twice. The broad-answer-field neighbor is different: one field is too wide even before question order matters."
     },
     widget: {
       kind: "sequence_reorderer",
       items: [
         { id: "internet-site", label: "internet listing site" },
         { id: "owner-ad", label: "other owner advertising" },
-        { id: "all-that-apply", label: "answer Yes to all routes that helped" }
+        { id: "all-that-apply", label: "answer Yes to all ways that helped" }
       ],
       initialOrder: ["internet-site", "owner-ad", "all-that-apply"],
       initialAllowMulti: false,
@@ -1764,7 +1765,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A moving-reason module asks several yes/no reason items in a row. The respondent had a secondary reason but already answered other reason questions.",
         questionPrompt:
-          "Which wording feature changes how the next Yes answer feels?",
+          "Which part of the wording changes how the next Yes answer feels?",
         wording: "After several moving-reason questions, did you move to avoid natural disasters?",
         pattern: "sequence_overlap",
         featureChoices: [
@@ -1774,7 +1775,7 @@ const authoredWorkbenchSpecimens: Array<
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This is the same pattern because earlier items in the series shape the meaning of the next Yes. It is not broad bucket because the pressure comes from sequence."
+          "This is the same pattern because earlier items in the series shape the meaning of the next Yes. It is not a broad-answer-field problem because the pressure comes from sequence."
       },
       {
         id: "owner-distractor-utilities",
@@ -1782,17 +1783,17 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A housing-cost form asks for one payment amount that can include electricity, gas, phone, and other utilities.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "How much did you pay for electricity, gas, telephone, and other utilities?",
         pattern: "broad_bucket",
         featureChoices: [
-          "One amount bucket spans several service types",
+          "One amount field spans several service types",
           "A prior answer overlaps the next option",
           "A technical boundary separates vehicle classes"
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This can look like overlap, but it happens inside one broad amount bucket rather than across a question sequence."
+          "This can look like overlap, but it happens inside one broad amount field rather than across a question sequence."
       }
     ],
     source: sourceReceipt(
@@ -1814,7 +1815,7 @@ const authoredWorkbenchSpecimens: Array<
     canonicalSubtitle: canonicalSubtitleByPattern.forced_precision,
     canonicalCitations: canonicalCitationByPattern.forced_precision,
     title: "When usual hours demand one number",
-    subtitle: "The item creates aggregation strain: variable weeks have to become a single usual-hours answer.",
+    subtitle: "Variable weeks have to become a single usual-hours answer, so the respondent picks an unstated rule for combining them.",
     testedWording: "How many hours per week do you USUALLY work at your <MAIN> job?",
     answerFrame: {
       eyebrow: "CPS usual-hours item",
@@ -1824,15 +1825,15 @@ const authoredWorkbenchSpecimens: Array<
         "The response is one numeric value for usual weekly hours at the main job."
       ],
       targetKind: "numeric_field",
-      targetLabel: "Highlighted answer path",
+      targetLabel: "Highlighted answer field",
       targetText: "One usual-hours number",
       responseOptions: [
         { id: "hours", text: "Usual hours worked each week: [number]", isTarget: true }
       ],
       taskPrompt:
-        "Judge whether one usual-hours number is recoverable, or whether the respondent must choose an unstated recipe such as average, most common week, or recent week.",
+        "Judge whether one usual-hours number can be given as-is, or whether the respondent must pick an unstated counting method such as average, most common week, or recent week.",
       methodNote:
-        "Averaging is not automatically wrong. The fit problem is that different respondents may use different recipes while entering the same clean-looking field."
+        "Averaging is not automatically wrong. The fit problem is that different respondents may use different counting methods while entering the same clean-looking field."
     },
     intendedConstruct: "Usual weekly hours at the respondent's main job.",
     sampleRespondent:
@@ -1840,12 +1841,12 @@ const authoredWorkbenchSpecimens: Array<
     prerequisiteVocab: prerequisiteVocabByPattern.forced_precision,
     predictionCopy: predictionCopy(
       [
-        "One number recoverable",
+        "One number can fit",
         "The respondent can give one usual-hours number without choosing a hidden calculation rule."
       ],
       [
-        "Recipe is unstated",
-        "The respondent can enter a number, but average, most common week, and recent week remain competing recipes."
+        "Counting method unclear",
+        "The respondent can enter a number, but average, most common week, and recent week remain competing methods."
       ],
       [
         "No usual number",
@@ -1864,10 +1865,10 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent can provide a number, but the field does not say whether average is the intended recipe.",
+          "The respondent can provide a number, but the field does not say whether average is the intended method.",
         probeRationale: {
           covered:
-            "A declared window or recipe makes this average interpretable as the intended answer.",
+            "A declared window or counting method makes this average interpretable as the intended answer.",
           notCovered:
             "The edit still lets average, usual, and recent-week logic compete."
         }
@@ -1886,7 +1887,7 @@ const authoredWorkbenchSpecimens: Array<
           "The answer is plausible, but the respondent is choosing a dominance rule that the field does not make explicit.",
         probeRationale: {
           covered:
-            "A usual-pattern rule can make a most-of-the-period answer recoverable.",
+            "A usual-pattern rule can make a most-of-the-period answer stable.",
           notCovered:
             "The edit still does not specify whether most-of-period should control the number."
         }
@@ -1905,9 +1906,9 @@ const authoredWorkbenchSpecimens: Array<
           "The numeric answer hides which weeks were included and how they were aggregated.",
         probeRationale: {
           covered:
-            "A shorter or explicit window makes the averaging recipe more inspectable.",
+            "A shorter or explicit window makes the averaging method more inspectable.",
           notCovered:
-            "The edit still turns several week types into one number without naming the recipe."
+            "The edit still turns several week types into one number without naming the counting method."
         }
       },
       {
@@ -1915,10 +1916,10 @@ const authoredWorkbenchSpecimens: Array<
         text: "A respondent works the same forty-hour schedule each week.",
         provenance: "editorial",
         attributionNote:
-          "Based on the CPS usual-hours construct, where stable schedules make the single answer recoverable.",
+          "Based on the CPS usual-hours target, where stable schedules let the single answer be given as-is.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "With a stable schedule, one usual-hours number is recoverable without extra calculation.",
+          "With a stable schedule, one usual-hours number can be given without extra calculation.",
         probeRationale: {
           covered:
             "Any reasonable window preserves the same forty-hour answer.",
@@ -1959,7 +1960,7 @@ const authoredWorkbenchSpecimens: Array<
           text: "The field combined paid hours, unpaid breaks, and travel time into one number.",
           isCorrect: false,
           explanation:
-            "That would be a broad-bucket problem. Here the construct is hours of work, and the cited strain is producing one number from variable weeks."
+            "That would be a broad-answer-field problem. Here the survey is asking for hours of work, and the cited strain is producing one number from variable weeks."
         },
         {
           id: "missing-na",
@@ -1974,7 +1975,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "hours-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Weeks do not match",
         detail:
           "The respondent may remember short weeks, long weeks, and recent schedule changes instead of one stable weekly pattern."
@@ -1982,7 +1983,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "hours-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
+        eyebrow: "Survey wording",
         title: "How many hours per week do you USUALLY work?",
         detail:
           "The numeric field accepts one clean-looking number and does not show the calculation rule used to make it."
@@ -1990,7 +1991,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "hours-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "Average, mode, or recent pattern?",
         detail:
           "The respondent has to choose whether usual means average, most common schedule, current schedule, or most of the reference period."
@@ -1998,17 +1999,17 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "hours-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
-        title: "The number can hide its recipe",
+        eyebrow: "What the recorded answer can hide",
+        title: "The number can hide its method",
         detail:
-          "Two respondents can both enter plausible numbers while using different recipes that the data field cannot recover."
+          "Two respondents can both enter plausible numbers while using different counting methods that the data field cannot recover."
       }
     ],
     neighborContrast: {
       pattern: "broad_bucket",
       neighborSpecimenId: "business-industry",
       contrastText:
-        "This specimen is forced precision because changing weeks must become one number. The broad-bucket neighbor is different: the field is too wide across answer concepts or levels."
+        "This example is forced precision because changing weeks must become one number. The broad-answer-field neighbor is different: the field is too wide across answer topics or levels."
     },
     widget: {
       kind: "time_window_slider",
@@ -2029,7 +2030,7 @@ const authoredWorkbenchSpecimens: Array<
         "hours-no-usual-week": { stableWindowIds: ["last-week"] }
       }
     },
-    probePrompt: "Explore how the recall window changes the answer recipe.",
+    probePrompt: "Explore how the recall window changes the counting method.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -2050,7 +2051,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A worker earns a base wage plus tips that vary by week. The form asks for one usual weekly earnings amount.",
         questionPrompt:
-          "Which wording feature would make the answer recipe unstable?",
+          "Which part of the wording would make the counting method unstable?",
         wording: "How much do you usually earn in a week when your tips change?",
         pattern: "forced_precision",
         featureChoices: [
@@ -2060,7 +2061,7 @@ const authoredWorkbenchSpecimens: Array<
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This is the same pattern because changing weekly tips must become one amount. It is not broad bucket because the answer shape is precise and numeric."
+          "This is the same pattern because changing weekly tips must become one amount. It is not a broad-answer-field problem because the answer shape is precise and numeric."
       },
       {
         id: "hours-distractor-main-reason",
@@ -2068,7 +2069,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A labor-force item asks for the main reason someone was not looking for work, even when several reasons applied.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "What is the main reason you were not looking for work?",
         pattern: "broad_bucket",
         featureChoices: [
@@ -2078,7 +2079,7 @@ const authoredWorkbenchSpecimens: Array<
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This may look like forced precision because it asks for one answer, but the distinguishing feature is a broad reason bucket rather than numeric aggregation."
+          "This may look like forced precision because it asks for one answer, but the distinguishing feature is a broad reason field rather than numeric aggregation."
       }
     ],
     source: sourceReceipt(
@@ -2112,14 +2113,14 @@ const authoredWorkbenchSpecimens: Array<
         "Help text defined a laptop as portable with a built-in keyboard and screen."
       ],
       targetKind: "response_option",
-      targetLabel: "Highlighted device label",
+      targetLabel: "Highlighted answer choice",
       targetText: "Laptop or notebook computer",
       responseOptions: [
         { id: "yes", text: "Yes, someone uses a laptop or notebook computer", isTarget: true },
         { id: "no", text: "No" }
       ],
       taskPrompt:
-        "Judge whether the label gives the respondent a clean route to portable-computer use, or whether notebook points to another device family.",
+        "Judge whether the label gives the respondent a clear answer for portable-computer use, or whether notebook points to another device family.",
       methodNote:
         "The report found laptop was understood, while notebook sent several respondents to tablet-like or lower-function devices."
     },
@@ -2130,8 +2131,8 @@ const authoredWorkbenchSpecimens: Array<
     prerequisiteVocab: prerequisiteVocabByPattern.label_ambiguity,
     predictionCopy: predictionCopy(
       [
-        "Laptop route visible",
-        "The highlighted label clearly points to the intended portable-computer construct."
+        "Laptop answer visible",
+        "The highlighted label clearly points to the intended portable-computer category."
       ],
       [
         "Notebook meaning shifts",
@@ -2139,7 +2140,7 @@ const authoredWorkbenchSpecimens: Array<
       ],
       [
         "Not a laptop computer",
-        "The household device should not be counted through the laptop/notebook path."
+        "The household device should not be counted as laptop/notebook use."
       ]
     ),
     vignettes: [
@@ -2176,7 +2177,7 @@ const authoredWorkbenchSpecimens: Array<
           "A Chromebook may be in scope or may be treated as a separate product family, so the label does not settle the answer.",
         probeRationale: {
           covered:
-            "Naming Chromebook or a clearer laptop class can bring this case into a declared route.",
+            "Naming Chromebook or a clearer laptop class can bring this case into a declared answer category.",
           notCovered:
             "The edit still leaves Chromebook hovering between laptop and another device family."
         }
@@ -2211,7 +2212,7 @@ const authoredWorkbenchSpecimens: Array<
           "A conventional laptop is the intended clean case for the item.",
         probeRationale: {
           covered:
-            "The edited label preserves laptop as the clear route for this respondent.",
+            "The edited label preserves laptop as the clear answer for this respondent.",
           notCovered:
             "The edit should not make a conventional laptop harder to report."
         }
@@ -2224,18 +2225,18 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the NTIA finding that some respondents mapped notebook to tablet-like devices.",
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "A tablet-only household is outside the laptop/notebook construct, so Yes would be the wrong path.",
+          "A tablet-only household is outside the laptop/notebook category, so Yes would be the wrong answer.",
         probeRationale: {
           covered:
-            "The edit resolves this by keeping tablet-only households outside the laptop path.",
+            "The edit resolves this by keeping tablet-only households outside the laptop answer.",
           notCovered:
-            "Removing notebook keeps tablet-only households from entering the laptop path."
+            "Removing notebook keeps tablet-only households from entering the laptop answer."
         }
       }
     ],
     mechanismQuestion: {
       prompt:
-        "Why can Laptop or notebook computer send respondents away from the intended laptop route?",
+        "Why can Laptop or notebook computer send respondents away from the intended laptop answer?",
       choices: [
         {
           id: "notebook-label",
@@ -2249,7 +2250,7 @@ const authoredWorkbenchSpecimens: Array<
           text: "The item assumed everyone owned a portable computer.",
           isCorrect: false,
           explanation:
-            "The issue is label interpretation, not a hidden inapplicable path."
+            "The issue is label interpretation, not a hidden not-applicable answer."
         },
         {
           id: "notebook-sequence",
@@ -2263,7 +2264,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "notebook-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Owns a portable computer",
         detail:
           "The respondent may own a laptop-like device and still use everyday device categories that differ from the survey's synonym."
@@ -2271,7 +2272,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "notebook-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
+        eyebrow: "Survey wording",
         title: "Laptop or notebook",
         detail:
           "The item treats notebook as another name for laptop, while some respondents treat it as a different product family."
@@ -2279,7 +2280,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "notebook-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "Notebook points elsewhere",
         detail:
           "The respondent has to decide whether notebook means a laptop, a smaller computer, a Chromebook-like device, or a tablet-like device."
@@ -2287,7 +2288,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "notebook-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "Device use can be underreported or misclassified",
         detail:
           "Households can report the wrong answer even when they know what devices they use, because the label redirects the classification."
@@ -2297,7 +2298,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "category_boundary_blur",
       neighborSpecimenId: "electric-vehicle-type",
       contrastText:
-        "This specimen is label ambiguity because notebook itself redirects the respondent before classification begins. The category-boundary neighbor is different: neighboring classes overlap even when the labels are understood."
+        "This example is label ambiguity because notebook itself redirects the respondent before classification begins. The category-boundary neighbor is different: neighboring classes overlap even when the labels are understood."
     },
     widget: {
       kind: "example_set_editor",
@@ -2340,7 +2341,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A home-internet item asks about equipment. Some households have one combined box; others use separate modem and router devices.",
         questionPrompt:
-          "Which wording feature would make respondents map the same equipment differently?",
+          "Which part of the wording would make respondents map the same equipment differently?",
         wording: "Do you use a gateway, modem, or router at home?",
         pattern: "label_ambiguity",
         featureChoices: [
@@ -2357,13 +2358,13 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A media-device item asks households to choose among smart TVs, streaming boxes, and other TV-connected devices that can perform similar functions.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "A smart TV, streaming box, or another device that plays through a TV",
         pattern: "category_boundary_blur",
         featureChoices: [
           "A single word is misunderstood on entry",
           "Neighboring device categories share features",
-          "A missing not-applicable route absorbs No"
+          "A missing not-applicable answer absorbs No"
         ],
         correctFeatureIndex: 1,
         explanation: "This is a boundary problem because the device classes can overlap."
@@ -2379,7 +2380,7 @@ const authoredWorkbenchSpecimens: Array<
       ntia2021Url
     ),
     counterexample: {
-      eyebrow: "Iterated wording",
+      eyebrow: "Updated wording",
       beforeWording: "What about a laptop or notebook?",
       afterWording: "What about a laptop?",
       evidenceOfImprovement:
@@ -2395,20 +2396,20 @@ const authoredWorkbenchSpecimens: Array<
     patternLabel: "Broad bucket",
     canonicalSubtitle: canonicalSubtitleByPattern.broad_bucket,
     canonicalCitations: canonicalCitationByPattern.broad_bucket,
-    title: "When a broad ethnicity bucket hides a subgroup",
-    subtitle: "A close-enough category and a write-in path do not behave like a visible box.",
+    title: "When a broad ethnicity category hides a subgroup",
+    subtitle: "A close-enough category and a write-in option do not behave like a visible box.",
     testedWording:
       "What is your ethnic group? Asian / Asian British ... Pakistani ... Kashmiri ... Any other Asian background, write in.",
     answerFrame: {
       eyebrow: "ONS ethnic-group answer architecture",
       prompt: "What is your ethnic group?",
       context: [
-        "The comparison concerns whether Kashmiri identity is available as a visible tick-box or only through a broader category and write-in route.",
-        "The workbench evaluates the form architecture for reporting a specific subgroup, not the legitimacy of any identity."
+        "The comparison concerns whether Kashmiri identity is available as a visible tick-box or only through a broader category and write-in option.",
+        "The worked example evaluates the form architecture for reporting a specific subgroup, not the legitimacy of any identity."
       ],
       targetKind: "response_option",
-      targetLabel: "Highlighted reporting path",
-      targetText: "Visible Kashmiri tick-box or explicit write-in path",
+      targetLabel: "Highlighted answer choice",
+      targetText: "Visible Kashmiri tick-box or explicit write-in option",
       responseOptions: [
         { id: "heading", text: "Asian / Asian British heading" },
         { id: "broad", text: "Indian or Pakistani broad tick-boxes" },
@@ -2416,27 +2417,27 @@ const authoredWorkbenchSpecimens: Array<
         { id: "write-in", text: "Any other Asian background, write in", isTarget: true }
       ],
       taskPrompt:
-        "Judge whether the answer architecture lets a Kashmiri respondent report the specific identity cleanly, or whether broad boxes and write-in effort change the route.",
+        "Judge whether the answer choices let a Kashmiri respondent report the specific identity cleanly, or whether broad boxes and write-in effort change the recorded answer.",
       methodNote:
         "The source found higher Kashmiri identification with a tick-box, while also weighing comparability and parallel-subgroup tradeoffs."
     },
     intendedConstruct:
       "Specific ethnic identity reporting for respondents who identify as Kashmiri.",
     sampleRespondent:
-      "A respondent who identifies as Kashmiri sees broader pre-coded answers that feel easier than write-in. Because the broad bucket is close enough, they move on.",
+      "A respondent who identifies as Kashmiri sees broader pre-coded answers that feel easier than write-in. Because the broad category is close enough, they move on.",
     prerequisiteVocab: prerequisiteVocabByPattern.broad_bucket,
     predictionCopy: predictionCopy(
       [
-        "Specific path visible",
+        "Specific answer visible",
         "The form gives a Kashmiri respondent a clear way to report the specific identity."
       ],
       [
-        "Broad path competes",
+        "Broad answer competes",
         "A broader visible category or write-in effort can pull the respondent away from the specific identity."
       ],
       [
         "Specific identity hidden",
-        "The route records only a broader category when the respondent wants the subgroup identity counted."
+        "The form records only a broader category when the respondent wants the subgroup identity counted."
       ]
     ),
     vignettes: [
@@ -2451,7 +2452,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent may have a specific identity to report, but visible broad boxes make the easier route compete with precision.",
+          "The respondent may have a specific identity to report, but visible broad boxes make the easier answer compete with precision.",
         probeRationale: {
           covered:
             "Separating a visible Kashmiri box from broad national boxes reduces the effort gap.",
@@ -2470,12 +2471,12 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "A write-in path exists, but respondents may read it as less official or less complete than a tick-box.",
+          "A write-in option exists, but respondents may read it as less official or less complete than a tick-box.",
         probeRationale: {
           covered:
-            "A visible subgroup box makes the specific answer look like a normal completion path.",
+            "A visible subgroup box makes the specific answer look like a normal way to complete the question.",
           notCovered:
-            "The edit still relies on a write-in path that can feel unofficial."
+            "The edit still relies on a write-in option that can feel unofficial."
         }
       },
       {
@@ -2503,10 +2504,10 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the split-sample finding that tick-box identification was higher.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "The visible subgroup box provides a clean route to the intended specific reporting.",
+          "The visible subgroup box provides a clear way to report the intended specific identity.",
         probeRationale: {
           covered:
-            "The edit keeps the specific subgroup route visible and separate from broad boxes.",
+            "The edit keeps the specific subgroup answer visible and separate from broad boxes.",
           notCovered:
             "The edit should not hide a respondent who is ready to report the subgroup directly."
         }
@@ -2519,10 +2520,10 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the ONS finding that write-in-only reporting recovered fewer Kashmiri identifications than a tick-box.",
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "The broad tick-box route records a less specific answer than the target subgroup identity.",
+          "The broad tick-box records a less specific answer than the target subgroup identity.",
         probeRationale: {
           covered:
-            "Adding a visible subgroup path gives this respondent a place to report the intended identity.",
+            "Adding a visible subgroup option gives this respondent a place to report the intended identity.",
           notCovered:
             "The edit still records the respondent only through a broader category."
         }
@@ -2530,14 +2531,14 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can a Kashmiri respondent be under-routed when broad tick-boxes are easier than write-in?",
+        "Why can a Kashmiri respondent be missed when broad tick-boxes are easier than write-in?",
       choices: [
         {
           id: "kashmiri-level",
           text: "The response task made a broad visible category compete with a specific subgroup identity.",
           isCorrect: true,
           explanation:
-            "The broad umbrella plus write-in path did not recover the subgroup at the same rate as a visible Kashmiri tick-box."
+            "The broad umbrella plus write-in option did not recover the subgroup at the same rate as a visible Kashmiri tick-box."
         },
         {
           id: "kashmiri-word",
@@ -2557,23 +2558,23 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "kashmiri-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Specific subgroup identity",
         detail:
-          "The respondent may identify specifically as Kashmiri while also recognizing broader Asian, Indian, or Pakistani routes."
+          "The respondent may identify specifically as Kashmiri while also recognizing broader Asian, Indian, or Pakistani categories."
       },
       {
         id: "kashmiri-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
-        title: "Broad boxes and a write-in path",
+        eyebrow: "Survey wording",
+        title: "Broad boxes and a write-in option",
         detail:
-          "The form architecture determines whether Kashmiri appears as a normal tick-box or must be supplied through a write-in route."
+          "The form determines whether Kashmiri appears as a normal tick-box or must be supplied through a write-in option."
       },
       {
         id: "kashmiri-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "Specific answer costs more effort",
         detail:
           "The respondent has to decide whether to take the easy broad box, trust the write-in, or look for a visible subgroup box."
@@ -2581,7 +2582,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "kashmiri-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "Subgroup counts depend on answer architecture",
         detail:
           "The source found more Kashmiri identification with a visible tick-box than with write-in only, while also documenting design tradeoffs."
@@ -2591,7 +2592,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "category_boundary_blur",
       neighborSpecimenId: "ons-ethnic-group-heading",
       contrastText:
-        "This specimen is broad bucket because a specific identity is nested under broader, easier reporting levels. The category-boundary neighbor is different: several visible headings can all look partly right."
+        "This example is a broad-answer-field problem because a specific identity is nested under broader, easier reporting levels. The category-boundary neighbor is different: several visible headings can all look partly right."
     },
     widget: {
       kind: "bucket_splitter",
@@ -2631,9 +2632,9 @@ const authoredWorkbenchSpecimens: Array<
         id: "kashmiri-near-industry",
         kind: "near_transfer",
         context:
-          "An employment form lets someone describe a workplace as a broad sector, establishment type, clinic type, or service line.",
+          "An employment form lets someone describe a workplace as a broad sector, workplace type, clinic type, or service line.",
         questionPrompt:
-          "Which wording feature makes several answer levels look responsive?",
+          "Which part of the wording makes several answer levels look responsive?",
         wording: "What kind of workplace was this: health care, hospital, clinic, or other service?",
         pattern: "broad_bucket",
         featureChoices: [
@@ -2650,11 +2651,11 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "An ethnic-group form uses a heading that combines geographic and colour terms, and some respondents search by different parts of that heading.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "African / Caribbean / Black / Black British",
         pattern: "category_boundary_blur",
         featureChoices: [
-          "A visible broad bucket hides a subgroup",
+          "A visible broad category hides a subgroup",
           "Adjacent section labels make several homes partly right",
           "An exact number is required from a variable history"
         ],
@@ -2681,7 +2682,7 @@ const authoredWorkbenchSpecimens: Array<
     canonicalSubtitle: canonicalSubtitleByPattern.false_premise,
     canonicalCitations: canonicalCitationByPattern.false_premise,
     title: "When flooding assumes the equipment exists",
-    subtitle: "No can mean no flooding, no pump, or no pump failure unless the path separates them.",
+    subtitle: "No can mean no flooding, no pump, or no pump failure unless the answer choices separate them.",
     testedWording:
       "In the last 12 months/since you've lived here, did water collect in your basement or crawl space because your sump pump stopped working properly?",
     answerFrame: {
@@ -2689,31 +2690,31 @@ const authoredWorkbenchSpecimens: Array<
       prompt:
         "Did water collect in your basement or crawl space because your sump pump stopped working properly as a result of a power outage?",
       context: [
-        "The item includes Yes, No, and No sump pump paths.",
+        "The item includes Yes, No, and No sump pump choices.",
         "The disputed repair was a follow-up after No to distinguish no pump from no pump failure."
       ],
       targetKind: "yes_no_path",
-      targetLabel: "Highlighted response path",
-      targetText: "Yes / No / No sump pump response set",
+      targetLabel: "Highlighted answer choices",
+      targetText: "Yes / No / No sump pump answer choices",
       responseOptions: [
         { id: "yes", text: "Yes", isTarget: true },
         { id: "no", text: "No", isTarget: true },
         { id: "no-pump", text: "No sump pump", isTarget: true }
       ],
       taskPrompt:
-        "Judge whether this response path separates no flooding, no pump, no pump failure, and out-of-scope water causes.",
+        "Judge whether these answer choices separate no flooding, no pump, no pump failure, and out-of-scope water causes.",
       methodNote:
         "The final wording adopted the outage wording but did not adopt the proposed follow-up after No."
     },
     intendedConstruct:
       "Flooding caused by an existing sump pump failing during a power outage.",
     sampleRespondent:
-      "A respondent without a sump pump hears a question that assumes the failure mechanism exists. They answer by escaping the premise.",
+      "A respondent without a sump pump hears a question that assumes a pump-failure event could happen. They answer by escaping the premise.",
     prerequisiteVocab: prerequisiteVocabByPattern.false_premise,
     predictionCopy: predictionCopy(
       [
-        "Pump-failure path clear",
-        "The response path separates in-scope pump-failure flooding from other states."
+        "Pump-failure answer clear",
+        "The answer choices separate in-scope pump-failure flooding from other states."
       ],
       [
         "No can hide no pump",
@@ -2736,12 +2737,12 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent lacks the assumed equipment, so the item needs a strong path out of the failure premise.",
+          "The respondent lacks the assumed equipment, so the item needs a clear way out of the failure premise.",
         probeRationale: {
           covered:
-            "A screener or not-applicable path lets no-sump-pump households bypass the failure event.",
+            "A screener or not-applicable option lets no-sump-pump households bypass the failure event.",
           notCovered:
-            "The response path still relies on the respondent escaping a premise about equipment they do not have."
+            "The answer choices still relies on the respondent escaping a premise about equipment they do not have."
         }
       },
       {
@@ -2755,7 +2756,7 @@ const authoredWorkbenchSpecimens: Array<
           "No could mean no pump, no failure, or no water, so the answer is not analytically clean.",
         probeRationale: {
           covered:
-            "A no-pump route or follow-up keeps this respondent from being coded as a substantive No.",
+            "A No sump pump choice or follow-up keeps this respondent from being coded as a substantive No.",
           notCovered:
             "The edit still lets no equipment hide inside No."
         }
@@ -2765,13 +2766,13 @@ const authoredWorkbenchSpecimens: Array<
         text: "A respondent with a sump pump reports water collecting because the pump failed.",
         provenance: "editorial",
         attributionNote:
-          "Based on the OUTFLOOD sump-pump-failure construct.",
+          "Based on the OUTFLOOD sump-pump-failure target.",
         expectedOutcome: "covered",
         outcomeRationale:
           "The respondent has the equipment, the failure occurred, and water collected for the intended reason.",
         probeRationale: {
           covered:
-            "The edit preserves a clean Yes route for in-scope pump-failure flooding.",
+            "The edit preserves a clear Yes answer for in-scope pump-failure flooding.",
           notCovered:
             "The edit should not block the core failure event from being reported."
         }
@@ -2784,12 +2785,12 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the OUTFLOOD outage-and-pump-failure scope.",
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "Water from another cause is outside the pump-failure path.",
+          "Water from another cause is outside the pump-failure item.",
         probeRationale: {
           covered:
             "The edit resolves this by keeping other water causes outside sump-pump failure.",
           notCovered:
-            "The edit keeps other water causes outside the target construct."
+            "The edit keeps other water causes outside the target event."
         }
       }
     ],
@@ -2799,7 +2800,7 @@ const authoredWorkbenchSpecimens: Array<
       choices: [
         {
           id: "sump-assumption",
-          text: "The question asked about a failure mechanism before establishing the equipment existed.",
+          text: "The question asked about pump failure before establishing that the equipment existed.",
           isCorrect: true,
           explanation: "A plain No can cover no pump, no pump failure, or no flooding."
         },
@@ -2823,7 +2824,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "sump-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "May not have a sump pump",
         detail:
           "The respondent may live in a home with no sump pump, which is different from having a pump that did not fail."
@@ -2831,7 +2832,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "sump-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
+        eyebrow: "Survey wording",
         title: "Because your sump pump stopped working",
         detail:
           "The causal frame names sump-pump failure before confirming that the household has a sump pump."
@@ -2839,7 +2840,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "sump-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "No event or no equipment?",
         detail:
           "The respondent has to decide whether No is the closest escape from the equipment premise or a substantive no-flooding answer."
@@ -2847,7 +2848,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "sump-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "The denominator remains unclear",
         detail:
           "Without a follow-up, analysts may not know which No households had equipment at risk and which were never in scope."
@@ -2857,7 +2858,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "label_ambiguity",
       neighborSpecimenId: "notebook-computer",
       contrastText:
-        "This specimen is false premise because the wording assumes equipment before separating inapplicable households. The label-ambiguity neighbor is different: one word itself points respondents to multiple meanings."
+        "This example is false premise because the wording assumes equipment before separating inapplicable households. The label-ambiguity neighbor is different: one word itself points respondents to multiple meanings."
     },
     widget: {
       kind: "filter_path_toggle",
@@ -2888,7 +2889,7 @@ const authoredWorkbenchSpecimens: Array<
         "sump-water-other-cause": { cleanStates: [] }
       }
     },
-    probePrompt: "Explore how a screener or not-applicable path changes No.",
+    probePrompt: "Explore how a screener or not-applicable option changes No.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -2909,7 +2910,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "An outage module asks about backup-generator failure. Some households have a generator; others have no generator at all.",
         questionPrompt:
-          "Which wording feature would make a plain No hard to interpret?",
+          "Which part of the wording would make a plain No hard to interpret?",
         wording: "Did your backup generator stop working during the outage?",
         pattern: "false_premise",
         featureChoices: [
@@ -2918,7 +2919,7 @@ const authoredWorkbenchSpecimens: Array<
           "A previous item licenses multiple answers"
         ],
         correctFeatureIndex: 0,
-        explanation: "Same pattern: homes without a generator need an applicability path."
+        explanation: "Same pattern: homes without a generator need an applicability option."
       },
       {
         id: "sump-distractor-notebook",
@@ -2926,7 +2927,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A household technology item asks about laptop or notebook computers, and notebook may cue non-laptop devices.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "Do you use a laptop or notebook computer?",
         pattern: "label_ambiguity",
         featureChoices: [
@@ -2948,7 +2949,7 @@ const authoredWorkbenchSpecimens: Array<
       ahs2023Url
     ),
     counterexample: {
-      eyebrow: "Partial repair",
+      eyebrow: "Partial fix",
       beforeWording:
         "Did water collect in your basement or crawl space because your sump pump stopped working properly?",
       afterWording:
@@ -2989,17 +2990,17 @@ const authoredWorkbenchSpecimens: Array<
       taskPrompt:
         "Judge whether the highlighted heading helps the respondent find the right section, or whether color and geography cues make several sections partly plausible.",
       methodNote:
-        "The ONS recommendation reordered the heading to put Black first; this specimen focuses on navigation through section cues."
+        "The ONS recommendation reordered the heading to put Black first; this example focuses on navigation through section cues."
     },
     intendedConstruct:
-      "A heading that lets respondents find the right boxes without resolving a race-versus-geography conflict.",
+      "A heading that helps the respondent find the right section without forcing a choice between colour and geography.",
     sampleRespondent:
       "A respondent scans for their usual cue and lands in the wrong place. Another sees White and African as both relevant.",
     prerequisiteVocab: prerequisiteVocabByPattern.category_boundary_blur,
     predictionCopy: predictionCopy(
       [
         "Heading cue works",
-        "The highlighted heading clearly gives this respondent the intended navigation route."
+        "The highlighted heading clearly gives this respondent the intended section cue."
       ],
       [
         "Heading cues compete",
@@ -3007,7 +3008,7 @@ const authoredWorkbenchSpecimens: Array<
       ],
       [
         "Wrong section cue",
-        "The highlighted heading would pull this respondent away from the better section route."
+        "The highlighted heading would pull this respondent away from the better section."
       ]
     ),
     vignettes: [
@@ -3041,7 +3042,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent eventually finds a path, but only after the heading order sends them through a different cue first.",
+          "The respondent eventually finds the right section, but only after the heading order sends them through a different cue first.",
         probeRationale: {
           covered:
             "A Black-first heading aligns the visible section with the respondent's first search cue.",
@@ -3060,10 +3061,10 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "The highlighted heading is the wrong path if geography pulls a White African respondent away from the White section.",
+          "The highlighted heading is the wrong section if geography pulls a White African respondent away from the White section.",
         probeRationale: {
           covered:
-            "An explicit White African path can keep geography from pulling the respondent into the highlighted section.",
+            "An explicit White African option can keep geography from pulling the respondent into the highlighted section.",
           notCovered:
             "The edit still does not resolve the cross-cutting White and African cues."
         }
@@ -3076,7 +3077,7 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the ONS finding that respondents missed the embedded 'Black' label, ticked the wrong section first, and corrected with a second mark.",
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "Multiple marks show that the heading did not give the respondent a stable first route.",
+          "Multiple marks show that the heading did not give the respondent a stable first section choice.",
         probeRationale: {
           covered:
             "A stronger lead cue reduces wrong-section scanning before the respondent reaches the intended box.",
@@ -3130,7 +3131,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "heading-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Searches by identity cue",
         detail:
           "The respondent may scan for Black, African, White African, or a familiar combined label before reading every box."
@@ -3138,7 +3139,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "heading-wording",
         kind: "tested_wording",
-        eyebrow: "Tested heading",
+        eyebrow: "Survey wording",
         title: "African/Caribbean/Black/Black British",
         detail:
           "The heading stacks geographic and colour cues, with Black appearing after African and Caribbean."
@@ -3146,7 +3147,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "heading-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "Which cue controls the section?",
         detail:
           "The respondent has to decide whether colour, geography, or the combined phrase should control the section choice."
@@ -3154,7 +3155,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "heading-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "Navigation errors can become data errors",
         detail:
           "The source documents wrong-section searching and multiple marks, showing that navigation friction can affect recorded answers."
@@ -3164,7 +3165,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "broad_bucket",
       neighborSpecimenId: "ons-kashmiri",
       contrastText:
-        "This specimen is category boundary blur because several visible heading cues seem partly right. The broad-bucket neighbor is different: a specific answer is hidden under a broader reporting route."
+        "This example is category boundary blur because several visible heading cues seem partly right. The broad-answer-field neighbor is different: a specific answer is hidden under a broader reporting category."
     },
     widget: {
       kind: "classifier_radio",
@@ -3181,7 +3182,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "white-african-path",
-          label: "White African path",
+          label: "White African option",
           description: "The category system explicitly acknowledges the geography-color crossing."
         }
       ],
@@ -3215,7 +3216,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A device survey asks about TV-connected devices. Smart TVs and streaming boxes can both run apps and play video through the TV.",
         questionPrompt:
-          "Which wording feature makes the category route unstable?",
+          "Which part of the wording makes the category choice unstable?",
         wording: "A smart TV, a streaming box, or another device that plays through a TV",
         pattern: "category_boundary_blur",
         featureChoices: [
@@ -3230,18 +3231,18 @@ const authoredWorkbenchSpecimens: Array<
         id: "heading-distractor-kashmiri",
         kind: "distractor",
         context:
-          "An ethnic-group form gives broad Asian / Asian British categories and a write-in route, while a respondent wants to report a specific Kashmiri identity.",
+          "An ethnic-group form gives broad Asian / Asian British categories and a write-in option, while a respondent wants to report a specific Kashmiri identity.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "Asian / Asian British, Pakistani, Any other Asian background, write in",
         pattern: "broad_bucket",
         featureChoices: [
-          "A broad visible bucket competes with a specific subgroup answer",
+          "A broad visible category competes with a specific subgroup answer",
           "Several section headings are equally plausible",
           "A prior question changes the next category"
         ],
         correctFeatureIndex: 0,
-        explanation: "This is broad bucket because the specific subgroup is harder to report."
+        explanation: "This is a broad-answer-field problem because the specific subgroup is harder to report."
       }
     ],
     source: sourceReceipt(
@@ -3254,7 +3255,7 @@ const authoredWorkbenchSpecimens: Array<
       onsEthnicGroupUrl
     ),
     counterexample: {
-      eyebrow: "Iterated wording",
+      eyebrow: "Updated wording",
       beforeWording: "African/Caribbean/Black/Black British",
       afterWording: "Black/African/Caribbean/Black British",
       evidenceOfImprovement:
@@ -3279,17 +3280,17 @@ const authoredWorkbenchSpecimens: Array<
       prompt: "For each reason, answer whether it was a reason you moved.",
       context: [
         "The item appears in a series of yes/no moving-reason questions.",
-        "The intended construct is any influence, not only the primary reason."
+        "The survey wanted to count any influence, not only the primary reason."
       ],
       targetKind: "sequence_item",
-      targetLabel: "Highlighted reason item",
+      targetLabel: "Highlighted answer choice in the series",
       targetText: "Avoid natural disasters",
       responseOptions: [
         { id: "other-reasons", text: "Other moving-reason items in the series" },
         { id: "disaster", text: "Did you move to avoid natural disasters?", isTarget: true }
       ],
       taskPrompt:
-        "Judge whether the highlighted Yes path means any influence or whether the sequence makes it feel like a main-reason answer.",
+        "Judge whether the highlighted Yes answer means any influence or whether the sequence makes it feel like a main-reason answer.",
       methodNote:
         "The report found that the item text was not the main issue; the sequence needed an all-influences instruction."
     },
@@ -3324,7 +3325,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent sees disaster risk as real but secondary, while the Yes path feels primary.",
+          "The respondent sees disaster risk as real but secondary, while the Yes answer feels primary.",
         probeRationale: {
           covered:
             "An all-influences instruction makes a secondary disaster motive eligible for Yes.",
@@ -3343,7 +3344,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "Part-of-the-reason fits the intended construct, but not if the series is read as primary-reason reporting.",
+          "Part-of-the-reason fits what the survey wanted to measure, but not if the series is read as primary-reason reporting.",
         probeRationale: {
           covered:
             "The all-that-influenced framing makes part-of-the-reason a clean Yes.",
@@ -3362,7 +3363,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "Forced Yes language signals that the answer path does not match the respondent's strength of reason.",
+          "Forced Yes language signals that the answer choice does not match the respondent's strength of reason.",
         probeRationale: {
           covered:
             "A clear any-influence instruction reduces the feeling that Yes overstates the reason.",
@@ -3391,13 +3392,13 @@ const authoredWorkbenchSpecimens: Array<
         text: "A respondent moved mainly because repeated wildfire risk made the prior location unacceptable.",
         provenance: "editorial",
         attributionNote:
-          "Based on the WMDISAS construct of moving to avoid natural disasters.",
+          "Based on the WMDISAS target of moving to avoid natural disasters.",
         expectedOutcome: "covered",
         outcomeRationale:
           "Disaster avoidance is clearly a reason for the move, so Yes is a clean fit.",
         probeRationale: {
           covered:
-            "The edit preserves a clean Yes route for a primary disaster-avoidance motive.",
+            "The edit preserves a clear Yes answer for a primary disaster-avoidance motive.",
           notCovered:
             "The edit should not block an obvious disaster-avoidance reason."
         }
@@ -3410,7 +3411,7 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the WMDISAS distinction between disaster avoidance and other moving reasons.",
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "The highlighted disaster-avoidance item is the wrong path when disaster risk was not a reason.",
+          "The highlighted disaster-avoidance item is the wrong answer when disaster risk was not a reason.",
         probeRationale: {
           covered:
             "The edit resolves this by keeping unrelated moving reasons outside the disaster item.",
@@ -3425,7 +3426,7 @@ const authoredWorkbenchSpecimens: Array<
       choices: [
         {
           id: "disaster-sequence",
-          text: "The yes/no reason series made a multi-reason construct feel like a primary-reason choice.",
+          text: "The yes/no reason series made a multi-reason target feel like a primary-reason choice.",
           isCorrect: true,
           explanation: "The respondent had a secondary motive, but the sequence made Yes feel too strong."
         },
@@ -3447,7 +3448,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "disaster-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Several motives influenced the move",
         detail:
           "The respondent may remember disaster risk as one real influence among rent, household, job, or location motives."
@@ -3455,7 +3456,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "disaster-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
+        eyebrow: "Survey wording",
         title: "Avoid natural disasters",
         detail:
           "The item appears as one yes/no reason in a series, after the respondent has already considered other motives."
@@ -3463,7 +3464,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "disaster-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "Any reason or main reason?",
         detail:
           "The respondent has to decide whether Yes means any influence, a major influence, or the main reason for the move."
@@ -3471,7 +3472,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "disaster-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
+        eyebrow: "What the recorded answer can hide",
         title: "Secondary motives can disappear",
         detail:
           "Respondents may say No to avoid overstating a real but non-primary motive."
@@ -3481,7 +3482,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "forced_precision",
       neighborSpecimenId: "acs-weeks-worked",
       contrastText:
-        "This specimen is sequence overlap because the prior reason series changes how Yes is interpreted. The forced-precision neighbor is different: the respondent must convert irregular experience into one exact-looking value."
+        "This example is sequence overlap because the prior reason series changes how Yes is interpreted. The forced-precision neighbor is different: the respondent must convert irregular experience into one exact-looking value."
     },
     widget: {
       kind: "sequence_reorderer",
@@ -3562,13 +3563,13 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A housing-search sequence first records an online listing, then asks whether owner advertising also helped with the same home search.",
         questionPrompt:
-          "Which wording feature changes whether the next Yes is allowed?",
+          "Which part of the wording changes whether the next Yes is allowed?",
         wording: "After saying you found the home online, did owner advertising also help?",
         pattern: "sequence_overlap",
         featureChoices: [
           "A prior answer changes whether the next Yes is allowed",
           "A response label is lexically ambiguous",
-          "A hidden not-applicable route absorbs No"
+          "A hidden not-applicable answer absorbs No"
         ],
         correctFeatureIndex: 0,
         explanation: "Same pattern: an earlier answer changes the later category."
@@ -3579,16 +3580,16 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A work-history item asks a respondent to count weeks worked across an irregular 52-week period.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "How many weeks did you work over the past 52 weeks?",
         pattern: "forced_precision",
         featureChoices: [
           "A series implies one primary reason",
           "An exact count is required from irregular history",
-          "A broad bucket hides a subgroup"
+          "A broad category hides a subgroup"
         ],
         correctFeatureIndex: 1,
-        explanation: "This is forced precision because the respondent must construct a week count."
+        explanation: "This is forced precision because the respondent must build a week count."
       }
     ],
     source: sourceReceipt(
@@ -3622,7 +3623,7 @@ const authoredWorkbenchSpecimens: Array<
         "The instruction treats a week as in scope even if the person worked only a few hours."
       ],
       targetKind: "numeric_field",
-      targetLabel: "Highlighted answer path",
+      targetLabel: "Highlighted answer field",
       targetText: "One numeric weeks-worked count",
       responseOptions: [
         { id: "weeks", text: "Weeks worked: [number]", isTarget: true }
@@ -3630,25 +3631,25 @@ const authoredWorkbenchSpecimens: Array<
       taskPrompt:
         "Judge whether the respondent can recover one weeks-worked count, or whether the field invites rounding, conversion, or a wrong counting rule.",
       methodNote:
-        "This specimen is about the burden and recipe behind an exact-looking number, not about whether annual work-duration data are useful."
+        "This example is about the burden and counting method behind an exact-looking number, not about whether annual work-duration data are useful."
     },
     intendedConstruct:
-      "Annual work-duration reporting without exactness that irregular work histories cannot support.",
+      "How many calendar weeks the person worked over the past year.",
     sampleRespondent:
       "A respondent remembers working most of the year, about three months, or on an inconsistent schedule. They convert or round to a plausible week count.",
     prerequisiteVocab: prerequisiteVocabByPattern.forced_precision,
     predictionCopy: predictionCopy(
       [
-        "Week count recoverable",
-        "The respondent can recover a calendar-week count that matches the intended rule."
+        "Week count can be given",
+        "The respondent can give a calendar-week count that matches the intended rule."
       ],
       [
-        "Count recipe unstable",
+        "Counting method unclear",
         "The respondent can answer, but the number may be a conversion, rounded estimate, or uncertain count."
       ],
       [
-        "Wrong counting rule",
-        "The respondent's route produces a number that should not stand in for weeks worked."
+        "Wrong counting method",
+        "The respondent's method produces a number that should not stand in for weeks worked."
       ]
     ),
     vignettes: [
@@ -3666,7 +3667,7 @@ const authoredWorkbenchSpecimens: Array<
           "The respondent may be able to answer approximately, but the field asks for exact weeks that memory does not support.",
         probeRationale: {
           covered:
-            "A months-first or less exact recipe can make the work spell easier to recover.",
+            "A months-first or less exact counting method can make the work spell easier to recover.",
           notCovered:
             "The edit still asks for a precision the respondent says they do not know."
         }
@@ -3685,7 +3686,7 @@ const authoredWorkbenchSpecimens: Array<
           "A rounded guess may be the best available answer, but the field records it like a count.",
         probeRationale: {
           covered:
-            "This case remains hard even after edits; it needs a recoverable reporting recipe, not only a shorter label.",
+            "This case remains hard even after edits; it needs a workable counting method, not only a shorter label.",
           notCovered:
             "The edit still converts variable work into an exact-looking number."
         }
@@ -3711,10 +3712,10 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "weeks-full-year-stable",
-        text: "A respondent with a stable all-year schedule can map 52 weeks to a recoverable count.",
+        text: "A respondent with a stable all-year schedule can map 52 weeks to a stable count.",
         provenance: "editorial",
         attributionNote:
-          "Based on the ACS 50-plus-week path and partial-week cue.",
+          "Based on the ACS 50-plus-week item and partial-week cue.",
         expectedOutcome: "covered",
         outcomeRationale:
           "A stable all-year worker can recover 52 weeks cleanly.",
@@ -3742,14 +3743,14 @@ const authoredWorkbenchSpecimens: Array<
           text: "The field combined paid hours, paid days, and weeks of work into one number.",
           isCorrect: false,
           explanation:
-            "That would be a broad-bucket problem. The field requests one construct: weeks. The cited issue is the exact-count expectation, not multiple constructs sharing a field."
+            "That would be a broad-answer-field problem. The field requests one topic: weeks. The cited issue is the exact-count expectation, not multiple topics sharing a field."
         },
         {
           id: "weeks-assumption",
           text: "The item assumed every respondent had worked for pay during the year.",
           isCorrect: false,
           explanation:
-            "ACS gates this question on prior employment items, so the assumption is upheld upstream. The documented issue is among workers with irregular schedules constructing an exact count, not among non-workers."
+            "ACS gates this question on prior employment items, so the assumption is upheld upstream. The documented issue is among workers with irregular schedules building an exact count, not among non-workers."
         }
       ]
     },
@@ -3757,7 +3758,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "weeks-reality",
         kind: "respondent_reality",
-        eyebrow: "Respondent reality",
+        eyebrow: "What the person knows",
         title: "Work history is stored unevenly",
         detail:
           "The respondent may remember work spells as jobs, months, days worked, partial weeks, paid leave, or breaks."
@@ -3765,7 +3766,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "weeks-wording",
         kind: "tested_wording",
-        eyebrow: "Tested wording",
+        eyebrow: "Survey wording",
         title: "How many weeks over the past 52 weeks?",
         detail:
           "The numeric field asks for one week count, while the instruction says even a few hours in a week should count."
@@ -3773,7 +3774,7 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "weeks-break",
         kind: "route_break",
-        eyebrow: "Route break",
+        eyebrow: "Where the answer choice stops fitting",
         title: "Count, convert, or round?",
         detail:
           "The respondent has to decide whether to count calendar weeks, convert months, divide days by five, or round from memory."
@@ -3781,8 +3782,8 @@ const authoredWorkbenchSpecimens: Array<
       {
         id: "weeks-consequence",
         kind: "data_consequence",
-        eyebrow: "Data consequence",
-        title: "The number hides its recipe",
+        eyebrow: "What the recorded answer can hide",
+        title: "The number hides its method",
         detail:
           "The same clean numeric field can hold a true week count, a conversion, or a rounded guess with different meaning."
       }
@@ -3791,7 +3792,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "broad_bucket",
       neighborSpecimenId: "business-industry",
       contrastText:
-        "This specimen is forced precision because irregular history must become one exact-looking count. The broad-bucket neighbor is different: one field spans multiple concepts or levels."
+        "This example is forced precision because irregular history must become one exact-looking count. The broad-answer-field neighbor is different: one field spans multiple topics or levels."
     },
     widget: {
       kind: "time_window_slider",
@@ -3811,7 +3812,7 @@ const authoredWorkbenchSpecimens: Array<
         }
       }
     },
-    probePrompt: "Explore how the reporting window changes the answer recipe.",
+    probePrompt: "Explore how the reporting window changes the counting method.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -3832,7 +3833,7 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A commute or work-schedule item asks for one usual arrival time, but the respondent arrived at different times across the week.",
         questionPrompt:
-          "Which wording feature would make the answer recipe unstable?",
+          "Which part of the wording would make the counting method unstable?",
         wording: "Last week, what time did this person usually arrive at work?",
         pattern: "forced_precision",
         featureChoices: [
@@ -3849,16 +3850,16 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "An outage module asks whether a sump pump failed, even though some households do not have a sump pump.",
         questionPrompt:
-          "Which wording feature is doing the work in this distractor?",
+          "Which part of the wording is doing the work in this distractor?",
         wording: "Did your sump pump fail during the outage?",
         pattern: "false_premise",
         featureChoices: [
           "A hidden equipment premise makes No ambiguous",
           "A week count is too exact for memory",
-          "A broad bucket hides subgroup detail"
+          "A broad category hides subgroup detail"
         ],
         correctFeatureIndex: 0,
-        explanation: "This is false premise because households without the equipment need a path."
+        explanation: "This is false premise because households without the equipment need an answer option."
       }
     ],
     source: sourceReceipt(

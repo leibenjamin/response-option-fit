@@ -13,12 +13,14 @@ export function PatternCatalog() {
       data-testid="pattern-catalog"
     >
       <header className="pattern-catalog-head">
-        <p className="pattern-catalog-eyebrow">Pattern catalog</p>
+        <p className="pattern-catalog-eyebrow">Before the examples</p>
         <h2 className="pattern-catalog-title" id="pattern-catalog-title">
-          Six response-fit patterns
+          Six recurring answer-choice problems
         </h2>
         <p className="pattern-catalog-lede">
-          Read these labels first. Each Workbench uses the same vocabulary.
+          A pattern here means a recurring kind of mismatch: the person has an
+          answer, but the survey choices do not give that answer a clear place
+          to go.
         </p>
       </header>
       <ol className="pattern-catalog-grid">

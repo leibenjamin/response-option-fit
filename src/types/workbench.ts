@@ -1,4 +1,4 @@
-/* Specimen Workbench data shape. JSON-serializable; every field below can
+/* Worked-example data shape. JSON-serializable; every field below can
    be written by hand or generated, then validated and rendered by the
    Workbench component without runtime side effects.
 
@@ -15,11 +15,11 @@ export type FailurePattern =
   | "sequence_overlap"
   | "forced_precision";
 
-/* Vignettes are the load-bearing pedagogical content. Each one is either
+/* Scenarios are the load-bearing pedagogical content. Each one is either
    a verbatim or close paraphrase from a public questionnaire-testing
-   report (provenance: "direct_quote") or an explicit editorial illustration
+   report (provenance: "direct_quote") or an explicit authored scenario
    constructed by us based on the report's findings (provenance: "editorial").
-   The Workbench renders a visible badge on every vignette so the distinction
+   The Workbench renders a visible badge on every scenario so the distinction
    is never hidden in a footnote. */
 export type VignetteProvenance = "direct_quote" | "editorial";
 
@@ -37,16 +37,16 @@ export type Vignette = {
   id: string;
   text: string;
   provenance: VignetteProvenance;
-  /* Citation is required for direct quotes; optional but encouraged for
-     editorial vignettes where the underlying finding has a page citation. */
+  /* Citation is required for source-backed findings; optional but encouraged for
+     authored scenarios where the underlying finding has a page citation. */
   citation?: {
     reportTitle: string;
     page: string;
     permalink?: string;
   };
-  /* For editorial vignettes only: a one-line note explaining what report
-     finding the editorial is grounded in. Direct-quote vignettes leave
-     this empty — the citation tells the whole story. Editorial vignettes
+  /* For authored scenarios only: a one-line note explaining what report
+     finding the scenario is grounded in. Source-backed findings leave
+     this empty — the citation tells the whole story. Authored scenarios
      without an attributionNote drift into unmoored fabrication and the
      content authoring step should reject them. */
   attributionNote?: string;
@@ -92,8 +92,8 @@ export type AnswerFrame = {
   methodNote?: string;
 };
 
-/* Predict beat: the user marks each vignette covered/ambiguous/not_covered,
-   rates confidence, and answers a required mechanism question that anchors
+/* Predict beat: the user marks each scenario covered/ambiguous/not_covered,
+   rates confidence, and answers a required wording-feature question that anchors
    diagnosis to a wording feature rather than to a respondent stereotype. */
 export type ConfidenceLevel = "guessing" | "hunch" | "fairly_sure";
 
@@ -120,7 +120,7 @@ export type NeighborContrast = {
 };
 
 /* Probe beat widgets. Each widget config is JSON-shaped and self-contained.
-   The diagnostic rule maps widget state to vignette outcomes; no side effects.
+   The diagnostic rule maps widget state to scenario outcomes; no side effects.
 
    IMPORTANT: every widget must be expressible without drag-only interaction
    (WCAG 2.5.7). Widget kinds that historically suggest drag (bucket splitter,
@@ -146,8 +146,8 @@ export type ExampleSetEditorConfig = {
   kind: "example_set_editor";
   initialExampleIds: string[];
   candidates: Array<{ id: string; label: string }>;
-  /* For each vignette, the sets of example-IDs that resolve it cleanly. If
-     none match, the vignette stays ambiguous. */
+  /* For each scenario, the sets of example-IDs that resolve it cleanly. If
+     none match, the scenario stays ambiguous. */
   diagnostic: Record<string, { coveredBy: string[][] }>;
 };
 
@@ -156,15 +156,15 @@ export type BucketSplitterConfig = {
   items: Array<{ id: string; label: string }>;
   initialSplitIndex: number | null;
   candidateSplits: number[];
-  /* For each vignette, which split positions produce a clean bucket fit. */
+  /* For each scenario, which split positions produce a clear field split. */
   diagnostic: Record<string, { cleanAt: number[] }>;
 };
 
 export type FilterPathToggleConfig = {
   kind: "filter_path_toggle";
   initialState: { hasScreener: boolean; hasNotApplicable: boolean };
-  /* For each vignette, the toggle states that resolve it cleanly. Empty
-     means no toggle state can resolve this vignette (a forced-floor case). */
+  /* For each scenario, the toggle states that resolve it cleanly. Empty
+     means no toggle state can resolve this scenario (a forced-floor case). */
   diagnostic: Record<
     string,
     {
@@ -177,7 +177,7 @@ export type ClassifierRadioConfig = {
   kind: "classifier_radio";
   features: Array<{ id: string; label: string; description: string }>;
   initialFeatureId: string;
-  /* For each vignette, which classifying features bin it cleanly. */
+  /* For each scenario, which classifying features bin it cleanly. */
   diagnostic: Record<string, { cleanFeatureIds: string[] }>;
 };
 
@@ -186,7 +186,7 @@ export type SequenceReordererConfig = {
   items: Array<{ id: string; label: string }>;
   initialOrder: string[];
   initialAllowMulti: boolean;
-  /* For each vignette, the configurations that resolve it cleanly. */
+  /* For each scenario, the configurations that resolve it cleanly. */
   diagnostic: Record<
     string,
     {
@@ -200,7 +200,7 @@ export type TimeWindowSliderConfig = {
   kind: "time_window_slider";
   windows: Array<{ id: string; label: string; days: number }>;
   initialWindowId: string;
-  /* For each vignette, which windows produce stable, recoverable answers. */
+  /* For each scenario, which windows produce stable, recoverable answers. */
   diagnostic: Record<string, { stableWindowIds: string[] }>;
 };
 
@@ -231,7 +231,7 @@ export type Reveal = {
   remainsUntested: RevealRemainsUntested;
 };
 
-/* Micro-cases run after Reveal: one near-transfer (same pattern, fresh
+/* Quick-practice cases run after Reveal: one near-transfer (same pattern, fresh
    wording), one distractor (tempting but adjacent pattern). The user picks
    the failing wording feature; explanation reveals immediately. */
 export type MicroCaseKind = "near_transfer" | "distractor";
@@ -265,7 +265,7 @@ export type Counterexample = {
   sourcePageRef: string;
 };
 
-/* Existing route stages stay; the Diagnose beat reuses the route map. */
+/* Answer-choice diagram stages stay in the data for Diagnose. */
 export type RouteStageKind =
   | "respondent_reality"
   | "tested_wording"
@@ -307,7 +307,7 @@ export type MethodNote = {
   whatOmitted: string;
 };
 
-/* The Workbench specimen. Every beat's content lives here; the component
+/* The worked example. Every beat's content lives here; the component
    tree renders this without computing pedagogically meaningful state. */
 export type WorkbenchSpecimen = {
   /* Identity */
@@ -347,7 +347,7 @@ export type WorkbenchSpecimen = {
   /* Reveal beat */
   reveal: Reveal;
 
-  /* Micro-cases — ordered tuple [near_transfer, distractor]. */
+  /* Quick-practice cases — ordered tuple [near_transfer, distractor]. */
   microCases: MicroCasePair;
 
   /* Source */
@@ -359,9 +359,9 @@ export type WorkbenchSpecimen = {
   counterexample?: Counterexample;
 };
 
-/* Catalog metadata: the ordered set of specimens, with the pacing model the
+/* Catalog metadata: the ordered set of examples, with the pacing model the
    exhibit recommends. Sessions are not enforced — the user is free to read
-   straight through — but the Workbench surfaces "good stopping point" cues
+   straight through — but the worked examples surface "good stopping point" cues
    at session boundaries. */
 export type SessionPlan = {
   sessions: Array<{

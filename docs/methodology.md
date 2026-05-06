@@ -1,56 +1,58 @@
 # Methodology
 
-Response Option Fit Lab treats a survey answer as a route from respondent
-reality to a recorded data category. Each Workbench now starts with an
-answer frame: the surrounding item or item sequence, the highlighted answer
-path under inspection, and the task the reader is being asked to judge.
+Response Option Fit Lab treats a survey answer choice as a possible mismatch
+between what a person knows and what the form lets them record. The public page
+uses the literal title "When survey answer choices don't match real answers";
+the project name remains secondary. Each worked example starts with the
+surrounding question or question sequence, the highlighted answer choice, and
+the task the reader is being asked to judge.
 
-## Specimen Selection
+## Example Selection
 
-The twelve specimens were selected from public U.S. Census Bureau and Office
+The twelve worked examples were selected from public U.S. Census Bureau and Office
 for National Statistics testing materials because each shows a distinct
 response-option fit problem without requiring sensitive personal examples or
 full-instrument critique:
 
-- **Label ambiguity:** respondents may attach different meanings to the same
-  response label.
-- **Broad bucket:** one response field can invite respondents to include
-  concepts outside the intended measurement boundary.
+- **Label ambiguity ("same words, several meanings"):** respondents may
+  attach different everyday meanings to the same answer-choice wording.
+- **Broad bucket:** one answer field can invite respondents to include several
+  levels of detail or several answer concepts at once.
 - **False premise:** a yes/no answer can hide a not-applicable state.
 - **Category boundary blur:** everyday categories can diverge from technical
   classification rules.
 - **Sequence overlap:** the meaning of an option can depend on the preceding
-  question path.
+  question or answer.
 - **Forced precision:** a single exact-looking answer can be required from
   variable or episodic experience.
 
-## Workbench Model
+## Worked-Example Model
 
-Each specimen is rendered in five teaching beats:
+Each example is rendered in five teaching beats:
 
-1. Frame: full item context and highlighted answer path.
-2. Predict: specimen-specific route judgments for each scenario.
-3. Diagnose: source-bounded answer key and route snapshot.
+1. Frame: the surrounding survey question and highlighted answer choice.
+2. Predict: example-specific judgments for each scenario.
+3. Diagnose: report-based answer key and answer-choice diagram.
 4. Probe: a small edit with live rationales for each scenario.
 5. Reveal: what the source-supported revision addresses and what remains untested.
 
-The prediction labels are authored per specimen so the learner sees local,
+The prediction labels are authored per example so the learner sees local,
 concrete language instead of generic fit terms. Every label set still maps to
-the same three route judgments: the highlighted path covers the scenario, the
-visible wording can route the scenario more than one way, or the scenario
-belongs outside the highlighted path.
+the same three judgments: the highlighted answer choice fits the scenario, the
+visible wording could send the scenario to more than one answer, or the scenario
+belongs outside the highlighted answer choice.
 
-The route snapshot uses four explanatory stages: respondent reality, tested
-wording, route break, and data consequence. Each stage includes short detail
-copy from the respondent's perspective. This structure is not a statistical
-model and does not estimate respondent counts, error rates, or distributional
-effects.
+The answer-choice diagram uses four explanatory stages: what the person knows,
+the tested wording, where the answer choice stops fitting, and what the
+recorded answer can hide. Each stage includes short detail copy from the
+person's perspective. This structure is not a statistical model and does not
+estimate respondent counts, error rates, or distributional effects.
 
 ## Authored Versus Source Material
 
 The source reports provide the public evidence base, tested-wording excerpts,
 report citations, and direct PDF links. The exhibit adds neutral framing,
-answer frames, route-stage summaries, prediction labels, pattern labels, and concise
+answer frames, diagram-stage summaries, prediction labels, pattern labels, and concise
 takeaways so the examples can be compared in a single interface.
 
 See [specimen-red-team.md](specimen-red-team.md) for the current ambiguity
@@ -59,8 +61,8 @@ audit, copy decisions, and future-wave risks.
 The provenance badges distinguish source-backed findings from authored
 scenarios. A source-backed finding may be a reported finding, quotation, or
 close paraphrase from a cited public report. An authored scenario is a
-constructed teaching case grounded in the cited report's mechanism or
-response architecture.
+constructed teaching case grounded in the cited report's wording or
+response-choice structure.
 
 ## Claim Boundary
 

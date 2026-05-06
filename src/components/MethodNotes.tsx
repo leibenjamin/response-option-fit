@@ -16,7 +16,7 @@ export function MethodNotes() {
           These examples are intentionally narrow. The lab uses short
           substantive wording excerpts from public testing materials to show
           one kind of measurement failure: the respondent has an answer, but
-          the response route does not hold it cleanly.
+          the survey choices do not give that answer a clear place to go.
         </p>
         <p className="method-body method-body--quiet">
           The exhibit does not reproduce full instruments, validate revised

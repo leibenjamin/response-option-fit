@@ -4,7 +4,6 @@ import { Colophon } from "./components/Colophon";
 import { Hero } from "./components/Hero";
 import { PatternCatalog } from "./components/PatternCatalog";
 import { Workbench } from "./components/Workbench";
-import { HowToRead } from "./components/workbench/HowToRead";
 import { PatternGlossary } from "./components/PatternGlossary";
 import { MethodNotes } from "./components/MethodNotes";
 import { ClaimBoundary } from "./components/ClaimBoundary";
@@ -39,18 +38,17 @@ function AppInner() {
   return (
     <div className="lab">
       <a href="#main-exhibit" className="skip-link" data-testid="skip-link">
-        Skip to main exhibit
+        Skip to worked examples
       </a>
       <SettingsButton onClick={() => setSettingsOpen(true)} />
       <Hero />
       <main
         id="main-exhibit"
         className="exhibit workbench-exhibit"
-        aria-label="Specimen Workbench exhibit"
+        aria-label="Worked examples about survey answer choices"
       >
         <PatternCatalog />
-        <HowToRead />
-        <div className="workbench-list" aria-label="Specimen Workbenches">
+        <div className="workbench-list" aria-label="Worked examples">
           {workbenchSpecimens.map((specimen) => (
             <Workbench key={specimen.id} specimen={specimen} />
           ))}
@@ -65,10 +63,10 @@ function AppInner() {
         <header className="shelf-head">
           <p className="shelf-eyebrow">Reference shelf</p>
           <h2 className="shelf-title" id="shelf-title">
-            How to read the rest of this page
+            Reference material for this page
           </h2>
           <p className="shelf-lede">
-            The Workbenches above are the heart of the page. Below are four short
+            The worked examples above are the heart of the page. Below are four short
             reference sections — a vocabulary for the failure types, a method
             note, an explicit boundary on what this exhibit does and does not
             claim, and the source provenance behind every quote and finding.
@@ -127,7 +125,7 @@ function AppInner() {
         aria-atomic="true"
         data-testid="specimen-announcer"
       >
-        12 workbenches.
+        12 worked examples.
       </div>
 
       <SettingsDrawer

@@ -156,7 +156,7 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
             >
               <details className="method-note-details">
                 <summary className="method-note-summary">
-                  Why this specimen is here
+                  Why this example is here
                 </summary>
                 <div className="method-note-body">
                   <p>{specimen.methodNote.whyHere}</p>
@@ -178,10 +178,14 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
             aria-labelledby={`${specimen.id}-microcases-title`}
           >
             <header className="beat-head">
-              <p className="beat-eyebrow">Micro-cases</p>
+              <p className="beat-eyebrow">Quick practice</p>
               <h3 className="beat-title" id={`${specimen.id}-microcases-title`}>
-                Try the pattern on fresh wording
+                Try the same idea on two short examples
               </h3>
+              <p className="beat-lede">
+                One practice item uses the same problem type. The other is a
+                nearby problem that can look similar at first.
+              </p>
             </header>
             <div className="microcase-list">
               {specimen.microCases.map((microCase, index) => (
