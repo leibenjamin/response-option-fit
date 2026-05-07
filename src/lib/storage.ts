@@ -2,6 +2,7 @@ const PREFIX = "rofl:v1:";
 const SCHEMA_VERSION = 1 as const;
 const STORAGE_CHANGE_EVENT = "rofl-storage-change";
 const SETTINGS_STORAGE_KEY = `${PREFIX}settings`;
+const WALK_STATE_STORAGE_KEY = `${PREFIX}walk-state`;
 
 export type Snapshot = {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -86,18 +87,36 @@ function serializeJSON(value: unknown): string | null {
 }
 
 function validateSnapshotEntry(key: string, value: unknown): string | null {
-  if (key !== SETTINGS_STORAGE_KEY) {
-    return `Snapshot key "${key}" is not recognized by this release.`;
+  if (key === SETTINGS_STORAGE_KEY) {
+    if (
+      !isPlainObject(value) ||
+      typeof (value as { remember?: unknown }).remember !== "boolean"
+    ) {
+      return `Snapshot value for "${SETTINGS_STORAGE_KEY}" must be an object with a boolean remember field.`;
+    }
+    return null;
   }
 
-  if (
-    !isPlainObject(value) ||
-    typeof (value as { remember?: unknown }).remember !== "boolean"
-  ) {
-    return `Snapshot value for "${SETTINGS_STORAGE_KEY}" must be an object with a boolean remember field.`;
+  if (key === WALK_STATE_STORAGE_KEY) {
+    if (!isPlainObject(value)) {
+      return `Snapshot value for "${WALK_STATE_STORAGE_KEY}" must be an object.`;
+    }
+    const v = value as { visited?: unknown; recapsDismissed?: unknown };
+    const visitedOk =
+      Array.isArray(v.visited) &&
+      v.visited.every((s) => typeof s === "string");
+    const recapsOk =
+      Array.isArray(v.recapsDismissed) &&
+      v.recapsDismissed.every(
+        (n) => typeof n === "number" && Number.isFinite(n)
+      );
+    if (!visitedOk || !recapsOk) {
+      return `Snapshot value for "${WALK_STATE_STORAGE_KEY}" must have string-array "visited" and number-array "recapsDismissed".`;
+    }
+    return null;
   }
 
-  return null;
+  return `Snapshot key "${key}" is not recognized by this release.`;
 }
 
 export function isAvailable(): boolean {

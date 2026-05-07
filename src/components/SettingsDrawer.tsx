@@ -280,7 +280,9 @@ export function SettingsDrawer({ open, onClose }: Props) {
                 Remember local settings on this device
               </span>
               <span className="settings-toggle-sub">
-                Stores this settings choice only in this browser. Worked-example progress is not saved yet.
+                Stores this settings choice and the names of examples you've
+                opened in walk mode, so the knowledge map fills in across
+                visits. Removed when you turn this off or clear stored data.
               </span>
             </span>
           </label>

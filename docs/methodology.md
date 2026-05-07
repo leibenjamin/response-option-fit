@@ -26,6 +26,20 @@ full-instrument critique:
 - **Forced precision:** a single exact-looking answer can be required from
   variable or episodic experience.
 
+## Page Layout
+
+The exhibit is laid out across three hash-routed views so the worked examples
+do not collapse into a single thirty-screen scroll. The overview at `#` keeps
+the hero, the six-pattern knowledge map, and one fully-working embedded
+worked example, so a visitor sees the work the exhibit can do without
+clicking through. The walk at `#walk/<id>` paginates the remaining examples
+one at a time, with a sticky pattern map on the right and prev/next
+navigation; mid-walk recap interstitials appear after the fourth and eighth
+examples, and a completion screen closes the sequence. The reference shelf
+at `#reference` carries the glossary, method note, claim boundary, and source
+appendix as their own route. The five-beat worked-example shell is identical
+across all twelve examples in either context.
+
 ## Worked-Example Model
 
 Each example is rendered in five teaching beats:
