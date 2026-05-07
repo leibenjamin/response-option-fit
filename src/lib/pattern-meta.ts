@@ -37,7 +37,7 @@ export const patternMeta: Record<FailurePattern, PatternMeta> = {
   broad_bucket: {
     pattern: "broad_bucket",
     label: "Broad bucket",
-    canonicalSubtitle: "One answer field covers too much",
+    canonicalSubtitle: "One answer space covers too much",
     accentVar: "--pat-broad-bucket"
   },
   false_premise: {

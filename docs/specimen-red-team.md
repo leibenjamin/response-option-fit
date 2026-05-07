@@ -373,16 +373,13 @@ built up the page's local vocabulary.
 - Lede defines "pattern" inline. Good.
 - Card layout: number, **patternLabel**, italic *canonicalSubtitle*, body
   sentence (`prerequisiteVocab`).
-  - N1 reading the first card: sees `Label ambiguity`, then *Lexical
-    ambiguity*, then "Label ambiguity means one answer-choice label can
-    point to more than one everyday meaning." Three definitions in a row,
-    and the middle one (*Lexical ambiguity*) is **more** technical than
-    the label being subtitled. This is a regression from the plain-language
-    intent. The other five canonicalSubtitles are concrete plain-language
-    phrases ("One answer field covers too much," "Question assumes too
-    much," etc.); only `Lexical ambiguity` is the original Latin-rooted
-    term. **Fix:** rewrite to a plain-English sibling, e.g. "Same words,
-    several meanings."
+  - N1 reading the first card: sees `Label ambiguity`, then the italic
+    canonicalSubtitle (now "Same words, several meanings" — earlier
+    versions used the Latin-rooted "Lexical ambiguity," which N1 had
+    flagged as more technical than the label being subtitled), then a
+    plain-English body sentence that no longer relies on the bare term
+    "label" but instead names "the wording of a single answer choice."
+    The earlier three-definitions-in-a-row regression is resolved.
   - N2 reading "Broad bucket": "bucket" is data-engineering/programming
     metaphor. The italic "One answer field covers too much" rescues the
     metaphor. Acceptable.
@@ -594,8 +591,8 @@ distractor draws the right contrast.
 
 #### Label ambiguity (Specimens 01 ride-hailing, 07 notebook)
 
-- Plain definition: "One answer-choice label can be read as several
-  different everyday things."
+- Plain definition: "The wording of a single answer choice can be read in
+  more than one everyday way."
 - Specimen 01 vignettes cover: app-ride understanding, taxi-only reading,
   shared-ride reading, Lyft user, neighbor carpool. Edges: covered (×2),
   ambiguous (×2), not_covered (×1). Good distribution.
@@ -613,8 +610,9 @@ distractor draws the right contrast.
 
 #### Broad bucket (02 business/industry, 08 Kashmiri)
 
-- Plain definition: "One answer field accepts answers at several different
-  levels of detail, so unlike answers can all look acceptable."
+- Plain definition: "A single answer space — a write-in box or one tick-box
+  — accepts responses at very different scopes, so unlike answers can all
+  look acceptable."
 - Specimen 02 vignettes cover: hospital/health-care (level conflict),
   food delivery (service line vs business), grocery store (right level),
   cashier (occupation level), business name (employer level). Good
@@ -654,8 +652,9 @@ distractor draws the right contrast.
 
 #### Category boundary blur (04 EV, 10 ethnic heading)
 
-- Plain definition: "Nearby answer choices share features, so the
-  dividing line is not obvious even when each label is understood."
+- Plain definition: "Two or more nearby answer choices share enough
+  features that the line between them is unclear, even when each word is
+  understood."
 - Specimen 04 vignettes cover: plug-ins-are-hybrids, hybrid-doesn't-plug,
   electric-means-plug-in, battery-only, plug-in hybrid, non-plug hybrid.
   Six vignettes; covers the meaningful boundary cases. Good.
@@ -680,8 +679,8 @@ distractor draws the right contrast.
 
 #### Forced precision (06 hours, 12 weeks)
 
-- Plain definition: "The form asks for one exact-looking answer when the
-  underlying situation is variable or hard to count exactly."
+- Plain definition: "A single survey question asks for one exact-looking
+  answer about a situation that varies or is hard to count exactly."
 - Specimen 06 vignettes cover: more-of-an-average, ninety-percent
   reasoning, variable averaging, stable forty, no usual week. Good.
 - Specimen 12 vignettes cover: not-exactly, rounded guess, days-divided-

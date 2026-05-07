@@ -18,7 +18,7 @@ function widgetLabel(kind: WorkbenchSpecimen["widget"]["kind"]) {
     case "example_set_editor":
       return "Examples to add to the wording";
     case "bucket_splitter":
-      return "Where to split one answer field";
+      return "Where to split one answer space";
     case "filter_path_toggle":
       return "Who should answer this question";
     case "classifier_radio":

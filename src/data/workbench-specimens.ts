@@ -5,7 +5,7 @@ const claimBoundaryNote =
 
 const canonicalSubtitleByPattern = {
   label_ambiguity: "Same words, several meanings",
-  broad_bucket: "One answer field covers too much",
+  broad_bucket: "One answer space covers too much",
   false_premise: "Question assumes too much",
   category_boundary_blur: "Categories overlap",
   sequence_overlap: "Earlier question changes the next answer",
@@ -79,17 +79,17 @@ const canonicalCitationByPattern = {
 
 const prerequisiteVocabByPattern = {
   label_ambiguity:
-    "Label ambiguity means one answer-choice label can point to more than one everyday meaning.",
+    "Label ambiguity means the wording of a single answer choice can be read in more than one everyday way. Two respondents in the same real situation can pick different answers because they understand the same words differently.",
   broad_bucket:
-    "Broad bucket means one answer field accepts several levels of detail, so unlike answers can all look acceptable.",
+    "Broad bucket means a single answer space — a write-in box or one tick-box — accepts responses at very different scopes. The same job, for example, can be reported as a workplace, a business type, or a whole industry, and all three look like fitting answers.",
   false_premise:
-    "False premise means the question assumes something applies before making that clear.",
+    "False premise means a question assumes a condition holds — for instance, that the household owns the equipment being asked about — without first checking whether that is true for this respondent.",
   category_boundary_blur:
-    "Category boundary blur means nearby answer choices share features, so the dividing line is not obvious.",
+    "Category boundary blur means two or more nearby answer choices share enough features that the line between them is unclear. The respondent may understand each word and still not know which neighbor a real case belongs in.",
   sequence_overlap:
-    "Sequence overlap means an earlier question changes how the next answer choice is read.",
+    "Sequence overlap means an earlier question changes how the next question or answer choice is read. After the earlier answer, a later one can feel like a repeat or a contradiction even when its wording is clear in isolation.",
   forced_precision:
-    "Forced precision means the form asks for one exact-looking answer from a situation that changes or is hard to count exactly."
+    "Forced precision means a single survey question asks for one exact-looking number or one specific answer about a situation that varies over time or is hard to count exactly."
 } satisfies Record<FailurePattern, string>;
 
 function predictionCopy(
@@ -174,7 +174,7 @@ const methodNotesById: Partial<
   },
   "business-industry": {
     whyHere:
-      "This example shows the broad bucket pattern because workplace type, industry, product line, and work activity can all look acceptable in one answer field.",
+      "This example shows the broad bucket pattern because workplace type, industry, product line, and work activity can all look acceptable in one answer space.",
     whatOmitted:
       "It leaves out occupation coding questions and the rest of the Current Population Survey flow around the item."
   },
@@ -291,16 +291,16 @@ const authoredWorkbenchSpecimens: Array<
     prerequisiteVocab: prerequisiteVocabByPattern.label_ambiguity,
     predictionCopy: predictionCopy(
       [
-        "Matches intended paid service",
-        "The highlighted option clearly covers a paid taxi or app-based ride service."
+        "Choice fits this trip",
+        "The trip is a paid taxi or app-based ride, and the wording \"Taxi or ride-hailing services\" lands on it cleanly for this respondent."
       ],
       [
-        "Label meaning can shift",
-        "The same trip could lead to different answers because Taxi or ride-hailing services is being read in different ways."
+        "Wording reads several ways",
+        "Similar trips can land here or somewhere else because \"Taxi or ride-hailing services\" can be read as an app ride, taxi cabs only, or any shared ride."
       ],
       [
-        "Not this paid-service option",
-        "The trip should use another commute option, not the highlighted taxi/app-ride option."
+        "Trip belongs elsewhere",
+        "The trip is not a paid taxi or app-based ride, so it should be reported under a different commute option, not the highlighted one."
       ]
     ),
     vignettes: [
@@ -399,7 +399,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can Taxi or ride-hailing services send similar commuters to different answers?",
+        "Why can \"Taxi or ride-hailing services\" send similar commuters to different answers?",
       choices: [
         {
           id: "label-range",
@@ -556,7 +556,7 @@ const authoredWorkbenchSpecimens: Array<
         wording: "An electric bicycle, a motorized scooter, or another micromobility vehicle",
         pattern: "category_boundary_blur",
         featureChoices: [
-          "A broad answer field that asks for too many services",
+          "A broad answer space that asks for too many services",
           "A boundary between neighboring vehicle classes",
           "A prior question that changes the next answer"
         ],
@@ -716,7 +716,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can What kind of business or industry is this? produce answers at different levels?",
+        "Why can \"What kind of business or industry is this?\" produce answers at different levels?",
       choices: [
         {
           id: "two-levels",
@@ -799,7 +799,7 @@ const authoredWorkbenchSpecimens: Array<
         "industry-business-name": { cleanAt: [] }
       }
     },
-    probePrompt: "Explore where the answer field needs a boundary.",
+    probePrompt: "Explore where the answer space needs a boundary.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -997,7 +997,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can Did any refrigerated medicine spoil? make No hard to interpret?",
+        "Why can \"Did any refrigerated medicine spoil?\" make \"No\" hard to interpret?",
       choices: [
         {
           id: "missing-applicability",
@@ -1319,7 +1319,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can Another type of electric vehicle? be hard to answer for hybrids and plug-ins?",
+        "Why can \"Another type of electric vehicle?\" be hard to answer for hybrids and plug-ins?",
       choices: [
         {
           id: "class-boundary",
@@ -1527,21 +1527,21 @@ const authoredWorkbenchSpecimens: Array<
     predictionCopy: predictionCopy(
       [
         "Distinct owner source",
-        "The highlighted owner-advertising item covers a source not already handled by the prior internet item."
+        "The highlighted owner-advertising item captures a source not already handled by the prior internet-site question."
       ],
       [
-        "Prior answer overlaps",
-        "The same listing can look like both the earlier internet source and the highlighted owner-advertising source."
+        "Repeats the prior answer",
+        "The same listing fits both the prior internet-site question and this owner-advertising question, so the highlighted item reads as the same source counted again."
       ],
       [
         "Not owner advertising",
-        "The scenario should stay outside the highlighted owner-advertising item."
+        "The respondent's situation does not involve any owner advertising, so the highlighted item is not where this source should go."
       ]
     ),
     vignettes: [
       {
         id: "owner-zillow-already",
-        text: "A respondent objected that they had just said they found the home on Zillow.",
+        text: "A respondent objected to this item, pointing out that they had just said they found the home on Zillow.",
         provenance: "direct_quote",
         citation: {
           reportTitle: ahs2025Title,
@@ -1550,7 +1550,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent sees the highlighted item as a repeat of the prior internet-site answer rather than a separate source.",
+          "Zillow is one of the sites named in the prior internet-site question, so the same listing fits both items. The respondent objects because the highlighted item reads as the prior answer counted again rather than as a separate source.",
         probeRationale: {
           covered:
             "Putting an all-that-helped instruction first makes multiple Yes answers permissible before the sequence begins.",
@@ -1628,7 +1628,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can Through some other advertising by the owner? feel repetitive after an internet-site answer?",
+        "Why can \"Through some other advertising by the owner?\" feel repetitive after an internet-site answer?",
       choices: [
         {
           id: "prior-overlap",
@@ -1639,7 +1639,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "one-large-bucket",
-          text: "One answer field combined unrelated housing-search sources.",
+          text: "One answer space combined unrelated housing-search sources.",
           isCorrect: false,
           explanation:
             "The issue appears across adjacent items, not inside one oversized response field."
@@ -1763,37 +1763,37 @@ const authoredWorkbenchSpecimens: Array<
         id: "owner-near-disaster",
         kind: "near_transfer",
         context:
-          "A moving-reason module asks several yes/no reason items in a row. The respondent had a secondary reason but already answered other reason questions.",
+          "A moving-reason module asks a series of yes/no items, each naming a different reason for the move. By the time the respondent reaches this item, they have already said Yes to a main motive but are also weighing a secondary disaster motive.",
         questionPrompt:
-          "Which part of the wording changes how the next Yes answer feels?",
-        wording: "After several moving-reason questions, did you move to avoid natural disasters?",
+          "Which part of the wording shapes how this Yes is read in the sequence?",
+        wording: "Did you move to avoid natural disasters?",
         pattern: "sequence_overlap",
         featureChoices: [
-          "A prior item stream changes whether Yes means any reason or main reason",
-          "A category label has several everyday meanings",
-          "A yes/no item assumes the condition exists"
+          "An earlier yes/no reason item makes this Yes feel like a main reason rather than any influence",
+          "The phrase \"natural disasters\" can be read as several different events",
+          "The item assumes the respondent has already decided what counts as a reason for the move"
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This is the same pattern because earlier items in the series shape the meaning of the next Yes. It is not a broad-answer-field problem because the pressure comes from sequence."
+          "Same pattern as Example 5: an earlier item in the sequence changes how the next answer is read. In Example 5 the same source feels counted twice; here, an earlier Yes makes the next Yes feel like a main-reason claim instead of any influence."
       },
       {
         id: "owner-distractor-utilities",
         kind: "distractor",
         context:
-          "A housing-cost form asks for one payment amount that can include electricity, gas, phone, and other utilities.",
+          "A housing-cost form has a single entry for what the household paid last month for utilities. Some households pay each utility separately; others pay one combined amount through the landlord.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
-        wording: "How much did you pay for electricity, gas, telephone, and other utilities?",
+        wording: "How much did you pay last month for electricity, gas, telephone, and other utilities?",
         pattern: "broad_bucket",
         featureChoices: [
-          "One amount field spans several service types",
-          "A prior answer overlaps the next option",
-          "A technical boundary separates vehicle classes"
+          "An earlier utility-cost item changes the next amount answer",
+          "One amount entry collects payments for several different services",
+          "The phrasing assumes every household pays for each of these utilities"
         ],
-        correctFeatureIndex: 0,
+        correctFeatureIndex: 1,
         explanation:
-          "This can look like overlap, but it happens inside one broad amount field rather than across a question sequence."
+          "This can look like sequence overlap because the wording lists several services, but the pressure here is inside one entry: a single amount has to cover several distinct utility services."
       }
     ],
     source: sourceReceipt(
@@ -2236,7 +2236,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can Laptop or notebook computer send respondents away from the intended laptop answer?",
+        "Why can \"Laptop or notebook computer\" send respondents away from the intended laptop answer?",
       choices: [
         {
           id: "notebook-label",
@@ -2796,7 +2796,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can a No answer be hard to interpret when the sump-pump item asks about failure first?",
+        "Why can a \"No\" answer be hard to interpret when the sump-pump item asks about failure first?",
       choices: [
         {
           id: "sump-assumption",
@@ -3104,7 +3104,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can African/Caribbean/Black/Black British send respondents through the wrong section cue?",
+        "Why can \"African/Caribbean/Black/Black British\" send respondents through the wrong section cue?",
       choices: [
         {
           id: "heading-boundary",
@@ -3422,7 +3422,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can Did you move to avoid natural disasters? undercount secondary disaster motives?",
+        "Why can \"Did you move to avoid natural disasters?\" undercount secondary disaster motives?",
       choices: [
         {
           id: "disaster-sequence",
@@ -3729,7 +3729,7 @@ const authoredWorkbenchSpecimens: Array<
     ],
     mechanismQuestion: {
       prompt:
-        "Why can How many weeks over the past 52 weeks? produce exact-looking but unstable counts?",
+        "Why can \"How many weeks over the past 52 weeks?\" produce exact-looking but unstable counts?",
       choices: [
         {
           id: "weeks-exact-count",
