@@ -29,22 +29,21 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
 
       <nav className="walk-rail-nav" aria-label="Walk through examples">
         <a
-          className={`walk-rail-nav-btn walk-rail-nav-btn--prev ${
-            prev ? "" : "is-disabled"
-          }`}
+          className="walk-rail-nav-btn walk-rail-nav-btn--prev"
           href={
             prev
               ? routeToHash({ kind: "walk", slot: prev.id })
               : routeToHash({ kind: "hub" })
           }
-          aria-disabled={prev ? undefined : "true"}
           data-testid="walk-prev"
         >
           <span className="walk-rail-nav-arrow" aria-hidden="true">
             ←
           </span>
           <span className="walk-rail-nav-body">
-            <span className="walk-rail-nav-key">Previous</span>
+            <span className="walk-rail-nav-key">
+              {prev ? "Previous" : "Back"}
+            </span>
             <span className="walk-rail-nav-label">
               {prev ? `${prev.number} · ${prev.railLabel}` : "Overview"}
             </span>

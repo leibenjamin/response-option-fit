@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { workbenchSpecimens } from "../data/workbench-specimens";
 import { pendingRecap, type WalkController } from "../lib/walk-state";
 import { routeToHash } from "../lib/routes";
@@ -41,6 +41,24 @@ export function WalkLayout({ specimen, controller }: Props) {
   const recapThreshold = pendingRecap(state, positionIndex);
   const { prev, next } = neighborSpecimens(specimen.id);
 
+  /* When the recap is dismissed, focus is on the Continue/Skip button that
+     just unmounted; the browser would otherwise drop focus to <body>. Move
+     focus to the workbench frame title so the screen-reader user lands on
+     the example they were already on. */
+  const handleDismissRecap = useCallback(
+    (threshold: number) => {
+      dismissRecap(threshold);
+      if (typeof window === "undefined") return;
+      window.requestAnimationFrame(() => {
+        const heading = document.getElementById(
+          `${specimen.id}-workbench-title`
+        );
+        heading?.focus({ preventScroll: false });
+      });
+    },
+    [dismissRecap, specimen.id]
+  );
+
   return (
     <div className="walk" data-testid="walk-layout">
       <WalkRibbon specimen={specimen} visited={visitedSet} />
@@ -56,8 +74,8 @@ export function WalkLayout({ specimen, controller }: Props) {
               threshold={recapThreshold}
               visited={visitedSet}
               currentSpecimenId={specimen.id}
-              onContinue={() => dismissRecap(recapThreshold)}
-              onSkip={() => dismissRecap(recapThreshold)}
+              onContinue={() => handleDismissRecap(recapThreshold)}
+              onSkip={() => handleDismissRecap(recapThreshold)}
             />
           )}
 
