@@ -16,8 +16,9 @@ full-instrument critique:
 
 - **Label ambiguity ("same words, several meanings"):** respondents may
   attach different everyday meanings to the same answer-choice wording.
-- **Broad bucket:** one answer field can invite respondents to include several
-  levels of detail or several answer concepts at once.
+- **Broad bucket:** a single answer space — a write-in box or one tick-box —
+  can collect responses at very different scopes (workplace, business type,
+  or whole industry).
 - **False premise:** a yes/no answer can hide a not-applicable state.
 - **Category boundary blur:** everyday categories can diverge from technical
   classification rules.

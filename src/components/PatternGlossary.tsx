@@ -3,15 +3,17 @@ import type { FailurePattern } from "../types/workbench";
 
 const glossaryBodies = {
   label_ambiguity:
-    "People may read the same answer-choice words in different everyday ways.",
+    "The wording of a single answer choice can be read in more than one everyday way.",
   broad_bucket:
-    "One answer field asks for too many levels of detail at once.",
-  false_premise: "The question assumes something is true before asking whether it applies.",
+    "A single answer space — a write-in box or one tick-box — accepts answers at very different scopes.",
+  false_premise:
+    "The question assumes a condition holds before checking whether it does for this respondent.",
   category_boundary_blur:
-    "Neighboring answer choices share features, so the dividing line is hard to see.",
-  sequence_overlap: "An earlier question changes how the next answer choice is read.",
+    "Two or more nearby answer choices share enough features that the line between them is unclear.",
+  sequence_overlap:
+    "An earlier question changes how the next question or answer choice is read.",
   forced_precision:
-    "The form asks for one exact-looking answer from a situation that varies."
+    "A single survey question asks for one exact-looking answer about a situation that varies."
 } satisfies Record<FailurePattern, string>;
 
 const items = workbenchSpecimens
