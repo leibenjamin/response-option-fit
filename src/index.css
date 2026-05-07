@@ -42,6 +42,18 @@
   --route-b: var(--accent);
   --route-c: #7a5a2f;
 
+  /* Per-pattern accents. Used by the subway dots, the knowledge-map cards,
+     and the walk-mode ribbon. Hues are chosen to be distinguishable in
+     color and to map to existing route tones where possible; each is
+     muted enough to coexist with the paper-stock palette. Forced-colors
+     mode falls back to system colors via the dedicated rules below. */
+  --pat-label-ambiguity: #5d6e44;
+  --pat-broad-bucket: #7a5a2f;
+  --pat-false-premise: #b04a2f;
+  --pat-category-boundary-blur: #455774;
+  --pat-sequence-overlap: #6a4a72;
+  --pat-forced-precision: #1f5c63;
+
   /* Type */
   --font-serif: "Iowan Old Style", "Charter", "Source Serif Pro", "Source Serif 4", Georgia, serif;
   --font-sans: "Inter", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -150,8 +162,7 @@ a:focus-visible {
   outline-offset: 3px;
   border-bottom-color: var(--accent);
 }
-button:focus-visible,
-.rail-button:focus-visible {
+button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   background: var(--paper-2);
@@ -165,9 +176,6 @@ summary:focus-visible {
 /* ---------------- Eyebrows (mono caps) ---------------- */
 .eyebrow,
 .section-eyebrow,
-.board-eyebrow,
-.rail-eyebrow,
-.margin-eyebrow,
 .snapshot-eyebrow,
 .snapshot-card-eyebrow,
 .route-stage-eyebrow,
@@ -335,78 +343,6 @@ summary:focus-visible {
   flex-direction: column;
   gap: var(--s-8);
   margin-bottom: var(--s-9);
-}
-
-/* ---------------- Specimen rail ---------------- */
-.rail {
-  position: sticky;
-  top: var(--s-5);
-  align-self: start;
-}
-.rail-eyebrow {
-  margin-bottom: var(--s-3);
-}
-.rail-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-.rail-item { position: relative; }
-.rail-item + .rail-item .rail-button { border-top: 1px solid var(--line-faint); }
-.rail-button {
-  display: grid;
-  grid-template-columns: 32px minmax(0, 1fr);
-  gap: var(--s-3);
-  align-items: center;
-  width: 100%;
-  padding: var(--s-3) var(--s-3) var(--s-3) var(--s-3);
-  text-align: left;
-  transition: background-color 120ms ease, color 120ms ease;
-  border-left: 2px solid transparent;
-}
-.rail-button:hover { background: var(--paper-2); }
-.rail-num {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--ink-mute);
-  letter-spacing: 0.08em;
-  align-self: start;
-  padding-top: 3px;
-}
-.rail-body { display: flex; flex-direction: column; min-width: 0; gap: 2px; }
-.rail-label {
-  font-family: var(--font-serif);
-  font-size: 17px;
-  color: var(--ink);
-  line-height: 1.2;
-}
-.rail-pattern {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-}
-.rail-item.is-active .rail-button {
-  background: var(--paper-card);
-  border-left-color: var(--accent);
-}
-.rail-item.is-active .rail-num { color: var(--accent); }
-.rail-item.is-active .rail-label { color: var(--ink); }
-.rail-item.is-active .rail-pattern { color: var(--accent); }
-
-.rail-foot {
-  font-family: var(--font-sans);
-  font-size: 12px;
-  color: var(--ink-mute);
-  margin: var(--s-3) 0 0;
-  line-height: 1.4;
-  font-style: italic;
 }
 
 /* ---------------- Board ---------------- */
@@ -777,54 +713,9 @@ summary:focus-visible {
   padding-left: var(--s-3);
 }
 
-/* ===================== SOURCE MARGIN ===================== */
-.margin {
-  position: sticky;
-  top: var(--s-5);
-  align-self: start;
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-5);
-}
-.margin-counter {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--ink-mute);
-  letter-spacing: 0.06em;
-  border-top: 1px solid var(--line);
-  padding-top: var(--s-3);
-}
-.margin-counter-now {
-  color: var(--accent);
-  font-size: 16px;
-}
-.margin-counter-sep {
-  color: var(--line);
-}
-.margin-block {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-2);
-}
-.margin-eyebrow { color: var(--ink-soft); }
-.margin-text {
-  margin: 0;
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--ink-2);
-}
-
-.margin-source {
-  background: var(--paper-2);
-  border: 1px solid var(--line-soft);
-  padding: var(--s-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-2);
-}
+/* ===================== SOURCE CHIPS / LINKS =====================
+   Used inside the Frame beat's source-manifest details and inside the
+   Source appendix on the Reference route. */
 .source-title {
   font-family: var(--font-serif);
   font-size: 15.5px;
@@ -884,79 +775,6 @@ summary:focus-visible {
   margin: var(--s-2) 0 0;
   line-height: 1.5;
   font-style: italic;
-}
-
-.margin-nav {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-  border-top: 1px dashed var(--line);
-  padding-top: var(--s-4);
-}
-.margin-nav-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--s-2);
-}
-.margin-nav-btn {
-  display: flex;
-  align-items: stretch;
-  gap: var(--s-2);
-  padding: var(--s-2) var(--s-3);
-  background: var(--paper);
-  border: 1px solid var(--line-soft);
-  text-align: left;
-  min-width: 0;
-  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
-}
-.margin-nav-btn--next {
-  text-align: right;
-  flex-direction: row;
-}
-.margin-nav-btn:not(:disabled):hover {
-  background: var(--paper-card);
-  border-color: var(--accent-soft);
-  color: var(--accent);
-}
-.margin-nav-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.margin-nav-arrow {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  color: var(--ink-soft);
-  align-self: center;
-  flex: 0 0 auto;
-}
-.margin-nav-btn:not(:disabled):hover .margin-nav-arrow {
-  color: var(--accent);
-}
-.margin-nav-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-.margin-nav-key {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-mute);
-}
-.margin-nav-label {
-  font-family: var(--font-serif);
-  font-size: 13.5px;
-  color: var(--ink);
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.margin-nav-btn:not(:disabled):hover .margin-nav-label {
-  color: var(--accent);
 }
 
 /* ===================== REFERENCE SHELF =====================
@@ -1724,11 +1542,11 @@ summary:focus-visible {
   gap: var(--s-2);
 }
 
-.pattern-catalog-num {
+.pattern-catalog-card-mark {
   font-family: var(--font-mono);
   font-size: 10.5px;
   letter-spacing: 0.16em;
-  color: var(--accent);
+  color: var(--card-accent, var(--accent));
   margin: 0;
 }
 
@@ -1774,13 +1592,18 @@ summary:focus-visible {
 
 .workbench-beat:first-child {
   border-top: 0;
+  /* The frame beat gets a thin pattern-tinted top edge so the failure
+     pattern is visible at a glance, even before the visitor reads the
+     eyebrow. Falls back to the global accent when the workbench renders
+     outside walk/featured contexts. */
+  box-shadow: inset 0 3px 0 0 var(--workbench-accent, var(--accent));
 }
 
 .beat-eyebrow {
   display: inline-flex;
   flex-wrap: wrap;
   gap: var(--s-2);
-  color: var(--accent);
+  color: var(--workbench-accent, var(--accent));
 }
 
 .frame-grid {
@@ -2884,29 +2707,932 @@ summary:focus-visible {
   line-height: 1.55;
 }
 
+/* ===================== HUB-LEVEL CTA + META =====================
+   The hub Hero, the Featured Example, the Walk-mode CTAs, and the
+   Completion screen all share one button surface so the primary call to
+   action reads consistently across routes. */
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.cta-button:hover,
+.cta-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.cta-button--primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.cta-button--primary:hover,
+.cta-button--primary:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.cta-button--secondary {
+  background: var(--paper-card);
+}
+
+.cta-button--ghost {
+  background: transparent;
+  border-color: var(--line-soft);
+  color: var(--ink-2);
+}
+
+.cta-button-arrow {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.hero-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: var(--s-3) 0 0;
+}
+
+.hero-meta-stat strong {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: 0;
+  margin-right: 2px;
+  text-transform: none;
+}
+
+.hero-meta-sep {
+  color: var(--ink-mute);
+}
+
+.hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+
+/* ===================== HUB =====================
+   Container for the hub route. Visually distinct from Walk and Reference
+   only by content — the lab frame stays the same so a portfolio visitor
+   doesn't feel "yanked" between modes. */
+
+.hub-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-7);
+  margin-bottom: var(--s-9);
+}
+
+.hub-foot-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+
+.hub-foot-links a {
+  border-bottom: 1px solid var(--accent-soft);
+}
+
+/* ===================== FEATURED EXAMPLE =====================
+   Embedded full workbench on the hub. Wrapped in an outline that visually
+   distinguishes it from the catalog above, with a "more like this" foot
+   that pulls the visitor into walk mode. */
+
+.featured-example {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  scroll-margin-top: var(--s-5);
+  position: relative;
+}
+
+.featured-example-head {
+  padding: var(--s-6) var(--s-7) var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  border-bottom: 1px dashed var(--line-soft);
+}
+
+.featured-example-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.featured-example-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.2;
+  margin: 0;
+  color: var(--ink);
+}
+
+.featured-example-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 64ch;
+}
+
+/* The embedded workbench inherits its existing look. Only neutralize the
+   outer card border so we don't double-border. */
+.featured-example > .workbench {
+  background: var(--paper-card);
+  border: 0;
+}
+
+.featured-example-foot {
+  padding: var(--s-5) var(--s-7) var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  border-top: 1px solid var(--line-faint);
+  background: var(--paper);
+}
+
+.featured-example-foot-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.featured-example-next {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-3);
+}
+
+.featured-example-next-link {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper-card);
+  border: 1px solid var(--line-soft);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ink);
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.featured-example-next-link:hover,
+.featured-example-next-link:focus-visible {
+  background: var(--paper-2);
+  border-color: var(--accent-soft);
+}
+
+.featured-example-next-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute);
+}
+
+.featured-example-next-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.featured-example-next-pattern {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.featured-example-next-title {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  line-height: 1.3;
+  color: var(--ink);
+  white-space: normal;
+}
+
+.featured-example-next-arrow {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-soft);
+  text-align: right;
+}
+.featured-example-next-link:hover .featured-example-next-arrow {
+  color: var(--accent);
+}
+
+.featured-example-walk {
+  align-self: flex-start;
+}
+
+/* ===================== KNOWLEDGE MAP CARDS =====================
+   Pattern catalog gets two presentations: full (3-col grid on the hub)
+   and rail (compact stack in walk-mode aside). Both share the card
+   skeleton; only the chrome and chip layout differ. */
+
+.pattern-catalog-card {
+  position: relative;
+  border-left: 3px solid transparent;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.pattern-catalog-card.is-current {
+  border-left-color: var(--card-accent, var(--accent));
+  background: var(--paper-card);
+}
+.pattern-catalog-card.is-completed {
+  border-left-color: var(--card-accent, var(--route-r));
+}
+.pattern-catalog-card.is-partial {
+  border-left-color: var(--line);
+}
+
+.pattern-catalog-chip-row {
+  list-style: none;
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.pattern-catalog-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 4px var(--s-2);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-soft);
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.pattern-catalog-chip:hover,
+.pattern-catalog-chip:focus-visible {
+  border-color: var(--card-accent, var(--accent));
+  color: var(--card-accent, var(--accent));
+}
+.pattern-catalog-chip.is-visited {
+  background: var(--paper-card);
+  color: var(--ink);
+}
+.pattern-catalog-chip.is-visited::before {
+  content: "✓";
+  font-size: 11px;
+  color: var(--card-accent, var(--route-r));
+  letter-spacing: 0;
+}
+.pattern-catalog-chip.is-current {
+  background: var(--card-accent, var(--accent));
+  border-color: var(--card-accent, var(--accent));
+  color: var(--paper);
+}
+.pattern-catalog-chip.is-current::before {
+  content: "▸";
+  font-size: 11px;
+  color: var(--paper);
+}
+.pattern-catalog-chip-num {
+  font-weight: 500;
+}
+.pattern-catalog-chip-label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Rail variant: tighter padding, single column, compact card. */
+.pattern-catalog--rail {
+  padding: var(--s-4) var(--s-4);
+  background: var(--paper-card);
+  border: 1px solid var(--line-soft);
+}
+.pattern-catalog--rail .pattern-catalog-head {
+  margin-bottom: var(--s-3);
+}
+.pattern-catalog--rail .pattern-catalog-title {
+  font-size: 17px;
+}
+.pattern-catalog--rail .pattern-catalog-lede {
+  font-style: normal;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.pattern-catalog-grid--rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.pattern-catalog--rail .pattern-catalog-card {
+  padding: var(--s-3);
+  gap: var(--s-1);
+  background: var(--paper);
+}
+.pattern-catalog--rail .pattern-catalog-label {
+  font-size: 14.5px;
+}
+.pattern-catalog--rail .pattern-catalog-canonical {
+  font-size: 12px;
+  margin-top: 0;
+}
+.pattern-catalog-sep {
+  color: var(--ink-mute);
+}
+
+/* ===================== WALK MODE =====================
+   Two-column layout: a sticky right rail with the knowledge map and
+   navigation, and a main column carrying the active workbench plus an
+   optional recap interstitial. */
+
+.lab--walk {
+  padding-top: 0;
+}
+
+.walk {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.walk-ribbon {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  margin: 0 calc(-1 * var(--gutter));
+  padding: var(--s-3) var(--gutter) var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.walk-ribbon::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px 0;
+  height: 2px;
+  background: var(--ribbon-accent, var(--accent));
+  pointer-events: none;
+}
+
+.walk-ribbon-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.walk-ribbon-counter {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.walk-ribbon-counter-eyebrow {
+  color: var(--ink-mute);
+}
+.walk-ribbon-counter-now {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  letter-spacing: 0;
+  color: var(--ribbon-accent, var(--ink));
+  font-weight: 500;
+  text-transform: none;
+}
+.walk-ribbon-counter-sep {
+  color: var(--ink-mute);
+}
+.walk-ribbon-counter-total {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.walk-ribbon-counter-pattern {
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.walk-ribbon-back {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line-soft);
+  padding-bottom: 1px;
+  display: inline-flex;
+  gap: var(--s-1);
+  align-items: baseline;
+}
+.walk-ribbon-back:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.subway {
+  width: 100%;
+}
+.subway-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--s-1);
+}
+.subway-item {
+  min-width: 0;
+}
+.subway-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-mute);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.subway-dot:hover,
+.subway-dot:focus-visible {
+  border-color: var(--dot-accent, var(--accent));
+  color: var(--dot-accent, var(--accent));
+}
+.subway-dot.is-visited {
+  background: color-mix(in srgb, var(--dot-accent, var(--accent)) 15%, var(--paper-card));
+  border-color: var(--dot-accent, var(--accent));
+  color: var(--dot-accent, var(--accent));
+}
+.subway-dot.is-current {
+  background: var(--dot-accent, var(--accent));
+  border-color: var(--dot-accent, var(--accent));
+  color: var(--paper);
+  font-weight: 500;
+}
+.subway-dot-num {
+  line-height: 1;
+}
+
+.walk-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--s-7);
+  align-items: start;
+}
+
+.walk-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+
+.walk-rail {
+  position: sticky;
+  top: calc(var(--s-7) + 56px);
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  min-width: 0;
+}
+
+.walk-rail-nav {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s-2);
+}
+
+.walk-rail-nav-btn {
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  text-align: left;
+  min-width: 0;
+  text-decoration: none;
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--line-soft);
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.walk-rail-nav-btn:hover,
+.walk-rail-nav-btn:focus-visible {
+  background: var(--paper-card);
+  border-color: var(--accent-soft);
+  color: var(--accent);
+}
+.walk-rail-nav-btn.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+.walk-rail-nav-btn--next {
+  text-align: right;
+  flex-direction: row;
+}
+.walk-rail-nav-arrow {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-soft);
+  align-self: center;
+  flex: 0 0 auto;
+}
+.walk-rail-nav-btn:hover .walk-rail-nav-arrow {
+  color: var(--accent);
+}
+.walk-rail-nav-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.walk-rail-nav-key {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.walk-rail-nav-label {
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.walk-rail-nav-btn:hover .walk-rail-nav-label {
+  color: var(--accent);
+}
+
+.walk-rail-foot {
+  border-top: 1px dashed var(--line-soft);
+  padding-top: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+.walk-rail-foot-row {
+  margin: 0;
+  font-size: 12.5px;
+}
+.walk-rail-foot-link {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+.walk-rail-foot-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.walk-bottom-nav {
+  margin-top: var(--s-5);
+}
+.walk-bottom-nav-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32px;
+  grid-template-rows: auto auto auto;
+  align-items: baseline;
+  gap: 2px var(--s-3);
+  padding: var(--s-5) var(--s-6);
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+.walk-bottom-nav-link:hover,
+.walk-bottom-nav-link:focus-visible {
+  background: var(--paper-2);
+  border-color: var(--accent-soft);
+}
+.walk-bottom-nav-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  grid-column: 1;
+  grid-row: 1;
+}
+.walk-bottom-nav-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--ink);
+  grid-column: 1;
+  grid-row: 2;
+}
+.walk-bottom-nav-pattern {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  grid-column: 1;
+  grid-row: 3;
+}
+.walk-bottom-nav-arrow {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--ink-soft);
+}
+.walk-bottom-nav-link:hover .walk-bottom-nav-arrow {
+  color: var(--accent);
+}
+
+/* ===================== RECAP INTERSTITIAL ===================== */
+
+.recap {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  padding: var(--s-6) var(--s-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.recap-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: 64ch;
+}
+
+.recap-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.recap-title {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--ink);
+}
+
+.recap-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.recap-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+  border-top: 1px dashed var(--line-soft);
+  padding-top: var(--s-4);
+}
+
+.recap-skip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line-soft);
+  padding-bottom: 2px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.recap-skip:hover,
+.recap-skip:focus-visible {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ===================== COMPLETION ===================== */
+
+.completion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-7);
+  padding: var(--s-7) 0 var(--s-9);
+}
+
+.completion-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-width: 64ch;
+}
+
+.completion-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.completion-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.05;
+  margin: 0;
+  color: var(--ink);
+}
+
+.completion-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(16.5px, 1.4vw, 19px);
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.completion-map {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.completion-map-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--ink);
+}
+
+.completion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+}
+
+/* ===================== REFERENCE ROUTE ===================== */
+
+.lab--reference {
+  padding-top: var(--s-7);
+}
+
+.reference-route {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-7);
+  margin-bottom: var(--s-9);
+}
+
+.reference-route-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: 72ch;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: var(--s-5);
+}
+
+.reference-route-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.reference-route-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.05;
+  margin: 0;
+  color: var(--ink);
+}
+
+.reference-route-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* On the reference route the shelf-section pieces no longer need the
+   bleeding paper-tone wrap from the old in-page shelf. */
+.lab--reference .shelf-section {
+  background: transparent;
+  margin-left: 0;
+  margin-right: 0;
+}
+
 /* ===================== RESPONSIVE ===================== */
 
-/* Slightly narrower viewports — keep 3-col rhythm in hero and exhibit but tighten */
+/* Slightly narrower viewports — tighten the hero rhythm and beat padding */
 @media (max-width: 1280px) {
   .hero {
     grid-template-columns: 200px minmax(0, 1fr) 260px;
     column-gap: var(--s-6);
   }
   .exhibit {
-    grid-template-columns: 200px minmax(0, 1fr) 260px;
     gap: var(--s-6);
   }
-  .board { padding: var(--s-5) var(--s-6); }
   .shelf { padding: var(--s-7) var(--gutter); }
   .pattern-catalog,
-  .how-to-read,
   .workbench-beat {
     padding-left: var(--s-6);
     padding-right: var(--s-6);
   }
 }
 
-/* Tablet portrait — collapse rail and margin around the board */
+/* Tablet portrait — collapse the hero and walk-mode rail */
 @media (max-width: 1080px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
@@ -2924,37 +3650,12 @@ summary:focus-visible {
     padding-bottom: 0;
   }
   .exhibit {
-    grid-template-columns: minmax(0, 1fr);
     gap: var(--s-6);
   }
-  .rail, .margin {
-    position: static;
-  }
-  .rail {
-    border-bottom: 1px solid var(--line);
-    padding-bottom: var(--s-4);
-  }
-  .rail-list {
-    flex-direction: row;
-    overflow-x: auto;
-    border: 0;
-    gap: var(--s-2);
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin;
-  }
-  .rail-item + .rail-item .rail-button { border-top: 0; }
-  .rail-button {
-    border: 1px solid var(--line-soft);
-    background: var(--paper);
-    min-width: 200px;
-    scroll-snap-align: start;
-    border-left: 2px solid transparent;
-  }
-  .rail-foot { display: none; }
   .glossary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .pattern-catalog-grid {
+  .pattern-catalog-grid--full {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .frame-grid,
@@ -2967,6 +3668,22 @@ summary:focus-visible {
   }
   .board-wording-meta {
     grid-template-columns: 1fr;
+  }
+  /* Walk mode collapses to single column; rail moves under the workbench
+     and goes static. Subway dots wrap into two rows. */
+  .walk-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .walk-rail {
+    position: static;
+    top: auto;
+  }
+  .subway-list {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: 22px;
+  }
+  .featured-example-next {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -3027,7 +3744,7 @@ summary:focus-visible {
   .glossary-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .pattern-catalog-grid,
+  .pattern-catalog-grid--full,
   .how-to-read-grid,
   .how-to-read-provenance,
   .how-to-read-outcomes,
@@ -3036,6 +3753,23 @@ summary:focus-visible {
   .microcase-list,
   .time-window-ticks {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .featured-example-head,
+  .featured-example-foot {
+    padding-left: var(--s-4);
+    padding-right: var(--s-4);
+  }
+  .walk-ribbon {
+    padding: var(--s-2) var(--s-4);
+  }
+  .walk-ribbon-counter-now {
+    font-size: 18px;
+  }
+  .walk-bottom-nav-link {
+    padding: var(--s-4) var(--s-4);
+  }
+  .recap {
+    padding: var(--s-4);
   }
   .how-to-read-block--wide {
     grid-column: auto;
@@ -3407,10 +4141,30 @@ summary:focus-visible {
   .counterexample-card,
   .provenance-badge,
   .outcome-badge,
-  .edit-outcome-badge {
+  .edit-outcome-badge,
+  .cta-button,
+  .subway-dot,
+  .walk-rail-nav-btn,
+  .walk-bottom-nav-link,
+  .walk-ribbon,
+  .pattern-catalog-chip,
+  .featured-example,
+  .featured-example-next-link,
+  .recap {
     color: CanvasText;
     background: Canvas;
     border-color: CanvasText;
+  }
+  .subway-dot.is-current,
+  .pattern-catalog-chip.is-current,
+  .cta-button--primary {
+    color: HighlightText;
+    background: Highlight;
+    border-color: Highlight;
+  }
+  .subway-dot.is-visited::before {
+    content: "✓ ";
+    margin-right: 2px;
   }
   .radio-card input:checked + .radio-card-mark,
   .checkbox-row input:checked + .checkbox-mark,

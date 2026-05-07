@@ -8,7 +8,12 @@ materials to show six recurring answer-choice problems.
 
 The project demonstrates a source-backed React and TypeScript interface with a
 worked-example flow, surrounding question context, source appendix, claim
-boundary, static security headers, and local-only settings controls.
+boundary, static security headers, and local-only settings controls. The page
+is organized as three hash-routed views — an overview that carries the hero,
+the six-pattern knowledge map, and one fully-working embedded example; a
+walk-through that paginates the remaining examples with a sticky map and
+recap interstitials; and a reference shelf for the glossary, method note,
+claim boundary, and source appendix.
 
 ## Sources And Attribution
 

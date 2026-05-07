@@ -1,4 +1,21 @@
-export function Hero() {
+import { workbenchSpecimens } from "../data/workbench-specimens";
+import { routeToHash } from "../lib/routes";
+
+type Props = {
+  /* Last specimen the visitor opened in walk mode. When provided, a
+     "Resume walk" affordance appears alongside the standard CTAs. */
+  resumeSpecimenId?: string | null;
+};
+
+/* The hub Hero. Tightened from the prior 4-stat scope receipt to a single
+   inline meta line, and pairs with two CTAs that lead the visitor either
+   into the embedded featured example below or directly into the paginated
+   walk. */
+export function Hero({ resumeSpecimenId = null }: Props = {}) {
+  const firstSpecimenId = workbenchSpecimens[0]?.id ?? "";
+  const resumeSpecimen = resumeSpecimenId
+    ? workbenchSpecimens.find((s) => s.id === resumeSpecimenId) ?? null
+    : null;
   return (
     <header className="hero" data-testid="hero">
       <div className="hero-rail">
@@ -31,11 +48,69 @@ export function Hero() {
             records something different from what the person meant.
           </p>
         </div>
+
+        <div className="hero-meta" aria-label="Exhibit scope">
+          <span className="hero-meta-stat">
+            <strong>12</strong> examples
+          </span>
+          <span className="hero-meta-sep" aria-hidden="true">
+            ·
+          </span>
+          <span className="hero-meta-stat">
+            <strong>6</strong> problem types
+          </span>
+          <span className="hero-meta-sep" aria-hidden="true">
+            ·
+          </span>
+          <span className="hero-meta-stat">
+            <strong>0</strong> generated rewrites
+          </span>
+        </div>
+
+        <div className="hero-cta-row" data-testid="hero-cta-row">
+          <a
+            className="cta-button cta-button--primary"
+            href="#featured-example"
+            data-testid="hero-cta-featured"
+          >
+            <span>Try the first example</span>
+            <span aria-hidden="true" className="cta-button-arrow">
+              ↓
+            </span>
+          </a>
+          <a
+            className="cta-button cta-button--secondary"
+            href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
+            data-testid="hero-cta-walk"
+          >
+            <span>Walk through all twelve</span>
+            <span aria-hidden="true" className="cta-button-arrow">
+              →
+            </span>
+          </a>
+          {resumeSpecimen && (
+            <a
+              className="cta-button cta-button--ghost"
+              href={routeToHash({
+                kind: "walk",
+                slot: resumeSpecimen.id
+              })}
+              data-testid="hero-cta-resume"
+            >
+              <span>
+                Resume walk · example {resumeSpecimen.number}
+              </span>
+              <span aria-hidden="true" className="cta-button-arrow">
+                ↻
+              </span>
+            </a>
+          )}
+        </div>
       </div>
 
       <ul
         className="hero-scope"
-        aria-label="Exhibit scope receipt"
+        aria-label="What this exhibit does and does not do"
         data-testid="scope-receipt"
       >
         <li className="hero-scope-item">
@@ -43,7 +118,7 @@ export function Hero() {
             <span className="hero-scope-val">12</span>
             <span className="hero-scope-unit"> examples</span>
           </p>
-          <p className="hero-scope-note">from public reports</p>
+          <p className="hero-scope-note">from public testing reports</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">

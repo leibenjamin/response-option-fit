@@ -1,5 +1,6 @@
-import { useReducer } from "react";
+import { useReducer, type CSSProperties } from "react";
 import { initialWidgetState, type WidgetState } from "../lib/diagnostics";
+import { patternMeta } from "../lib/pattern-meta";
 import type {
   ConfidenceLevel,
   VignetteOutcome,
@@ -115,6 +116,10 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
   );
   const canReveal = allPredicted && state.mechanismChoiceId !== null;
   const titleId = `${specimen.id}-workbench-title`;
+  const accentVar = patternMeta[specimen.pattern].accentVar;
+  const style = {
+    "--workbench-accent": `var(${accentVar})`
+  } as CSSProperties;
 
   return (
     <article
@@ -122,6 +127,7 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
       id={`workbench-${specimen.number}-${specimen.id}`}
       data-testid={`workbench-${specimen.id}`}
       aria-labelledby={titleId}
+      style={style}
     >
       <FrameBeat specimen={specimen} titleId={titleId} />
       <PredictBeat

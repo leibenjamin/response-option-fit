@@ -5,10 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Response Option Fit Lab</title>
     <meta name="description" content="An editorial exhibit about survey answer choices that do not match what people know, using twelve worked examples from public questionnaire-testing materials." />
+    <link rel="canonical" href="https://benlei.org/response-option-fit/" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f5f1ea" />
     <meta name="robots" content="noai, noimageai" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Response Option Fit Lab" />
+    <meta property="og:description" content="An editorial exhibit about survey answer choices that do not match what people know, using twelve worked examples from public questionnaire-testing materials." />
+    <meta property="og:url" content="https://benlei.org/response-option-fit/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Response Option Fit Lab" />
+    <meta name="twitter:description" content="An editorial exhibit about survey answer choices that do not match what people know, using twelve worked examples from public questionnaire-testing materials." />
   </head>
   <body>
     <div id="root"></div>
@@ -22,6 +30,7 @@
       <section class="colophon-section" aria-labelledby="colophon-what">
         <h2 id="colophon-what">What this is</h2>
         <p>Response Option Fit Lab is a static editorial exhibit about a narrow problem: how survey answer choices can fail before analysis begins. The public page leads with the literal title "When survey answer choices don't match real answers" and uses worked examples, drawn from public cognitive-testing materials and clearly labeled scenarios, to make six recurring answer-choice problems visible. It is not a guide to validated replacement wording, a model of respondent distributions, or a substitute for cognitive testing, expert review, or field evidence.</p>
+        <p>The exhibit is laid out across three top-level routes. The <strong>overview</strong> is the share-target and carries the hero, the six-pattern map, and one fully-working embedded worked example so the depth is visible without clicking. The <strong>walk</strong> shows one worked example at a time with a sticky knowledge map on the right and prev/next navigation; mid-walk recap interstitials appear after every fourth example and a completion screen closes the sequence. The <strong>reference shelf</strong> moves the glossary, method note, claim boundary, and source appendix off the main scroll into their own route so the exhibit no longer reads as a single thirty-screen page.</p>
       </section>
 
       <section class="colophon-section" aria-labelledby="colophon-audience">
@@ -81,8 +90,8 @@
 
       <section class="colophon-section" aria-labelledby="colophon-privacy">
         <h2 id="colophon-privacy">Privacy and performance</h2>
-        <p>This exhibit has no analytics, no ad tech, no cookies, and no third-party runtime requests. The only persistent storage is optional settings data saved to localStorage after an explicit opt-in. Worked-example progress is not saved in this release. Stored data stays in the browser for this origin until you export it, replace it, or clear it. Export writes a local file; import reads one back on-device; Clear removes the stored data for this site.</p>
-        <p>The performance budget is a release-review target, not a hard law: no network calls after initial load, JavaScript at or below <strong>100 KB gzip</strong>, CSS at or below <strong>35 KB gzip</strong>. Current release: <strong>JS 91.08 KB gzip</strong>, <strong>CSS 9.40 KB gzip</strong>, measured <strong>2026-05-06</strong>. Regressions are editorially visible changes, not private engineering trivia; if a release exceeds the target, the colophon says why the added weight is worth it. If motion is reduced, the exhibit keeps it reduced. If forced-colors is active, the user's contrast choices win.</p>
+        <p>This exhibit has no analytics, no ad tech, no cookies, and no third-party runtime requests. The only persistent storage is optional local data saved to localStorage after an explicit opt-in through the Settings drawer. When the Remember toggle is on, the exhibit stores two things on this device: the settings choice itself, and the names of worked examples opened in walk mode so the knowledge map fills in across visits. When Remember is off the visit history stays in memory only and is lost on reload. Stored data stays in the browser for this origin until you export it, replace it, or clear it. Export writes a local file; import reads one back on-device; Clear removes the stored data for this site.</p>
+        <p>The performance budget is a release-review target, not a hard law: no network calls after initial load, JavaScript at or below <strong>100 KB gzip</strong>, CSS at or below <strong>35 KB gzip</strong>. Current release: <strong>JS 96.06 KB gzip</strong>, <strong>CSS 11.03 KB gzip</strong>, measured <strong>2026-05-07</strong>. Regressions are editorially visible changes, not private engineering trivia; if a release exceeds the target, the colophon says why the added weight is worth it. If motion is reduced, the exhibit keeps it reduced. If forced-colors is active, the user's contrast choices win.</p>
       </section>
 
       <section class="colophon-section" aria-labelledby="colophon-decisions">
@@ -97,6 +106,8 @@
         <p>Context: bespoke pages are tempting because each failure pattern invites its own visual treatment. Decision: keep one five-step shell — Frame, Predict, Diagnose, Probe, Reveal — across the exhibit. Consequences: cognitive overhead drops, transfer improves, accessibility testing is more tractable, and the reader learns the shell once. The tradeoff is less local flourish. Alternatives considered: one custom layout per pattern or one long essay per pattern. Both would likely feel richer in isolation and weaker across the set.</p>
         <h3>ADR — Why drop scale anchoring and add forced precision</h3>
         <p>Context: early taxonomies often drift toward every familiar survey pathology, whether or not it belongs at the response-option layer. Decision: remove scale anchoring from the core six and replace it with forced precision. Consequences: the taxonomy gets sharper about response-option fit and less diffuse about general scale design. Alternatives considered: keeping both, merging them, or leaving scale anchoring in as a "classic." Forced precision earns the slot because it is easier to show in worked option sets and closer to the exhibit's central claim about failure before analysis.</p>
+        <h3>ADR — Why three top-level routes (overview, walk, reference)</h3>
+        <p>Context: rendering twelve full worked examples plus a four-section reference shelf as one continuous scroll produced a page roughly thirty viewport heights tall on landing, which buried the editorial richness behind a long flat list. Decision: split into three hash-routed views. The overview keeps a tightened hero, the six-pattern knowledge map, and one fully-working embedded worked example as the share-target. The walk paginates the remaining examples one at a time, with a sticky pattern map and recap interstitials at thresholds four and eight. The reference shelf moves to its own route. Consequences: the casual visitor grasps the gist in a few screens without forced clicking; the long-form reader gets a mode that paces twelve examples without any one page becoming overwhelming; the appendix material stops adding to every casual visit. Alternatives considered: a sticky table of contents on a still-flat scroll, beat-level pagination inside one workbench, a hub-only model with drill-in detail pages, and a tabs-by-pattern structure. The hybrid was chosen because it preserved the embedded "show, do not tell" surface while keeping the canonical interleaved order recommended by the cited learning literature.</p>
       </section>
 
       <section class="colophon-section" aria-labelledby="colophon-limits">
