@@ -32,17 +32,24 @@ function useRoute(): Route {
   return route;
 }
 
-function Hub({ controller }: { controller: WalkController }) {
+function Hub({
+  controller,
+  onSettingsOpen
+}: {
+  controller: WalkController;
+  onSettingsOpen: () => void;
+}) {
   const visitedSet = new Set(controller.state.visited);
-  /* The Resume CTA points at the most recently opened specimen, which is
-     the last id added to the visited array. */
-  const lastVisited =
-    controller.state.visited[controller.state.visited.length - 1] ?? null;
+  /* The Resume CTA points at the specimen the visitor was most recently
+     active on, including revisits — not just the most recent newly-opened
+     specimen — so navigating 1 → 2 → 1 leaves Resume pointing at 1. */
+  const lastVisited = controller.state.lastSpecimenId;
   return (
     <div className="lab" data-testid="hub">
       <a href="#featured-example" className="skip-link" data-testid="skip-link">
         Skip to worked example
       </a>
+      <SettingsButton onClick={onSettingsOpen} />
       <Hero resumeSpecimenId={lastVisited} />
       <main
         className="hub-main"
@@ -70,26 +77,17 @@ function Hub({ controller }: { controller: WalkController }) {
           </a>
         </p>
       </footer>
-
-      <div
-        className="sr-only"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        data-testid="specimen-announcer"
-      >
-        12 worked examples.
-      </div>
     </div>
   );
 }
 
-function ReferenceRoute() {
+function ReferenceRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
   return (
     <div className="lab lab--reference">
       <a href="#reference" className="skip-link" data-testid="skip-link">
         Skip to reference material
       </a>
+      <SettingsButton onClick={onSettingsOpen} />
       <Reference />
       <footer className="foot">
         <p className="foot-line foot-line--quiet hub-foot-links">
@@ -108,10 +106,12 @@ function ReferenceRoute() {
 
 function WalkRoute({
   slot,
-  controller
+  controller,
+  onSettingsOpen
 }: {
   slot: string;
   controller: WalkController;
+  onSettingsOpen: () => void;
 }) {
   const specimen = useMemo(
     () =>
@@ -127,6 +127,7 @@ function WalkRoute({
         <a href="#walk-done" className="skip-link" data-testid="skip-link">
           Skip to summary
         </a>
+        <SettingsButton onClick={onSettingsOpen} />
         <CompletionScreen visited={new Set(controller.state.visited)} />
         <footer className="foot">
           <p className="foot-line foot-line--quiet hub-foot-links">
@@ -152,6 +153,7 @@ function WalkRoute({
       <a href="#main-exhibit" className="skip-link" data-testid="skip-link">
         Skip to worked example
       </a>
+      <SettingsButton onClick={onSettingsOpen} />
       <WalkLayout specimen={specimen} controller={controller} />
       <footer className="foot">
         <p className="foot-line foot-line--quiet hub-foot-links">
@@ -260,17 +262,22 @@ function AppShell() {
     return () => window.cancelAnimationFrame(frame);
   }, [route]);
 
+  const openSettings = () => setSettingsOpen(true);
+
   return (
     <>
-      <SettingsButton onClick={() => setSettingsOpen(true)} />
       {route.kind === "colophon" ? (
         <Colophon />
       ) : route.kind === "reference" ? (
-        <ReferenceRoute />
+        <ReferenceRoute onSettingsOpen={openSettings} />
       ) : route.kind === "walk" ? (
-        <WalkRoute slot={route.slot} controller={controller} />
+        <WalkRoute
+          slot={route.slot}
+          controller={controller}
+          onSettingsOpen={openSettings}
+        />
       ) : (
-        <Hub controller={controller} />
+        <Hub controller={controller} onSettingsOpen={openSettings} />
       )}
       <SettingsDrawer open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       <div

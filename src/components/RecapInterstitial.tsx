@@ -98,7 +98,11 @@ export function RecapInterstitial({
           data-testid="recap-continue"
           onClick={onContinue}
         >
-          <span>Continue with the next example</span>
+          <span>
+            Continue with example{" "}
+            {workbenchSpecimens.find((s) => s.id === currentSpecimenId)
+              ?.number ?? ""}
+          </span>
           <span aria-hidden="true" className="cta-button-arrow">
             ↓
           </span>

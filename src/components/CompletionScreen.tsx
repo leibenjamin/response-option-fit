@@ -16,6 +16,8 @@ export function CompletionScreen({ visited }: Props) {
   const visitedCount = workbenchSpecimens.filter((specimen) =>
     visited.has(specimen.id)
   ).length;
+  const firstSpecimenId = workbenchSpecimens[0]?.id ?? "";
+  const isEmpty = visitedCount === 0;
 
   return (
     <main
@@ -25,7 +27,9 @@ export function CompletionScreen({ visited }: Props) {
       data-testid="completion-screen"
     >
       <header className="completion-head">
-        <p className="completion-eyebrow">End of the walk</p>
+        <p className="completion-eyebrow">
+          {isEmpty ? "Walk summary" : "End of the walk"}
+        </p>
         <h1
           className="completion-title"
           id="completion-title"
@@ -33,6 +37,8 @@ export function CompletionScreen({ visited }: Props) {
         >
           {allVisited
             ? "You've finished all twelve."
+            : isEmpty
+            ? "Twelve examples are waiting."
             : "End of the walk."}
         </h1>
         <p className="completion-lede">
@@ -42,6 +48,13 @@ export function CompletionScreen({ visited }: Props) {
               Frame, Predict, Diagnose, Probe, Reveal — appeared across all
               six failure patterns. The next two reads are the reference
               shelf and the colophon.
+            </>
+          ) : isEmpty ? (
+            <>
+              You haven't started the walk yet. The exhibit threads twelve
+              worked examples through six recurring answer-choice problems,
+              one example at a time, with a knowledge map that fills in as
+              you go. The first example is one click away.
             </>
           ) : (
             <>
@@ -71,16 +84,29 @@ export function CompletionScreen({ visited }: Props) {
       </section>
 
       <nav className="completion-actions" aria-label="What to read next">
-        <a
-          className="cta-button cta-button--primary"
-          href={routeToHash({ kind: "reference" })}
-          data-testid="completion-reference"
-        >
-          <span>Read the reference shelf</span>
-          <span aria-hidden="true" className="cta-button-arrow">
-            →
-          </span>
-        </a>
+        {isEmpty ? (
+          <a
+            className="cta-button cta-button--primary"
+            href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
+            data-testid="completion-start"
+          >
+            <span>Start with example 01</span>
+            <span aria-hidden="true" className="cta-button-arrow">
+              →
+            </span>
+          </a>
+        ) : (
+          <a
+            className="cta-button cta-button--primary"
+            href={routeToHash({ kind: "reference" })}
+            data-testid="completion-reference"
+          >
+            <span>Read the reference shelf</span>
+            <span aria-hidden="true" className="cta-button-arrow">
+              →
+            </span>
+          </a>
+        )}
         <a
           className="cta-button cta-button--secondary"
           href={routeToHash({ kind: "colophon" })}

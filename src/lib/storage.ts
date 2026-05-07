@@ -101,7 +101,11 @@ function validateSnapshotEntry(key: string, value: unknown): string | null {
     if (!isPlainObject(value)) {
       return `Snapshot value for "${WALK_STATE_STORAGE_KEY}" must be an object.`;
     }
-    const v = value as { visited?: unknown; recapsDismissed?: unknown };
+    const v = value as {
+      visited?: unknown;
+      recapsDismissed?: unknown;
+      lastSpecimenId?: unknown;
+    };
     const visitedOk =
       Array.isArray(v.visited) &&
       v.visited.every((s) => typeof s === "string");
@@ -110,8 +114,14 @@ function validateSnapshotEntry(key: string, value: unknown): string | null {
       v.recapsDismissed.every(
         (n) => typeof n === "number" && Number.isFinite(n)
       );
-    if (!visitedOk || !recapsOk) {
-      return `Snapshot value for "${WALK_STATE_STORAGE_KEY}" must have string-array "visited" and number-array "recapsDismissed".`;
+    /* lastSpecimenId is optional and tolerates missing/null for snapshots
+       written by a build that pre-dates this field. */
+    const lastOk =
+      v.lastSpecimenId === undefined ||
+      v.lastSpecimenId === null ||
+      typeof v.lastSpecimenId === "string";
+    if (!visitedOk || !recapsOk || !lastOk) {
+      return `Snapshot value for "${WALK_STATE_STORAGE_KEY}" must have string-array "visited", number-array "recapsDismissed", and optional string "lastSpecimenId".`;
     }
     return null;
   }

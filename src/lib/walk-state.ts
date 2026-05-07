@@ -22,6 +22,11 @@ export const recapThresholds: readonly number[] = [4, 8];
 export type WalkState = {
   visited: string[];
   recapsDismissed: number[];
+  /* The specimen id from the most recent visit() call, including revisits.
+     Used by the Resume CTA on the hub to point at where the visitor was
+     last active rather than where they last saw something new. Null means
+     they have never opened a walk-mode specimen. */
+  lastSpecimenId: string | null;
 };
 
 type WalkAction =
@@ -30,13 +35,18 @@ type WalkAction =
   | { type: "hydrate"; state: WalkState }
   | { type: "reset" };
 
-const EMPTY_STATE: WalkState = { visited: [], recapsDismissed: [] };
+const EMPTY_STATE: WalkState = {
+  visited: [],
+  recapsDismissed: [],
+  lastSpecimenId: null
+};
 
 function reducer(state: WalkState, action: WalkAction): WalkState {
   switch (action.type) {
     case "visit": {
-      if (state.visited.includes(action.specimenId)) return state;
-      return { ...state, visited: [...state.visited, action.specimenId] };
+      const next: WalkState = { ...state, lastSpecimenId: action.specimenId };
+      if (state.visited.includes(action.specimenId)) return next;
+      return { ...next, visited: [...state.visited, action.specimenId] };
     }
     case "dismiss_recap": {
       if (state.recapsDismissed.includes(action.threshold)) return state;
@@ -54,13 +64,23 @@ function reducer(state: WalkState, action: WalkAction): WalkState {
 
 function isWalkState(value: unknown): value is WalkState {
   if (typeof value !== "object" || value === null) return false;
-  const v = value as { visited?: unknown; recapsDismissed?: unknown };
-  return (
-    Array.isArray(v.visited) &&
-    v.visited.every((s) => typeof s === "string") &&
+  const v = value as {
+    visited?: unknown;
+    recapsDismissed?: unknown;
+    lastSpecimenId?: unknown;
+  };
+  const visitedOk =
+    Array.isArray(v.visited) && v.visited.every((s) => typeof s === "string");
+  const recapsOk =
     Array.isArray(v.recapsDismissed) &&
-    v.recapsDismissed.every((n) => typeof n === "number" && Number.isFinite(n))
-  );
+    v.recapsDismissed.every((n) => typeof n === "number" && Number.isFinite(n));
+  /* lastSpecimenId is optional in older snapshots: tolerate missing or
+     null, otherwise require a string. */
+  const lastOk =
+    v.lastSpecimenId === undefined ||
+    v.lastSpecimenId === null ||
+    typeof v.lastSpecimenId === "string";
+  return visitedOk && recapsOk && lastOk;
 }
 
 export type WalkController = {

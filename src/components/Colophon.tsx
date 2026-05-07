@@ -20,7 +20,7 @@ export function Colophon() {
             href={import.meta.env.BASE_URL}
             data-testid="return-to-exhibit"
           >
-            Return to exhibit
+            Return to overview
           </a>
         </p>
       </footer>

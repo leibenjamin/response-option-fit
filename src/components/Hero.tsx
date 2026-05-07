@@ -49,24 +49,6 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
           </p>
         </div>
 
-        <div className="hero-meta" aria-label="Exhibit scope">
-          <span className="hero-meta-stat">
-            <strong>12</strong> examples
-          </span>
-          <span className="hero-meta-sep" aria-hidden="true">
-            ·
-          </span>
-          <span className="hero-meta-stat">
-            <strong>6</strong> problem types
-          </span>
-          <span className="hero-meta-sep" aria-hidden="true">
-            ·
-          </span>
-          <span className="hero-meta-stat">
-            <strong>0</strong> generated rewrites
-          </span>
-        </div>
-
         <div className="hero-cta-row" data-testid="hero-cta-row">
           <a
             className="cta-button cta-button--primary"
