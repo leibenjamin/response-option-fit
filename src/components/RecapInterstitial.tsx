@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { recapRetrievalPrompts } from "../data/field-guide";
 import { workbenchSpecimens } from "../data/workbench-specimens";
 import { patternMeta, patternOrder } from "../lib/pattern-meta";
 import type { FailurePattern } from "../types/workbench";
@@ -42,6 +43,8 @@ export function RecapInterstitial({
   const titleId = `recap-${threshold}-title`;
   const isFirstRecap = threshold === 4;
   const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const retrievalPrompt = recapRetrievalPrompts[threshold] ?? null;
+  const [selectedPattern, setSelectedPattern] = useState<FailurePattern | null>(null);
 
   useEffect(() => {
     /* Move focus to the recap title so screen-reader users land on the
@@ -90,6 +93,41 @@ export function RecapInterstitial({
         currentSpecimenId={currentSpecimenId}
         showHeader={false}
       />
+
+      {retrievalPrompt && (
+        <section
+          className="recap-retrieval"
+          aria-labelledby={`recap-retrieval-${threshold}-title`}
+          data-testid="recap-retrieval"
+        >
+          <p className="recap-retrieval-eyebrow">Think first, then reveal</p>
+          <h3 id={`recap-retrieval-${threshold}-title`}>
+            Quick pattern check
+          </h3>
+          <p>{retrievalPrompt.prompt}</p>
+          <div className="recap-retrieval-options" role="group" aria-label="Pattern choices">
+            {retrievalPrompt.options.map((pattern) => {
+              const active = selectedPattern === pattern;
+              return (
+                <button
+                  key={pattern}
+                  type="button"
+                  className={`recap-retrieval-option ${active ? "is-active" : ""}`}
+                  aria-pressed={active}
+                  onClick={() => setSelectedPattern(pattern)}
+                >
+                  {patternMeta[pattern].label}
+                </button>
+              );
+            })}
+          </div>
+          {selectedPattern && (
+            <p className="recap-retrieval-answer" data-testid="recap-retrieval-answer">
+              Useful distinction: {retrievalPrompt.explanation}
+            </p>
+          )}
+        </section>
+      )}
 
       <div className="recap-actions">
         <button

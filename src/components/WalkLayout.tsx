@@ -79,7 +79,7 @@ export function WalkLayout({ specimen, controller }: Props) {
             />
           )}
 
-          <Workbench specimen={specimen} />
+          <Workbench key={specimen.id} specimen={specimen} />
 
           <footer className="walk-bottom-nav" aria-label="Continue walking">
             <a

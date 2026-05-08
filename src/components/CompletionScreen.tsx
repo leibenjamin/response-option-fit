@@ -1,4 +1,7 @@
+import { useState } from "react";
+import { mixedReviewItems } from "../data/field-guide";
 import { workbenchSpecimens } from "../data/workbench-specimens";
+import { patternMeta } from "../lib/pattern-meta";
 import { routeToHash } from "../lib/routes";
 import { PatternCatalog } from "./PatternCatalog";
 
@@ -10,6 +13,7 @@ type Props = {
    knowledge map with everything filled in and points the visitor toward
    the reference shelf and the colophon as the natural next reads. */
 export function CompletionScreen({ visited }: Props) {
+  const [reviewAnswers, setReviewAnswers] = useState<Record<string, string>>({});
   const allVisited =
     visited.size > 0 &&
     workbenchSpecimens.every((specimen) => visited.has(specimen.id));
@@ -46,8 +50,8 @@ export function CompletionScreen({ visited }: Props) {
             <>
               You've worked through every example. The same five-beat shell —
               Frame, Predict, Diagnose, Probe, Reveal — appeared across all
-              six failure patterns. The next two reads are the reference
-              shelf and the colophon.
+              six failure patterns. The next read is the field guide, where
+              the examples turn into reusable checks and prompts.
             </>
           ) : isEmpty ? (
             <>
@@ -61,8 +65,8 @@ export function CompletionScreen({ visited }: Props) {
               You've reached the wrap-up. You worked through{" "}
               <strong>{visitedCount}</strong> of 12 examples this session.
               The full set is always one click away in the knowledge map
-              below, and the reference shelf collects the patterns,
-              boundaries, and source citations behind every example.
+              below, and the field guide turns the patterns into portable
+              checks for your own survey drafts.
             </>
           )}
         </p>
@@ -83,6 +87,57 @@ export function CompletionScreen({ visited }: Props) {
         />
       </section>
 
+      {!isEmpty && (
+        <section
+          className="completion-review"
+          aria-labelledby="completion-review-title"
+          data-testid="completion-mixed-review"
+        >
+          <header className="completion-review-head">
+            <p className="completion-review-eyebrow">Mixed review</p>
+            <h2 id="completion-review-title">Distinguish the confusable pairs</h2>
+            <p>
+              Pick a pattern, then read the distinction. This is retrieval
+              practice, not a saved score.
+            </p>
+          </header>
+          <div className="completion-review-list">
+            {mixedReviewItems.map((item) => {
+              const selected = reviewAnswers[item.id] ?? null;
+              return (
+                <fieldset className="completion-review-card" key={item.id}>
+                  <legend>{item.prompt}</legend>
+                  <div className="completion-review-options">
+                    {item.options.map((pattern) => (
+                      <label className="segmented-radio" key={pattern}>
+                        <input
+                          type="radio"
+                          name={`completion-review-${item.id}`}
+                          value={pattern}
+                          checked={selected === pattern}
+                          onChange={() =>
+                            setReviewAnswers((answers) => ({
+                              ...answers,
+                              [item.id]: pattern
+                            }))
+                          }
+                        />
+                        <span>{patternMeta[pattern].label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  {selected && (
+                    <p className="completion-review-answer">
+                      Useful distinction: {item.explanation}
+                    </p>
+                  )}
+                </fieldset>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       <nav className="completion-actions" aria-label="What to read next">
         {isEmpty ? (
           <a
@@ -98,6 +153,18 @@ export function CompletionScreen({ visited }: Props) {
         ) : (
           <a
             className="cta-button cta-button--primary"
+            href={routeToHash({ kind: "fieldGuide" })}
+            data-testid="completion-field-guide"
+          >
+            <span>Use the field guide</span>
+            <span aria-hidden="true" className="cta-button-arrow">
+              →
+            </span>
+          </a>
+        )}
+        {!isEmpty && (
+          <a
+            className="cta-button cta-button--secondary"
             href={routeToHash({ kind: "reference" })}
             data-testid="completion-reference"
           >

@@ -70,6 +70,16 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
               →
             </span>
           </a>
+          <a
+            className="cta-button cta-button--secondary"
+            href={routeToHash({ kind: "fieldGuide" })}
+            data-testid="hero-cta-field-guide"
+          >
+            <span>Use the framework</span>
+            <span aria-hidden="true" className="cta-button-arrow">
+              →
+            </span>
+          </a>
           {resumeSpecimen && (
             <a
               className="cta-button cta-button--ghost"

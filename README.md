@@ -12,8 +12,9 @@ boundary, static security headers, and local-only settings controls. The page
 is organized as three hash-routed views — an overview that carries the hero,
 the six-pattern knowledge map, and one fully-working embedded example; a
 walk-through that paginates the remaining examples with a sticky map and
-recap interstitials; and a reference shelf for the glossary, method note,
-claim boundary, and source appendix.
+recap interstitials; a field guide with reusable tests, checklists, and
+static prompts for external LLM review; and a reference shelf for the
+glossary, method note, claim boundary, and source appendix.
 
 ## Sources And Attribution
 
@@ -81,17 +82,21 @@ See [docs/deployment.md](docs/deployment.md) and
 
 ## Performance Budget
 
-Release budget for the public exhibit. These targets are reviewed with
-judgment, not treated as a compile-time law: a useful release can exceed them
-when the added weight is explicit, measured, and worth the tradeoff.
+Release budget for the public exhibit. These targets are spacious guardrails
+against accidental bloat, not editorial compression rules: a useful release can
+exceed them when the added weight is explicit, measured, and worth the tradeoff.
 
 - LCP under 1.8 s on a Slow-4G profile.
-- Total JavaScript under 100 KB gzipped after all interactive modules ship.
-- Total CSS under 35 KB gzipped.
-- All interaction is client-side; no network requests after initial document
-  and assets load.
+- Initial JavaScript under 200 KB gzipped.
+- Lazy route chunks under 75 KB gzipped each.
+- Total CSS under 90 KB gzipped.
+- All interaction is client-side; no third-party runtime requests. Lazy route
+  chunks may load from the same origin when the visitor opens a route such as
+  the field guide.
 - Any budget overage should be called out in release notes with current build
-  numbers and the reason the added weight is justified.
+  numbers and the reason the added weight is justified. Useful teaching content
+  should be measured and route-split where appropriate, not trimmed merely to
+  satisfy an arbitrary old byte ceiling.
 
 ## Privacy Budget
 
@@ -103,10 +108,13 @@ to:
 - No PII collected or transmitted under any condition.
 - Current persistence is limited to opt-in, on-device settings data
   (`localStorage`). The Settings surface supports JSON export/import/clear and
-  shows the exact stored keys and values for transparency. Worked-example progress is
-  not persisted in this release.
+  shows the exact stored keys and values for transparency. When Remember is on,
+  the names of examples opened in walk mode are stored locally so the knowledge
+  map fills in across visits; when Remember is off, walk progress is in-memory
+  only and is lost on reload.
 - No user input is sent off-device. The exhibit deliberately contains no
-  freeform text inputs.
+  freeform text inputs, and the prompt pack is static copy for tools the user
+  chooses outside this site.
 
 ## License
 
