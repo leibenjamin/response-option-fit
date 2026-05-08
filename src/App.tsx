@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { workbenchSpecimens } from "./data/workbench-specimens";
 import { Colophon } from "./components/Colophon";
 import { CompletionScreen } from "./components/CompletionScreen";
@@ -14,6 +14,11 @@ import { SettingsProvider } from "./lib/settings";
 import { useWalkController, type WalkController } from "./lib/walk-state";
 
 const knownSpecimenIds: readonly string[] = workbenchSpecimens.map((s) => s.id);
+const FieldGuide = lazy(() =>
+  import("./components/FieldGuide").then((module) => ({
+    default: module.FieldGuide
+  }))
+);
 
 function currentRoute(): Route {
   if (typeof window === "undefined") return { kind: "hub" };
@@ -68,6 +73,10 @@ function Hub({
           Built for editorial study of response-option fit.
         </p>
         <p className="foot-line foot-line--quiet hub-foot-links">
+          <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
+            Field guide
+          </a>
+          <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
             Reference shelf
           </a>
@@ -93,6 +102,55 @@ function ReferenceRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
         <p className="foot-line foot-line--quiet hub-foot-links">
           <a className="foot-link" href={routeToHash({ kind: "hub" })}>
             ← Back to overview
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
+            Field guide
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
+            Colophon
+          </a>
+        </p>
+      </footer>
+    </div>
+  );
+}
+
+function FieldGuideRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
+  return (
+    <div className="lab lab--field-guide">
+      <a href="#field-guide" className="skip-link" data-testid="skip-link">
+        Skip to field guide
+      </a>
+      <SettingsButton onClick={onSettingsOpen} />
+      <Suspense
+        fallback={
+          <main
+            id="field-guide"
+            className="field-guide"
+            aria-labelledby="field-guide-title"
+          >
+            <h1
+              className="field-guide-title"
+              id="field-guide-title"
+              tabIndex={-1}
+            >
+              Loading field guide
+            </h1>
+          </main>
+        }
+      >
+        <FieldGuide />
+      </Suspense>
+      <footer className="foot">
+        <p className="foot-line foot-line--quiet hub-foot-links">
+          <a className="foot-link" href={routeToHash({ kind: "hub" })}>
+            ← Back to overview
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "reference" })}>
+            Reference shelf
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -139,6 +197,10 @@ function WalkRoute({
               Reference shelf
             </a>
             <span aria-hidden="true">·</span>
+            <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
+              Field guide
+            </a>
+            <span aria-hidden="true">·</span>
             <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
               Colophon
             </a>
@@ -165,6 +227,10 @@ function WalkRoute({
             Reference shelf
           </a>
           <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
+            Field guide
+          </a>
+          <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
             Colophon
           </a>
@@ -180,6 +246,8 @@ function routeAnnouncement(route: Route): string {
       return "Loaded overview.";
     case "reference":
       return "Loaded reference material.";
+    case "fieldGuide":
+      return "Loaded field guide.";
     case "colophon":
       return "Loaded colophon.";
     case "walk": {
@@ -197,6 +265,8 @@ function pageTitle(route: Route): string {
       return "Response Option Fit Lab";
     case "reference":
       return "Reference — Response Option Fit Lab";
+    case "fieldGuide":
+      return "Field guide — Response Option Fit Lab";
     case "colophon":
       return "Colophon — Response Option Fit Lab";
     case "walk": {
@@ -216,6 +286,8 @@ function focusHeadingId(route: Route): string {
       return "exhibit-title";
     case "reference":
       return "reference-title";
+    case "fieldGuide":
+      return "field-guide-title";
     case "colophon":
       return "colophon-title";
     case "walk":
@@ -250,7 +322,14 @@ function AppShell() {
          focus on its own mount; don't fight it. */
       const recap = document.querySelector('[data-testid="recap-interstitial"]');
       if (!recap) {
-        const heading = document.getElementById(id);
+        const fieldGuideTarget =
+          route.kind === "fieldGuide"
+            ? window.location.hash.replace(/^#/, "")
+            : "";
+        const heading =
+          fieldGuideTarget.startsWith("field-guide-")
+            ? document.getElementById(fieldGuideTarget)
+            : document.getElementById(id);
         heading?.focus({ preventScroll: false });
       }
       /* Make sure paginated routes scroll back to the top on transition;
@@ -270,6 +349,8 @@ function AppShell() {
         <Colophon />
       ) : route.kind === "reference" ? (
         <ReferenceRoute onSettingsOpen={openSettings} />
+      ) : route.kind === "fieldGuide" ? (
+        <FieldGuideRoute onSettingsOpen={openSettings} />
       ) : route.kind === "walk" ? (
         <WalkRoute
           slot={route.slot}

@@ -74,6 +74,15 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
         <p className="walk-rail-foot-row">
           <a
             className="walk-rail-foot-link"
+            href={routeToHash({ kind: "fieldGuide" })}
+            data-testid="walk-rail-field-guide"
+          >
+            Field guide →
+          </a>
+        </p>
+        <p className="walk-rail-foot-row">
+          <a
+            className="walk-rail-foot-link"
             href={routeToHash({ kind: "reference" })}
             data-testid="walk-rail-reference"
           >

@@ -12,6 +12,7 @@ import { MicroCaseBeat } from "./workbench/MicroCaseBeat";
 import { PredictBeat } from "./workbench/PredictBeat";
 import { ProbeBeat } from "./workbench/ProbeBeat";
 import { RevealBeat } from "./workbench/RevealBeat";
+import { PatternApplicationDetails } from "./PatternApplicationDetails";
 
 type PredictionMap = Record<string, VignetteOutcome | null>;
 
@@ -215,6 +216,7 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
               ))}
             </div>
           </section>
+          <PatternApplicationDetails pattern={specimen.pattern} />
         </>
       )}
     </article>

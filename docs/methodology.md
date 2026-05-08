@@ -29,15 +29,17 @@ full-instrument critique:
 
 ## Page Layout
 
-The exhibit is laid out across three hash-routed views so the worked examples
+The exhibit is laid out across four hash-routed views so the worked examples
 do not collapse into a single thirty-screen scroll. The overview at `#` keeps
 the hero, the six-pattern knowledge map, and one fully-working embedded
 worked example, so a visitor sees the work the exhibit can do without
 clicking through. The walk at `#walk/<id>` paginates the remaining examples
 one at a time, with a sticky pattern map on the right and prev/next
 navigation; mid-walk recap interstitials appear after the fourth and eighth
-examples, and a completion screen closes the sequence. The reference shelf
-at `#reference` carries the glossary, method note, claim boundary, and source
+examples, and a completion screen closes the sequence. The field guide at
+`#field-guide` turns the examples into reusable checks, pattern-specific
+checklists, and static prompts for external research tool review. The reference shelf at
+`#reference` carries the glossary, method note, claim boundary, and source
 appendix as their own route. The five-beat worked-example shell is identical
 across all twelve examples in either context.
 

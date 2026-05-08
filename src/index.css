@@ -3459,6 +3459,67 @@ summary:focus-visible {
   border-bottom-color: var(--accent);
 }
 
+.recap-retrieval {
+  border: 1px dashed var(--line-soft);
+  background: var(--paper);
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.recap-retrieval-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.recap-retrieval h3,
+.recap-retrieval p {
+  margin: 0;
+}
+
+.recap-retrieval h3 {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.recap-retrieval-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.recap-retrieval-option {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.recap-retrieval-option:hover,
+.recap-retrieval-option:focus-visible,
+.recap-retrieval-option.is-active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-paper);
+}
+
+.recap-retrieval-answer {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--ink-2);
+}
+
 /* ===================== COMPLETION ===================== */
 
 .completion {
@@ -3517,11 +3578,388 @@ summary:focus-visible {
   color: var(--ink);
 }
 
+.completion-review {
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  padding: var(--s-5) var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.completion-review-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: 70ch;
+}
+
+.completion-review-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.completion-review h2,
+.completion-review p {
+  margin: 0;
+}
+
+.completion-review h2 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.completion-review-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-3);
+}
+
+.completion-review-card {
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  margin: 0;
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
+}
+
+.completion-review-card legend {
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  line-height: 1.35;
+  color: var(--ink);
+  padding: 0;
+  margin-bottom: var(--s-2);
+}
+
+.completion-review-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.completion-review-answer {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--ink-2);
+  border-top: 1px dashed var(--line-soft);
+  padding-top: var(--s-3);
+}
+
 .completion-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-3);
   align-items: center;
+}
+
+/* ===================== FIELD GUIDE ROUTE ===================== */
+
+.lab--field-guide {
+  padding-top: var(--s-7);
+}
+
+.field-guide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-8);
+  margin-bottom: var(--s-9);
+}
+
+.field-guide-head,
+.field-guide-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: 76ch;
+}
+
+.field-guide-head {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: var(--s-5);
+}
+
+.field-guide-eyebrow,
+.field-guide-section-eyebrow,
+.prompt-card-eyebrow,
+.pattern-checklist-eyebrow,
+.apply-pattern-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.field-guide-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.05;
+  margin: 0;
+  color: var(--ink);
+}
+
+.field-guide-lede,
+.field-guide-section-head p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.field-guide-warning {
+  border: 1px solid var(--accent-soft);
+  background: var(--accent-paper);
+  padding: var(--s-5) var(--s-6);
+  max-width: 84ch;
+}
+
+.field-guide-warning h2 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0 0 var(--s-2);
+}
+
+.field-guide-warning p {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.field-guide-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.field-guide-section-head h2 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.fit-test-grid,
+.pattern-checklist-grid,
+.prompt-card-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4);
+}
+
+.fit-test-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fit-test-card,
+.pattern-checklist-card,
+.prompt-card {
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  padding: var(--s-5);
+  min-width: 0;
+}
+
+.fit-test-card h3,
+.pattern-checklist-card h3,
+.prompt-card-title,
+.apply-pattern-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--ink);
+}
+
+.fit-test-question {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--ink-2);
+  margin: var(--s-2) 0 var(--s-3);
+}
+
+.fit-test-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin: 0;
+}
+
+.fit-test-detail div {
+  border-top: 1px dashed var(--line-soft);
+  padding-top: var(--s-3);
+}
+
+.fit-test-detail dt {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.fit-test-detail dd {
+  margin: var(--s-1) 0 0;
+  color: var(--ink-2);
+}
+
+.pattern-checklist-card {
+  scroll-margin-top: var(--s-9);
+}
+
+.pattern-checklist-warning,
+.apply-pattern-warning {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--ink-2);
+  margin: var(--s-2) 0 var(--s-3);
+}
+
+.pattern-checklist-card ol,
+.apply-pattern-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--ink-2);
+}
+
+.pattern-checklist-card li + li,
+.apply-pattern-list li + li {
+  margin-top: var(--s-2);
+}
+
+.prompt-card-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.prompt-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--s-4);
+  align-items: start;
+}
+
+.prompt-card-purpose {
+  margin: var(--s-2) 0 0;
+  color: var(--ink-2);
+}
+
+.prompt-copy-button {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-2);
+  padding: var(--s-2) var(--s-3);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.prompt-copy-button:hover,
+.prompt-copy-button:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--paper-2);
+}
+
+.prompt-details {
+  margin-top: var(--s-4);
+  border-top: 1px dashed var(--line-soft);
+  padding-top: var(--s-3);
+}
+
+.prompt-details summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.prompt-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  padding: var(--s-4);
+  margin: var(--s-3) 0 0;
+}
+
+.prompt-copy-status {
+  min-height: 1.5em;
+  margin: var(--s-2) 0 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.research-link-list {
+  columns: 2;
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.research-link-list li {
+  break-inside: avoid;
+  margin-bottom: var(--s-2);
+}
+
+/* ===================== APPLY THIS PATTERN ===================== */
+
+.workbench-beat--apply-pattern {
+  border-top-style: dashed;
+}
+
+.apply-pattern-details {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  padding: var(--s-4);
+}
+
+.apply-pattern-summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.apply-pattern-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding-top: var(--s-4);
+}
+
+.apply-pattern-link-row {
+  margin: var(--s-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 /* ===================== REFERENCE ROUTE ===================== */
@@ -3628,6 +4066,11 @@ summary:focus-visible {
   }
   .frame-grid,
   .probe-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .completion-review-list,
+  .fit-test-grid,
+  .pattern-checklist-grid {
     grid-template-columns: minmax(0, 1fr);
   }
   .claims-grid {
@@ -3738,6 +4181,22 @@ summary:focus-visible {
   }
   .recap {
     padding: var(--s-4);
+  }
+  .completion-review,
+  .field-guide-warning,
+  .fit-test-card,
+  .pattern-checklist-card,
+  .prompt-card {
+    padding: var(--s-4);
+  }
+  .prompt-card-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .prompt-copy-button {
+    justify-self: start;
+  }
+  .research-link-list {
+    columns: 1;
   }
   .how-to-read-block--wide {
     grid-column: auto;
@@ -4118,14 +4577,26 @@ summary:focus-visible {
   .pattern-catalog-chip,
   .featured-example,
   .featured-example-next-link,
-  .recap {
+  .recap,
+  .recap-retrieval,
+  .recap-retrieval-option,
+  .completion-review,
+  .completion-review-card,
+  .field-guide-warning,
+  .fit-test-card,
+  .pattern-checklist-card,
+  .prompt-card,
+  .prompt-copy-button,
+  .prompt-text,
+  .apply-pattern-details {
     color: CanvasText;
     background: Canvas;
     border-color: CanvasText;
   }
   .subway-dot.is-current,
   .pattern-catalog-chip.is-current,
-  .cta-button--primary {
+  .cta-button--primary,
+  .recap-retrieval-option.is-active {
     color: HighlightText;
     background: Highlight;
     border-color: Highlight;
