@@ -45,8 +45,8 @@ export function FieldGuide() {
         </h1>
         <p className="field-guide-lede">
           These are portable tests, checklists, and prompt templates for
-          reviewing answer choices before analysis begins. They are not a
-          validator, score, or replacement for cognitive testing.
+          reviewing your own survey answer choices before analysis begins. They
+          are not a validator, score, or replacement for cognitive testing.
         </p>
       </header>
 
@@ -58,8 +58,8 @@ export function FieldGuide() {
         <p>
           This app does not run automation, send pasted survey text anywhere, or offer
           freeform survey inputs. The prompts below are static text you can copy
-          into an external research tool tool if your own data, privacy rules, and source
-          permissions allow it.
+          into an research tool tool you choose if your own data, privacy rules, and
+          source permissions allow it.
         </p>
       </section>
 
@@ -142,11 +142,12 @@ export function FieldGuide() {
       >
         <header className="field-guide-section-head">
           <p className="field-guide-section-eyebrow">Prompt pack</p>
-          <h2 id="prompt-pack-title">Static prompts for external research tool review</h2>
+          <h2 id="prompt-pack-title">Prompts for reviewing your own survey</h2>
           <p>
             These prompts make the model show its assumptions, preserve claim
             boundaries, and separate rewriting from validation. They are meant
-            for tools you choose outside this static site.
+            for your questionnaire in tools you choose outside this static site,
+            not for revising this website.
           </p>
         </header>
         <div className="prompt-card-list">

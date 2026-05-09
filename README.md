@@ -9,11 +9,11 @@ materials to show six recurring answer-choice problems.
 The project demonstrates a source-backed React and TypeScript interface with a
 worked-example flow, surrounding question context, source appendix, claim
 boundary, static security headers, and local-only settings controls. The page
-is organized as three hash-routed views — an overview that carries the hero,
+is organized as four hash-routed views — an overview that carries the hero,
 the six-pattern knowledge map, and one fully-working embedded example; a
 walk-through that paginates the remaining examples with a sticky map and
 recap interstitials; a field guide with reusable tests, checklists, and
-static prompts for external research tool review; and a reference shelf for the
+static prompts for visitors reviewing their own surveys; and a reference shelf for the
 glossary, method note, claim boundary, and source appendix.
 
 ## Sources And Attribution
@@ -114,7 +114,7 @@ to:
   only and is lost on reload.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
-  chooses outside this site.
+  chooses outside this site when reviewing their own survey material.
 
 ## License
 
