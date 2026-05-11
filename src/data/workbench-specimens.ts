@@ -393,7 +393,7 @@ const authoredWorkbenchSpecimens: Array<
           covered:
             "The edit correctly keeps neighbor carpool outside the ride-hailing option.",
           notCovered:
-            "Leaving carpool out keeps the highlighted option from absorbing neighbor rides."
+            "The neighbor ride is outside the paid-service target. The label stays stable as long as no carpool or shared-ride example is added to widen it."
         }
       }
     ],
@@ -466,6 +466,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "example_set_editor",
+      displayLabel: "Examples that clarify without widening",
       initialExampleIds: ["taxi"],
       candidates: [
         { id: "taxi", label: "taxi" },
@@ -510,7 +511,22 @@ const authoredWorkbenchSpecimens: Array<
           ]
         },
         "ride-carpool": { coveredBy: [] }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "ride-carpool",
+          when: { activeExampleIdsAny: ["carpool", "shared-only"] },
+          kind: "scope_widened",
+          rationale:
+            "Adding carpool or shared-ride examples invites informal shared rides into the highlighted option, widening the paid-service target rather than clarifying it."
+        },
+        {
+          vignetteId: "ride-carpool",
+          kind: "still_outside_target",
+          rationale:
+            "The neighbor ride stays outside the paid-service target, and the current examples do not invite it in."
+        }
+      ]
     },
     probePrompt:
       "Explore whether examples make Uber/Lyft and app-based paid rides visible without inviting informal carpools.",
@@ -547,22 +563,22 @@ const authoredWorkbenchSpecimens: Array<
           "This is the same pattern as Example 1: the respondent may know what happened, but the service label can point to platform apps, courier companies, or informal delivery."
       },
       {
-        id: "ride-distractor-vehicle",
+        id: "ride-distractor-service-boundary",
         kind: "distractor",
         context:
-          "A vehicle item asks households to classify a small electric vehicle. Respondents understand the device but may not know whether it belongs with bicycles, scooters, or a broader micromobility class.",
+          "A travel survey lists taxi, ride-hailing app, airport shuttle, and informal carpool as separate options. A respondent knows the words but is unsure where a paid shared shuttle belongs.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
-        wording: "An electric bicycle, a motorized scooter, or another micromobility vehicle",
+        wording: "Taxi, ride-hailing app, airport shuttle, or informal carpool",
         pattern: "category_boundary_blur",
         featureChoices: [
-          "A broad answer space that asks for too many services",
-          "A boundary between neighboring vehicle classes",
+          "A broad answer space that asks for several answer levels",
+          "A boundary between known transport-service classes",
           "A prior question that changes the next answer"
         ],
         correctFeatureIndex: 1,
         explanation:
-          "This is the nearest-neighbor pattern: the respondent may understand each vehicle word, but the boundary between small vehicle classes is hard to draw."
+          "Close, but this is category boundary blur: the service labels are understandable, while the rule for the shared paid shuttle is missing. Ride-hailing is label ambiguity because the option words themselves can redirect the commute."
       }
     ],
     source: sourceReceipt(
@@ -647,8 +663,9 @@ const authoredWorkbenchSpecimens: Array<
         }
       },
       {
-        id: "industry-food-delivery",
-        text: "A participant gave food delivery for one job, then supplied a different line of work for a second job.",
+        id: "industry-university-biomedical",
+        text:
+          "A university worker doing biomedical research wondered whether to answer state government work, university work, hospital work, research, biomedical research, or medical development.",
         provenance: "direct_quote",
         citation: {
           reportTitle: cpsSelfResponseTitle,
@@ -657,12 +674,12 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "Food delivery can be read as service line, platform work, or business type, so the field does not fully control the response level.",
+          "The same job can be described by institution, workplace, sector, activity, or research line, so unlike answer levels can all look complete.",
         probeRationale: {
           covered:
-            "Your split makes service line a distinct answer level instead of leaving it mixed with business type.",
+            "Your split names the answer level, so someone coding the response no longer receives university, hospital, and biomedical research as if they were equivalent answers.",
           notCovered:
-            "The edit still lets food delivery float between service, business, and work activity."
+            "The field still lets institution, workplace, and activity answers all look responsive in the same box."
         }
       },
       {
@@ -676,9 +693,9 @@ const authoredWorkbenchSpecimens: Array<
           "Grocery store is a kind of business at a usable level for the field.",
         probeRationale: {
           covered:
-            "Your split leaves workplace or business type available as a clean answer level.",
+            "Your split leaves a generic business type, such as grocery store, visible as an acceptable answer level.",
           notCovered:
-            "The field does not yet make grocery store visibly acceptable as the intended level."
+            "The field does not yet show whether a generic business type is the intended answer level."
         }
       },
       {
@@ -692,9 +709,9 @@ const authoredWorkbenchSpecimens: Array<
           "Cashier is an occupation or task, not the kind of business or industry.",
         probeRationale: {
           covered:
-            "The edit resolves this only by separating occupation from the business/industry field.",
+            "The edit only helps if occupation is visibly outside the business/industry field and belongs in its own field.",
           notCovered:
-            "Keeping occupation separate prevents the business/industry field from absorbing job titles."
+            "Without that boundary, a task such as cashier can masquerade as a complete business/industry answer."
         }
       },
       {
@@ -705,12 +722,12 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the CPS recommendation to add examples that show the level of detail expected.",
         expectedOutcome: "not_covered",
         outcomeRationale:
-          "An employer name may be familiar, but it is not the kind of business, activity, product, or service requested.",
+          "An employer name may be familiar, but the field asks for a class of business, activity, product, or service, not a proper name.",
         probeRationale: {
           covered:
-            "The edit resolves this only if employer name is separated from kind of business.",
+            "The edit resolves this only if proper employer names are visibly separated from kind-of-business answers.",
           notCovered:
-            "The edit keeps names outside the field and asks for a class of business instead."
+            "The field still lets a proper name look responsive even though it does not state the class of business."
         }
       }
     ],
@@ -783,6 +800,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "bucket_splitter",
+      displayLabel: "Boundary between answer levels",
       items: [
         { id: "establishment", label: "workplace or business type" },
         { id: "industry", label: "industry or sector" },
@@ -793,22 +811,23 @@ const authoredWorkbenchSpecimens: Array<
       candidateSplits: [1, 2, 3],
       diagnostic: {
         "industry-hospital-health-care": { cleanAt: [1] },
-        "industry-food-delivery": { cleanAt: [2] },
+        "industry-university-biomedical": { cleanAt: [2, 3] },
         "industry-grocery-store": { cleanAt: [1, 2] },
         "industry-job-title": { cleanAt: [3] },
         "industry-business-name": { cleanAt: [] }
       }
     },
-    probePrompt: "Explore where the answer space needs a boundary.",
+    probePrompt:
+      "Explore which answer level the text field should collect, and what still belongs outside it.",
     reveal: {
       addresses: {
         revisionDescription:
-          "The report recommended adding examples to clarify the type and level of detail expected.",
+          "The report recommended adding examples to clarify the type and level of detail expected. The portable move is to name the answer level; examples help because they model that level.",
         sourcePageRef: "CPS internet self-response section 3.4.5, pp. 69-75"
       },
       remainsUntested: {
         residualRisks: [
-          "Examples may clarify common jobs while leaving platform, multi-client, or mixed-workplace work hard to classify."
+          "Examples may clarify common jobs while leaving platform, multi-client, government/university, or mixed-workplace work hard to classify."
         ],
         claimBoundaryNote
       }
@@ -1064,6 +1083,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "filter_path_toggle",
+      displayLabel: "Applicability path",
       initialState: { hasScreener: false, hasNotApplicable: true },
       diagnostic: {
         "medicine-no-medicine-no": {
@@ -1097,7 +1117,15 @@ const authoredWorkbenchSpecimens: Array<
         "medicine-not-outage": {
           cleanStates: []
         }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "medicine-not-outage",
+          kind: "still_outside_target",
+          rationale:
+            "This spoilage is outside the outage target. A clearer applicability path does not bring unrelated refrigerator failures into this item."
+        }
+      ]
     },
     probePrompt: "Explore how a direct option and follow-up change No.",
     reveal: {
@@ -1115,22 +1143,22 @@ const authoredWorkbenchSpecimens: Array<
     },
     microCases: [
       {
-        id: "medicine-near-basement",
+        id: "medicine-near-elevator",
         kind: "near_transfer",
         context:
-          "A storm-damage module asks about basement flooding. Some households have sump pumps; others do not have that equipment at all.",
+          "An outage module asks whether the building elevator stopped working. Some respondents live in buildings with elevators; others live in homes with no elevator at all.",
         questionPrompt:
           "Which part of the wording would make a plain No hard to interpret?",
-        wording: "Did your sump pump fail during the outage?",
+        wording: "Did your building elevator stop working during the outage?",
         pattern: "false_premise",
         featureChoices: [
-          "A yes/no item lets No absorb households without the equipment",
+          "A yes/no item lets No absorb homes where the equipment does not exist",
           "Two adjacent categories share a boundary",
           "A prior question licenses multiple answers"
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This is the same pattern because households without a sump pump need an applicability option. It is not sequence overlap because no prior response is changing the category."
+          "Same mechanism: homes without the equipment need an applicability path before No can be interpreted. It is not sequence overlap because no prior response is changing this answer."
       },
       {
         id: "medicine-distractor-owner-ad",
@@ -1279,9 +1307,9 @@ const authoredWorkbenchSpecimens: Array<
           "A battery-only plug-in vehicle belongs in the first item, not the highlighted other-electric item.",
         probeRationale: {
           covered:
-            "A plug-in rule puts this vehicle in the first plug-in item instead of the highlighted other-electric item.",
+            "A plug-in rule sends this vehicle to the first plug-in item instead of the highlighted other-electric item.",
           notCovered:
-            "Keeping plug-in vehicles separate prevents the other-electric item from absorbing them."
+            "The selected cue still risks putting a plug-in vehicle in the wrong destination instead of the first plug-in item."
         }
       },
       {
@@ -1386,6 +1414,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "classifier_radio",
+      displayLabel: "Vehicle feature used as the category rule",
       features: [
         {
           id: "plugs-in",
@@ -1399,8 +1428,9 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "everyday-electric",
-          label: "Everyday electric label",
-          description: "Classify by whether the respondent would casually call the vehicle electric."
+          label: "Casual electric meaning",
+          description:
+            "Use the everyday label the respondent would casually apply, even when it does not settle the plug-in or hybrid rule."
         }
       ],
       initialFeatureId: "everyday-electric",
@@ -1408,10 +1438,26 @@ const authoredWorkbenchSpecimens: Array<
         "ev-plug-ins-hybrids": { cleanFeatureIds: ["plugs-in", "gas-and-battery"] },
         "ev-does-not-plug": { cleanFeatureIds: ["gas-and-battery"] },
         "ev-electric-means-plug": { cleanFeatureIds: ["plugs-in"] },
-        "ev-battery-only": { cleanFeatureIds: ["plugs-in", "everyday-electric"] },
+        "ev-battery-only": { cleanFeatureIds: ["plugs-in"] },
         "ev-plug-in-hybrid": { cleanFeatureIds: ["plugs-in", "gas-and-battery"] },
         "ev-non-plug-hybrid": { cleanFeatureIds: ["gas-and-battery"] }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "ev-battery-only",
+          when: { selectedFeatureId: "everyday-electric" },
+          kind: "still_ambiguous",
+          rationale:
+            "The casual electric label does not settle the destination. Under the intended route, this battery-only vehicle belongs in the plug-in item, not the highlighted other-EV item."
+        },
+        {
+          vignetteId: "ev-plug-in-hybrid",
+          when: { selectedFeatureId: "everyday-electric" },
+          kind: "still_ambiguous",
+          rationale:
+            "The casual label still leaves competing destinations: plug-in status points to one item, while hybrid status points toward the other-EV item."
+        }
+      ]
     },
     probePrompt: "Explore which vehicle feature carries the classification.",
     reveal: {
@@ -1695,6 +1741,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "sequence_reorderer",
+      displayLabel: "Instruction placement and repeated sources",
       items: [
         { id: "internet-site", label: "internet listing site" },
         { id: "owner-ad", label: "other owner advertising" },
@@ -1742,7 +1789,49 @@ const authoredWorkbenchSpecimens: Array<
           ],
           requiresMulti: true
         }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "owner-zillow-already",
+          when: {
+            order: ["all-that-apply", "internet-site", "owner-ad"],
+            allowMulti: true
+          },
+          kind: "tradeoff_remains",
+          rationale:
+            "The instruction licenses multiple Yes answers, but this scenario still depends on whether the survey wants one listing coded under both internet site and owner advertising."
+        },
+        {
+          vignetteId: "owner-zillow-already",
+          when: {
+            order: ["all-that-apply", "owner-ad", "internet-site"],
+            allowMulti: true
+          },
+          kind: "tradeoff_remains",
+          rationale:
+            "The instruction licenses multiple Yes answers, but it does not settle whether one already-counted listing should be recorded under two sources."
+        },
+        {
+          vignetteId: "owner-craigslist-owner",
+          when: {
+            order: ["all-that-apply", "internet-site", "owner-ad"],
+            allowMulti: true
+          },
+          kind: "tradeoff_remains",
+          rationale:
+            "The instruction makes overlapping sources permissible, but the same owner-written Craigslist post can still be double-coded as one source event."
+        },
+        {
+          vignetteId: "owner-craigslist-owner",
+          when: {
+            order: ["all-that-apply", "owner-ad", "internet-site"],
+            allowMulti: true
+          },
+          kind: "tradeoff_remains",
+          rationale:
+            "Putting the instruction first helps the route, but the same-listing tradeoff remains if the survey needs unique source events."
+        }
+      ]
     },
     probePrompt: "Explore how instruction placement changes the overlap.",
     reveal: {
@@ -1778,22 +1867,22 @@ const authoredWorkbenchSpecimens: Array<
           "Same pattern as Example 5: an earlier item in the sequence changes how the next answer is read. In Example 5 the same source feels counted twice; here, an earlier Yes makes the next Yes feel like a main-reason claim instead of any influence."
       },
       {
-        id: "owner-distractor-utilities",
+        id: "owner-distractor-business-level",
         kind: "distractor",
         context:
-          "A housing-cost form has a single entry for what the household paid last month for utilities. Some households pay each utility separately; others pay one combined amount through the landlord.",
+          "An employment form asks one open question about where someone worked. Respondents answer with an employer name, workplace type, broad sector, or service line.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
-        wording: "How much did you pay last month for electricity, gas, telephone, and other utilities?",
+        wording: "What kind of business, industry, or work was this?",
         pattern: "broad_bucket",
         featureChoices: [
-          "An earlier utility-cost item changes the next amount answer",
-          "One amount entry collects payments for several different services",
-          "The phrasing assumes every household pays for each of these utilities"
+          "An earlier source item changes whether this source counts again",
+          "One field accepts different answer levels as if they were equivalent",
+          "The phrasing assumes every respondent had the equipment"
         ],
         correctFeatureIndex: 1,
         explanation:
-          "This can look like sequence overlap because the wording lists several services, but the pressure here is inside one entry: a single amount has to cover several distinct utility services."
+          "Close, but this is broad bucket: the problem is one field accepting unlike answer levels. Owner advertising is sequence overlap because two adjacent items make one source look countable twice."
       }
     ],
     source: sourceReceipt(
@@ -2013,6 +2102,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "time_window_slider",
+      displayLabel: "Representative rule or recall cue",
       windows: [
         { id: "last-week", label: "last week", days: 7 },
         { id: "four-weeks", label: "last 4 weeks", days: 28 },
@@ -2021,16 +2111,40 @@ const authoredWorkbenchSpecimens: Array<
       ],
       initialWindowId: "four-months",
       diagnostic: {
-        "hours-more-average": { stableWindowIds: ["usual-no-window"] },
-        "hours-ninety-percent": { stableWindowIds: ["usual-no-window"] },
+        "hours-more-average": { stableWindowIds: [] },
+        "hours-ninety-percent": { stableWindowIds: [] },
         "hours-variable-average": { stableWindowIds: ["last-week", "four-weeks"] },
         "hours-stable-forty": {
           stableWindowIds: ["last-week", "four-weeks", "four-months", "usual-no-window"]
         },
         "hours-no-usual-week": { stableWindowIds: ["last-week"] }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "hours-more-average",
+          when: { windowId: "usual-no-window" },
+          kind: "method_still_hidden",
+          rationale:
+            "Removing the four-month window may reduce one confusion, but this number still hides whether the respondent averaged, used a current pattern, or chose another representative rule."
+        },
+        {
+          vignetteId: "hours-ninety-percent",
+          when: { windowId: "usual-no-window" },
+          kind: "method_still_hidden",
+          rationale:
+            "The no-window wording still leaves the dominance rule private: most of the period, average week, recent week, and usual week can produce different numbers."
+        },
+        {
+          vignetteId: "hours-variable-average",
+          when: { windowId: "usual-no-window" },
+          kind: "method_still_hidden",
+          rationale:
+            "A no-window usual-hours question still collapses several week types into one number without preserving the aggregation method."
+        }
+      ]
     },
-    probePrompt: "Explore how the recall window changes the counting method.",
+    probePrompt:
+      "Explore what the recall window clarifies and what representative rule it still leaves hidden.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -2064,22 +2178,22 @@ const authoredWorkbenchSpecimens: Array<
           "This is the same pattern because changing weekly tips must become one amount. It is not a broad-answer-field problem because the answer shape is precise and numeric."
       },
       {
-        id: "hours-distractor-main-reason",
+        id: "hours-distractor-business-level",
         kind: "distractor",
         context:
-          "A labor-force item asks for the main reason someone was not looking for work, even when several reasons applied.",
+          "A work survey asks for the kind of business or industry. One respondent writes hospital, another writes health care, another writes cashier, and another writes an employer name.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
-        wording: "What is the main reason you were not looking for work?",
+        wording: "What kind of business or industry was this?",
         pattern: "broad_bucket",
         featureChoices: [
-          "One reason field compresses multiple coexisting reasons",
+          "One field accepts different answer levels",
           "One number is required from variable weeks",
           "A missing equipment screener changes No"
         ],
         correctFeatureIndex: 0,
         explanation:
-          "This may look like forced precision because it asks for one answer, but the distinguishing feature is a broad reason field rather than numeric aggregation."
+          "Close, but this is broad bucket: the answer level is drifting inside one field. Forced precision is different because the problem is the hidden rule that produced one exact-looking number."
       }
     ],
     source: sourceReceipt(
@@ -2155,7 +2269,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "Lower functionality is a plausible device distinction, but it does not match the survey's laptop synonym.",
+          "Weaker-device meaning: lower functionality is a plausible device distinction, but it does not match the survey's laptop synonym.",
         probeRationale: {
           covered:
             "Removing notebook or pairing laptop with a clearer portable-computer label reduces this side meaning.",
@@ -2174,7 +2288,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "A Chromebook may be in scope or may be treated as a separate product family, so the label does not settle the answer.",
+          "Borderline product-family meaning: a Chromebook may be in scope or may be treated as a separate product family, so the label does not settle the answer.",
         probeRationale: {
           covered:
             "Naming Chromebook or a clearer laptop class can bring this case into a declared answer category.",
@@ -2193,7 +2307,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "Tablet-like interpretation sends the label toward a neighboring device category before the respondent answers.",
+          "Wrong neighboring family: tablet-like interpretation sends the label toward a neighboring device category before the respondent answers.",
         probeRationale: {
           covered:
             "A laptop-only or built-in-keyboard frame keeps tablet-like readings from controlling the answer.",
@@ -2302,6 +2416,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "example_set_editor",
+      displayLabel: "Terms included in the device label",
       initialExampleIds: ["notebook"],
       candidates: [
         { id: "laptop", label: "laptop" },
@@ -2318,7 +2433,23 @@ const authoredWorkbenchSpecimens: Array<
           coveredBy: [["laptop"], ["laptop", "notebook"], ["laptop", "two-in-one"]]
         },
         "notebook-tablet-only": { coveredBy: [] }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "notebook-tablet",
+          when: { activeExampleIdsAny: ["tablet"] },
+          kind: "scope_widened",
+          rationale:
+            "Adding a tablet example reinforces the tablet meaning the respondent already had in mind, so the device label reaches toward a neighboring family instead of controlling the notebook synonym."
+        },
+        {
+          vignetteId: "notebook-tablet-only",
+          when: { activeExampleIdsAny: ["tablet"] },
+          kind: "scope_widened",
+          rationale:
+            "A tablet example invites tablet-only households into the laptop item, widening the intended portable-computer target rather than clarifying it."
+        }
+      ]
     },
     probePrompt: "Explore whether removing or replacing notebook narrows the label.",
     reveal: {
@@ -2332,6 +2463,11 @@ const authoredWorkbenchSpecimens: Array<
           "Chromebooks, keyboard tablets, and 2-in-1 devices may still sit outside laptop for some respondents."
         ],
         claimBoundaryNote
+      },
+      pairBridge: {
+        eyebrow: "Pair bridge",
+        text:
+          "Same family, different repair: ride-hailing needs examples that clarify paid app services without inviting carpools; notebook mostly needs removal of a synonym that redirects people toward other device families."
       }
     },
     microCases: [
@@ -2350,7 +2486,8 @@ const authoredWorkbenchSpecimens: Array<
           "A single numeric answer is required from variable use"
         ],
         correctFeatureIndex: 0,
-        explanation: "Same pattern: the equipment labels can be synonyms or distinct devices."
+        explanation:
+          "Same mechanism: one equipment label can point to several meanings before the respondent chooses Yes or No. It is not sequence overlap because no earlier item is changing the answer."
       },
       {
         id: "notebook-distractor-smart-tv",
@@ -2367,7 +2504,8 @@ const authoredWorkbenchSpecimens: Array<
           "A missing not-applicable answer absorbs No"
         ],
         correctFeatureIndex: 1,
-        explanation: "This is a boundary problem because the device classes can overlap."
+        explanation:
+          "Close, but this is category boundary blur: the device classes share functions even when the words are understood. Notebook is label ambiguity because one term redirects the respondent."
       }
     ],
     source: sourceReceipt(
@@ -2396,7 +2534,7 @@ const authoredWorkbenchSpecimens: Array<
     patternLabel: "Broad bucket",
     canonicalSubtitle: canonicalSubtitleByPattern.broad_bucket,
     canonicalCitations: canonicalCitationByPattern.broad_bucket,
-    title: "When a broad ethnicity category hides a subgroup",
+    title: "When write-in recovery is not the same as a visible route",
     subtitle: "A close-enough category and a write-in option do not behave like a visible box.",
     testedWording:
       "What is your ethnic group? Asian / Asian British ... Pakistani ... Kashmiri ... Any other Asian background, write in.",
@@ -2491,7 +2629,7 @@ const authoredWorkbenchSpecimens: Array<
           "The specific box helps, but learned broad-category habits can still compete with it.",
         probeRationale: {
           covered:
-            "A clearer subgroup separation improves the chance that the specific answer is seen in time.",
+            "A visible subgroup route improves the chance that the specific answer is seen, but it does not prove the respondent will use it.",
           notCovered:
             "The edit still does not overcome the broad-category habit."
         }
@@ -2596,6 +2734,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "bucket_splitter",
+      displayLabel: "Visibility of the specific answer route",
       items: [
         { id: "asian-heading", label: "Asian / Asian British heading" },
         { id: "broad-national", label: "Indian or Pakistani box" },
@@ -2607,12 +2746,22 @@ const authoredWorkbenchSpecimens: Array<
       diagnostic: {
         "kashmiri-easier-tick": { cleanAt: [2] },
         "kashmiri-not-completed": { cleanAt: [2] },
-        "kashmiri-broad-habit": { cleanAt: [2] },
+        "kashmiri-broad-habit": { cleanAt: [] },
         "kashmiri-specific-box": { cleanAt: [2] },
         "kashmiri-broad-only": { cleanAt: [2] }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "kashmiri-broad-habit",
+          when: { splitIndex: 2 },
+          kind: "tradeoff_remains",
+          rationale:
+            "The visible route helps, but this authored case is still about learned broad-category habit. The sketch does not decide the census-category tradeoff ONS weighed."
+        }
+      ]
     },
-    probePrompt: "Explore where the form separates broad categories from subgroup reporting.",
+    probePrompt:
+      "Explore whether the specific Kashmiri route is visible enough to compete with broader boxes and write-in recovery.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -2622,28 +2771,35 @@ const authoredWorkbenchSpecimens: Array<
       remainsUntested: {
         residualRisks: [
           "Adding one subgroup box can create pressure for parallel boxes for other communities.",
-          "Respondents may become uncertain whether to tick both a broad box and a subgroup box."
+          "Respondents may become uncertain whether to tick both a broad box and a subgroup box.",
+          "This teaching sketch tests route visibility only; it does not decide whether ONS should have adopted the tick-box."
         ],
         claimBoundaryNote
+      },
+      pairBridge: {
+        eyebrow: "Pair bridge",
+        text:
+          "Same family, different shape: business/industry splits answer levels inside one open text field; Kashmiri tests whether a specific route is as visible and trusted as the broader route."
       }
     },
     microCases: [
       {
-        id: "kashmiri-near-industry",
+        id: "kashmiri-near-language-route",
         kind: "near_transfer",
         context:
-          "An employment form lets someone describe a workplace as a broad sector, workplace type, clinic type, or service line.",
+          "A school form has a broad regional-language checkbox and a small write-in line for a specific home language. A family wants the specific language recorded but treats the visible broad checkbox as the safer route.",
         questionPrompt:
-          "Which part of the wording makes several answer levels look responsive?",
-        wording: "What kind of workplace was this: health care, hospital, clinic, or other service?",
+          "Which part of the wording makes the specific route hard to use?",
+        wording: "Regional language group, or write in another home language",
         pattern: "broad_bucket",
         featureChoices: [
-          "A broad level competes with a more specific reporting level",
+          "A visible broad route competes with a lower-visibility specific route",
           "A previous item primes the next response",
           "A label has several unrelated meanings"
         ],
         correctFeatureIndex: 0,
-        explanation: "Same pattern: several reporting levels can all look responsive."
+        explanation:
+          "Same mechanism as the Kashmiri case: the specific answer exists only through a lower-visibility route, while the broad route looks easier and more official. It is not category boundary blur because several visible headings are not competing."
       },
       {
         id: "kashmiri-distractor-black-heading",
@@ -2660,7 +2816,8 @@ const authoredWorkbenchSpecimens: Array<
           "An exact number is required from a variable history"
         ],
         correctFeatureIndex: 1,
-        explanation: "This is boundary blur because several section labels become partly relevant."
+        explanation:
+          "Close, but this is category boundary blur: several visible section cues become partly relevant before the respondent reaches a box. Kashmiri is broad bucket because the specific route is lower-visibility than the broad route."
       }
     ],
     source: sourceReceipt(
@@ -2727,30 +2884,11 @@ const authoredWorkbenchSpecimens: Array<
     ),
     vignettes: [
       {
-        id: "sump-help-very",
-        text: 'A respondent without a sump pump said the help text was "very" helpful.',
-        provenance: "direct_quote",
-        citation: {
-          reportTitle: ahs2023Title,
-          page: "section 4.5.8 OUTFLOOD, pp. 57-59",
-          permalink: ahs2023Url
-        },
-        expectedOutcome: "ambiguous",
-        outcomeRationale:
-          "The respondent lacks the assumed equipment, so the item needs a clear way out of the failure premise.",
-        probeRationale: {
-          covered:
-            "A screener or not-applicable option lets no-sump-pump households bypass the failure event.",
-          notCovered:
-            "The answer choices still relies on the respondent escaping a premise about equipment they do not have."
-        }
-      },
-      {
         id: "sump-no-pump-no",
         text: "A respondent with no sump pump answers No because the assumed equipment is absent.",
         provenance: "editorial",
         attributionNote:
-          "Based on the OUTFLOOD no-sump-pump disambiguator.",
+          "Source-grounded authored route based on the OUTFLOOD no-sump-pump disambiguator and proposed follow-up after No.",
         expectedOutcome: "ambiguous",
         outcomeRationale:
           "No could mean no pump, no failure, or no water, so the answer is not analytically clean.",
@@ -2759,6 +2897,22 @@ const authoredWorkbenchSpecimens: Array<
             "A No sump pump choice or follow-up keeps this respondent from being coded as a substantive No.",
           notCovered:
             "The edit still lets no equipment hide inside No."
+        }
+      },
+      {
+        id: "sump-has-pump-no-failure",
+        text: "A respondent has a sump pump, but it did not fail and no water collected, so they answer No.",
+        provenance: "editorial",
+        attributionNote:
+          "Based on the OUTFLOOD follow-up distinction between no sump pump and sump pump did not stop working properly.",
+        expectedOutcome: "covered",
+        outcomeRationale:
+          "This is the substantive No route: the household has the equipment, but the target pump-failure event did not occur.",
+        probeRationale: {
+          covered:
+            "The follow-up or screener keeps this substantive No separate from households with no sump pump.",
+          notCovered:
+            "The edit should preserve a clear No for households with a sump pump and no pump-failure flooding."
         }
       },
       {
@@ -2862,20 +3016,21 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "filter_path_toggle",
-      initialState: { hasScreener: false, hasNotApplicable: false },
+      displayLabel: "Applicability path after No",
+      initialState: { hasScreener: false, hasNotApplicable: true },
       diagnostic: {
-        "sump-help-very": {
-          cleanStates: [
-            { hasScreener: true, hasNotApplicable: false },
-            { hasScreener: true, hasNotApplicable: true },
-            { hasScreener: false, hasNotApplicable: true }
-          ]
-        },
         "sump-no-pump-no": {
           cleanStates: [
             { hasScreener: true, hasNotApplicable: false },
-            { hasScreener: true, hasNotApplicable: true },
-            { hasScreener: false, hasNotApplicable: true }
+            { hasScreener: true, hasNotApplicable: true }
+          ]
+        },
+        "sump-has-pump-no-failure": {
+          cleanStates: [
+            { hasScreener: false, hasNotApplicable: false },
+            { hasScreener: true, hasNotApplicable: false },
+            { hasScreener: false, hasNotApplicable: true },
+            { hasScreener: true, hasNotApplicable: true }
           ]
         },
         "sump-failed-outage": {
@@ -2887,13 +3042,28 @@ const authoredWorkbenchSpecimens: Array<
           ]
         },
         "sump-water-other-cause": { cleanStates: [] }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "sump-no-pump-no",
+          when: { hasScreener: false, hasNotApplicable: true },
+          kind: "still_ambiguous",
+          rationale:
+            "The source item already had a No sump pump route, but this authored No scenario still needs a follow-up or screener because the respondent chose plain No."
+        },
+        {
+          vignetteId: "sump-water-other-cause",
+          kind: "still_outside_target",
+          rationale:
+            "Water from another cause is outside the pump-failure target. Applicability wording cannot turn it into sump-pump-failure flooding."
+        }
+      ]
     },
     probePrompt: "Explore how a screener or not-applicable option changes No.",
     reveal: {
       addresses: {
         revisionDescription:
-          "The outage-and-timeframe wording was adopted, but the no-sump-pump follow-up was not.",
+          "The outage-and-timeframe wording was adopted, but the no-sump-pump follow-up was not. The source directly documents a no-sump respondent who found the help text very helpful; the plain-No route here is an authored teaching scenario from the proposed follow-up.",
         sourcePageRef: "AHS 2023 section 4.5.8 OUTFLOOD, pp. 57-59"
       },
       remainsUntested: {
@@ -2901,6 +3071,11 @@ const authoredWorkbenchSpecimens: Array<
           "The final wording can still collapse no equipment and no failure event inside No."
         ],
         claimBoundaryNote
+      },
+      pairBridge: {
+        eyebrow: "Pair bridge",
+        text:
+          "Same family, different trapdoor: medicine shows a missed not-applicable route that already existed; sump pump stacks equipment, failure, outage, and water before No can be interpreted."
       }
     },
     microCases: [
@@ -2919,7 +3094,8 @@ const authoredWorkbenchSpecimens: Array<
           "A previous item licenses multiple answers"
         ],
         correctFeatureIndex: 0,
-        explanation: "Same pattern: homes without a generator need an applicability option."
+        explanation:
+          "Same mechanism: homes without a generator need an applicability path before No can be interpreted. It is not label ambiguity because the term generator is not the failing step."
       },
       {
         id: "sump-distractor-notebook",
@@ -2936,7 +3112,8 @@ const authoredWorkbenchSpecimens: Array<
           "A single number is required from variable behavior"
         ],
         correctFeatureIndex: 1,
-        explanation: "This is label ambiguity because notebook sends respondents to different devices."
+        explanation:
+          "Close, but this is label ambiguity: notebook sends respondents toward different device meanings. Sump pump is false premise because the No route can hide absent equipment."
       }
     ],
     source: sourceReceipt(
@@ -2975,7 +3152,8 @@ const authoredWorkbenchSpecimens: Array<
       prompt: "Choose the section and tick-box that best describes your ethnic group.",
       context: [
         "The issue is the section heading that respondents scan before choosing a more specific box.",
-        "The tested heading placed African and Caribbean before Black."
+        "The tested heading placed African and Caribbean before Black.",
+        "This is a navigation boundary: respondents scan headings before they reach the box."
       ],
       targetKind: "heading",
       targetLabel: "Highlighted section heading",
@@ -3169,6 +3347,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "classifier_radio",
+      displayLabel: "Visible cue used to find the section",
       features: [
         {
           id: "african-first",
@@ -3182,8 +3361,9 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "white-african-path",
-          label: "White African option",
-          description: "The category system explicitly acknowledges the geography-color crossing."
+          label: "Hypothetical White African route",
+          description:
+            "Authored stress route for the cross-cutting geography-colour case; not an ONS-tested replacement."
         }
       ],
       initialFeatureId: "african-first",
@@ -3191,11 +3371,20 @@ const authoredWorkbenchSpecimens: Array<
         "heading-black-african": { cleanFeatureIds: ["black-first"] },
         "heading-looking-black": { cleanFeatureIds: ["black-first"] },
         "heading-white-african": { cleanFeatureIds: ["white-african-path"] },
-        "heading-multiple-ticks": { cleanFeatureIds: ["black-first", "white-african-path"] },
-        "heading-black-british-clean": { cleanFeatureIds: ["black-first"] }
-      }
+        "heading-multiple-ticks": { cleanFeatureIds: ["black-first"] },
+        "heading-black-british-clean": { cleanFeatureIds: ["african-first", "black-first"] }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "heading-multiple-ticks",
+          when: { selectedFeatureId: "white-african-path" },
+          kind: "still_ambiguous",
+          rationale:
+            "The hypothetical White African route helps a different cross-cutting case; it does not fix this Black-cue search path or wrong-section first mark."
+        }
+      ]
     },
-    probePrompt: "Explore which cue should carry the category boundary.",
+    probePrompt: "Explore which visible cue should guide the respondent to the section.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -3204,9 +3393,15 @@ const authoredWorkbenchSpecimens: Array<
       },
       remainsUntested: {
         residualRisks: [
-          "White African respondents and respondents skeptical of colour terminology may still find imperfect fit."
+          "White African respondents and respondents skeptical of colour terminology may still find imperfect fit.",
+          "The White African route in the Probe is an authored stress test for a documented residual problem, not a validated ONS replacement."
         ],
         claimBoundaryNote
+      },
+      pairBridge: {
+        eyebrow: "Pair bridge",
+        text:
+          "Same family, different gate: EV asks which vehicle feature controls the bin; the heading case asks which visible section cue guides the route."
       }
     },
     microCases: [
@@ -3225,7 +3420,8 @@ const authoredWorkbenchSpecimens: Array<
           "The question assumes equipment exists"
         ],
         correctFeatureIndex: 0,
-        explanation: "Same pattern: the device categories can be understood but still overlap."
+        explanation:
+          "Same mechanism: the respondent can understand the device words and still lack the rule for which category controls. It is not broad bucket because the problem is between neighboring classes, not one answer space."
       },
       {
         id: "heading-distractor-kashmiri",
@@ -3242,7 +3438,8 @@ const authoredWorkbenchSpecimens: Array<
           "A prior question changes the next category"
         ],
         correctFeatureIndex: 0,
-        explanation: "This is a broad-answer-field problem because the specific subgroup is harder to report."
+        explanation:
+          "Close, but this is broad bucket route visibility: the specific subgroup route is less visible than the broad option. The heading specimen is different because several visible section cues compete."
       }
     ],
     source: sourceReceipt(
@@ -3325,7 +3522,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent sees disaster risk as real but secondary, while the Yes answer feels primary.",
+          "Weak influence: the respondent sees disaster risk as real but secondary, while the Yes answer feels primary.",
         probeRationale: {
           covered:
             "An all-influences instruction makes a secondary disaster motive eligible for Yes.",
@@ -3344,7 +3541,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "Part-of-the-reason fits what the survey wanted to measure, but not if the series is read as primary-reason reporting.",
+          "Part reason: part-of-the-reason fits what the survey wanted to measure, but not if the series is read as primary-reason reporting.",
         probeRationale: {
           covered:
             "The all-that-influenced framing makes part-of-the-reason a clean Yes.",
@@ -3363,7 +3560,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "Forced Yes language signals that the answer choice does not match the respondent's strength of reason.",
+          "Binary pressure: forced Yes language signals that the answer choice does not match the respondent's strength of reason.",
         probeRationale: {
           covered:
             "A clear any-influence instruction reduces the feeling that Yes overstates the reason.",
@@ -3373,13 +3570,13 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "disaster-primary-only",
-        text: "A respondent treating the series as main-reason reporting says No when disaster avoidance was one influence.",
+        text: "A constructed respondent treats the series as main-reason reporting and says No, even though disaster avoidance was one influence.",
         provenance: "editorial",
         attributionNote:
-          "Based on the WMDISAS any-reason versus primary-reason finding.",
+          "Authored risk case based on the WMDISAS finding that respondents hesitated over primary versus secondary reasons; the report says hesitating respondents ultimately selected Yes.",
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The respondent's No would underreport a real secondary influence because the series implies primary reason.",
+          "This No would underreport a real secondary influence, but it is an authored stress case rather than an observed source route.",
         probeRationale: {
           covered:
             "The all-influences rule makes the secondary motive count before the respondent reaches the item.",
@@ -3486,6 +3683,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "sequence_reorderer",
+      displayLabel: "Instruction placement and influence threshold",
       items: [
         { id: "moving-reasons", label: "other moving reasons" },
         { id: "natural-disasters", label: "avoid natural disasters" },
@@ -3551,9 +3749,15 @@ const authoredWorkbenchSpecimens: Array<
       },
       remainsUntested: {
         residualRisks: [
-          "Without an all-influences instruction, secondary motives can still be underreported."
+          "Without an all-influences instruction, secondary motives can still be underreported.",
+          "The source documented hesitation about primary versus secondary reasons; it did not document hesitant respondents ultimately answering No."
         ],
         claimBoundaryNote
+      },
+      pairBridge: {
+        eyebrow: "Pair bridge",
+        text:
+          "Same family, different sequence pressure: owner advertising asks whether one source can count twice; disaster reasons asks whether a secondary influence is enough for Yes."
       }
     },
     microCases: [
@@ -3572,7 +3776,8 @@ const authoredWorkbenchSpecimens: Array<
           "A hidden not-applicable answer absorbs No"
         ],
         correctFeatureIndex: 0,
-        explanation: "Same pattern: an earlier answer changes the later category."
+        explanation:
+          "Same mechanism: an earlier answer changes whether the later Yes feels allowed. The disaster case shifts the threshold for Yes; owner advertising shifts whether one source may count twice."
       },
       {
         id: "disaster-distractor-weeks",
@@ -3589,7 +3794,8 @@ const authoredWorkbenchSpecimens: Array<
           "A broad category hides a subgroup"
         ],
         correctFeatureIndex: 1,
-        explanation: "This is forced precision because the respondent must build a week count."
+        explanation:
+          "Close, but this is forced precision: the respondent must build one exact-looking count from irregular history. Disaster is sequence overlap because the surrounding reason series changes what Yes seems to mean."
       }
     ],
     source: sourceReceipt(
@@ -3667,7 +3873,7 @@ const authoredWorkbenchSpecimens: Array<
           "The respondent may be able to answer approximately, but the field asks for exact weeks that memory does not support.",
         probeRationale: {
           covered:
-            "A months-first or less exact counting method can make the work spell easier to recover.",
+            "Thinking in months may help recover the work spell, but it still needs a conversion rule before it becomes a calendar-week count.",
           notCovered:
             "The edit still asks for a precision the respondent says they do not know."
         }
@@ -3705,7 +3911,7 @@ const authoredWorkbenchSpecimens: Array<
           "Dividing days by a five-day workweek can undercount calendar weeks when short work spells span more weeks.",
         probeRationale: {
           covered:
-            "A partial-week cue can prevent the five-days-equals-one-week conversion.",
+            "The partial-week cue states the intended rule: a week counts if the person worked even a few hours.",
           notCovered:
             "The edit still lets the respondent convert workdays instead of counting calendar weeks with any work."
         }
@@ -3796,34 +4002,58 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "time_window_slider",
+      displayLabel: "Counting cue or rule",
+      controlLabel: "Counting cue",
       windows: [
-        { id: "past-52-weeks", label: "past 52 weeks", days: 365 },
-        { id: "calendar-year", label: "calendar year", days: 365 },
-        { id: "months-first", label: "months first", days: 30 },
-        { id: "partial-week-cue", label: "partial-week cue", days: 7 }
+        { id: "past-52-weeks", label: "52-week reference period", days: 365 },
+        { id: "calendar-year", label: "calendar-year shortcut", days: 365 },
+        { id: "months-first", label: "months-first recall aid", days: 30 },
+        { id: "partial-week-cue", label: "count any week with a few hours", days: 7 }
       ],
       initialWindowId: "past-52-weeks",
       diagnostic: {
-        "weeks-not-exactly": { stableWindowIds: ["months-first"] },
+        "weeks-not-exactly": { stableWindowIds: [] },
         "weeks-rounded-guess": { stableWindowIds: [] },
         "weeks-days-divided": { stableWindowIds: ["partial-week-cue"] },
         "weeks-full-year-stable": {
           stableWindowIds: ["past-52-weeks", "calendar-year", "months-first", "partial-week-cue"]
         }
-      }
+      },
+      probeOutcomeRules: [
+        {
+          vignetteId: "weeks-not-exactly",
+          when: { windowId: "months-first" },
+          kind: "method_still_hidden",
+          rationale:
+            "Starting from months may help reconstruct the spell, but the final answer still needs a calendar-week rule."
+        },
+        {
+          vignetteId: "weeks-days-divided",
+          when: { windowId: "partial-week-cue" },
+          kind: "route_clearer",
+          rationale:
+            "The cue clarifies the intended rule: count any calendar week with even a few hours of work. It is still a rule cue, not proof that every respondent will stop converting workdays."
+        }
+      ]
     },
-    probePrompt: "Explore how the reporting window changes the counting method.",
+    probePrompt: "Explore how the wording changes the counting rule or recall cue.",
     reveal: {
       addresses: {
         revisionDescription:
-          "The report recommended sharpening the timeframe and retaining even for a few hours.",
+          "The report recommended clarifying the 50+ week gate and 52-week timeframe, routing full-year or nearly full-year workers past the follow-up, including paid time off, and retaining the cue that even a few hours in a week count.",
         sourcePageRef: "2016 ACS Content Test sections 4.7.1 and 4.7.3, pp. 100-108"
       },
       remainsUntested: {
         residualRisks: [
-          "Multiple jobs, paid leave, intermittent schedules, and proxy knowledge may still produce estimates."
+          "Multiple jobs, intermittent schedules, proxy knowledge, and residual exact-count difficulty may still produce estimates.",
+          "The source did not validate a months-first replacement for the weeks-worked count."
         ],
         claimBoundaryNote
+      },
+      pairBridge: {
+        eyebrow: "Pair bridge",
+        text:
+          "Same family, different hidden recipe: usual hours asks which week represents the pattern; weeks worked asks how calendar weeks are counted from spells, months, days, partial weeks, and leave."
       }
     },
     microCases: [
@@ -3842,24 +4072,26 @@ const authoredWorkbenchSpecimens: Array<
           "A previous item changes what Yes means"
         ],
         correctFeatureIndex: 0,
-        explanation: "Same pattern: variable arrival times must collapse into one answer."
+        explanation:
+          "Same mechanism: variable arrival times must collapse into one exact-looking answer, so the private representative rule matters. It is not label ambiguity because the words are not the main uncertainty."
       },
       {
-        id: "weeks-distractor-sump",
+        id: "weeks-distractor-industry-level",
         kind: "distractor",
         context:
-          "An outage module asks whether a sump pump failed, even though some households do not have a sump pump.",
+          "An employment survey asks one open field about work type. Respondents answer with an employer name, workplace type, sector, or service line.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
-        wording: "Did your sump pump fail during the outage?",
-        pattern: "false_premise",
+        wording: "What kind of business, industry, or work did this person do?",
+        pattern: "broad_bucket",
         featureChoices: [
-          "A hidden equipment premise makes No ambiguous",
+          "One field accepts unlike answer levels",
           "A week count is too exact for memory",
-          "A broad category hides subgroup detail"
+          "A previous answer changes what Yes means"
         ],
         correctFeatureIndex: 0,
-        explanation: "This is false premise because households without the equipment need an answer option."
+        explanation:
+          "Close, but this is broad bucket: employer, workplace type, sector, and service line are different answer levels. Weeks worked is forced precision because the exact-looking number hides a counting rule."
       }
     ],
     source: sourceReceipt(

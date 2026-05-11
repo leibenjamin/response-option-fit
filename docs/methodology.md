@@ -36,7 +36,8 @@ worked example, so a visitor sees the work the exhibit can do without
 clicking through. The walk at `#walk/<id>` paginates the remaining examples
 one at a time, with a sticky pattern map on the right and prev/next
 navigation; mid-walk recap interstitials appear after the fourth and eighth
-examples, and a completion screen closes the sequence. The field guide at
+examples, and a completion screen closes the sequence with six compact
+contrast prompts. The field guide at
 `#field-guide` turns the examples into reusable checks, pattern-specific
 checklists, and static prompts for external research tool review. The reference shelf at
 `#reference` carries the glossary, method note, claim boundary, and source
@@ -49,8 +50,8 @@ Each example is rendered in five teaching beats:
 
 1. Frame: the surrounding survey question and highlighted answer choice.
 2. Predict: example-specific judgments for each scenario.
-3. Diagnose: report-based answer key and answer-choice diagram.
-4. Probe: a small edit with live rationales for each scenario.
+3. Diagnose: teaching diagnosis and answer-choice diagram.
+4. Probe: a small preset wording change with diagnostic outcomes for each scenario.
 5. Reveal: what the source-supported revision addresses and what remains untested.
 
 The prediction labels are authored per example so the learner sees local,
@@ -64,6 +65,13 @@ the tested wording, where the answer choice stops fitting, and what the
 recorded answer can hide. Each stage includes short detail copy from the
 person's perspective. This structure is not a statistical model and does not
 estimate respondent counts, error rates, or distributional effects.
+
+Probe outcomes are visitor-facing teaching diagnostics, not validation results.
+They distinguish route clearer, still ambiguous, still outside target, tradeoff
+remains, method still hidden, and scope widened states so a wording change can
+remain partial even when it improves one route. The second example in each
+pattern pair also carries a compact bridge note to help visitors compare the
+two shapes of the same problem family.
 
 ## Authored Versus Source Material
 
@@ -80,6 +88,10 @@ scenarios. A source-backed finding may be a reported finding, quotation, or
 close paraphrase from a cited public report. An authored scenario is a
 constructed teaching case grounded in the cited report's wording or
 response-choice structure.
+
+Authored scenarios, pair bridges, completion-review prompts, and Probe
+rationales are learning aids. They should not be read as official source-agency
+answer keys or as tested replacement wording.
 
 ## Claim Boundary
 

@@ -1837,7 +1837,8 @@ summary:focus-visible {
 .microcase,
 .mechanism-result,
 .neighbor-contrast-card,
-.counterexample-card {
+.counterexample-card,
+.pair-bridge-card {
   background: var(--paper);
   border: 1px solid var(--line-soft);
   padding: var(--s-4);
@@ -1917,6 +1918,7 @@ summary:focus-visible {
 .mechanism-result-note,
 .neighbor-contrast-body,
 .reveal-card-body,
+.pair-bridge-body,
 .counterexample-body,
 .microcase-explanation p {
   margin: 0;
@@ -2146,13 +2148,25 @@ summary:focus-visible {
 }
 
 .outcome-badge--not_covered,
-.edit-outcome-badge--not_covered {
+.edit-outcome-badge--not_covered,
+.edit-outcome-badge--still_outside_target,
+.edit-outcome-badge--scope_widened {
   color: var(--accent);
 }
 
 .outcome-badge--user,
-.edit-outcome-badge--covered {
+.edit-outcome-badge--covered,
+.edit-outcome-badge--route_clearer {
   color: var(--ink-soft);
+}
+
+.edit-outcome-badge--still_ambiguous {
+  color: var(--route-c);
+}
+
+.edit-outcome-badge--tradeoff_remains,
+.edit-outcome-badge--method_still_hidden {
+  color: var(--route-w);
 }
 
 .mechanism-result,
@@ -2168,7 +2182,8 @@ summary:focus-visible {
 
 .mechanism-result-eyebrow,
 .neighbor-contrast-eyebrow,
-.reveal-card-eyebrow {
+.reveal-card-eyebrow,
+.pair-bridge-eyebrow {
   color: var(--accent);
 }
 

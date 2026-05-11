@@ -55,7 +55,7 @@ export const patternApplicationGuides: Record<
     checks: [
       "Before the yes/no item, write the applicability condition the respondent must meet.",
       "Ask what No could mean: no event, no equipment, no exposure, no memory, or not applicable.",
-      "Use a screener, skip, or visible not-applicable route when the denominator matters."
+      "Choose the applicability path: screener, skip, follow-up after No, or visible not-applicable route."
     ]
   },
   category_boundary_blur: {
@@ -100,7 +100,7 @@ export const mixedReviewItems: readonly MixedReviewItem[] = [
       "A respondent has a 2-in-1 tablet/laptop, but the survey offers laptop and tablet with no rule for which feature controls the answer.",
     options: ["label_ambiguity", "category_boundary_blur"],
     explanation:
-      "The word meanings may be familiar; the harder issue is the boundary between neighboring device categories."
+      "The nearest wrong route is label ambiguity. Here the words may be familiar; the harder issue is the missing boundary rule between neighboring device categories."
   },
   {
     id: "bucket-vs-premise",
@@ -108,15 +108,39 @@ export const mixedReviewItems: readonly MixedReviewItem[] = [
       "A job question asks for business or industry in one field, so one person writes 'hospital' and another writes 'health care.'",
     options: ["broad_bucket", "false_premise"],
     explanation:
-      "The item applies to both respondents, but the answer space accepts different levels of detail."
+      "The nearest wrong route is false premise. Here the item applies to both respondents; the problem is that one field accepts different answer levels."
   },
   {
     id: "sequence-vs-precision",
     prompt:
-      "After saying they found a home on a website, a respondent reaches a later owner-advertising item and wonders whether to count it again.",
+      "A respondent says disaster risk was one reason for moving but hesitates because Yes sounds like the main reason.",
     options: ["sequence_overlap", "forced_precision"],
     explanation:
-      "The answer choice is read through a prior answer, not a hidden counting method."
+      "The nearest wrong route is forced precision. This is sequence overlap because the reason series changes the threshold for Yes, not because a number hides a counting recipe."
+  },
+  {
+    id: "label-vs-bucket",
+    prompt:
+      "A commute option adds examples to clarify paid app rides, while a job field adds examples to model whether answers should be workplace type, sector, or service line.",
+    options: ["label_ambiguity", "broad_bucket"],
+    explanation:
+      "The nearest wrong route is broad bucket. Label ambiguity uses examples to clarify what a label means; broad bucket uses examples to model the expected answer level."
+  },
+  {
+    id: "bucket-vs-sequence",
+    prompt:
+      "A housing-search form could ask one broad field for how someone heard about a home, or it could ask internet site first and owner advertising next.",
+    options: ["broad_bucket", "sequence_overlap"],
+    explanation:
+      "The nearest wrong route is sequence overlap. Broad bucket is one field too wide; sequence overlap is two adjacent items making one source seem countable twice."
+  },
+  {
+    id: "premise-vs-precision",
+    prompt:
+      "One case requires recovering whether the household had the equipment before interpreting No; another requires recovering the counting rule behind a numeric answer.",
+    options: ["false_premise", "forced_precision"],
+    explanation:
+      "The nearest wrong route is forced precision. False premise recovers the denominator or applicability path before interpreting No; forced precision recovers the rule behind the number."
   }
 ];
 
@@ -125,9 +149,9 @@ export const recapRetrievalPrompts: Record<number, RecapRetrievalPrompt> = {
     threshold: 4,
     prompt:
       "Before example 05, which earlier pattern is easiest to confuse with sequence overlap?",
-    options: ["label_ambiguity", "category_boundary_blur", "false_premise"],
+    options: ["label_ambiguity", "broad_bucket", "false_premise"],
     explanation:
-      "Sequence overlap can look like word ambiguity, but the key question is whether the prior item changed the meaning."
+      "Broad bucket is one field too wide; owner advertising is two adjacent items making one source look countable twice."
   },
   8: {
     threshold: 8,
@@ -135,6 +159,6 @@ export const recapRetrievalPrompts: Record<number, RecapRetrievalPrompt> = {
       "Before example 09, which earlier pattern can look like false premise if you only read the No answer?",
     options: ["broad_bucket", "sequence_overlap", "forced_precision"],
     explanation:
-      "Both can hide different meanings in one answer space. False premise is narrower: the question may not apply to the respondent at all."
+      "Sequence overlap asks what an earlier answer made No or Yes mean. False premise asks whether the person belonged in the item at all."
   }
 };

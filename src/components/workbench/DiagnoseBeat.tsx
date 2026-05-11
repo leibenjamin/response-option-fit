@@ -43,9 +43,9 @@ export function DiagnoseBeat({
       data-testid={`diagnose-${specimen.id}`}
     >
       <header className="beat-head">
-        <p className="beat-eyebrow">Step 2 / Compare with the report</p>
+        <p className="beat-eyebrow">Step 2 / Compare routes</p>
         <h3 className="beat-title" id={`${specimen.id}-diagnose-title`}>
-          Compare your choices with the report-based explanation
+          Compare your choices with the teaching diagnosis
         </h3>
       </header>
 
@@ -58,7 +58,7 @@ export function DiagnoseBeat({
                 className={`outcome-badge outcome-badge--${vignette.expectedOutcome}`}
                 data-testid="published-outcome-badge"
               >
-                Report-based answer: {outcomeLabel(vignette.expectedOutcome, specimen.predictionCopy)}
+                Expected route: {outcomeLabel(vignette.expectedOutcome, specimen.predictionCopy)}
               </span>
               <span className="outcome-badge outcome-badge--user">
                 You said: {outcomeLabel(predictions[vignette.id], specimen.predictionCopy)}
@@ -78,7 +78,7 @@ export function DiagnoseBeat({
             You chose: {selectedMechanism.text}
           </p>
           <p className="mechanism-result-body">
-            Report-based explanation: {correctMechanism.text}
+            Best diagnosis: {correctMechanism.text}
           </p>
           <p className="mechanism-result-note">{selectedMechanism.explanation}</p>
         </div>
