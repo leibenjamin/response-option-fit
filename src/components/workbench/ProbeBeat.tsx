@@ -1,4 +1,8 @@
-import { evaluateDiagnostic, type WidgetState } from "../../lib/diagnostics";
+import {
+  probeOutcomeLabels,
+  resolveProbeOutcome,
+  type WidgetState
+} from "../../lib/diagnostics";
 import type { WorkbenchSpecimen } from "../../types/workbench";
 import { BucketSplitter } from "./widgets/BucketSplitter";
 import { ClassifierRadio } from "./widgets/ClassifierRadio";
@@ -110,29 +114,26 @@ export function ProbeBeat({ specimen, widgetState, onWidgetStateChange }: Props)
 
       <div className="probe-grid">
         <div className="probe-widget-panel">
-          <p className="probe-widget-label">{widgetLabel(specimen.widget.kind)}</p>
+          <p className="probe-widget-label">
+            {specimen.widget.displayLabel ?? widgetLabel(specimen.widget.kind)}
+          </p>
           {renderWidget()}
         </div>
 
         <ol className="probe-outcome-list" aria-label="Live exploratory outcomes">
           {specimen.vignettes.map((vignette) => {
-            const outcome = evaluateDiagnostic(widgetState, vignette.id, specimen.widget);
+            const outcome = resolveProbeOutcome(widgetState, vignette, specimen.widget);
             return (
               <li key={vignette.id} className="probe-outcome-card">
                 <p className="probe-outcome-text">{vignette.text}</p>
                 <span
-                  className={`edit-outcome-badge edit-outcome-badge--${outcome}`}
+                  className={`edit-outcome-badge edit-outcome-badge--${outcome.kind}`}
                   data-testid="edit-outcome-badge"
                 >
-                  Under your edit:{" "}
-                  {outcome === "covered"
-                    ? "clearer for this scenario"
-                    : "still unclear for this scenario"}
+                  Under your edit: {probeOutcomeLabels[outcome.kind]}
                 </span>
                 <p className="probe-rationale" data-testid="probe-rationale">
-                  {outcome === "covered"
-                    ? vignette.probeRationale.covered
-                    : vignette.probeRationale.notCovered}
+                  {outcome.rationale}
                 </p>
               </li>
             );

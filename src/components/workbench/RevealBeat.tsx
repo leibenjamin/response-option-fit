@@ -66,6 +66,13 @@ export function RevealBeat({ specimen }: Props) {
           <p className="reveal-source-ref">{specimen.counterexample.sourcePageRef}</p>
         </article>
       )}
+
+      {specimen.reveal.pairBridge && (
+        <article className="pair-bridge-card" data-testid={`pair-bridge-${specimen.id}`}>
+          <p className="pair-bridge-eyebrow">{specimen.reveal.pairBridge.eyebrow}</p>
+          <p className="pair-bridge-body">{specimen.reveal.pairBridge.text}</p>
+        </article>
+      )}
     </section>
   );
 }

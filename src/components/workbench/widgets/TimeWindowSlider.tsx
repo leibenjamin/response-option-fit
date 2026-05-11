@@ -37,7 +37,7 @@ export function TimeWindowSlider({ config, state, vignettes, onStateChange }: Pr
       </pre>
 
       <label className="range-label" htmlFor={sliderId}>
-        Recall window
+        {config.controlLabel ?? "Recall window"}
       </label>
       <input
         id={sliderId}

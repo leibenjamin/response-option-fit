@@ -77,3 +77,18 @@ reference, and a direct public PDF URL:
   cases grounded in the cited report's wording or response-choice structure.
 - Repair directions identify the type of clarification suggested by the source
   finding; they are not validated replacement questions.
+- Probe outcomes are authored teaching diagnostics. They show whether a preset
+  wording change clarifies the route, leaves ambiguity, stays outside target,
+  leaves a tradeoff, hides a method, or widens scope; they do not validate a
+  replacement item.
+- The ONS Kashmiri example tests visibility of the specific answer route while
+  preserving the report's documented tradeoff decision. The ONS ethnic-heading
+  example marks the White African path as an authored stress route, not an
+  ONS-tested replacement.
+- The sump-pump plain-No route, disaster underreporting risk, and several
+  weeks-worked counting cases are authored or source-grounded teaching
+  scenarios. The source notes in the interface should remain visible wherever
+  those cases could be mistaken for direct respondent observations.
+- Usual-hours and ACS-weeks probes distinguish recall cues from hidden
+  aggregation or counting rules. Cleaner wording does not imply that the
+  private calculation method has been recovered.

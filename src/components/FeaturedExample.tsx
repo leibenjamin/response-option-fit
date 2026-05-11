@@ -27,7 +27,7 @@ export function FeaturedExample() {
         <p className="featured-example-lede">
           Below is the first of twelve worked examples, fully working: read
           the survey question, mark each scenario as covered, ambiguous, or
-          not covered, then reveal the report-based explanation. The other
+          not covered, then reveal the teaching diagnosis. The other
           eleven examples follow the same five-beat shell.
         </p>
       </header>

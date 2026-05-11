@@ -160,10 +160,11 @@ current wording is validated replacement survey wording.
   competing with a specific subgroup identity.
 - Route decision: details clarify that the form architecture changes whether
   Kashmiri appears as a normal tick-box or a write-in route.
-- Micro-case decision: workplace answer level is the broad-bucket near transfer;
-  the Black/African heading is the boundary-blur distractor.
+- Micro-case decision: a language-route example is the route-visibility near
+  transfer; the Black/African heading is the boundary-blur distractor.
 - Remaining risk: this specimen carries design-tradeoff complexity; Reveal must
-  keep the comparability and parallel-subgroup cautions visible.
+  keep the comparability, parallel-subgroup cautions, and "route visibility is
+  not category-policy endorsement" boundary visible.
 
 ## Specimen 09 - Sump Pump
 
@@ -179,7 +180,8 @@ current wording is validated replacement survey wording.
   is the label-ambiguity distractor.
 - Remaining risk: users may still read "No sump pump" in the visible response
   options and assume the issue is fully solved; the follow-up-after-No rationale
-  needs to stay explicit.
+  needs to stay explicit, and the plain-No route should remain marked as an
+  authored/source-grounded teaching case.
 
 ## Specimen 10 - Ethnic-Group Heading
 
@@ -194,7 +196,8 @@ current wording is validated replacement survey wording.
 - Micro-case decision: TV-connected devices extend boundary blur; Kashmiri
   write-in architecture is the broad-bucket distractor.
 - Remaining risk: terminology choices are culturally and nationally specific;
-  the source remains authoritative for the ONS context.
+  the source remains authoritative for the ONS context, and the White African
+  path should remain visibly hypothetical/authored if it is used.
 
 ## Specimen 11 - Avoid Natural Disasters
 
@@ -223,9 +226,10 @@ current wording is validated replacement survey wording.
 - Route decision: details list calendar-week counts, month conversion,
   day-division, and rounding as competing recipes.
 - Micro-case decision: variable arrival time is near-transfer forced precision;
-  sump pump is the false-premise distractor.
+  business/industry answer-level compression is the broad-bucket distractor.
 - Remaining risk: the widget cannot fully repair proxy knowledge, multiple jobs,
-  or paid-leave interpretation; those remain Reveal risks.
+  paid-leave interpretation, or residual exact-count difficulty; those remain
+  Reveal risks.
 
 ## 2026-05-06 Novice-Language Audit
 
@@ -274,8 +278,8 @@ Copy rules for future waves:
 - Prefer "what the survey wanted to measure" over "intended construct."
 - Prefer "what the person knows" over "respondent reality."
 - Prefer "where the answer choice stops fitting" over "route break."
-- Prefer "based only on the cited report" or "report-based" over
-  "source-bounded."
+- Prefer "based only on the cited report" or "teaching diagnosis" over
+  answer-key language.
 - Prefer "source details" over "source receipt" or "manifest."
 - Prefer "try one wording change" over "probe," and state that wording changes
   are exploratory and not validated.
@@ -462,8 +466,8 @@ built up the page's local vocabulary.
 
 #### Diagnose beat
 
-- Title "Compare your choices with the report-based explanation." Clear.
-- Per-vignette: "Report-based answer:" badge + "You said:" badge +
+- Title "Compare your choices with the teaching diagnosis." Clear.
+- Per-vignette: "Expected route:" badge + "You said:" badge +
   rationale paragraph. Good.
 - "Wording feature check" block:
   - N1: "feature" again here. Better: "Why the wording broke down" or
@@ -514,8 +518,10 @@ built up the page's local vocabulary.
   - "Question order" - clear.
   - "Reporting window" - "window" is data-analyst metaphor; better
     "Time period to ask about."
-- Outcome badges "Under your edit: clearer for this scenario / still
-  unclear for this scenario." Plain and good.
+- Outcome badges now use a small diagnostic vocabulary: Route clearer, Still
+  ambiguous, Still outside target, Tradeoff remains, Method still hidden, and
+  Scope widened. The label must stay paired with the rationale so it does not
+  become jargon.
 
 #### Reveal beat
 
@@ -614,7 +620,7 @@ distractor draws the right contrast.
   — accepts responses at very different scopes, so unlike answers can all
   look acceptable."
 - Specimen 02 vignettes cover: hospital/health-care (level conflict),
-  food delivery (service line vs business), grocery store (right level),
+  university/biomedical research (answer-level ambiguity), grocery store (right level),
   cashier (occupation level), business name (employer level). Good
   range; edges: ambiguous (×2), covered (×1), not_covered (×2).
 - Specimen 08 sits awkwardly under broad_bucket. The "bucket" here is
@@ -692,18 +698,18 @@ distractor draws the right contrast.
 
 | Specimen | Near-transfer | Distractor pattern |
 | --- | --- | --- |
-| 01 ride-hailing | label_ambiguity (delivery app) | category_boundary_blur (micromobility) |
+| 01 ride-hailing | label_ambiguity (delivery app) | category_boundary_blur (service boundary) |
 | 02 business/industry | broad_bucket (gig company/line of work) | forced_precision (variable hours) |
-| 03 refrigerated medicine | false_premise (sump pump) | sequence_overlap (rental app/owner) |
+| 03 refrigerated medicine | false_premise (no elevator building) | sequence_overlap (rental app/owner) |
 | 04 EV | category_boundary_blur (smart TV) | label_ambiguity (laptop/notebook) |
-| 05 owner ad | sequence_overlap (disaster reasons) | broad_bucket (utilities cost) |
-| 06 usual hours | forced_precision (variable tips) | broad_bucket (main reason) |
+| 05 owner ad | sequence_overlap (disaster reasons) | broad_bucket (business answer level) |
+| 06 usual hours | forced_precision (variable tips) | broad_bucket (business answer level) |
 | 07 notebook | label_ambiguity (gateway/modem/router) | category_boundary_blur (smart TV) |
-| 08 Kashmiri | broad_bucket (workplace levels) | category_boundary_blur (Black/African heading) |
+| 08 Kashmiri | broad_bucket (specific language route) | category_boundary_blur (Black/African heading) |
 | 09 sump pump | false_premise (backup generator) | label_ambiguity (notebook) |
 | 10 ethnic heading | category_boundary_blur (smart TV) | broad_bucket (Kashmiri write-in) |
 | 11 disasters | sequence_overlap (owner ad) | forced_precision (weeks worked) |
-| 12 weeks worked | forced_precision (variable arrival time) | false_premise (sump pump) |
+| 12 weeks worked | forced_precision (variable arrival time) | broad_bucket (industry answer level) |
 
 Each pattern appears as a near-transfer at least twice and as a
 distractor at least once across the 12 specimens. Every adjacent pair

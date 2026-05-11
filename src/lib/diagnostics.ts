@@ -3,12 +3,30 @@ import type {
   ClassifierRadioConfig,
   ExampleSetEditorConfig,
   FilterPathToggleConfig,
+  ProbeOutcomeKind,
+  ProbeOutcomeRule,
   SequenceReordererConfig,
   TimeWindowSliderConfig,
+  Vignette,
   WidgetConfig
 } from "../types/workbench";
 
 export type DiagnosticOutcome = "covered" | "not_covered";
+
+export type ProbeDisplayOutcome = {
+  diagnosticOutcome: DiagnosticOutcome;
+  kind: ProbeOutcomeKind;
+  rationale: string;
+};
+
+export const probeOutcomeLabels = {
+  route_clearer: "Route clearer",
+  still_ambiguous: "Still ambiguous",
+  still_outside_target: "Still outside target",
+  tradeoff_remains: "Tradeoff remains",
+  method_still_hidden: "Method still hidden",
+  scope_widened: "Scope widened"
+} satisfies Record<ProbeOutcomeKind, string>;
 
 export type ExampleSetEditorState = {
   kind: "example_set_editor";
@@ -198,4 +216,110 @@ export function evaluateDiagnostic(
         ? evaluateTimeWindow(widgetState, vignetteId, config)
         : "not_covered";
   }
+}
+
+function arrayFieldMatches(left: string[] | undefined, right: string[] | undefined): boolean {
+  if (!right) return true;
+  if (!left) return false;
+  return sameSet(left, right);
+}
+
+function arrayIncludesAny(left: string[] | undefined, right: string[] | undefined): boolean {
+  if (!right) return true;
+  if (!left) return false;
+  return right.some((id) => left.includes(id));
+}
+
+function orderFieldMatches(left: string[] | undefined, right: string[] | undefined): boolean {
+  if (!right) return true;
+  if (!left) return false;
+  return sameOrder(left, right);
+}
+
+function ruleMatches(rule: ProbeOutcomeRule, widgetState: WidgetState): boolean {
+  const when = rule.when;
+  if (!when) return true;
+
+  const activeExamples =
+    widgetState.kind === "example_set_editor" ? widgetState.activeExampleIds : undefined;
+  if (!arrayFieldMatches(activeExamples, when.activeExampleIds)) {
+    return false;
+  }
+  if (!arrayIncludesAny(activeExamples, when.activeExampleIdsAny)) {
+    return false;
+  }
+  if (!orderFieldMatches(
+    widgetState.kind === "sequence_reorderer" ? widgetState.order : undefined,
+    when.order
+  )) {
+    return false;
+  }
+
+  if (
+    when.splitIndex !== undefined &&
+    (widgetState.kind !== "bucket_splitter" || widgetState.splitIndex !== when.splitIndex)
+  ) {
+    return false;
+  }
+  if (
+    when.hasScreener !== undefined &&
+    (widgetState.kind !== "filter_path_toggle" ||
+      widgetState.hasScreener !== when.hasScreener)
+  ) {
+    return false;
+  }
+  if (
+    when.hasNotApplicable !== undefined &&
+    (widgetState.kind !== "filter_path_toggle" ||
+      widgetState.hasNotApplicable !== when.hasNotApplicable)
+  ) {
+    return false;
+  }
+  if (
+    when.selectedFeatureId !== undefined &&
+    (widgetState.kind !== "classifier_radio" ||
+      widgetState.selectedFeatureId !== when.selectedFeatureId)
+  ) {
+    return false;
+  }
+  if (
+    when.allowMulti !== undefined &&
+    (widgetState.kind !== "sequence_reorderer" || widgetState.allowMulti !== when.allowMulti)
+  ) {
+    return false;
+  }
+  if (
+    when.windowId !== undefined &&
+    (widgetState.kind !== "time_window_slider" || widgetState.windowId !== when.windowId)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function resolveProbeOutcome(
+  widgetState: WidgetState,
+  vignette: Vignette,
+  config: WidgetConfig
+): ProbeDisplayOutcome {
+  const diagnosticOutcome = evaluateDiagnostic(widgetState, vignette.id, config);
+  const fallback: ProbeDisplayOutcome = {
+    diagnosticOutcome,
+    kind: diagnosticOutcome === "covered" ? "route_clearer" : "still_ambiguous",
+    rationale:
+      diagnosticOutcome === "covered"
+        ? vignette.probeRationale.covered
+        : vignette.probeRationale.notCovered
+  };
+  const matchingRule = config.probeOutcomeRules?.find(
+    (rule) => rule.vignetteId === vignette.id && ruleMatches(rule, widgetState)
+  );
+
+  if (!matchingRule) return fallback;
+  return {
+    diagnosticOutcome,
+    kind: matchingRule.kind,
+    rationale: matchingRule.rationale ?? fallback.rationale
+  };
 }

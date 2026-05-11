@@ -25,6 +25,36 @@ export type VignetteProvenance = "direct_quote" | "editorial";
 
 export type VignetteOutcome = "covered" | "ambiguous" | "not_covered";
 
+export type ProbeOutcomeKind =
+  | "route_clearer"
+  | "still_ambiguous"
+  | "still_outside_target"
+  | "tradeoff_remains"
+  | "method_still_hidden"
+  | "scope_widened";
+
+export type ProbeOutcomeStateMatcher = {
+  activeExampleIds?: string[];
+  /* True when any of these example IDs is in the active set. Use this instead
+     of activeExampleIds when a rule should fire across many state shapes that
+     share one widening or correcting example, rather than one exact set. */
+  activeExampleIdsAny?: string[];
+  splitIndex?: number | null;
+  hasScreener?: boolean;
+  hasNotApplicable?: boolean;
+  selectedFeatureId?: string;
+  order?: string[];
+  allowMulti?: boolean;
+  windowId?: string;
+};
+
+export type ProbeOutcomeRule = {
+  vignetteId: string;
+  when?: ProbeOutcomeStateMatcher;
+  kind: ProbeOutcomeKind;
+  rationale?: string;
+};
+
 export type PredictionCopy = Record<
   VignetteOutcome,
   {
@@ -200,17 +230,26 @@ export type TimeWindowSliderConfig = {
   kind: "time_window_slider";
   windows: Array<{ id: string; label: string; days: number }>;
   initialWindowId: string;
+  controlLabel?: string;
   /* For each scenario, which windows produce stable, recoverable answers. */
   diagnostic: Record<string, { stableWindowIds: string[] }>;
 };
 
+export type WidgetDisplayConfig = {
+  displayLabel?: string;
+  probeOutcomeRules?: ProbeOutcomeRule[];
+};
+
 export type WidgetConfig =
-  | ExampleSetEditorConfig
-  | BucketSplitterConfig
-  | FilterPathToggleConfig
-  | ClassifierRadioConfig
-  | SequenceReordererConfig
-  | TimeWindowSliderConfig;
+  WidgetDisplayConfig &
+    (
+      | ExampleSetEditorConfig
+      | BucketSplitterConfig
+      | FilterPathToggleConfig
+      | ClassifierRadioConfig
+      | SequenceReordererConfig
+      | TimeWindowSliderConfig
+    );
 
 /* Reveal beat splits into two visibly separate blocks, both required. The
    "remainsUntested" block must name at least one residual risk by string
@@ -229,6 +268,10 @@ export type RevealRemainsUntested = {
 export type Reveal = {
   addresses: RevealAddresses;
   remainsUntested: RevealRemainsUntested;
+  pairBridge?: {
+    eyebrow: string;
+    text: string;
+  };
 };
 
 /* Quick-practice cases run after Reveal: one near-transfer (same pattern, fresh
