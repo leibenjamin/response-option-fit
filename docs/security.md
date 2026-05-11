@@ -7,7 +7,9 @@ The application is a static, client-rendered React app.
 - No backend, API, authentication, database, analytics, cookies, or service
   worker.
 - Optional settings persistence uses browser-local storage only when enabled by
-  the reader. Workbench progress is not persisted in this release.
+  the reader. Walk visit history and dismissed recap state persist only after
+  the reader turns on Remember in the Settings drawer; otherwise they remain
+  in memory and are lost on reload.
 - No freeform text inputs or contenteditable regions.
 - The settings drawer can import a local JSON settings file, but import parsing
   happens in the browser and does not transmit the file.
