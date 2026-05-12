@@ -4,6 +4,142 @@ This log records the ambiguity review behind the specimen-specific copy pass.
 It is a working artifact for future implementation waves, not a claim that the
 current wording is validated replacement survey wording.
 
+## 2026-05-12 Synthetic-Primary Case Lab Wave
+
+### Triggering Content Critique
+
+- The old Example 01 opener spent too much space on self-evident metadata
+  before asking the reader to do anything.
+- The phrase "paid-service category" was too narrow for a commute list that
+  also contains unpaid or non-service modes.
+- "What the survey wanted to measure," "What the person knows," and "Problem
+  type in plain language" were useful authoring scaffolds but too repetitive
+  as first-screen learner content.
+- "Source-backed finding" and "Authored scenario" blurred several different
+  evidence states: reported quote, summarized source finding, invented teaching
+  case, and source-grounded stress case.
+- The old Predict, Diagnose, Probe, Reveal, and Quick Practice sections
+  repeated the same scenarios too closely. The route explanation was useful,
+  but it arrived after the learner had already seen the same card several
+  times.
+- The required Confidence field did not explain its instructional purpose and
+  became another hurdle before feedback.
+
+### Decision
+
+- Make Example 01 a synthetic-primary case lab using an invented night-market
+  survey and the highlighted answer choice `Rideshare`.
+- Keep the real ACS ride-hailing source as a collapsed evidence anchor, not the
+  first thing the learner has to read.
+- Use three judgment labels exactly tied to the highlighted choice:
+  `Highlighted choice fits`, `Highlighted choice is easy to misread`, and
+  `Another choice fits better`.
+- Keep `Another choice fits better` as a negative-control route. It prevents
+  learners from treating every nearby transportation meaning as label
+  ambiguity that should be absorbed into the highlighted choice.
+- Replace the old provenance wording in the new shell with `Teaching case`,
+  `Reported quote`, `Reported finding`, and `Source-grounded stress case`.
+- Leave Examples 02-12 on the legacy five-beat shell until each is migrated.
+
+### Implementation Notes For Future Waves
+
+- The new `caseLab` data shape is optional on a `WorkbenchSpecimen`; legacy
+  examples still render through `FrameBeat`, `PredictBeat`, `DiagnoseBeat`,
+  `ProbeBeat`, `RevealBeat`, and microcases.
+- Mobile pacing required a different order from desktop: a compact prompt and
+  highlighted-choice summary appears before sorting, while the fuller answer
+  list is hidden behind disclosure.
+- For future migrations, put route explanations inside each scenario after the
+  learner answers instead of restating all scenarios in a separate diagnosis
+  section.
+- Use public sources as evidence anchors and claim boundaries. Do not let
+  invented scenarios read like source-observed respondent behavior.
+
+## 2026-05-12 CaseLab Hardening Review
+
+### Source Audit
+
+- The night-market survey, `Rideshare` answer choice, and all main deck
+  scenarios are teaching cases. They are not reported ACS respondent events.
+- The ACS source anchor remains the evidence boundary: the public report tested
+  `Taxi or ride-hailing services`, not the synthetic `Rideshare` label.
+- A paraphrased participant description is treated as a `Reported finding`,
+  not a `Reported quote`. `Reported quote` is held for direct or close quote
+  material only.
+- The coworker-carpool stress case is source-grounded because it is constructed
+  from the reported shared-ride reading. It is not presented as an observed
+  night-market or ACS respondent.
+
+### Line-By-Line Learner Walkthrough
+
+- The catalog intro now says the pattern map previews six answer-choice
+  problems, avoiding the unsupported first-use definition "A pattern here
+  means...".
+- The CaseLab lede now states the invented/source split before the learner
+  sorts any case: invented night-market lesson first, ACS source tested
+  `Taxi or ride-hailing services`.
+- The old "Teacher move" phrasing was replaced with a direct learner action:
+  work through one trip at a time and ask whether the highlighted choice gives
+  that respondent a clear route.
+- The judgment labels keep the user's requested shape but tighten the meanings:
+  "easy to misread" is only for an in-scope trip whose label points the
+  respondent away; out-of-scope neighbors go to "Another choice fits better."
+
+### Taxonomy Stress Test
+
+- Center case: Lyft ride to the gate demonstrates the intended paid app-based
+  car ride route.
+- In-scope misread: solo Uber ride tests whether `share` wrongly implies
+  passenger sharing.
+- Scope edge: pooled app ride keeps a real app ride in scope even though it
+  involves sharing a car.
+- Negative control: coworker carpool prevents the learner from absorbing every
+  shared car trip into the highlighted choice.
+- Neighbor categories: bike-share and taxi show that the ambiguity pattern is
+  not a license to merge other transportation modes into the highlighted
+  target.
+- Held boundary: if a future case centers a respondent who understands every
+  label but lacks a classification rule for a paid shared shuttle, that belongs
+  closer to category boundary blur than to label ambiguity.
+
+### Interaction And Accessibility Findings
+
+- The long all-cards list repeated too much text and pushed the first active
+  task below the first screen on phones. The deck shell reduces scroll by
+  showing one active scenario at a time.
+- The repair bench now unlocks only after every deck scenario is sorted, and
+  the transfer check unlocks only after the repair bench is reviewed.
+- The transfer check now uses the same three judgments on one fresh label
+  rather than asking a jargon-prone meta-question about "the same problem."
+- Scenario, repair, and transfer feedback use polite live regions when they
+  render.
+- Provenance badges no longer use `<abbr>` in the new CaseLab shell because
+  the labels are not abbreviations.
+
+### Rejected Alternatives
+
+- Fully sourced-primary Example 01 was rejected for this wave because the ACS
+  wording and respondent probes were credible but too narrow and source-heavy
+  for the first active lesson.
+- A freeform wording editor was rejected because it would imply evaluation of
+  unvalidated replacement wording.
+- A broad inclusive repair such as `Rideshare, carpool, taxi, or shared
+  bike/scooter` was retained only as a negative example because it fixes
+  findability by changing the construct.
+
+### Migration Guardrails
+
+- Do not migrate Examples 02-12 by copying Example 01's transportation content.
+  Migrate the shell pattern: compact setup, one active scenario at a time,
+  immediate route feedback, repair consequences, transfer sort, source anchor.
+- Every migrated CaseLab should carry authoring-only scenario roles equivalent
+  to center case, in-scope strain, negative control, and neighbor contrast.
+- Each migration must decide whether the third route is a true out-of-scope
+  route, a category boundary neighbor, or a false-premise not-applicable path;
+  do not reuse "Another choice fits better" without checking the local pattern.
+- Keep source anchors collapsed until after the learner has acted, but preserve
+  report titles, page references, and claim boundaries in the source panel.
+
 ## Reader Profiles Used
 
 - Domain novice: knows ordinary words like taxi, hybrid, No, and usual, but not

@@ -5,14 +5,18 @@ between what a person knows and what the form lets them record. The public page
 uses the literal title "When survey answer choices don't match real answers";
 the project name remains secondary. Each worked example starts with the
 surrounding question or question sequence, the highlighted answer choice, and
-the task the reader is being asked to judge.
+the task the reader is being asked to judge. Newer examples may use synthetic
+teaching cases first, with the public source moved into a visible evidence
+anchor.
 
 ## Example Selection
 
-The twelve worked examples were selected from public U.S. Census Bureau and Office
-for National Statistics testing materials because each shows a distinct
+The twelve worked examples are anchored to public U.S. Census Bureau and Office
+for National Statistics testing materials because each source shows a distinct
 response-option fit problem without requiring sensitive personal examples or
-full-instrument critique:
+full-instrument critique. The Example 01 migration adds a synthetic-primary
+case lab: the night-market scenarios are invented for instruction, while the
+ACS ride-hailing report remains the evidence anchor.
 
 - **Label ambiguity ("same words, several meanings"):** respondents may
   attach different everyday meanings to the same answer-choice wording.
@@ -41,12 +45,30 @@ contrast prompts. The field guide at
 `#field-guide` turns the examples into reusable checks, pattern-specific
 checklists, and static prompts for external LLM review. The reference shelf at
 `#reference` carries the glossary, method note, claim boundary, and source
-appendix as their own route. The five-beat worked-example shell is identical
-across all twelve examples in either context.
+appendix as their own route. Example 01 now uses the integrated case-lab shell.
+The remaining examples still use the legacy five-beat shell until they are
+migrated.
 
 ## Worked-Example Model
 
-Each example is rendered in five teaching beats:
+Two shells currently exist.
+
+Example 01 uses the integrated case-lab shell:
+
+1. Setup: a synthetic survey question and highlighted answer choice.
+2. Sort: a guided scenario deck with immediate teaching feedback.
+3. Repair bench: preset wording changes and per-scenario consequences.
+4. Transfer check: one fresh scenario sorted with the same three judgments.
+5. Real-world anchor: collapsed source evidence and claim boundaries.
+
+The CaseLab shell intentionally reaches the active sorting task faster than
+the legacy shell. It shows the full answer list on larger screens, keeps the
+list behind disclosure on phones, gates the repair bench until the learner has
+sorted every teaching case, and gates the transfer check until the learner has
+reviewed the repair bench. This keeps source context and repair caveats visible
+without making them the first thing a novice has to parse.
+
+The remaining examples are rendered in five legacy teaching beats:
 
 1. Frame: the surrounding survey question and highlighted answer choice.
 2. Predict: example-specific judgments for each scenario.
@@ -66,32 +88,42 @@ recorded answer can hide. Each stage includes short detail copy from the
 person's perspective. This structure is not a statistical model and does not
 estimate respondent counts, error rates, or distributional effects.
 
-Probe outcomes are visitor-facing teaching diagnostics, not validation results.
+Repair and Probe outcomes are visitor-facing teaching diagnostics, not
+validation results.
 They distinguish route clearer, still ambiguous, still outside target, tradeoff
 remains, method still hidden, and scope widened states so a wording change can
 remain partial even when it improves one route. The second example in each
 pattern pair also carries a compact bridge note to help visitors compare the
 two shapes of the same problem family.
 
+CaseLab repair outcomes add **misread risk** for the current wording when a
+nearby out-of-scope scenario can be tempted into the highlighted label without
+the exhibit claiming that the answer choice itself has been intentionally
+widened.
+
 ## Authored Versus Source Material
 
 The source reports provide the public evidence base, tested-wording excerpts,
 report citations, and direct PDF links. The exhibit adds neutral framing,
-answer frames, diagram-stage summaries, prediction labels, pattern labels, and concise
-takeaways so the examples can be compared in a single interface.
+synthetic teaching cases, answer frames, diagram-stage summaries, prediction
+labels, pattern labels, and concise takeaways so the examples can be compared
+in a single interface.
 
 See [specimen-red-team.md](specimen-red-team.md) for the current ambiguity
 audit, copy decisions, and future-wave risks.
 
-The provenance badges distinguish source-backed findings from authored
-scenarios. A source-backed finding may be a reported finding, quotation, or
-close paraphrase from a cited public report. An authored scenario is a
-constructed teaching case grounded in the cited report's wording or
-response-choice structure.
+The current provenance vocabulary is more specific than the old two-label
+system:
 
-Authored scenarios, pair bridges, completion-review prompts, and Probe
-rationales are learning aids. They should not be read as official source-agency
-answer keys or as tested replacement wording.
+- **Teaching case:** invented for the lesson; not reported by the source.
+- **Reported quote:** direct or close quote from a cited public report.
+- **Reported finding:** summarized finding from a cited public report.
+- **Source-grounded stress case:** constructed teaching case based on a cited
+  source finding.
+
+Teaching cases, pair bridges, completion-review prompts, CaseLab repair
+rationales, and Probe rationales are learning aids. They should not be read as
+official source-agency answer keys or as tested replacement wording.
 
 ## Claim Boundary
 

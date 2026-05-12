@@ -4,10 +4,11 @@ Response Option Fit Lab is the project name for a static editorial exhibit about
 survey answer choices that do not match what people know. The public page now
 leads with the literal title "When survey answer choices don't match real
 answers" and uses twelve worked examples from public questionnaire-testing
-materials to show six recurring answer-choice problems.
+materials and synthetic teaching cases to show six recurring answer-choice
+problems.
 
-The project demonstrates a source-backed React and TypeScript interface with a
-worked-example flow, surrounding question context, source appendix, claim
+The project demonstrates a React and TypeScript interface with synthetic-first
+case labs, source anchors, surrounding question context, source appendix, claim
 boundary, static security headers, and local-only settings controls. The page
 is organized as four hash-routed views — an overview that carries the hero,
 the six-pattern knowledge map, and one fully-working embedded example; a
@@ -18,10 +19,12 @@ glossary, method note, claim boundary, and source appendix.
 
 ## Sources And Attribution
 
-Examples are drawn from public U.S. Census Bureau and Office for National
-Statistics materials. The app uses short wording excerpts and public report
-references for editorial study. It does not reproduce agency logos,
-screenshots, or PDF imagery, and it does not validate alternate wording.
+Examples use a hybrid posture. Synthetic teaching cases may lead a lesson when
+that improves clarity, and public U.S. Census Bureau or Office for National
+Statistics materials provide the evidence anchors. The app uses short wording
+excerpts and public report references for editorial study. It does not
+reproduce agency logos, screenshots, or PDF imagery, and it does not validate
+alternate wording.
 
 The app code is MIT licensed. Short source wording excerpts and report
 references remain attributable to their respective public sources; no
@@ -71,13 +74,13 @@ See [docs/deployment.md](docs/deployment.md) and
 ## Limitations
 
 - This is an editorial exhibit, not a survey analyzer or measurement tool.
-- It includes twelve worked examples and does not claim to generalize across all survey
-  instruments, modes, or populations.
+- It includes twelve worked examples and does not claim to generalize across all
+  survey instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
-- Prediction labels are example-specific teaching labels. Each worked example
-  defines its own three plain-language judgments for whether the highlighted
-  answer choice fits the scenario, could be marked more than one way, or belongs
-  elsewhere.
+- Example 01 uses a synthetic-primary case lab. The remaining examples still use
+  the legacy five-beat worked-example shell until they are migrated.
+- Teaching-case labels are not source claims. Public reports remain the
+  authority for reported quotes, findings, and recommendations.
 - Repair directions are conceptual and are not validated replacement wording.
 
 ## Performance Budget

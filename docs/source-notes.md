@@ -2,12 +2,15 @@
 
 ## Source Posture
 
-- Examples are drawn from public questionnaire-testing and recommendation
+- Source anchors are drawn from public questionnaire-testing and recommendation
   reports from the U.S. Census Bureau and the Office for National Statistics.
+- Synthetic teaching cases may lead a lesson when they make the response-option
+  problem easier to see. Those cases are not reported source events.
 - The exhibit uses short substantive wording excerpts and report references for
   editorial study.
-- The exhibit also adds answer frames: compact surrounding question context and
-  the highlighted answer choice needed to make each teaching scenario fair.
+- The exhibit also adds answer frames, synthetic scenarios, compact surrounding
+  question context, and highlighted answer choices needed to make each teaching
+  task fair.
 - No agency logos, screenshots, or PDF imagery are reproduced.
 - No source-agency endorsement is implied.
 - The original reports remain authoritative for context, findings, and
@@ -15,8 +18,8 @@
 
 ## Attribution Formula
 
-Each worked example carries the report title, publication year, section or page
-reference, and a direct public PDF URL:
+Each worked example carries or links to the report title, publication year,
+section or page reference, and a direct public PDF URL:
 
 `Source: <Agency>, <Report Title> (<Year>), <Section / Page>.`
 
@@ -67,14 +70,24 @@ reference, and a direct public PDF URL:
 
 ## Wording Notes
 
-- Direct source material is limited to short tested-wording excerpts, report
-  titles, years, section/page references, and URLs.
-- Exhibit titles, answer frames, scenario rationales, diagram-stage summaries,
-  data-consequence descriptions, repair directions, and takeaways are editorial
-  paraphrases.
-- Provenance labels use **Source-backed finding** for cited findings,
-  quotations, or close paraphrases, and **Authored scenario** for constructed
-  cases grounded in the cited report's wording or response-choice structure.
+- Direct source material is limited to short tested-wording excerpts, short
+  respondent quotations, report titles, years, section/page references, and
+  URLs.
+- Exhibit titles, synthetic scenarios, answer frames, scenario rationales,
+  diagram-stage summaries, data-consequence descriptions, repair directions,
+  and takeaways are editorial teaching material unless explicitly marked as
+  reported source material.
+- Provenance labels now separate **Teaching case**, **Reported quote**,
+  **Reported finding**, and **Source-grounded stress case**. Legacy examples
+  may still display the older **Source-backed finding** and **Authored
+  scenario** labels until migrated.
+- **Reported quote** is reserved for direct or close quote material from a
+  cited report. A paraphrased participant description or summarized observation
+  is a **Reported finding** even when it describes one participant.
+- Example 01 currently uses invented night-market teaching cases in the main
+  deck. Its real-world anchor uses reported ACS findings plus a
+  source-grounded constructed stress case; the synthetic `Rideshare` wording
+  was not fielded by the Census Bureau.
 - Repair directions identify the type of clarification suggested by the source
   finding; they are not validated replacement questions.
 - Probe outcomes are authored teaching diagnostics. They show whether a preset
