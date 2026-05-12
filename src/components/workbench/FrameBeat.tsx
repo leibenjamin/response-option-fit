@@ -57,7 +57,9 @@ export function FrameBeat({ specimen, titleId }: Props) {
                     key={option.id}
                     className={`answer-frame-option ${option.isTarget ? "is-target" : ""}`}
                   >
-                    <span>{option.text}</span>
+                    <span className="answer-frame-option-text">
+                      {option.text}
+                    </span>
                     {option.note && <span className="answer-frame-option-note">{option.note}</span>}
                   </li>
                 ))}
