@@ -26,9 +26,14 @@ Thumbs.db
 *.tar.gz
 *.tgz
 
-# Local handoff and research material. Curated public docs belong in docs/.
+# Local working docs: handoff notes, page audits, long-form research dumps,
+# red-team notes, deep-research prompts. Curated public docs belong in docs/.
 docs/handoff.md
 docs/research/
+docs/page-walkthrough-audit.md
+docs/case-lab-deep-research-prompt.md
+docs/specimen-red-team.md
+
+# Stray local artifacts (Office exports, Windows alternate-data-stream files).
 *.docx
 *:Zone.Identifier
-docs/page-walkthrough-audit.md
