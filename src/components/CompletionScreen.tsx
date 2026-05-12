@@ -48,9 +48,9 @@ export function CompletionScreen({ visited }: Props) {
         <p className="completion-lede">
           {allVisited ? (
             <>
-              You've worked through every example. The same five-beat shell —
-              Frame, Predict, Diagnose, Probe, Reveal — appeared across all
-              six failure patterns. The next read is the field guide, where
+              You've worked through every example. The first case used the
+              integrated case-lab shell; the remaining examples used the
+              legacy five-beat shell. The next read is the field guide, where
               the examples turn into reusable checks and prompts.
             </>
           ) : isEmpty ? (

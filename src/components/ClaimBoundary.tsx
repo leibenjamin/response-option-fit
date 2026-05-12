@@ -1,5 +1,5 @@
 const allowed = [
-  "This exhibit summarizes selected public questionnaire-testing findings.",
+  "This exhibit uses synthetic teaching cases and selected public questionnaire-testing findings.",
   "This exhibit shows how response-option fit problems can affect interpretation.",
   "This exhibit explains why categories, labels, and sequence context matter before analysis begins."
 ];

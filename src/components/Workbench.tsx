@@ -6,6 +6,7 @@ import type {
   VignetteOutcome,
   WorkbenchSpecimen
 } from "../types/workbench";
+import { CaseLab } from "./workbench/CaseLab";
 import { DiagnoseBeat } from "./workbench/DiagnoseBeat";
 import { FrameBeat } from "./workbench/FrameBeat";
 import { MicroCaseBeat } from "./workbench/MicroCaseBeat";
@@ -106,7 +107,13 @@ function reducer(state: WorkbenchState, action: Action): WorkbenchState {
   }
 }
 
-export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
+function LegacyWorkbenchContent({
+  specimen,
+  titleId
+}: {
+  specimen: WorkbenchSpecimen;
+  titleId: string;
+}) {
   const [state, dispatch] = useReducer(
     reducer,
     specimen,
@@ -116,20 +123,9 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
     (vignette) => state.predictions[vignette.id] !== null
   );
   const canReveal = allPredicted && state.mechanismChoiceId !== null;
-  const titleId = `${specimen.id}-workbench-title`;
-  const accentVar = patternMeta[specimen.pattern].accentVar;
-  const style = {
-    "--workbench-accent": `var(${accentVar})`
-  } as CSSProperties;
 
   return (
-    <article
-      className="workbench"
-      id={`workbench-${specimen.number}-${specimen.id}`}
-      data-testid={`workbench-${specimen.id}`}
-      aria-labelledby={titleId}
-      style={style}
-    >
+    <>
       <FrameBeat specimen={specimen} titleId={titleId} />
       <PredictBeat
         specimen={specimen}
@@ -218,6 +214,30 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
           </section>
           <PatternApplicationDetails pattern={specimen.pattern} />
         </>
+      )}
+    </>
+  );
+}
+
+export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
+  const titleId = `${specimen.id}-workbench-title`;
+  const accentVar = patternMeta[specimen.pattern].accentVar;
+  const style = {
+    "--workbench-accent": `var(${accentVar})`
+  } as CSSProperties;
+
+  return (
+    <article
+      className="workbench"
+      id={`workbench-${specimen.number}-${specimen.id}`}
+      data-testid={`workbench-${specimen.id}`}
+      aria-labelledby={titleId}
+      style={style}
+    >
+      {specimen.caseLab ? (
+        <CaseLab specimen={specimen} titleId={titleId} />
+      ) : (
+        <LegacyWorkbenchContent specimen={specimen} titleId={titleId} />
       )}
     </article>
   );

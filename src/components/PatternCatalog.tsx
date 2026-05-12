@@ -78,9 +78,8 @@ export function PatternCatalog({
             </p>
           ) : (
             <p className="pattern-catalog-lede">
-              A pattern here means a recurring kind of mismatch: the person
-              has an answer, but the survey choices do not give that answer
-              a clear place to go.
+              Use this map as a preview of the six answer-choice problems you
+              will see in the examples below.
             </p>
           )}
         </header>

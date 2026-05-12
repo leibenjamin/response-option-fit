@@ -41,11 +41,11 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
 
         <div className="hero-body-wrap">
           <p className="hero-body">
-            This page walks through public questionnaire-testing examples from
-            the U.S. Census Bureau and the Office for National Statistics. In
-            each worked example, you read the survey question, look at a few
-            realistic respondent situations, and see where an answer choice
-            records something different from what the person meant.
+            This page teaches answer-choice problems with synthetic case labs
+            and public questionnaire-testing anchors from the U.S. Census
+            Bureau and the Office for National Statistics. You read a survey
+            question, sort respondent situations, and see where an answer
+            choice records something different from what the person meant.
           </p>
         </div>
 
@@ -110,7 +110,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
             <span className="hero-scope-val">12</span>
             <span className="hero-scope-unit"> examples</span>
           </p>
-          <p className="hero-scope-note">from public testing reports</p>
+          <p className="hero-scope-note">with public source anchors</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
