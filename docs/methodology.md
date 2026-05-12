@@ -68,6 +68,11 @@ sorted every teaching case, and gates the transfer check until the learner has
 reviewed the repair bench. This keeps source context and repair caveats visible
 without making them the first thing a novice has to parse.
 
+CaseLab scenario cards show the respondent-reading line before the judgment
+buttons. That line is part of the situation the learner is asked to reason
+from, not post-answer feedback. The feedback panel still waits until after a
+choice so the teaching route remains an explanation rather than a prompt.
+
 The remaining examples are rendered in five legacy teaching beats:
 
 1. Frame: the surrounding survey question and highlighted answer choice.
@@ -81,6 +86,16 @@ concrete language instead of generic fit terms. Every label set still maps to
 the same three judgments: the highlighted answer choice fits the scenario, the
 visible wording could send the scenario to more than one answer, or the scenario
 belongs outside the highlighted answer choice.
+
+Locked previews appear before gated legacy sections so visitors can see that
+Compare routes, Probe, Reveal, and Quick practice are intentionally downstream
+of the first judgment. These previews do not expose the answer key.
+
+The app also carries opt-in local practice notes. They remember only predefined
+choice IDs and outcomes when the visitor has enabled Remember in Settings. The
+notes can show counts such as routes marked, teaching routes matched, and
+practice items completed, but they are not grades, survey scores, analytics,
+or evidence that a replacement wording has been validated.
 
 The answer-choice diagram uses four explanatory stages: what the person knows,
 the tested wording, where the answer choice stops fitting, and what the

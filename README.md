@@ -112,9 +112,12 @@ to:
 - Current persistence is limited to opt-in, on-device settings data
   (`localStorage`). The Settings surface supports JSON export/import/clear and
   shows the exact stored keys and values for transparency. When Remember is on,
-  the names of examples opened in walk mode are stored locally so the knowledge
-  map fills in across visits; when Remember is off, walk progress is in-memory
-  only and is lost on reload.
+  the names of examples opened in walk mode and local practice notes from
+  predefined choices are stored locally so the knowledge map and practice
+  state can resume across visits; when Remember is off, walk and practice
+  progress is in-memory only and is lost on reload.
+- Practice notes are lightweight teaching-state records, not a score,
+  account, analytics trail, or validation of any survey wording.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
   chooses outside this site when reviewing their own survey material.

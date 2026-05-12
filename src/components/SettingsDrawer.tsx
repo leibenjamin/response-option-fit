@@ -280,9 +280,9 @@ export function SettingsDrawer({ open, onClose }: Props) {
                 Remember local settings on this device
               </span>
               <span className="settings-toggle-sub">
-                Stores this settings choice and the names of examples you've
-                opened in walk mode, so the knowledge map fills in across
-                visits. Removed when you turn this off or clear stored data.
+                Stores this settings choice, the names of examples you've
+                opened in walk mode, and local practice notes from predefined
+                choices. Removed when you turn this off or clear stored data.
               </span>
             </span>
           </label>
