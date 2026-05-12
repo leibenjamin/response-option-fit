@@ -25,10 +25,10 @@ export function FeaturedExample() {
           Try one example before walking through the rest
         </h2>
         <p className="featured-example-lede">
-          Below is the first of twelve worked examples, fully working: read
-          the survey question, mark each scenario as covered, ambiguous, or
-          not covered, then reveal the teaching diagnosis. The other
-          eleven examples follow the same five-beat shell.
+          Below is the first case lab, fully working: read the synthetic survey
+          question, sort the scenarios, try a wording change, and check the
+          real-world source anchor. The remaining examples still use the
+          legacy worked-example shell until they are migrated.
         </p>
       </header>
 

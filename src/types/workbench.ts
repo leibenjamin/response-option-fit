@@ -25,6 +25,19 @@ export type VignetteProvenance = "direct_quote" | "editorial";
 
 export type VignetteOutcome = "covered" | "ambiguous" | "not_covered";
 
+export type CaseLabProvenance =
+  | "teaching_case"
+  | "reported_quote"
+  | "reported_finding"
+  | "source_grounded_stress_case";
+
+export type CaseLabScenarioRole =
+  | "center_case"
+  | "in_scope_misread"
+  | "scope_edge"
+  | "negative_control"
+  | "neighbor_category";
+
 export type ProbeOutcomeKind =
   | "route_clearer"
   | "still_ambiguous"
@@ -62,6 +75,107 @@ export type PredictionCopy = Record<
     description: string;
   }
 >;
+
+export type CaseLabJudgmentChoice = {
+  outcome: VignetteOutcome;
+  label: string;
+  description: string;
+};
+
+export type CaseLabScenario = {
+  id: string;
+  /* Authoring-only: used by review docs and migration audits, not rendered. */
+  role: CaseLabScenarioRole;
+  title: string;
+  situation: string;
+  respondentReading: string;
+  provenance: CaseLabProvenance;
+  expectedOutcome: VignetteOutcome;
+  feedbackTitle: string;
+  routeExplanation: string;
+  takeaway: string;
+};
+
+export type CaseLabRepairOutcomeKind =
+  | "route_clearer"
+  | "still_ambiguous"
+  | "misread_risk"
+  | "still_outside_target"
+  | "scope_widened";
+
+export type CaseLabRepairOption = {
+  id: string;
+  label: string;
+  revisedChoice: string;
+  explanation: string;
+  scenarioOutcomes: Record<
+    string,
+    {
+      kind: CaseLabRepairOutcomeKind;
+      label: string;
+      rationale: string;
+    }
+  >;
+};
+
+export type CaseLabTransferChallenge = {
+  title: string;
+  prompt: string;
+  targetLabel: string;
+  targetText: string;
+  scenarioTitle: string;
+  situation: string;
+  respondentReading: string;
+  expectedOutcome: VignetteOutcome;
+  feedbackTitle: string;
+  routeExplanation: string;
+  takeaway: string;
+};
+
+export type CaseLabSourceAnchorItem = {
+  provenance: Exclude<CaseLabProvenance, "teaching_case">;
+  label: string;
+  body: string;
+  citation?: {
+    reportTitle: string;
+    page: string;
+    permalink?: string;
+  };
+};
+
+export type CaseLab = {
+  eyebrow: string;
+  title: string;
+  lede: string;
+  setup: string;
+  answerFrame: {
+    eyebrow: string;
+    prompt: string;
+    context: [string, ...string[]];
+    targetLabel: string;
+    targetText: string;
+    intendedMeaning: string;
+    responseOptions: [AnswerFrameLine, ...AnswerFrameLine[]];
+  };
+  judgmentChoices: [
+    CaseLabJudgmentChoice,
+    CaseLabJudgmentChoice,
+    CaseLabJudgmentChoice
+  ];
+  scenarios: [CaseLabScenario, ...CaseLabScenario[]];
+  repairBench: {
+    title: string;
+    lede: string;
+    options: [CaseLabRepairOption, ...CaseLabRepairOption[]];
+  };
+  transferChallenge: CaseLabTransferChallenge;
+  sourceAnchor: {
+    title: string;
+    lede: string;
+    evidence: [CaseLabSourceAnchorItem, ...CaseLabSourceAnchorItem[]];
+    limitations: [string, ...string[]];
+  };
+};
 
 export type Vignette = {
   id: string;
@@ -400,6 +514,10 @@ export type WorkbenchSpecimen = {
 
   /* Optional counterexample */
   counterexample?: Counterexample;
+
+  /* Optional synthetic-primary teaching flow. When present, Workbench renders
+     this integrated case lab instead of the legacy beat sequence. */
+  caseLab?: CaseLab;
 };
 
 /* Catalog metadata: the ordered set of examples, with the pacing model the

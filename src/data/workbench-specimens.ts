@@ -251,9 +251,9 @@ const authoredWorkbenchSpecimens: Array<
     patternLabel: "Label ambiguity",
     canonicalSubtitle: canonicalSubtitleByPattern.label_ambiguity,
     canonicalCitations: canonicalCitationByPattern.label_ambiguity,
-    title: "When one commute option can mean taxi, app ride, or shared ride",
+    title: "When one travel option can mean app ride, carpool, or bike share",
     subtitle:
-      "The respondent knows how they got to work. The answer option asks which paid-service category that trip belongs to.",
+      "The respondent knows the trip. The answer choice makes them decide what kind of ride the label is naming.",
     testedWording: "Taxi or ride-hailing services",
     answerFrame: {
       eyebrow: "ACS means-of-transportation item",
@@ -289,6 +289,370 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent who used Lyft to get to work can report the trip, but still has to decide whether Taxi or ride-hailing services includes Lyft, only taxi cabs, or any shared ride.",
     prerequisiteVocab: prerequisiteVocabByPattern.label_ambiguity,
+    caseLab: {
+      eyebrow: "Example 01 / Synthetic case lab",
+      title: "When rideshare can mean app ride, carpool, or bike share",
+      lede:
+        "This lesson starts with an invented night-market survey. The real ACS source tested Taxi or ride-hailing services; Rideshare is a synthetic teaching label built to make the ambiguity easier to see.",
+      setup:
+        "Work through one trip at a time. For each trip, ask whether the highlighted answer choice gives that respondent a clear place to go.",
+      answerFrame: {
+        eyebrow: "Night-market exit survey",
+        prompt:
+          "How did you get to the night market today? Choose the one option that best describes your main trip.",
+        context: [
+          "This synthetic survey wants the main transportation mode for a visitor's trip to the market.",
+          "The highlighted choice is intended to mean a paid app-based car ride, such as Uber or Lyft."
+        ],
+        targetLabel: "Highlighted answer choice",
+        targetText: "Rideshare",
+        intendedMeaning:
+          "A paid app-based car ride, such as Uber or Lyft.",
+        responseOptions: [
+          { id: "drove", text: "Drove myself" },
+          { id: "carpool", text: "Carpool or rode with someone I know" },
+          { id: "transit", text: "Bus, train, or shuttle" },
+          { id: "taxi", text: "Taxi" },
+          { id: "rideshare", text: "Rideshare", isTarget: true },
+          { id: "bike-scooter", text: "Bike, scooter, or bike-share" },
+          { id: "walk", text: "Walked" },
+          { id: "other", text: "Something else" }
+        ]
+      },
+      judgmentChoices: [
+        {
+          outcome: "covered",
+          label: "Highlighted choice fits",
+          description: "The trip is the intended paid app-based car ride."
+        },
+        {
+          outcome: "ambiguous",
+          label: "Highlighted choice is easy to misread",
+          description:
+            "The trip is in scope, but the wording can point the respondent away."
+        },
+        {
+          outcome: "not_covered",
+          label: "Another choice fits better",
+          description:
+            "The trip is outside the app-ride target, even if the words feel tempting."
+        }
+      ],
+      scenarios: [
+        {
+          id: "night-market-lyft",
+          role: "center_case",
+          title: "Lyft ride to the gate",
+          situation: "Maya paid for a Lyft ride to the market gate.",
+          respondentReading:
+            "She uses rideshare to mean app-based paid car ride.",
+          provenance: "teaching_case",
+          expectedOutcome: "covered",
+          feedbackTitle: "The highlighted choice names this trip.",
+          routeExplanation:
+            "Maya's mental answer and the survey's intended target line up: paid app-based car ride goes to Rideshare.",
+          takeaway:
+            "A clear center case is useful because it shows what the answer choice is supposed to catch."
+        },
+        {
+          id: "night-market-solo-app",
+          role: "in_scope_misread",
+          title: "Solo app ride, no sharing",
+          situation:
+            "Jon used Uber for a solo ride. He hesitates because rideshare sounds to him like sharing the car with other passengers.",
+          respondentReading:
+            "He treats share as the controlling word, even though the trip is a paid app-based car ride.",
+          provenance: "teaching_case",
+          expectedOutcome: "ambiguous",
+          feedbackTitle: "The trip is in scope, but the label can mislead him.",
+          routeExplanation:
+            "The real trip belongs in the intended app-ride target. The problem is that Rideshare can sound like pooled riding rather than app-based service.",
+          takeaway:
+            "Label ambiguity can push an in-scope respondent away from the highlighted choice."
+        },
+        {
+          id: "night-market-pooled-app",
+          role: "scope_edge",
+          title: "Pooled app ride",
+          situation:
+            "DeShawn used an app to book a discounted pooled ride and shared the car with another passenger.",
+          respondentReading:
+            "He sees both parts: the ride was app-based and it involved sharing a car.",
+          provenance: "teaching_case",
+          expectedOutcome: "covered",
+          feedbackTitle: "The sharing does not push this trip out of scope.",
+          routeExplanation:
+            "The trip is still a paid app-based car ride. The passenger sharing is a detail inside the intended app-ride target, not a reason to send the answer elsewhere.",
+          takeaway:
+            "A good repair should clarify the service model without accidentally excluding pooled app rides."
+        },
+        {
+          id: "night-market-carpool",
+          role: "negative_control",
+          title: "Coworker carpool",
+          situation:
+            "Nora rode with a coworker who was already driving to the market.",
+          respondentReading:
+            "She sometimes calls this ridesharing because two people shared one car.",
+          provenance: "teaching_case",
+          expectedOutcome: "not_covered",
+          feedbackTitle: "The label is tempting, but another choice is right.",
+          routeExplanation:
+            "This is not the intended paid app-based car ride. The visible carpool choice is the better route.",
+          takeaway:
+            "The negative-control answer matters: not every confusing neighbor should be absorbed into the highlighted choice."
+        },
+        {
+          id: "night-market-bike-share",
+          role: "neighbor_category",
+          title: "Bike-share dock",
+          situation:
+            "Iris checked out a shared city bike, rode it to the market, and returned it at a dock.",
+          respondentReading:
+            "She sees share inside rideshare and wonders whether a shared bike counts.",
+          provenance: "teaching_case",
+          expectedOutcome: "not_covered",
+          feedbackTitle: "Another transportation choice fits better.",
+          routeExplanation:
+            "The trip is a bike-share trip, not a paid app-based car ride. The bike or scooter option should catch it.",
+          takeaway:
+            "A repair should clarify the target without widening it to every shared mobility service."
+        },
+        {
+          id: "night-market-taxi",
+          role: "neighbor_category",
+          title: "Taxi stand",
+          situation:
+            "Owen took a taxi from a hotel stand and paid the driver at the end of the ride.",
+          respondentReading:
+            "He sees a hired ride and wonders whether Rideshare includes taxis too.",
+          provenance: "teaching_case",
+          expectedOutcome: "not_covered",
+          feedbackTitle: "The taxi option is the cleaner route.",
+          routeExplanation:
+            "This trip is a paid car ride, but not the intended app-based service. The separate Taxi choice should receive it.",
+          takeaway:
+            "A good label distinguishes the target from neighboring paid services as well as informal shared rides."
+        }
+      ],
+      repairBench: {
+        title: "Try a wording change without widening the target",
+        lede:
+          "The goal is not to make every nearby trip fit. The goal is to make the intended app-ride route visible while keeping carpool, taxi, and bike-share outside.",
+        options: [
+          {
+            id: "keep-rideshare",
+            label: "Current",
+            revisedChoice: "Rideshare",
+            explanation:
+              "Short, familiar to some respondents, but it relies on local meaning and the word share.",
+            scenarioOutcomes: {
+              "night-market-lyft": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Maya already uses Rideshare the intended way, so the route is clear for her."
+              },
+              "night-market-solo-app": {
+                kind: "still_ambiguous",
+                label: "Still ambiguous",
+                rationale:
+                  "Jon may still read share as pooled riding and hesitate on a solo Uber trip."
+              },
+              "night-market-pooled-app": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "DeShawn's pooled app ride matches a common rideshare reading because it is both app-based and shared."
+              },
+              "night-market-carpool": {
+                kind: "misread_risk",
+                label: "Misread risk",
+                rationale:
+                  "Nora can still treat informal carpooling as ridesharing."
+              },
+              "night-market-bike-share": {
+                kind: "misread_risk",
+                label: "Misread risk",
+                rationale:
+                  "Iris can still connect share to bike-share instead of app-based car service."
+              },
+              "night-market-taxi": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Owen has a neighboring paid car service, and the separate Taxi choice remains the better route."
+              }
+            }
+          },
+          {
+            id: "app-based",
+            label: "Clarify",
+            revisedChoice: "App-based ride service, such as Uber or Lyft",
+            explanation:
+              "This names the service model and gives concrete examples, which helps the intended target stand apart.",
+            scenarioOutcomes: {
+              "night-market-lyft": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "The Lyft trip is named directly by the example."
+              },
+              "night-market-solo-app": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "The phrase app-based ride service points to Jon's solo Uber trip without requiring passenger sharing."
+              },
+              "night-market-pooled-app": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "DeShawn can still answer here because the wording names the app-based service model, not the number of passengers."
+              },
+              "night-market-carpool": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Nora's coworker carpool is still outside because it is not an app-based paid service."
+              },
+              "night-market-bike-share": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Iris has a shared bike, but not an app-based car ride."
+              },
+              "night-market-taxi": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Owen's taxi stays in the separate Taxi option."
+              }
+            }
+          },
+          {
+            id: "too-wide",
+            label: "Too broad",
+            revisedChoice: "Rideshare, carpool, taxi, or shared bike/scooter",
+            explanation:
+              "This sounds inclusive, but it mixes the target with several neighboring transportation modes.",
+            scenarioOutcomes: {
+              "night-market-lyft": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "The app ride is included, but the answer choice now includes much more than the app-ride target."
+              },
+              "night-market-solo-app": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Jon can find the trip, but the route is clear only because the answer choice has become much wider."
+              },
+              "night-market-pooled-app": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "DeShawn can find the app ride, but the answer choice no longer isolates app-based rides from other shared modes."
+              },
+              "night-market-carpool": {
+                kind: "scope_widened",
+                label: "Scope widened",
+                rationale:
+                  "Nora's carpool is now pulled into a choice that was supposed to isolate app-based rides."
+              },
+              "night-market-bike-share": {
+                kind: "scope_widened",
+                label: "Scope widened",
+                rationale:
+                  "Iris's bike-share trip is now part of the highlighted choice, changing the thing being measured."
+              },
+              "night-market-taxi": {
+                kind: "scope_widened",
+                label: "Scope widened",
+                rationale:
+                  "Owen's taxi is now mixed with app rides even though the original list had a separate Taxi route."
+              }
+            }
+          }
+        ]
+      },
+      transferChallenge: {
+        title: "Sort one fresh label",
+        prompt:
+          "Use the same three judgments on a different service label. Do not name the pattern first; sort the respondent route.",
+        targetLabel: "Highlighted answer choice",
+        targetText: "Food delivery or courier app service",
+        scenarioTitle: "DoorDash, but courier sounds wrong",
+        situation:
+          "A campus survey asks how a meal reached a student. Lena used DoorDash, but she hesitates because courier sounds to her like a package company, not a restaurant delivery app.",
+        respondentReading:
+          "She knows the meal came through an app service, but one word in the label points her toward a different kind of service.",
+        expectedOutcome: "ambiguous",
+        feedbackTitle:
+          "The meal is in scope, but the service label can point her away.",
+        routeExplanation:
+          "Lena's trip through DoorDash belongs in the intended app-service route. The problem is the wording: courier can invite a package-delivery reading that competes with food-delivery app.",
+        takeaway:
+          "Near transfer is the same move as the ride case: separate the real event from the everyday meanings invited by the highlighted label."
+      },
+      sourceAnchor: {
+        title: "Why the real ACS source belongs behind this teaching case",
+        lede:
+          "The night-market case is invented. The evidence anchor is the Census Bureau cognitive-testing report on the ACS means-of-transportation item.",
+        evidence: [
+          {
+            provenance: "reported_finding",
+            label: "A participant described Lyft travel to work",
+            body:
+              "The report describes a participant who said he would take Lyft to work several times a week when working.",
+            citation: {
+              reportTitle: acsRound3Title,
+              page: "p. 37",
+              permalink: acsRound3Url
+            }
+          },
+          {
+            provenance: "reported_finding",
+            label: "Most probed participants distinguished ride-hailing from carpooling",
+            body:
+              "The report says eight of ten probed participants treated ride-hailing and carpooling as different, usually because ride-hailing was paid and company-hosted.",
+            citation: {
+              reportTitle: acsRound3Title,
+              page: "p. 37",
+              permalink: acsRound3Url
+            }
+          },
+          {
+            provenance: "reported_finding",
+            label: "Shared-ride reading was still documented",
+            body:
+              "The report also describes one participant who mapped the ride-hailing option to a broad shared-ride idea after looking for carpool.",
+            citation: {
+              reportTitle: acsRound3Title,
+              page: "pp. 37-38",
+              permalink: acsRound3Url
+            }
+          },
+          {
+            provenance: "source_grounded_stress_case",
+            label: "Why the coworker carpool case is constructed",
+            body:
+              "The coworker carpool in the teaching deck is a constructed stress case based on the reported shared-ride reading. It is not a reported night-market or ACS respondent.",
+            citation: {
+              reportTitle: acsRound3Title,
+              page: "pp. 37-38",
+              permalink: acsRound3Url
+            }
+          }
+        ],
+        limitations: [
+          "The night-market survey is synthetic and was not tested by the Census Bureau.",
+          "The repair bench is a teaching model, not validated replacement wording.",
+          "Brand examples such as Uber or Lyft can date quickly or miss local services."
+        ]
+      }
+    },
     predictionCopy: predictionCopy(
       [
         "Choice fits this trip",

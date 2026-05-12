@@ -322,6 +322,18 @@ function AppShell() {
          focus on its own mount; don't fight it. */
       const recap = document.querySelector('[data-testid="recap-interstitial"]');
       if (!recap) {
+        const hubTarget =
+          route.kind === "hub"
+            ? decodeURIComponent(window.location.hash.replace(/^#/, ""))
+            : "";
+        const hubElement =
+          hubTarget && hubTarget !== "exhibit"
+            ? document.getElementById(hubTarget)
+            : null;
+        if (hubElement) {
+          hubElement.scrollIntoView({ block: "start", behavior: "auto" });
+          return;
+        }
         const fieldGuideTarget =
           route.kind === "fieldGuide"
             ? window.location.hash.replace(/^#/, "")
