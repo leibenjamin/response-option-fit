@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { CaseLabPracticeRecord } from "../../lib/practice-state";
 import type {
   CaseLabProvenance,
   CaseLabRepairOutcomeKind,
@@ -9,6 +10,8 @@ import type {
 type Props = {
   specimen: WorkbenchSpecimen;
   titleId: string;
+  savedPractice?: CaseLabPracticeRecord;
+  onPracticeChange?: (record: CaseLabPracticeRecord) => void;
 };
 
 type ScenarioAnswers = Record<string, VignetteOutcome | null>;
@@ -58,24 +61,43 @@ function ProvenanceBadge({ provenance }: { provenance: CaseLabProvenance }) {
   );
 }
 
-export function CaseLab({ specimen, titleId }: Props) {
+export function CaseLab({
+  specimen,
+  titleId,
+  savedPractice,
+  onPracticeChange
+}: Props) {
   const lab = specimen.caseLab;
   if (!lab) return null;
 
   const [scenarioAnswers, setScenarioAnswers] = useState<ScenarioAnswers>(() =>
-    Object.fromEntries(lab.scenarios.map((scenario) => [scenario.id, null]))
+    Object.fromEntries(
+      lab.scenarios.map((scenario) => [
+        scenario.id,
+        savedPractice?.scenarioAnswers?.[scenario.id] ?? null
+      ])
+    )
   );
   const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
-  const [selectedRepairId, setSelectedRepairId] = useState(
-    lab.repairBench.options[0].id
+  const firstRepairId = lab.repairBench.options[0].id;
+  const [selectedRepairId, setSelectedRepairId] = useState(() =>
+    savedPractice?.selectedRepairId &&
+    lab.repairBench.options.some((option) => option.id === savedPractice.selectedRepairId)
+      ? savedPractice.selectedRepairId
+      : firstRepairId
   );
-  const [repairBenchSeen, setRepairBenchSeen] = useState(false);
+  const [repairBenchSeen, setRepairBenchSeen] = useState(
+    () => savedPractice?.repairBenchSeen ?? false
+  );
   const [transferAnswer, setTransferAnswer] = useState<VignetteOutcome | null>(
-    null
+    () => savedPractice?.transferAnswer ?? null
   );
 
   const answeredCount = lab.scenarios.filter(
     (scenario) => scenarioAnswers[scenario.id] !== null
+  ).length;
+  const matchedCount = lab.scenarios.filter(
+    (scenario) => scenarioAnswers[scenario.id] === scenario.expectedOutcome
   ).length;
   const allScenariosAnswered = lab.scenarios.every(
     (scenario) => scenarioAnswers[scenario.id] !== null
@@ -92,6 +114,29 @@ export function CaseLab({ specimen, titleId }: Props) {
   const transferAnswered = transferAnswer !== null;
   const transferCorrect =
     transferAnswer === lab.transferChallenge.expectedOutcome;
+
+  useEffect(() => {
+    const answered = Object.fromEntries(
+      Object.entries(scenarioAnswers).filter(
+        (entry): entry is [string, VignetteOutcome] => entry[1] !== null
+      )
+    );
+    const record: CaseLabPracticeRecord = {};
+    if (Object.keys(answered).length > 0) record.scenarioAnswers = answered;
+    if (selectedRepairId !== firstRepairId || repairBenchSeen) {
+      record.selectedRepairId = selectedRepairId;
+    }
+    if (repairBenchSeen) record.repairBenchSeen = true;
+    if (transferAnswer !== null) record.transferAnswer = transferAnswer;
+    onPracticeChange?.(record);
+  }, [
+    firstRepairId,
+    onPracticeChange,
+    repairBenchSeen,
+    scenarioAnswers,
+    selectedRepairId,
+    transferAnswer
+  ]);
 
   const choiceLabel = (outcome: VignetteOutcome) =>
     lab.judgmentChoices.find((choice) => choice.outcome === outcome)?.label ??
@@ -151,7 +196,7 @@ export function CaseLab({ specimen, titleId }: Props) {
                     className={`case-lab-option ${option.isTarget ? "is-target" : ""}`}
                     key={option.id}
                   >
-                    <span>{option.text}</span>
+                    <span className="case-lab-option-text">{option.text}</span>
                     {option.note && (
                       <span className="case-lab-option-note">{option.note}</span>
                     )}
@@ -172,7 +217,7 @@ export function CaseLab({ specimen, titleId }: Props) {
                     className={`case-lab-option ${option.isTarget ? "is-target" : ""}`}
                     key={option.id}
                   >
-                    <span>{option.text}</span>
+                    <span className="case-lab-option-text">{option.text}</span>
                     {option.note && (
                       <span className="case-lab-option-note">{option.note}</span>
                     )}
@@ -238,6 +283,10 @@ export function CaseLab({ specimen, titleId }: Props) {
                 <p className="case-lab-situation">
                   {activeScenario.situation}
                 </p>
+                <p className="case-lab-reading">
+                  <span>Respondent reading before choosing:</span>{" "}
+                  {activeScenario.respondentReading}
+                </p>
                 <div
                   className="case-lab-choice-row"
                   role="group"
@@ -260,10 +309,6 @@ export function CaseLab({ specimen, titleId }: Props) {
                     );
                   })}
                 </div>
-                <p className="case-lab-reading">
-                  <span>Respondent reading:</span>{" "}
-                  {activeScenario.respondentReading}
-                </p>
                 {activeScenarioAnswered && (
                   <div className="case-lab-feedback" aria-live="polite">
                     <p className="case-lab-feedback-title">
@@ -335,6 +380,32 @@ export function CaseLab({ specimen, titleId }: Props) {
                   );
                 })}
               </div>
+              <div className="practice-note" aria-live="polite">
+                <p className="practice-note-kicker">Practice notes</p>
+                <p>
+                  {answeredCount === 0
+                    ? "No teaching cases sorted yet."
+                    : `${matchedCount} teaching route${
+                        matchedCount === 1 ? "" : "s"
+                      } matched after ${answeredCount} sorted.`}
+                </p>
+                <p>
+                  {repairBenchSeen
+                    ? "Repair bench checked."
+                    : allScenariosAnswered
+                    ? "Repair bench ready."
+                    : "Repair bench unlocks after every teaching case."}
+                </p>
+                <p>
+                  {transferAnswered
+                    ? transferCorrect
+                      ? "Transfer route matched."
+                      : "Transfer route compared."
+                    : transferUnlocked
+                    ? "Transfer check ready."
+                    : "Transfer check unlocks after the repair bench."}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -354,10 +425,13 @@ export function CaseLab({ specimen, titleId }: Props) {
         </header>
 
         {!allScenariosAnswered && (
-          <p className="case-lab-gate">
-            Sort every teaching case to see how wording changes affect the same
-            trips.
-          </p>
+          <div className="case-lab-gate" role="note">
+            <p className="case-lab-gate-label">Locked for now</p>
+            <p>
+              Sort every teaching case to see how wording changes affect the
+              same trips.
+            </p>
+          </div>
         )}
 
         {allScenariosAnswered && (
@@ -430,14 +504,16 @@ export function CaseLab({ specimen, titleId }: Props) {
           <p className="beat-lede">{lab.transferChallenge.prompt}</p>
         </header>
         {!allScenariosAnswered && (
-          <p className="case-lab-gate">
-            Sort every teaching case before trying the transfer check.
-          </p>
+          <div className="case-lab-gate" role="note">
+            <p className="case-lab-gate-label">Locked for now</p>
+            <p>Sort every teaching case before trying the transfer check.</p>
+          </div>
         )}
         {allScenariosAnswered && !repairBenchSeen && (
-          <p className="case-lab-gate">
-            Review the repair bench, then continue here for one fresh case.
-          </p>
+          <div className="case-lab-gate" role="note">
+            <p className="case-lab-gate-label">Up next</p>
+            <p>Review the repair bench, then continue here for one fresh case.</p>
+          </div>
         )}
         {transferUnlocked && (
           <article
@@ -455,7 +531,7 @@ export function CaseLab({ specimen, titleId }: Props) {
               {lab.transferChallenge.situation}
             </p>
             <p className="case-lab-reading">
-              <span>Respondent reading:</span>{" "}
+              <span>Respondent reading before choosing:</span>{" "}
               {lab.transferChallenge.respondentReading}
             </p>
             <div

@@ -11,6 +11,7 @@ import { SettingsDrawer } from "./components/SettingsDrawer";
 import { WalkLayout } from "./components/WalkLayout";
 import { parseHash, routeToHash, type Route } from "./lib/routes";
 import { SettingsProvider } from "./lib/settings";
+import { PracticeProvider } from "./lib/practice-state";
 import { useWalkController, type WalkController } from "./lib/walk-state";
 
 const knownSpecimenIds: readonly string[] = workbenchSpecimens.map((s) => s.id);
@@ -389,7 +390,9 @@ function AppShell() {
 export default function App() {
   return (
     <SettingsProvider>
-      <AppShell />
+      <PracticeProvider>
+        <AppShell />
+      </PracticeProvider>
     </SettingsProvider>
   );
 }

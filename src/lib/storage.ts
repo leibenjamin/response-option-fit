@@ -3,6 +3,7 @@ const SCHEMA_VERSION = 1 as const;
 const STORAGE_CHANGE_EVENT = "rofl-storage-change";
 const SETTINGS_STORAGE_KEY = `${PREFIX}settings`;
 const WALK_STATE_STORAGE_KEY = `${PREFIX}walk-state`;
+const PRACTICE_STATE_STORAGE_KEY = `${PREFIX}practice-state`;
 
 export type Snapshot = {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -123,6 +124,95 @@ function validateSnapshotEntry(key: string, value: unknown): string | null {
     if (!visitedOk || !recapsOk || !lastOk) {
       return `Snapshot value for "${WALK_STATE_STORAGE_KEY}" must have string-array "visited", number-array "recapsDismissed", and optional string "lastSpecimenId".`;
     }
+    return null;
+  }
+
+  if (key === PRACTICE_STATE_STORAGE_KEY) {
+    if (!isPlainObject(value)) {
+      return `Snapshot value for "${PRACTICE_STATE_STORAGE_KEY}" must be an object.`;
+    }
+    const specimens = (value as { specimens?: unknown }).specimens;
+    if (!isPlainObject(specimens)) {
+      return `Snapshot value for "${PRACTICE_STATE_STORAGE_KEY}" must have an object "specimens" field.`;
+    }
+
+    const outcomes = new Set(["covered", "ambiguous", "not_covered"]);
+    const confidences = new Set(["guessing", "hunch", "fairly_sure"]);
+    const outcomeMapOk = (map: unknown) =>
+      isPlainObject(map) &&
+      Object.values(map).every(
+        (entry) => typeof entry === "string" && outcomes.has(entry)
+      );
+    const numberMapOk = (map: unknown) =>
+      isPlainObject(map) &&
+      Object.values(map).every(
+        (entry) => Number.isInteger(entry) && (entry as number) >= 0
+      );
+    const booleanMapOk = (map: unknown) =>
+      isPlainObject(map) &&
+      Object.values(map).every((entry) => typeof entry === "boolean");
+
+    for (const record of Object.values(specimens)) {
+      if (!isPlainObject(record)) {
+        return `Snapshot value for "${PRACTICE_STATE_STORAGE_KEY}" must contain specimen objects.`;
+      }
+      const r = record as { caseLab?: unknown; legacy?: unknown };
+      if (r.caseLab !== undefined) {
+        if (!isPlainObject(r.caseLab)) {
+          return `Snapshot value for "${PRACTICE_STATE_STORAGE_KEY}" has an invalid caseLab record.`;
+        }
+        const c = r.caseLab as {
+          scenarioAnswers?: unknown;
+          selectedRepairId?: unknown;
+          repairBenchSeen?: unknown;
+          transferAnswer?: unknown;
+        };
+        const caseLabOk =
+          (c.scenarioAnswers === undefined || outcomeMapOk(c.scenarioAnswers)) &&
+          (c.selectedRepairId === undefined ||
+            typeof c.selectedRepairId === "string") &&
+          (c.repairBenchSeen === undefined ||
+            typeof c.repairBenchSeen === "boolean") &&
+          (c.transferAnswer === undefined ||
+            (typeof c.transferAnswer === "string" &&
+              outcomes.has(c.transferAnswer)));
+        if (!caseLabOk) {
+          return `Snapshot value for "${PRACTICE_STATE_STORAGE_KEY}" has an invalid caseLab record.`;
+        }
+      }
+      if (r.legacy !== undefined) {
+        if (!isPlainObject(r.legacy)) {
+          return `Snapshot value for "${PRACTICE_STATE_STORAGE_KEY}" has an invalid legacy record.`;
+        }
+        const l = r.legacy as {
+          predictions?: unknown;
+          confidence?: unknown;
+          mechanismChoiceId?: unknown;
+          predictionSubmitted?: unknown;
+          revealedNeighborContrast?: unknown;
+          microCaseAnswers?: unknown;
+          microCaseSubmitted?: unknown;
+        };
+        const legacyOk =
+          (l.predictions === undefined || outcomeMapOk(l.predictions)) &&
+          (l.confidence === undefined ||
+            (typeof l.confidence === "string" && confidences.has(l.confidence))) &&
+          (l.mechanismChoiceId === undefined ||
+            typeof l.mechanismChoiceId === "string") &&
+          (l.predictionSubmitted === undefined ||
+            typeof l.predictionSubmitted === "boolean") &&
+          (l.revealedNeighborContrast === undefined ||
+            typeof l.revealedNeighborContrast === "boolean") &&
+          (l.microCaseAnswers === undefined ||
+            numberMapOk(l.microCaseAnswers)) &&
+          (l.microCaseSubmitted === undefined ||
+            booleanMapOk(l.microCaseSubmitted));
+        if (!legacyOk) {
+          return `Snapshot value for "${PRACTICE_STATE_STORAGE_KEY}" has an invalid legacy record.`;
+        }
+      }
+    }
+
     return null;
   }
 
