@@ -31,10 +31,19 @@ function injectProdSecurityHeaders(): Plugin {
   };
 }
 
-const appBase = process.env.VITE_BASE_PATH ?? "/";
+// The exhibit's production target is benlei.org/response-option-fit/, so build
+// and preview default to that mount path. Dev still defaults to root so
+// `npm run dev` keeps serving at http://127.0.0.1:5173/. Override either with
+// VITE_BASE_PATH for arbitrary mount paths.
+const DEPLOY_BASE = "/response-option-fit/";
 
-export default defineConfig({
-  base: appBase,
-  plugins: [react(), injectProdSecurityHeaders()],
-  server: { port: 5173, host: "127.0.0.1", strictPort: true }
+export default defineConfig(({ command, isPreview }) => {
+  const buildOrPreview = command === "build" || isPreview === true;
+  const appBase = process.env.VITE_BASE_PATH ?? (buildOrPreview ? DEPLOY_BASE : "/");
+
+  return {
+    base: appBase,
+    plugins: [react(), injectProdSecurityHeaders()],
+    server: { port: 5173, host: "127.0.0.1", strictPort: true }
+  };
 });
