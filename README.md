@@ -45,19 +45,18 @@ Open http://localhost:5173.
 
 ## Build
 
-Build for the default deploy target (`/response-option-fit/`):
-
 ```bash
 npm run build
 npm run preview
 ```
 
-`npm run build:subpath` is preserved as an explicit alias and produces the same
-output.
+The build emits relative asset paths, so the same artifact works at the root
+or behind a subpath mount with no extra coordination.
 
-For another mount path, set `VITE_BASE_PATH` to the public path with leading and
-trailing slashes, then run `npm run build`. Use `VITE_BASE_PATH=/` for a
-root-served build.
+`npm run build:subpath` is preserved as an explicit alias and produces the same
+output. For an absolute mount path, set `VITE_BASE_PATH` to the public path
+with leading and trailing slashes, then run `npm run build` (or use
+`VITE_BASE_PATH=/` for an absolute root build).
 
 ## Deployment
 

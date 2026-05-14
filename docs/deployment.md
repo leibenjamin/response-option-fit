@@ -5,38 +5,43 @@ Response Option Fit Lab is a static Vite app. The production build emits an
 
 ## Default build
 
-The exhibit's production target is `benlei.org/response-option-fit/`, so the
-default build emits assets under `/response-option-fit/`:
-
 ```bash
 npm run build
 ```
 
-`npm run build:subpath` is preserved as an explicit alias for the same output
-and is safe to leave in any deploy configuration that references it.
+The build emits relative asset paths (`./assets/...`). Relative URLs resolve
+against the document URL, so the same artifact works whether it is served at
+the root, behind the Cloudflare Worker mount at `/response-option-fit/`, or
+from `vite preview`. No coordination between the build base and the deploy
+mount path is required.
 
-Preview the production build locally — `vite preview` reads the same base from
-`vite.config.ts` and serves the built `dist/` at the mount path:
+`npm run build:subpath` is preserved as an explicit alias and is safe to leave
+in any deploy configuration that references it.
+
+Preview the production build locally:
 
 ```bash
 npm run preview
-# → http://127.0.0.1:4173/response-option-fit/
+# → http://127.0.0.1:4173/
 ```
 
 `npm run dev` keeps the dev server at the root (`http://127.0.0.1:5173/`) for
-fast iteration; only `vite build` and `vite preview` apply the subpath default.
+fast iteration; only `vite build` and `vite preview` apply the relative-base
+default.
 
 ## Alternate mount paths
 
 Set `VITE_BASE_PATH` to the public path (with leading and trailing slashes) to
-build for any other mount:
+build for a specific absolute mount path:
 
 ```bash
 VITE_BASE_PATH=/my-path/ npm run build
 ```
 
-Use `VITE_BASE_PATH=/` for a root-served build. The configured base path must
-match the deployed URL path so asset references resolve correctly.
+Use `VITE_BASE_PATH=/` for an absolute root-served build. The configured base
+path must match the deployed URL path so asset references resolve correctly.
+Most deployments do not need this — the default relative-base output is
+mount-agnostic.
 
 ## Headers
 
@@ -61,9 +66,8 @@ It redirects `/response-option-fit` to `/response-option-fit/`, strips the mount
 prefix before asset lookup, and falls back to `index.html` for navigation
 requests.
 
-Because the Worker only serves paths under `/response-option-fit/`, the built
-assets must reference that mount path. The default `npm run build` already
-emits the correct paths.
+The build emits relative paths by default, so the same artifact works behind
+the Worker mount without any base-path coordination.
 
 Then bind the generated static assets to the Worker as `ASSETS` in the
 Cloudflare configuration for the deployment target.
