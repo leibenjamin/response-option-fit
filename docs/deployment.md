@@ -3,37 +3,40 @@
 Response Option Fit Lab is a static Vite app. The production build emits an
 `index.html` entry plus content-hashed assets in `dist/assets/`.
 
-## Root Deployment
+## Default build
 
-Use this for hosts that serve the app at `/`:
+The exhibit's production target is `benlei.org/response-option-fit/`, so the
+default build emits assets under `/response-option-fit/`:
 
 ```bash
 npm run build
 ```
 
-Preview the production build locally:
+`npm run build:subpath` is preserved as an explicit alias for the same output
+and is safe to leave in any deploy configuration that references it.
+
+Preview the production build locally — `vite preview` reads the same base from
+`vite.config.ts` and serves the built `dist/` at the mount path:
 
 ```bash
 npm run preview
+# → http://127.0.0.1:4173/response-option-fit/
 ```
 
-## Subpath Deployment
+`npm run dev` keeps the dev server at the root (`http://127.0.0.1:5173/`) for
+fast iteration; only `vite build` and `vite preview` apply the subpath default.
 
-Use the convenience script for `/response-option-fit/`:
+## Alternate mount paths
 
-```bash
-npm run build:subpath
-```
-
-For another mount path, set `VITE_BASE_PATH` to the public path with leading and
-trailing slashes:
+Set `VITE_BASE_PATH` to the public path (with leading and trailing slashes) to
+build for any other mount:
 
 ```bash
 VITE_BASE_PATH=/my-path/ npm run build
 ```
 
-The configured base path must match the deployed URL path so asset references
-resolve correctly.
+Use `VITE_BASE_PATH=/` for a root-served build. The configured base path must
+match the deployed URL path so asset references resolve correctly.
 
 ## Headers
 
@@ -58,11 +61,9 @@ It redirects `/response-option-fit` to `/response-option-fit/`, strips the mount
 prefix before asset lookup, and falls back to `index.html` for navigation
 requests.
 
-Build the app with:
-
-```bash
-npm run build:subpath
-```
+Because the Worker only serves paths under `/response-option-fit/`, the built
+assets must reference that mount path. The default `npm run build` already
+emits the correct paths.
 
 Then bind the generated static assets to the Worker as `ASSETS` in the
 Cloudflare configuration for the deployment target.
