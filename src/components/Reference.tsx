@@ -26,10 +26,11 @@ export function Reference() {
         </h1>
         <p className="reference-route-lede">
           Four short reference sections behind the worked examples — a
-          vocabulary for the failure types, a method note, an explicit
+          glossary of the six problem types, a method note, an explicit
           boundary on what this exhibit does and does not claim, and the
-          source provenance behind every quote and finding. If you only read
-          one, read the glossary.
+          source provenance behind every quote and finding. Start with the
+          glossary for vocabulary, or the source appendix if you are checking
+          evidence.
         </p>
       </header>
 

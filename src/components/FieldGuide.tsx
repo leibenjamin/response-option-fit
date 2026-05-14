@@ -1,7 +1,20 @@
 import { patternApplicationGuides } from "../data/field-guide";
 import { promptCards, responseFitTests } from "../data/field-guide-route";
 import { patternMeta, patternOrder } from "../lib/pattern-meta";
+import { routeToHash } from "../lib/routes";
+import { workbenchSpecimens } from "../data/workbench-specimens";
+import type { FailurePattern } from "../types/workbench";
 import { PromptCard } from "./PromptCard";
+
+const specimensByPattern: Record<FailurePattern, typeof workbenchSpecimens> = (() => {
+  const map = Object.fromEntries(
+    patternOrder.map((pattern) => [pattern, [] as typeof workbenchSpecimens])
+  ) as Record<FailurePattern, typeof workbenchSpecimens>;
+  for (const specimen of workbenchSpecimens) {
+    map[specimen.pattern].push(specimen);
+  }
+  return map;
+})();
 
 const researchLinks = [
   {
@@ -41,7 +54,7 @@ export function FieldGuide() {
       <header className="field-guide-head">
         <p className="field-guide-eyebrow">Reusable field guide</p>
         <h1 className="field-guide-title" id="field-guide-title" tabIndex={-1}>
-          Use the framework on your own survey questions
+          Check your own survey answer choices
         </h1>
         <p className="field-guide-lede">
           These are portable tests, checklists, and prompt templates for
@@ -113,6 +126,7 @@ export function FieldGuide() {
           {patternOrder.map((pattern) => {
             const guide = patternApplicationGuides[pattern];
             const meta = patternMeta[pattern];
+            const examples = specimensByPattern[pattern];
             return (
               <article
                 className="pattern-checklist-card"
@@ -129,6 +143,25 @@ export function FieldGuide() {
                     <li key={check}>{check}</li>
                   ))}
                 </ol>
+                {examples.length > 0 && (
+                  <p className="pattern-checklist-examples">
+                    <span className="pattern-checklist-examples-label">
+                      Worked examples:
+                    </span>
+                    {examples.map((specimen, index) => (
+                      <span key={specimen.id}>
+                        {index > 0 ? ", " : " "}
+                        <a
+                          className="pattern-checklist-example-link"
+                          href={routeToHash({ kind: "walk", slot: specimen.id })}
+                        >
+                          {specimen.number} —{" "}
+                          {specimen.fieldGuideLinkLabel ?? specimen.railLabel}
+                        </a>
+                      </span>
+                    ))}
+                  </p>
+                )}
               </article>
             );
           })}
@@ -141,13 +174,13 @@ export function FieldGuide() {
         data-testid="prompt-pack"
       >
         <header className="field-guide-section-head">
-          <p className="field-guide-section-eyebrow">Prompt pack</p>
-          <h2 id="prompt-pack-title">Prompts for reviewing your own survey</h2>
+          <p className="field-guide-section-eyebrow">Optional copyable prompts</p>
+          <h2 id="prompt-pack-title">Prompts for outside review tools</h2>
           <p>
-            These prompts make the model show its assumptions, preserve claim
-            boundaries, and separate rewriting from validation. They are meant
-            for your questionnaire in tools you choose outside this static site,
-            not for revising this website.
+            These static prompts are written to force explicit assumptions,
+            preserve claim boundaries, and separate rewriting from validation.
+            Use them only in tools and contexts your own data, privacy, and
+            source rules allow.
           </p>
         </header>
         <div className="prompt-card-list">

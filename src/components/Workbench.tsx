@@ -6,7 +6,6 @@ import {
   type LegacyPracticeRecord
 } from "../lib/practice-state";
 import type {
-  ConfidenceLevel,
   VignetteOutcome,
   WorkbenchSpecimen
 } from "../types/workbench";
@@ -25,7 +24,6 @@ type WorkbenchState = {
   predictionSubmitted: boolean;
   revealedNeighborContrast: boolean;
   predictions: PredictionMap;
-  confidence: ConfidenceLevel | null;
   mechanismChoiceId: string | null;
   widgetState: WidgetState;
   microCaseAnswers: Record<string, number | null>;
@@ -34,7 +32,6 @@ type WorkbenchState = {
 
 type Action =
   | { type: "set_prediction"; vignetteId: string; outcome: VignetteOutcome }
-  | { type: "set_confidence"; confidence: ConfidenceLevel }
   | { type: "set_mechanism"; choiceId: string }
   | { type: "reveal_diagnosis" }
   | { type: "reveal_neighbor_contrast" }
@@ -84,7 +81,6 @@ function createInitialState(
       canRestoreReveal && savedPractice?.predictionSubmitted === true,
     revealedNeighborContrast: savedPractice?.revealedNeighborContrast === true,
     predictions,
-    confidence: savedPractice?.confidence ?? null,
     mechanismChoiceId,
     widgetState: initialWidgetState(specimen.widget),
     microCaseAnswers,
@@ -102,8 +98,6 @@ function reducer(state: WorkbenchState, action: Action): WorkbenchState {
           [action.vignetteId]: action.outcome
         }
       };
-    case "set_confidence":
-      return { ...state, confidence: action.confidence };
     case "set_mechanism":
       return { ...state, mechanismChoiceId: action.choiceId };
     case "reveal_diagnosis":
@@ -158,7 +152,6 @@ function compactLegacyPractice(
   }
 
   if (Object.keys(predictions).length > 0) record.predictions = predictions;
-  if (state.confidence !== null) record.confidence = state.confidence;
   if (state.mechanismChoiceId !== null) {
     record.mechanismChoiceId = state.mechanismChoiceId;
   }
@@ -301,14 +294,12 @@ function LegacyWorkbenchContent({
         specimen={specimen}
         predictions={state.predictions}
         mechanismChoiceId={state.mechanismChoiceId}
-        confidence={state.confidence}
         revealed={state.predictionSubmitted}
         canReveal={canReveal}
         onPredictionChange={(vignetteId, outcome) =>
           dispatch({ type: "set_prediction", vignetteId, outcome })
         }
         onMechanismChange={(choiceId) => dispatch({ type: "set_mechanism", choiceId })}
-        onConfidenceChange={(confidence) => dispatch({ type: "set_confidence", confidence })}
         onReveal={() => dispatch({ type: "reveal_diagnosis" })}
       />
       <LegacyPracticeNotes specimen={specimen} state={state} canReveal={canReveal} />

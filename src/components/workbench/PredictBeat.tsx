@@ -1,5 +1,4 @@
 import type {
-  ConfidenceLevel,
   VignetteOutcome,
   WorkbenchSpecimen
 } from "../../types/workbench";
@@ -11,12 +10,10 @@ type Props = {
   specimen: WorkbenchSpecimen;
   predictions: PredictionMap;
   mechanismChoiceId: string | null;
-  confidence: ConfidenceLevel | null;
   revealed: boolean;
   canReveal: boolean;
   onPredictionChange: (vignetteId: string, outcome: VignetteOutcome) => void;
   onMechanismChange: (choiceId: string) => void;
-  onConfidenceChange: (confidence: ConfidenceLevel) => void;
   onReveal: () => void;
 };
 
@@ -24,12 +21,6 @@ const predictionOutcomes: VignetteOutcome[] = [
   "covered",
   "ambiguous",
   "not_covered"
-];
-
-const confidenceChoices: Array<{ value: ConfidenceLevel; label: string }> = [
-  { value: "guessing", label: "Guessing" },
-  { value: "hunch", label: "Hunch" },
-  { value: "fairly_sure", label: "Fairly sure" }
 ];
 
 function provenanceLabel(provenance: WorkbenchSpecimen["vignettes"][number]["provenance"]) {
@@ -46,12 +37,10 @@ export function PredictBeat({
   specimen,
   predictions,
   mechanismChoiceId,
-  confidence,
   revealed,
   canReveal,
   onPredictionChange,
   onMechanismChange,
-  onConfidenceChange,
   onReveal
 }: Props) {
   const selectedMechanism = specimen.mechanismQuestion.choices.find(
@@ -146,24 +135,6 @@ export function PredictBeat({
         {revealed && selectedMechanism && (
           <p className="mechanism-explanation">{selectedMechanism.explanation}</p>
         )}
-      </fieldset>
-
-      <fieldset className="confidence-fieldset">
-        <legend>Confidence</legend>
-        <div className="segmented-radios">
-          {confidenceChoices.map((choice) => (
-            <label key={choice.value} className="segmented-radio">
-              <input
-                type="radio"
-                name={`${specimen.id}-confidence`}
-                value={choice.value}
-                checked={confidence === choice.value}
-                onChange={() => onConfidenceChange(choice.value)}
-              />
-              <span>{choice.label}</span>
-            </label>
-          ))}
-        </div>
       </fieldset>
 
       <div className="reveal-gate">

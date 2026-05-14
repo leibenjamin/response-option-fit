@@ -26,16 +26,31 @@ export function FeaturedExample() {
         </h2>
         <p className="featured-example-lede">
           Below is the first case lab, fully working: read the synthetic survey
-          question, sort the scenarios, try a wording change, and check the
-          real-world source anchor. The remaining examples still use the
-          legacy worked-example shell until they are migrated.
+          question, work through the teaching cases, try a wording change, and
+          check the real-world source anchor. Examples 01–02 teach through case
+          labs; examples 03–12 use a five-step worked-example format.
+        </p>
+        <p
+          className="featured-example-source-receipt"
+          data-testid="featured-example-source-receipt"
+        >
+          <span className="featured-example-source-receipt-label">
+            Evidence anchor:
+          </span>{" "}
+          <span>
+            {featured.source.agency} · {featured.source.documentCode} ·{" "}
+            {featured.source.year}.
+          </span>{" "}
+          <span className="featured-example-source-receipt-note">
+            Teaching cases below are synthetic.
+          </span>
         </p>
       </header>
 
       <Workbench specimen={featured} />
 
       <footer className="featured-example-foot">
-        <p className="featured-example-foot-eyebrow">More like this</p>
+        <p className="featured-example-foot-eyebrow">More worked examples</p>
         <ul className="featured-example-next">
           {[second, third].filter(Boolean).map((specimen) => (
             <li key={specimen.id} className="featured-example-next-item">

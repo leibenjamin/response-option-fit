@@ -51,11 +51,11 @@ export const patternApplicationGuides: Record<
     pattern: "false_premise",
     fieldGuideId: "field-guide-false_premise",
     warning:
-      "No is dangerous when the question never first checked whether the question applies.",
+      "\"No\" is dangerous when the item never first checks whether it applies to the respondent.",
     checks: [
       "Before the yes/no item, write the applicability condition the respondent must meet.",
-      "Ask what No could mean: no event, no equipment, no exposure, no memory, or not applicable.",
-      "Choose the applicability path: screener, skip, follow-up after No, or visible not-applicable route."
+      "Ask what \"No\" could mean: no event, no equipment, no exposure, no memory, or not applicable.",
+      "Choose the applicability path: screener, skip, follow-up after \"No\", or visible not-applicable route."
     ]
   },
   category_boundary_blur: {
@@ -84,7 +84,7 @@ export const patternApplicationGuides: Record<
     pattern: "forced_precision",
     fieldGuideId: "field-guide-forced_precision",
     warning:
-      "Exact-looking answers often hide a private counting method.",
+      "Exact-looking answers often hide an unstated counting method.",
     checks: [
       "Write the counting method the survey expects: average, most common, current, any, calendar count, or rounded estimate.",
       "Ask whether a person with variable experience can recover that answer from memory or records.",
@@ -113,10 +113,10 @@ export const mixedReviewItems: readonly MixedReviewItem[] = [
   {
     id: "sequence-vs-precision",
     prompt:
-      "A respondent says disaster risk was one reason for moving but hesitates because Yes sounds like the main reason.",
+      "A respondent says disaster risk was one reason for moving but hesitates because \"Yes\" sounds like the main reason.",
     options: ["sequence_overlap", "forced_precision"],
     explanation:
-      "The nearest wrong route is forced precision. This is sequence overlap because the reason series changes the threshold for Yes, not because a number hides a counting recipe."
+      "The nearest wrong route is forced precision. This is sequence overlap because the reason series changes the threshold for \"Yes\", not because a number hides a counting recipe."
   },
   {
     id: "label-vs-bucket",
@@ -137,10 +137,10 @@ export const mixedReviewItems: readonly MixedReviewItem[] = [
   {
     id: "premise-vs-precision",
     prompt:
-      "One case requires recovering whether the household had the equipment before interpreting No; another requires recovering the counting rule behind a numeric answer.",
+      "One case requires recovering whether the household had the equipment before interpreting \"No\"; another requires recovering the counting rule behind a numeric answer.",
     options: ["false_premise", "forced_precision"],
     explanation:
-      "The nearest wrong route is forced precision. False premise recovers the denominator or applicability path before interpreting No; forced precision recovers the rule behind the number."
+      "The nearest wrong route is forced precision. False premise recovers the denominator or applicability path before interpreting \"No\"; forced precision recovers the rule behind the number."
   }
 ];
 
@@ -156,9 +156,9 @@ export const recapRetrievalPrompts: Record<number, RecapRetrievalPrompt> = {
   8: {
     threshold: 8,
     prompt:
-      "Before example 09, which earlier pattern can look like false premise if you only read the No answer?",
+      "Before example 09, which earlier pattern can look like false premise if you only read the \"No\" answer?",
     options: ["broad_bucket", "sequence_overlap", "forced_precision"],
     explanation:
-      "Sequence overlap asks what an earlier answer made No or Yes mean. False premise asks whether the person belonged in the item at all."
+      "Sequence overlap asks what an earlier answer made \"No\" or \"Yes\" mean. False premise asks whether the person belonged in the item at all."
   }
 };

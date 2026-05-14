@@ -26,7 +26,7 @@ export const responseFitTests: readonly ResponseFitTest[] = [
   },
   {
     id: "exclusive-exhaustive",
-    title: "Exhaustive and non-overlap test",
+    title: "Coverage and exclusivity test",
     question:
       "Can every in-scope answer land in exactly one visible place?",
     redFlag:
@@ -36,11 +36,11 @@ export const responseFitTests: readonly ResponseFitTest[] = [
   },
   {
     id: "no-means-what",
-    title: "No-means-what test",
+    title: "\"No\"-means-what test",
     question:
-      "If someone answers No, what states of the world can that No hide?",
+      "If someone answers \"No\", what states of the world can that \"No\" hide?",
     redFlag:
-      "No can mean the event did not happen, the condition was not applicable, or the respondent never had the thing being asked about.",
+      "\"No\" can mean the event did not happen, the condition was not applicable, or the respondent never had the thing being asked about.",
     nextMove:
       "Separate applicability from the substantive yes/no question before testing the wording."
   },
@@ -56,7 +56,7 @@ export const responseFitTests: readonly ResponseFitTest[] = [
   },
   {
     id: "sequence-carryover",
-    title: "Sequence-carryover test",
+    title: "Previous-question test",
     question:
       "What does the previous question make this answer choice sound like?",
     redFlag:
@@ -66,7 +66,7 @@ export const responseFitTests: readonly ResponseFitTest[] = [
   },
   {
     id: "precision-recipe",
-    title: "Precision-recipe test",
+    title: "Counting-rule test",
     question:
       "What method should the respondent use to produce this exact-looking answer?",
     redFlag:
@@ -292,7 +292,7 @@ export const promptCards: readonly PromptCard[] = [
     id: "final-edit-review",
     title: "Final edit review",
     purpose:
-      "Use on your own survey before shipping a draft, especially when a rewrite has passed through several people.",
+      "Use on your own survey before sending a draft into review or testing, especially when a rewrite has passed through several people.",
     prompt: finalEditReviewPrompt
   }
 ];
