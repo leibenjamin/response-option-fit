@@ -78,8 +78,8 @@ export function PatternCatalog({
             </p>
           ) : (
             <p className="pattern-catalog-lede">
-              Use this map as a preview of the six answer-choice problems you
-              will see in the examples below.
+              Name the failure once, then watch the twelve worked examples
+              take it twelve different turns.
             </p>
           )}
         </header>

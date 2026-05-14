@@ -45,7 +45,7 @@ export function DiagnoseBeat({
       <header className="beat-head">
         <p className="beat-eyebrow">Step 2 / Compare routes</p>
         <h3 className="beat-title" id={`${specimen.id}-diagnose-title`}>
-          Compare your choices with the teaching diagnosis
+          Where your judgments line up with the teaching route
         </h3>
       </header>
 

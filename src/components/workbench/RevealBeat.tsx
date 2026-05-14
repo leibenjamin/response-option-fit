@@ -14,13 +14,13 @@ export function RevealBeat({ specimen }: Props) {
       <header className="beat-head">
         <p className="beat-eyebrow">Step 4 / What the source supports</p>
         <h3 className="beat-title" id={`${specimen.id}-reveal-title`}>
-          What the cited report says the revision addressed
+          The cited revision: what it tackled, what's still untested
         </h3>
       </header>
 
       <p className="reveal-orientation">
-        Read both cards: one names what the source-supported revision addresses;
-        one names what still needs testing.
+        Two cards: one names what the source-supported revision changed;
+        the other names what the revision did not settle.
       </p>
 
       <div className="reveal-card-grid">

@@ -7,10 +7,14 @@ type Props = {
   resumeSpecimenId?: string | null;
 };
 
-/* The hub Hero. Tightened from the prior 4-stat scope receipt to a single
-   inline meta line, and pairs with two CTAs that lead the visitor either
-   into the embedded featured example below or directly into the paginated
-   walk. */
+/* The hub Hero. Top-of-page identity carrier: editorial-exhibit eyebrow,
+   project kicker, plain-language title, mechanism subtitle, body that
+   names the source posture and the field-guide value, two CTA-shaped
+   actions whose hierarchy flips for returning visitors, a quiet text-link
+   row for the lower-priority entry points, and a four-stat scope receipt
+   that doubles as a trust receipt. The lastVisited prop drives the
+   CTA-hierarchy flip: returning visitors lead with Resume walk and demote
+   the first-time entry points to text links. */
 export function Hero({ resumeSpecimenId = null }: Props = {}) {
   const firstSpecimenId = workbenchSpecimens[0]?.id ?? "";
   const resumeSpecimen = resumeSpecimenId
@@ -51,53 +55,98 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
           </p>
         </div>
 
+        {/* CTA hierarchy depends on whether the visitor has walked before.
+           First-time visitors get a strong "Try the first example" as
+           primary; returning visitors get "Resume walk" as primary and the
+           first-time entry points demoted to text links. Mobile keeps the
+           two main CTA-shaped buttons stacked but the secondary text links
+           stay quiet. */}
         <div className="hero-cta-row" data-testid="hero-cta-row">
-          <a
-            className="cta-button cta-button--primary"
-            href="#featured-example"
-            data-testid="hero-cta-featured"
-          >
-            <span>Try the first example</span>
-            <span aria-hidden="true" className="cta-button-arrow">
-              ↓
-            </span>
-          </a>
-          <a
-            className="cta-button cta-button--secondary"
-            href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
-            data-testid="hero-cta-walk"
-          >
-            <span>Walk through all twelve</span>
-            <span aria-hidden="true" className="cta-button-arrow">
-              →
-            </span>
-          </a>
-          <a
-            className="cta-button cta-button--secondary"
-            href={routeToHash({ kind: "fieldGuide" })}
-            data-testid="hero-cta-field-guide"
-          >
-            <span>Open the field guide</span>
-            <span aria-hidden="true" className="cta-button-arrow">
-              →
-            </span>
-          </a>
-          {resumeSpecimen && (
-            <a
-              className="cta-button cta-button--ghost"
-              href={routeToHash({
-                kind: "walk",
-                slot: resumeSpecimen.id
-              })}
-              data-testid="hero-cta-resume"
-            >
-              <span>
-                Resume walk · example {resumeSpecimen.number}
-              </span>
-              <span aria-hidden="true" className="cta-button-arrow">
-                ↻
-              </span>
-            </a>
+          {resumeSpecimen ? (
+            <>
+              <a
+                className="cta-button cta-button--primary"
+                href={routeToHash({
+                  kind: "walk",
+                  slot: resumeSpecimen.id
+                })}
+                data-testid="hero-cta-resume"
+              >
+                <span>
+                  Resume walk · example {resumeSpecimen.number}
+                </span>
+                <span aria-hidden="true" className="cta-button-arrow">
+                  ↻
+                </span>
+              </a>
+              <a
+                className="cta-button cta-button--secondary"
+                href={routeToHash({ kind: "fieldGuide" })}
+                data-testid="hero-cta-field-guide"
+              >
+                <span>Open the field guide</span>
+                <span aria-hidden="true" className="cta-button-arrow">
+                  →
+                </span>
+              </a>
+              <p
+                className="hero-cta-quiet"
+                data-testid="hero-cta-quiet-links"
+              >
+                Or restart from the top:{" "}
+                <a
+                  className="hero-cta-text-link"
+                  href="#featured-example"
+                  data-testid="hero-cta-featured"
+                >
+                  Try the first example
+                </a>
+                <span aria-hidden="true"> · </span>
+                <a
+                  className="hero-cta-text-link"
+                  href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
+                  data-testid="hero-cta-walk"
+                >
+                  Walk through all twelve
+                </a>
+              </p>
+            </>
+          ) : (
+            <>
+              <a
+                className="cta-button cta-button--primary"
+                href="#featured-example"
+                data-testid="hero-cta-featured"
+              >
+                <span>Try the first example</span>
+                <span aria-hidden="true" className="cta-button-arrow">
+                  ↓
+                </span>
+              </a>
+              <a
+                className="cta-button cta-button--secondary"
+                href={routeToHash({ kind: "fieldGuide" })}
+                data-testid="hero-cta-field-guide"
+              >
+                <span>Open the field guide</span>
+                <span aria-hidden="true" className="cta-button-arrow">
+                  →
+                </span>
+              </a>
+              <p
+                className="hero-cta-quiet"
+                data-testid="hero-cta-quiet-links"
+              >
+                Or jump to the paginated walk:{" "}
+                <a
+                  className="hero-cta-text-link"
+                  href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
+                  data-testid="hero-cta-walk"
+                >
+                  Walk through all twelve
+                </a>
+              </p>
+            </>
           )}
         </div>
       </div>
