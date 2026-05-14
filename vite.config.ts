@@ -31,11 +31,13 @@ function injectProdSecurityHeaders(): Plugin {
   };
 }
 
-// The exhibit's production target is benlei.org/response-option-fit/, so build
-// and preview default to that mount path. Dev still defaults to root so
-// `npm run dev` keeps serving at http://127.0.0.1:5173/. Override either with
-// VITE_BASE_PATH for arbitrary mount paths.
-const DEPLOY_BASE = "/response-option-fit/";
+// The exhibit's production target is benlei.org/response-option-fit/, served
+// via a Cloudflare Worker mount. Build emits relative asset paths so the same
+// artifact works whether the Worker, a static host, or `vite preview` is
+// serving it — relative URLs resolve against the document URL no matter the
+// mount path. Dev still defaults to root so `npm run dev` keeps serving at
+// http://127.0.0.1:5173/. Override either with VITE_BASE_PATH.
+const DEPLOY_BASE = "./";
 
 export default defineConfig(({ command, isPreview }) => {
   const buildOrPreview = command === "build" || isPreview === true;
