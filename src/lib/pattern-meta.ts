@@ -37,31 +37,31 @@ export const patternMeta: Record<FailurePattern, PatternMeta> = {
   broad_bucket: {
     pattern: "broad_bucket",
     label: "Broad bucket",
-    canonicalSubtitle: "One answer space covers too much",
+    canonicalSubtitle: "One answer space accepts answers at several levels",
     accentVar: "--pat-broad-bucket"
   },
   false_premise: {
     pattern: "false_premise",
     label: "False premise",
-    canonicalSubtitle: "Question assumes too much",
+    canonicalSubtitle: "Question assumes a condition that may not hold",
     accentVar: "--pat-false-premise"
   },
   category_boundary_blur: {
     pattern: "category_boundary_blur",
     label: "Category boundary blur",
-    canonicalSubtitle: "Categories overlap",
+    canonicalSubtitle: "Nearby categories lack a clear rule",
     accentVar: "--pat-category-boundary-blur"
   },
   sequence_overlap: {
     pattern: "sequence_overlap",
     label: "Sequence overlap",
-    canonicalSubtitle: "Earlier question changes the next answer",
+    canonicalSubtitle: "Earlier question changes how the next answer is read",
     accentVar: "--pat-sequence-overlap"
   },
   forced_precision: {
     pattern: "forced_precision",
     label: "Forced precision",
-    canonicalSubtitle: "One exact answer required",
+    canonicalSubtitle: "One exact answer where reality varies",
     accentVar: "--pat-forced-precision"
   }
 };

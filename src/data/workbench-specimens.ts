@@ -5,11 +5,11 @@ const claimBoundaryNote =
 
 const canonicalSubtitleByPattern = {
   label_ambiguity: "Same words, several meanings",
-  broad_bucket: "One answer space covers too much",
-  false_premise: "Question assumes too much",
-  category_boundary_blur: "Categories overlap",
-  sequence_overlap: "Earlier question changes the next answer",
-  forced_precision: "One exact answer required"
+  broad_bucket: "One answer space accepts answers at several levels",
+  false_premise: "Question assumes a condition that may not hold",
+  category_boundary_blur: "Nearby categories lack a clear rule",
+  sequence_overlap: "Earlier question changes how the next answer is read",
+  forced_precision: "One exact answer where reality varies"
 } satisfies Record<FailurePattern, string>;
 
 const canonicalCitationByPattern = {
@@ -168,7 +168,7 @@ const methodNotesById: Partial<
 > = {
   "ride-hailing": {
     whyHere:
-      "This example shows label ambiguity because app-service, taxi, and shared-ride meanings can all come from the same answer-choice words.",
+      "This example shows label ambiguity because app-based ride, taxi, and passenger-sharing meanings can all come from the same answer-choice words.",
     whatOmitted:
       "It leaves out the broader list of commute options and any claim about downstream travel estimates."
   },
@@ -180,7 +180,7 @@ const methodNotesById: Partial<
   },
   "refrigerated-medicine": {
     whyHere:
-      "This example shows a false premise because No can hide both no spoilage and no refrigerated medicine.",
+      "This example shows a false premise because \"No\" can hide both no spoilage and no refrigerated medicine.",
     whatOmitted:
       "It leaves out the rest of the outage section in the same survey and does not estimate how common either answer meaning is."
   },
@@ -204,19 +204,19 @@ const methodNotesById: Partial<
   },
   "notebook-computer": {
     whyHere:
-      "This example shows label ambiguity because notebook sends some people toward non-laptop device meanings before they answer Yes or No.",
+      "This example shows label ambiguity because \"notebook\" sends some people toward non-laptop device meanings before they answer \"Yes\" or \"No\".",
     whatOmitted:
       "It leaves out the broader list of devices in the same Internet Use Survey and any claim about generation-level device adoption rates."
   },
   "ons-kashmiri": {
     whyHere:
-      "This example shows the broad bucket pattern because a specific subgroup identity sits under a broader Asian/Asian British category and a write-in option.",
+      "This example shows the broad bucket pattern because a specific subgroup identity can be routed through a broader Asian/Asian British category or a write-in option.",
     whatOmitted:
       "It leaves out the comparability and parallel-subgroup tradeoffs the ONS report weighed when recommending against the tick-box, which the colophon and Reveal cards summarize separately."
   },
   "sump-pump": {
     whyHere:
-      "This example shows a false premise because No can absorb no equipment, no pump failure, and no flooding inside one yes/no question.",
+      "This example shows a false premise because \"No\" can absorb no equipment, no pump failure, and no flooding inside one yes/no question.",
     whatOmitted:
       "It leaves out the rest of the outage section in the same survey and does not estimate how common no-pump households are."
   },
@@ -228,7 +228,7 @@ const methodNotesById: Partial<
   },
   "avoid-natural-disasters": {
     whyHere:
-      "This example shows sequence overlap because a yes/no reasons series can make Yes feel like the main reason even when the survey wants any influence.",
+      "This example shows sequence overlap because a yes/no reasons series can make \"Yes\" feel like the main reason even when the survey wants any influence.",
     whatOmitted:
       "It leaves out the rest of the AHS moving-reasons module and does not model how often secondary motives drive moves."
   },
@@ -247,6 +247,7 @@ const authoredWorkbenchSpecimens: Array<
     id: "ride-hailing",
     number: "01",
     railLabel: "Ride-hailing",
+    fieldGuideLinkLabel: "Ride-hailing label",
     pattern: "label_ambiguity",
     patternLabel: "Label ambiguity",
     canonicalSubtitle: canonicalSubtitleByPattern.label_ambiguity,
@@ -291,9 +292,9 @@ const authoredWorkbenchSpecimens: Array<
     prerequisiteVocab: prerequisiteVocabByPattern.label_ambiguity,
     caseLab: {
       eyebrow: "Example 01 / Synthetic case lab",
-      title: "When rideshare can mean app ride, carpool, or bike share",
+      title: "When \"rideshare\" can mean app ride, carpool, or bike share",
       lede:
-        "This lesson starts with an invented night-market survey. The real ACS source tested Taxi or ride-hailing services; Rideshare is a synthetic teaching label built to make the ambiguity easier to see.",
+        "This lesson starts with an invented night-market survey. The real ACS source tested \"Taxi or ride-hailing services\"; \"Rideshare\" is a synthetic teaching label built to make the ambiguity easier to see.",
       setup:
         "Work through one trip at a time. For each trip, ask whether the highlighted answer choice gives that respondent a clear place to go.",
       answerFrame: {
@@ -342,10 +343,10 @@ const authoredWorkbenchSpecimens: Array<
         {
           id: "night-market-lyft",
           role: "center_case",
-          title: "Lyft ride to the gate",
-          situation: "Maya paid for a Lyft ride to the market gate.",
+          title: "Lyft to the night market",
+          situation: "Maya paid for a Lyft ride to the night market's western entrance.",
           respondentReading:
-            "She uses rideshare to mean app-based paid car ride.",
+            "She uses \"rideshare\" to mean app-based paid car ride.",
           provenance: "teaching_case",
           expectedOutcome: "covered",
           feedbackTitle: "The highlighted choice names this trip.",
@@ -359,14 +360,14 @@ const authoredWorkbenchSpecimens: Array<
           role: "in_scope_misread",
           title: "Solo app ride, no sharing",
           situation:
-            "Jon used Uber for a solo ride. He hesitates because rideshare sounds to him like sharing the car with other passengers.",
+            "Jon used Uber for a solo ride. He hesitates because \"rideshare\" sounds to him like sharing the car with other passengers.",
           respondentReading:
-            "He treats share as the controlling word, even though the trip is a paid app-based car ride.",
+            "He treats \"share\" as the controlling word, even though the trip is a paid app-based car ride.",
           provenance: "teaching_case",
           expectedOutcome: "ambiguous",
           feedbackTitle: "The trip is in scope, but the label can mislead him.",
           routeExplanation:
-            "The real trip belongs in the intended app-ride target. The problem is that Rideshare can sound like pooled riding rather than app-based service.",
+            "The real trip belongs in the intended app-ride target. The problem is that \"Rideshare\" can sound like pooled riding rather than app-based service.",
           takeaway:
             "Label ambiguity can push an in-scope respondent away from the highlighted choice."
         },
@@ -409,7 +410,7 @@ const authoredWorkbenchSpecimens: Array<
           situation:
             "Iris checked out a shared city bike, rode it to the market, and returned it at a dock.",
           respondentReading:
-            "She sees share inside rideshare and wonders whether a shared bike counts.",
+            "She sees \"share\" inside \"rideshare\" and wonders whether a shared bike counts.",
           provenance: "teaching_case",
           expectedOutcome: "not_covered",
           feedbackTitle: "Another transportation choice fits better.",
@@ -425,7 +426,7 @@ const authoredWorkbenchSpecimens: Array<
           situation:
             "Owen took a taxi from a hotel stand and paid the driver at the end of the ride.",
           respondentReading:
-            "He sees a hired ride and wonders whether Rideshare includes taxis too.",
+            "He sees a hired ride and wonders whether \"Rideshare\" includes taxis too.",
           provenance: "teaching_case",
           expectedOutcome: "not_covered",
           feedbackTitle: "The taxi option is the cleaner route.",
@@ -445,25 +446,25 @@ const authoredWorkbenchSpecimens: Array<
             label: "Current",
             revisedChoice: "Rideshare",
             explanation:
-              "Short, familiar to some respondents, but it relies on local meaning and the word share.",
+              "Short, familiar to some respondents, but it relies on local meaning and the word \"share\".",
             scenarioOutcomes: {
               "night-market-lyft": {
                 kind: "route_clearer",
                 label: "Route clearer",
                 rationale:
-                  "Maya already uses Rideshare the intended way, so the route is clear for her."
+                  "Maya already uses \"Rideshare\" the intended way, so the route is clear for her."
               },
               "night-market-solo-app": {
                 kind: "still_ambiguous",
                 label: "Still ambiguous",
                 rationale:
-                  "Jon may still read share as pooled riding and hesitate on a solo Uber trip."
+                  "Jon may still read \"share\" as pooled riding and hesitate on a solo Uber trip."
               },
               "night-market-pooled-app": {
                 kind: "route_clearer",
                 label: "Route clearer",
                 rationale:
-                  "DeShawn's pooled app ride matches a common rideshare reading because it is both app-based and shared."
+                  "DeShawn's pooled app ride matches a common \"rideshare\" reading because it is both app-based and shared."
               },
               "night-market-carpool": {
                 kind: "misread_risk",
@@ -475,7 +476,7 @@ const authoredWorkbenchSpecimens: Array<
                 kind: "misread_risk",
                 label: "Misread risk",
                 rationale:
-                  "Iris can still connect share to bike-share instead of app-based car service."
+                  "Iris can still connect \"share\" to bike-share instead of app-based car service."
               },
               "night-market-taxi": {
                 kind: "still_outside_target",
@@ -583,16 +584,16 @@ const authoredWorkbenchSpecimens: Array<
           "Use the same three judgments on a different service label. Do not name the pattern first; sort the respondent route.",
         targetLabel: "Highlighted answer choice",
         targetText: "Food delivery or courier app service",
-        scenarioTitle: "DoorDash, but courier sounds wrong",
+        scenarioTitle: "DoorDash, but \"courier\" sounds wrong",
         situation:
-          "A campus survey asks how a meal reached a student. Lena used DoorDash, but she hesitates because courier sounds to her like a package company, not a restaurant delivery app.",
+          "A campus survey asks how a meal reached a student. Lena used DoorDash, but she hesitates because \"courier\" sounds to her like a package company, not a restaurant delivery app.",
         respondentReading:
           "She knows the meal came through an app service, but one word in the label points her toward a different kind of service.",
         expectedOutcome: "ambiguous",
         feedbackTitle:
           "The meal is in scope, but the service label can point her away.",
         routeExplanation:
-          "Lena's trip through DoorDash belongs in the intended app-service route. The problem is the wording: courier can invite a package-delivery reading that competes with food-delivery app.",
+          "Lena's trip through DoorDash belongs in the intended app-service route. The problem is the wording: \"courier\" can invite a package-delivery reading that competes with food-delivery app.",
         takeaway:
           "Near transfer is the same move as the ride case: separate the real event from the everyday meanings invited by the highlighted label."
       },
@@ -608,7 +609,7 @@ const authoredWorkbenchSpecimens: Array<
               "The report describes a participant who said he would take Lyft to work several times a week when working.",
             citation: {
               reportTitle: acsRound3Title,
-              page: "p. 37",
+              page: "pp. 37-38",
               permalink: acsRound3Url
             }
           },
@@ -619,7 +620,7 @@ const authoredWorkbenchSpecimens: Array<
               "The report says eight of ten probed participants treated ride-hailing and carpooling as different, usually because ride-hailing was paid and company-hosted.",
             citation: {
               reportTitle: acsRound3Title,
-              page: "p. 37",
+              page: "pp. 37-38",
               permalink: acsRound3Url
             }
           },
@@ -811,7 +812,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Where the answer choice stops fitting",
         title: "App ride, taxi cab, or shared ride?",
         detail:
-          "The respondent has to infer whether ride-hailing means an app-based paid service, a taxi-like service, or any ride shared with someone else."
+          "The respondent has to infer whether \"ride-hailing\" means an app-based paid service, a taxi-like service, or any ride shared with someone else."
       },
       {
         id: "ride-consequence",
@@ -826,7 +827,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "category_boundary_blur",
       neighborSpecimenId: "electric-vehicle-type",
       contrastText:
-        "This example is label ambiguity because the contested step is what Taxi or ride-hailing services means. The neighbor pattern is category boundary blur, where the words may be understood but the line between neighboring classes is unclear."
+        "This example is label ambiguity because the contested step is what \"Taxi or ride-hailing services\" means. The neighbor pattern is category boundary blur, where the words may be understood but the line between neighboring classes is unclear."
     },
     widget: {
       kind: "example_set_editor",
@@ -959,6 +960,7 @@ const authoredWorkbenchSpecimens: Array<
     id: "business-industry",
     number: "02",
     railLabel: "Business",
+    fieldGuideLinkLabel: "Business/industry field",
     pattern: "broad_bucket",
     patternLabel: "Broad bucket",
     canonicalSubtitle: canonicalSubtitleByPattern.broad_bucket,
@@ -992,13 +994,381 @@ const authoredWorkbenchSpecimens: Array<
     sampleRespondent:
       "A respondent who works in a hospital can separate the workplace from the broader health care industry, but the single field asks for both at once.",
     prerequisiteVocab: prerequisiteVocabByPattern.broad_bucket,
+    caseLab: {
+      eyebrow: "Example 02 / Synthetic case lab",
+      title:
+        "When \"Food service\" can mean a workplace, an industry, or the wrong question entirely",
+      lede:
+        "This lesson starts with an invented city-employment survey. The real CPS source tested a \"What kind of business or industry is this?\" write-in; \"Food service\" is a synthetic teaching label built here to make the level question easier to see.",
+      setup:
+        "Work through one worker at a time. For each, ask whether the highlighted answer choice gives that respondent a clear place to go — or whether the level, the wording, or the question type sends them elsewhere.",
+      answerFrame: {
+        eyebrow: "City employment survey",
+        prompt:
+          "What kind of business or industry is this? Choose the one option that best describes your workplace.",
+        context: [
+          "This synthetic survey wants the broad industry of the worker's main job.",
+          "The highlighted choice is intended to mean the entire food-service industry, not one specific kind of food business."
+        ],
+        targetLabel: "Highlighted answer choice",
+        targetText: "Food service",
+        intendedMeaning:
+          "The whole food-service industry: restaurants, cafés, bakeries, catering, and similar businesses.",
+        responseOptions: [
+          { id: "education", text: "Education" },
+          { id: "retail", text: "Retail" },
+          { id: "restaurant", text: "Restaurant" },
+          { id: "food-service", text: "Food service", isTarget: true },
+          { id: "healthcare", text: "Health care" },
+          { id: "other", text: "Something else" }
+        ]
+      },
+      judgmentChoices: [
+        {
+          outcome: "covered",
+          label: "Highlighted choice fits",
+          description:
+            "The respondent's industry is the intended one for the highlighted answer choice."
+        },
+        {
+          outcome: "ambiguous",
+          label: "Highlighted choice is easy to misread",
+          description:
+            "The respondent's industry is in scope, but the wording can point them toward a narrower or off-level answer."
+        },
+        {
+          outcome: "not_covered",
+          label: "Another choice fits better",
+          description:
+            "The respondent's actual industry sits in a neighboring category, even if the wording feels tempting."
+        }
+      ],
+      scenarios: [
+        {
+          id: "industry-bakery-chef",
+          role: "center_case",
+          title: "Bakery chef",
+          situation:
+            "Marisol is the head chef at a downtown bakery that makes bread and pastries for walk-in customers.",
+          respondentReading:
+            "She reads the question as asking about the kind of business and picks the broad food category.",
+          provenance: "teaching_case",
+          expectedOutcome: "covered",
+          feedbackTitle: "The highlighted choice names this worker's industry.",
+          routeExplanation:
+            "A bakery is part of the food-service industry, and \"Food service\" is the broad answer choice that captures it cleanly.",
+          takeaway:
+            "When a job is plainly inside the target industry, the broad-level option fits — that's the center case the choice is built to catch."
+        },
+        {
+          id: "industry-pizza-delivery",
+          role: "in_scope_misread",
+          title: "Pizza delivery driver",
+          situation:
+            "Diego delivers pizzas for a local chain. He reads the question and selects \"Restaurant\" because that names where he works.",
+          respondentReading:
+            "He treats \"Restaurant\" as the most specific match, even though \"Food service\" is the broader industry that includes his job.",
+          provenance: "teaching_case",
+          expectedOutcome: "ambiguous",
+          feedbackTitle: "The job is in scope, but the wording let him pick a narrower level.",
+          routeExplanation:
+            "The pizza-delivery job is in food service, so the highlighted choice fits the industry. The wording does not stop the respondent from picking a narrower tick-box that is also accurate at a different level.",
+          takeaway:
+            "Broad bucket can fail without anyone making a mistake: the same job sits at two different visible levels in the same answer space."
+        },
+        {
+          id: "industry-hotel-restaurant",
+          role: "scope_edge",
+          title: "Chef in a hotel restaurant",
+          situation:
+            "Taro is a chef in a restaurant inside a large hotel. He prepares meals for hotel guests at the in-house restaurant.",
+          respondentReading:
+            "He sees that he works at a hotel but reads the question as asking about the kind of work the restaurant does.",
+          provenance: "teaching_case",
+          expectedOutcome: "covered",
+          feedbackTitle: "The hotel context does not move this job out of food service.",
+          routeExplanation:
+            "The unusual context (hotel) might invite a \"Hospitality\" reading, but the highlighted choice is about the food-service industry, which this restaurant is part of.",
+          takeaway:
+            "A scope-edge case shows that nearby context does not always change the answer level — the underlying activity still belongs in the highlighted industry."
+        },
+        {
+          id: "industry-school-teacher",
+          role: "negative_control",
+          title: "Public-school teacher",
+          situation:
+            "Anna teaches science at a public high school full-time.",
+          respondentReading:
+            "She reads the question as asking about the broad industry of the workplace and picks \"Education.\"",
+          provenance: "teaching_case",
+          expectedOutcome: "not_covered",
+          feedbackTitle: "Her industry is education, not food-related.",
+          routeExplanation:
+            "Anna's job is plainly in education, so \"Education\" is the right answer. \"Food service\" does not cover her situation at all.",
+          takeaway:
+            "The negative-control case matters: not every nearby job belongs in the highlighted industry, even if the wording is broad."
+        },
+        {
+          id: "industry-nurse-occupation",
+          role: "neighbor_category",
+          title: "Nurse who reads it as occupation",
+          situation:
+            "Priya is a registered nurse at a hospital. When she reads the question, she thinks it is asking what she does for a living, not where she works.",
+          respondentReading:
+            "She mentally reaches for \"nurse\" as the answer and, finding no nurse option, picks \"Health care\" because the question seems to want her job's domain.",
+          provenance: "teaching_case",
+          expectedOutcome: "not_covered",
+          feedbackTitle: "Her industry is health care, not food service.",
+          routeExplanation:
+            "Even after the question-type misread, Priya's actual industry is health care — a neighboring industry to food service. The highlighted choice is the wrong route.",
+          takeaway:
+            "A broad-bucket question can also collect occupation-level answers; here the neighboring-industry tick-box is the better route, not the highlighted one."
+        },
+        {
+          id: "industry-grocery-employer",
+          role: "neighbor_category",
+          title: "Grocery-store worker who reads it as employer name",
+          situation:
+            "Liam works at GreenGrocer Supermarket. When he reads the question, he thinks it is asking for the name of his employer and writes that into a \"Something else\" field, then picks the closest visible option.",
+          respondentReading:
+            "He sees \"Retail\" as the closest match to a grocery store and selects it.",
+          provenance: "teaching_case",
+          expectedOutcome: "not_covered",
+          feedbackTitle: "A grocery store is retail, not food service.",
+          routeExplanation:
+            "Liam's industry is retail (grocery is food retail, not food preparation or service). The highlighted choice is in a neighboring industry; \"Retail\" is the right route for him.",
+          takeaway:
+            "A neighboring-industry case can look food-related but belong somewhere else — broad bucket is not a license to absorb every adjacent job."
+        }
+      ],
+      repairBench: {
+        title: "Try a wording change without widening the target",
+        lede:
+          "The goal is not to make every nearby job fit. The goal is to make the intended food-service route visible while keeping retail, healthcare, occupation, and employer-name answers outside.",
+        options: [
+          {
+            id: "keep-current",
+            label: "Current",
+            revisedChoice: "Food service",
+            explanation:
+              "Short and familiar to some respondents, but the same words can be read as a workplace type (restaurant, café), a job activity (serving food), or the whole industry.",
+            scenarioOutcomes: {
+              "industry-bakery-chef": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Marisol already reads \"Food service\" as the food industry, so the route is clear for her."
+              },
+              "industry-pizza-delivery": {
+                kind: "still_ambiguous",
+                label: "Still ambiguous",
+                rationale:
+                  "Diego can still pick \"Restaurant\" because the wording does not say which level the form wants."
+              },
+              "industry-hotel-restaurant": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Taro picks the broad industry option as written, and the highlighted route still catches him."
+              },
+              "industry-school-teacher": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Anna's job stays in education, and the highlighted choice is not where it should be coded."
+              },
+              "industry-nurse-occupation": {
+                kind: "misread_risk",
+                label: "Misread risk",
+                rationale:
+                  "Priya's occupation-level reading can still send her toward the highlighted choice if the form does not separate industry from job role."
+              },
+              "industry-grocery-employer": {
+                kind: "misread_risk",
+                label: "Misread risk",
+                rationale:
+                  "Liam can still read \"Food service\" as covering a grocery store because food is on the shelves there."
+              }
+            }
+          },
+          {
+            id: "clarify-with-examples",
+            label: "Clarify",
+            revisedChoice:
+              "Food service (e.g., restaurants, cafés, bakeries, catering)",
+            explanation:
+              "This names the intended industry and pins the level with examples, so respondents can see what counts as food service and what does not.",
+            scenarioOutcomes: {
+              "industry-bakery-chef": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "The \"bakery\" example matches Marisol's job directly."
+              },
+              "industry-pizza-delivery": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Diego sees that food-service examples include restaurants, so the broader level is now visibly the right place for his job."
+              },
+              "industry-hotel-restaurant": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Taro's restaurant work is named directly by the examples, even though it sits inside a hotel."
+              },
+              "industry-school-teacher": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Anna's education job stays outside the food-service examples."
+              },
+              "industry-nurse-occupation": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Priya can see that health care is not in the food-service examples and that her industry belongs elsewhere."
+              },
+              "industry-grocery-employer": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Liam can see that food-service examples are about preparing or serving food, not about food retail."
+              }
+            }
+          },
+          {
+            id: "too-broad",
+            label: "Too broad",
+            revisedChoice:
+              "Food service, food retail, hospitality, or related fields",
+            explanation:
+              "This sounds inclusive, but it pulls neighboring industries — grocery, hotels, catering supply — into the same answer choice and erases the level distinction the form was supposed to capture.",
+            scenarioOutcomes: {
+              "industry-bakery-chef": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Marisol's bakery is still in scope, but the answer choice is now much broader than the intended target."
+              },
+              "industry-pizza-delivery": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Diego's pizza delivery is in scope, but the broader choice no longer separates restaurants from related fields."
+              },
+              "industry-hotel-restaurant": {
+                kind: "route_clearer",
+                label: "Route clearer",
+                rationale:
+                  "Taro's job lands here, but \"hospitality\" is now also explicitly inside the answer choice."
+              },
+              "industry-school-teacher": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Education stays outside even this widened choice."
+              },
+              "industry-nurse-occupation": {
+                kind: "still_outside_target",
+                label: "Still outside target",
+                rationale:
+                  "Health care is not absorbed by the wider choice, so Priya's neighboring industry stays separate."
+              },
+              "industry-grocery-employer": {
+                kind: "scope_widened",
+                label: "Scope widened",
+                rationale:
+                  "\"Food retail\" now sits inside the highlighted choice, so Liam's grocery job is pulled in even though the original target was about food service, not retail."
+              }
+            }
+          }
+        ]
+      },
+      transferChallenge: {
+        title: "Sort one fresh case",
+        prompt:
+          "Use the same three judgments on a different industry label in a different domain. Do not name the pattern first; sort the respondent route.",
+        targetLabel: "Highlighted answer choice",
+        targetText: "Software",
+        scenarioTitle: "App developer at a delivery company",
+        situation:
+          "A second city survey asks workers \"What kind of business or industry is this?\" Renata writes the apps that drivers use at a food-delivery company. Asked about her workplace, she hesitates: is the answer \"Software\" (what her team builds), \"Food service\" (what the company sells), or \"Delivery\" (how the work reaches customers)?",
+        respondentReading:
+          "She knows her work is software, but the company's business sounds more like food delivery, and the form has only one tick-box.",
+        expectedOutcome: "ambiguous",
+        feedbackTitle:
+          "Renata's work is in scope, but the wording can pull her to a different level.",
+        routeExplanation:
+          "Renata writes software, so \"Software\" captures one accurate answer. Because the company's business is food delivery, the wording can also send her toward a food-related answer. The broad-bucket pattern is back: same job, multiple visible levels.",
+        takeaway:
+          "Near transfer is the same move as the food-service case: the level the form wants is not stated, so two visible options can both feel right."
+      },
+      sourceAnchor: {
+        title:
+          "Why the real CPS source belongs behind this teaching case",
+        lede:
+          "The city-employment case is invented. The evidence anchor is the Census Bureau cognitive-testing report on the CPS internet self-response IO1IND/IO2IND items, where respondents documented the same level-of-answer problem in their own jobs.",
+        evidence: [
+          {
+            provenance: "reported_quote",
+            label: "A participant named the two levels directly",
+            body:
+              "One participant said: \"It is asking what kind of business or industry is this, which is two different questions. Because the business is a hospital and the industry is health care.\"",
+            citation: {
+              reportTitle: cpsSelfResponseTitle,
+              page: "section 3.4.5, pp. 69-70",
+              permalink: cpsSelfResponseUrl
+            }
+          },
+          {
+            provenance: "reported_finding",
+            label: "Biomedical researcher juggled several levels",
+            body:
+              "A biomedical-research worker considered \"state government work,\" \"university work,\" \"hospital work,\" \"research,\" \"biomedical research,\" and \"medical development\" before deciding what to enter.",
+            citation: {
+              reportTitle: cpsSelfResponseTitle,
+              page: "section 3.4.5, pp. 69-70",
+              permalink: cpsSelfResponseUrl
+            }
+          },
+          {
+            provenance: "reported_finding",
+            label: "Round 1 recommendation was examples, not relabeling",
+            body:
+              "CBSM recommended adding examples to the question so respondents could see the level of detail expected. Round 2 added examples such as \"elementary school, residential construction, medical hospital, HVAC service and installation, motor vehicle manufacturing, computer software development.\"",
+            citation: {
+              reportTitle: cpsSelfResponseTitle,
+              page: "section 3.4.5, pp. 73-74",
+              permalink: cpsSelfResponseUrl
+            }
+          },
+          {
+            provenance: "source_grounded_stress_case",
+            label: "Why the occupation-misread and employer-name cases are constructed",
+            body:
+              "The nurse-as-occupation and grocery-as-employer-name scenarios in the deck are constructed teaching cases. They are based on the report's documented level-confusion patterns (e.g., one participant entered a task or workplace name when the form expected an industry), not on specific CPS respondents.",
+            citation: {
+              reportTitle: cpsSelfResponseTitle,
+              page: "section 3.4.5, pp. 69-76",
+              permalink: cpsSelfResponseUrl
+            }
+          }
+        ],
+        limitations: [
+          "The city-employment survey is synthetic and was not tested by the Census Bureau.",
+          "The repair bench is a teaching model, not validated replacement wording.",
+          "The synthetic answer-choice list (Education, Retail, Restaurant, Food service, Health care, Something else) does not match the real CPS write-in format; it is a teaching device to make the level pattern visible."
+        ]
+      }
+    },
     predictionCopy: predictionCopy(
       [
         "Right answer level visible",
         "The field gives this respondent a clear kind-of-business or industry answer."
       ],
       [
-        "Answer level floats",
+        "Answer level shifts",
         "The field lets more than one level of workplace description look responsive."
       ],
       [
@@ -1248,11 +1618,12 @@ const authoredWorkbenchSpecimens: Array<
     id: "refrigerated-medicine",
     number: "03",
     railLabel: "Medicine",
+    fieldGuideLinkLabel: "Refrigerated medicine yes/no",
     pattern: "false_premise",
     patternLabel: "False premise",
     canonicalSubtitle: canonicalSubtitleByPattern.false_premise,
     canonicalCitations: canonicalCitationByPattern.false_premise,
-    title: "When No hides no medicine",
+    title: "When \"No\" can mean \"no refrigerated medicine\"",
     subtitle: "A yes/no item can assume the household has the thing it asks about.",
     testedWording: "Did any refrigerated medicine spoil?",
     answerFrame: {
@@ -1285,8 +1656,8 @@ const authoredWorkbenchSpecimens: Array<
         "The answer choices clearly separate spoilage, no spoilage, or no refrigerated medicine."
       ],
       [
-        "No can hide no medicine",
-        "A No answer could mean no spoilage or that the household had no refrigerated medicine."
+        "\"No\" can hide \"no medicine\"",
+        "A \"No\" answer could mean no spoilage or that the household had no refrigerated medicine."
       ],
       [
         "Outside outage item",
@@ -1296,35 +1667,35 @@ const authoredWorkbenchSpecimens: Array<
     vignettes: [
       {
         id: "medicine-no-medicine-no",
-        text: "Upon probing, two respondents said they answered No because they did not have refrigerated medicine.",
+        text: "Upon probing, two respondents said they answered \"No\" because they did not have refrigerated medicine.",
         provenance: "direct_quote",
         citation: {
           reportTitle: ahs2023Title,
-          page: "section 4.5.4, pp. 58-59",
+          page: "section 4.5.4 OUTMED, pp. 54-55",
           permalink: ahs2023Url
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "No is a true answer form, but here it mixes no spoilage with no refrigerated medicine.",
+          "\"No\" is a true answer form, but here it mixes no spoilage with no refrigerated medicine.",
         probeRationale: {
           covered:
-            "A screener or follow-up separates no refrigerated medicine from a substantive No.",
+            "A screener or follow-up separates no refrigerated medicine from a substantive \"No\".",
           notCovered:
-            "The current answer choices still let a household without refrigerated medicine disappear inside No."
+            "The current answer choices still let a household without refrigerated medicine disappear inside \"No\"."
         }
       },
       {
         id: "medicine-volunteers-no-med",
-        text: "A respondent notices the No refrigerated medicine option and uses it directly.",
+        text: "A respondent notices the \"No refrigerated medicine\" option and uses it directly.",
         provenance: "editorial",
         attributionNote:
-          "Based on the AHS 2023 OUTMED recommendation to keep the No refrigerated medicine option for respondents who volunteer that information.",
+          "Based on the AHS 2023 OUTMED recommendation to keep the \"No refrigerated medicine\" option for respondents who volunteer that information.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "This respondent uses the explicit inapplicable option, so No does not have to carry that meaning.",
+          "This respondent uses the explicit inapplicable option, so \"No\" does not have to carry that meaning.",
         probeRationale: {
           covered:
-            "A visible not-applicable option keeps this respondent out of the No answer.",
+            "A visible not-applicable option keeps this respondent out of the \"No\" answer.",
           notCovered:
             "Without a visible not-applicable option, this respondent may still need to improvise."
         }
@@ -1337,12 +1708,12 @@ const authoredWorkbenchSpecimens: Array<
           "Based on the AHS 2023 OUTMED target: spoilage of refrigerated medicine during an outage.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "The household is in scope and the event occurred; the correct answer is Yes, not the highlighted No.",
+          "The household is in scope and the event occurred; the correct answer is \"Yes\", not the highlighted \"No\".",
         probeRationale: {
           covered:
-            "The edit preserves a clear Yes answer for in-scope spoilage.",
+            "The edit preserves a clear \"Yes\" answer for in-scope spoilage.",
           notCovered:
-            "This case should stay outside No because the medicine did spoil."
+            "This case should stay outside \"No\" because the medicine did spoil."
         }
       },
       {
@@ -1350,15 +1721,15 @@ const authoredWorkbenchSpecimens: Array<
         text: "A respondent had refrigerated medicine, kept it cold, and no medicine spoiled.",
         provenance: "editorial",
         attributionNote:
-          "Based on the AHS 2023 OUTMED distinction between substantive No and no refrigerated medicine.",
+          "Based on the AHS 2023 OUTMED distinction between substantive \"No\" and no refrigerated medicine.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "This is the substantive No the item is trying to measure: medicine existed, but did not spoil.",
+          "This is the substantive \"No\" the item is trying to measure: medicine existed, but did not spoil.",
         probeRationale: {
           covered:
-            "The edit leaves a clear No answer for in-scope households with no spoilage.",
+            "The edit leaves a clear \"No\" answer for in-scope households with no spoilage.",
           notCovered:
-            "The No answer remains hard to interpret if it is not separated from no-medicine households."
+            "The \"No\" answer remains hard to interpret if it is not separated from no-medicine households."
         }
       },
       {
@@ -1384,7 +1755,7 @@ const authoredWorkbenchSpecimens: Array<
       choices: [
         {
           id: "missing-applicability",
-          text: "The No answer competed with a weakly visible not-applicable option.",
+          text: "The \"No\" answer competed with a weakly visible not-applicable option.",
           isCorrect: true,
           explanation:
             "No refrigerated medicine was available, but two respondents still answered No; the report recommended a follow-up after No."
@@ -1420,23 +1791,23 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Survey wording",
         title: "Did any refrigerated medicine spoil?",
         detail:
-          "The answer choices include No refrigerated medicine, but the yes/no wording still makes No feel available."
+          "The answer choices include \"No refrigerated medicine,\" but the yes/no wording still makes \"No\" feel available."
       },
       {
         id: "medicine-break",
         kind: "route_break",
         eyebrow: "Where the answer choice stops fitting",
-        title: "No response or missed inapplicable option?",
+        title: "Picked \"No\" or missed the inapplicable option?",
         detail:
-          "The respondent may choose No as the closest answer instead of noticing or using the not-applicable option."
+          "The respondent may choose \"No\" as the closest answer instead of noticing or using the not-applicable option."
       },
       {
         id: "medicine-consequence",
         kind: "data_consequence",
         eyebrow: "What the recorded answer can hide",
-        title: "No loses its denominator",
+        title: "\"No\" loses its denominator",
         detail:
-          "Without a follow-up, analysts cannot tell whether No means in-scope no spoilage or out-of-scope no refrigerated medicine."
+          "Without a follow-up, analysts cannot tell whether \"No\" means in-scope no spoilage or out-of-scope no refrigerated medicine."
       }
     ],
     neighborContrast: {
@@ -1491,16 +1862,16 @@ const authoredWorkbenchSpecimens: Array<
         }
       ]
     },
-    probePrompt: "Explore how a direct option and follow-up change No.",
+    probePrompt: "Explore how a direct option and follow-up change \"No\".",
     reveal: {
       addresses: {
         revisionDescription:
-          "The report recommended adding outage and timeframe wording, keeping the No refrigerated medicine option, and adding a follow-up after No.",
-        sourcePageRef: "AHS 2023 section 4.5.4 OUTMED, pp. 58-59"
+          "The report recommended adding outage and timeframe wording, keeping the \"No refrigerated medicine\" option, and adding a follow-up after \"No\".",
+        sourcePageRef: "AHS 2023 section 4.5.4 OUTMED, pp. 54-55"
       },
       remainsUntested: {
         residualRisks: [
-          "A follow-up after No can increase burden for respondents whose refrigerated medicine clearly did not spoil."
+          "A follow-up after \"No\" can increase burden for respondents whose refrigerated medicine clearly did not spoil."
         ],
         claimBoundaryNote
       }
@@ -1516,7 +1887,7 @@ const authoredWorkbenchSpecimens: Array<
         wording: "Did your building elevator stop working during the outage?",
         pattern: "false_premise",
         featureChoices: [
-          "A yes/no item lets No absorb homes where the equipment does not exist",
+          "A yes/no item lets \"No\" absorb homes where the equipment does not exist",
           "Two adjacent categories share a boundary",
           "A prior question licenses multiple answers"
         ],
@@ -1549,7 +1920,7 @@ const authoredWorkbenchSpecimens: Array<
       ahs2023Title,
       "cognitive_testing",
       "2022",
-      "section 4.5.4 OUTMED, pp. 58-59",
+      "section 4.5.4 OUTMED, pp. 54-55",
       ahs2023Url
     )
   },
@@ -1557,6 +1928,7 @@ const authoredWorkbenchSpecimens: Array<
     id: "electric-vehicle-type",
     number: "04",
     railLabel: "EV type",
+    fieldGuideLinkLabel: "Electric-vehicle type rule",
     pattern: "category_boundary_blur",
     patternLabel: "Category boundary blur",
     canonicalSubtitle: canonicalSubtitleByPattern.category_boundary_blur,
@@ -1609,7 +1981,7 @@ const authoredWorkbenchSpecimens: Array<
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound12Title,
-          page: "pp. 272-273",
+          page: "pp. 113-114",
           permalink: acsRound12Url
         },
         expectedOutcome: "ambiguous",
@@ -1628,7 +2000,7 @@ const authoredWorkbenchSpecimens: Array<
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound12Title,
-          page: "pp. 272-273",
+          page: "pp. 113-114",
           permalink: acsRound12Url
         },
         expectedOutcome: "ambiguous",
@@ -1647,7 +2019,7 @@ const authoredWorkbenchSpecimens: Array<
         provenance: "direct_quote",
         citation: {
           reportTitle: acsRound12Title,
-          page: "pp. 272-273",
+          page: "pp. 273-274",
           permalink: acsRound12Url
         },
         expectedOutcome: "ambiguous",
@@ -1897,6 +2269,7 @@ const authoredWorkbenchSpecimens: Array<
     id: "owner-advertising",
     number: "05",
     railLabel: "Owner ad",
+    fieldGuideLinkLabel: "Owner-advertising sequence",
     pattern: "sequence_overlap",
     patternLabel: "Sequence overlap",
     canonicalSubtitle: canonicalSubtitleByPattern.sequence_overlap,
@@ -1955,7 +2328,7 @@ const authoredWorkbenchSpecimens: Array<
         provenance: "direct_quote",
         citation: {
           reportTitle: ahs2025Title,
-          page: "section 4.8.7 RMOVHS, pp. 98-99",
+          page: "section 4.8.7 RMOVHS, pp. 99-100",
           permalink: ahs2025Url
         },
         expectedOutcome: "ambiguous",
@@ -1963,18 +2336,18 @@ const authoredWorkbenchSpecimens: Array<
           "Zillow is one of the sites named in the prior internet-site question, so the same listing fits both items. The respondent objects because the highlighted item reads as the prior answer counted again rather than as a separate source.",
         probeRationale: {
           covered:
-            "Putting an all-that-helped instruction first makes multiple Yes answers permissible before the sequence begins.",
+            "Putting an all-that-helped instruction first makes multiple \"Yes\" answers permissible before the sequence begins.",
           notCovered:
             "The sequence still asks the respondent to decide whether the same listing is being counted twice."
         }
       },
       {
         id: "owner-zillow-changed",
-        text: "A participant changed No to Yes because the owner had posted the house on Zillow.",
+        text: "A participant changed \"No\" to \"Yes\" because the owner had posted the house on Zillow.",
         provenance: "direct_quote",
         citation: {
           reportTitle: ahs2025Title,
-          page: "section 4.8.7 RMOVHS, pp. 98-99",
+          page: "section 4.8.7 RMOVHS, pp. 99-100",
           permalink: ahs2025Url
         },
         expectedOutcome: "ambiguous",
@@ -2084,9 +2457,9 @@ const authoredWorkbenchSpecimens: Array<
         id: "owner-break",
         kind: "route_break",
         eyebrow: "Where the answer choice stops fitting",
-        title: "Does this count again?",
+        title: "Does the same online listing count again?",
         detail:
-          "The respondent has to decide whether the owner-authored internet listing should be counted again or treated as already reported."
+          "The respondent has to decide whether the owner-authored online listing should be reported again or treated as already counted."
       },
       {
         id: "owner-consequence",
@@ -2201,8 +2574,8 @@ const authoredWorkbenchSpecimens: Array<
     reveal: {
       addresses: {
         revisionDescription:
-          "CBSM recommended an introductory sentence explaining that respondents may answer Yes to every option that helped them find the home.",
-        sourcePageRef: "AHS 2025 section 4.8.7 RMOVHS, pp. 98-99"
+          "CBSM recommended an introductory sentence explaining that respondents may answer \"Yes\" to every option that helped them find the home.",
+        sourcePageRef: "AHS 2025 section 4.8.7 RMOVHS, pp. 99-100"
       },
       remainsUntested: {
         residualRisks: [
@@ -2216,19 +2589,19 @@ const authoredWorkbenchSpecimens: Array<
         id: "owner-near-disaster",
         kind: "near_transfer",
         context:
-          "A moving-reason module asks a series of yes/no items, each naming a different reason for the move. By the time the respondent reaches this item, they have already said Yes to a main motive but are also weighing a secondary disaster motive.",
+          "A moving-reason module asks a series of yes/no items, each naming a different reason for the move. By the time the respondent reaches this item, they have already said \"Yes\" to a main motive but are also weighing a secondary disaster motive.",
         questionPrompt:
-          "Which part of the wording shapes how this Yes is read in the sequence?",
+          "Which part of the wording shapes how this \"Yes\" is read in the sequence?",
         wording: "Did you move to avoid natural disasters?",
         pattern: "sequence_overlap",
         featureChoices: [
-          "An earlier yes/no reason item makes this Yes feel like a main reason rather than any influence",
+          "An earlier yes/no reason item makes this \"Yes\" feel like a main reason rather than any influence",
           "The phrase \"natural disasters\" can be read as several different events",
           "The item assumes the respondent has already decided what counts as a reason for the move"
         ],
         correctFeatureIndex: 0,
         explanation:
-          "Same pattern as Example 5: an earlier item in the sequence changes how the next answer is read. In Example 5 the same source feels counted twice; here, an earlier Yes makes the next Yes feel like a main-reason claim instead of any influence."
+          "Same pattern as Example 5: an earlier item in the sequence changes how the next answer is read. In Example 5 the same source feels counted twice; here, an earlier \"Yes\" makes the next \"Yes\" feel like a main-reason claim instead of any influence."
       },
       {
         id: "owner-distractor-business-level",
@@ -2255,7 +2628,7 @@ const authoredWorkbenchSpecimens: Array<
       ahs2025Title,
       "cognitive_testing",
       "2024",
-      "section 4.8.7 RMOVHS, pp. 98-99",
+      "section 4.8.7 RMOVHS, pp. 99-100",
       ahs2025Url
     )
   },
@@ -2263,12 +2636,13 @@ const authoredWorkbenchSpecimens: Array<
     id: "usual-hours",
     number: "06",
     railLabel: "Usual hours",
+    fieldGuideLinkLabel: "Usual-hours count",
     pattern: "forced_precision",
     patternLabel: "Forced precision",
     canonicalSubtitle: canonicalSubtitleByPattern.forced_precision,
     canonicalCitations: canonicalCitationByPattern.forced_precision,
-    title: "When usual hours demand one number",
-    subtitle: "Variable weeks have to become a single usual-hours answer, so the respondent picks an unstated rule for combining them.",
+    title: "When the \"usual hours\" item turns a varying schedule into one number",
+    subtitle: "Weeks where hours vary have to become a single \"usual hours\" answer, so the respondent picks an unstated rule for combining them.",
     testedWording: "How many hours per week do you USUALLY work at your <MAIN> job?",
     answerFrame: {
       eyebrow: "CPS usual-hours item",
@@ -2313,7 +2687,7 @@ const authoredWorkbenchSpecimens: Array<
         provenance: "direct_quote",
         citation: {
           reportTitle: cpsSelfResponseTitle,
-          page: "section 3.4.2, pp. 49-54",
+          page: "section 3.4.2, pp. 50-56",
           permalink: cpsSelfResponseUrl
         },
         expectedOutcome: "ambiguous",
@@ -2332,7 +2706,7 @@ const authoredWorkbenchSpecimens: Array<
         provenance: "direct_quote",
         citation: {
           reportTitle: cpsSelfResponseTitle,
-          page: "section 3.4.2, pp. 49-54",
+          page: "section 3.4.2, pp. 50-56",
           permalink: cpsSelfResponseUrl
         },
         expectedOutcome: "ambiguous",
@@ -2351,7 +2725,7 @@ const authoredWorkbenchSpecimens: Array<
         provenance: "direct_quote",
         citation: {
           reportTitle: cpsSelfResponseTitle,
-          page: "section 3.4.2, pp. 49-54",
+          page: "section 3.4.2, pp. 50-56",
           permalink: cpsSelfResponseUrl
         },
         expectedOutcome: "ambiguous",
@@ -2445,9 +2819,9 @@ const authoredWorkbenchSpecimens: Array<
         id: "hours-break",
         kind: "route_break",
         eyebrow: "Where the answer choice stops fitting",
-        title: "Average, mode, or recent pattern?",
+        title: "Average, most-common week, or current schedule?",
         detail:
-          "The respondent has to choose whether usual means average, most common schedule, current schedule, or most of the reference period."
+          "The respondent has to choose whether \"usual\" means the average week, the most common week, the current schedule, or most of the reference period."
       },
       {
         id: "hours-consequence",
@@ -2513,7 +2887,7 @@ const authoredWorkbenchSpecimens: Array<
       addresses: {
         revisionDescription:
           "The Round 2 form removed the instruction to consider the last four months and simplified the usual-hours item.",
-        sourcePageRef: "CPS internet self-response section 3.4.2, pp. 49-54"
+        sourcePageRef: "CPS internet self-response section 3.4.2, pp. 50-56"
       },
       remainsUntested: {
         residualRisks: [
@@ -2566,7 +2940,7 @@ const authoredWorkbenchSpecimens: Array<
       cpsSelfResponseTitle,
       "cognitive_testing",
       "2025",
-      "section 3.4.2, pp. 49-54",
+      "section 3.4.2, pp. 50-56",
       cpsSelfResponseUrl
     )
   },
@@ -2574,11 +2948,12 @@ const authoredWorkbenchSpecimens: Array<
     id: "notebook-computer",
     number: "07",
     railLabel: "Notebook",
+    fieldGuideLinkLabel: "Laptop-or-notebook label",
     pattern: "label_ambiguity",
     patternLabel: "Label ambiguity",
     canonicalSubtitle: canonicalSubtitleByPattern.label_ambiguity,
     canonicalCitations: canonicalCitationByPattern.label_ambiguity,
-    title: "When notebook stops meaning laptop",
+    title: "When \"notebook\" stops meaning laptop",
     subtitle: "The respondent may own the device, but the label sends them to another product family.",
     testedWording:
       "What about a laptop or notebook? [Do you/Does anyone in this household] use a laptop or notebook computer?",
@@ -2605,7 +2980,7 @@ const authoredWorkbenchSpecimens: Array<
     intendedConstruct:
       "Use of a portable personal computer with a built-in keyboard and screen.",
     sampleRespondent:
-      "A respondent who owns a portable computer hears notebook as another device family. The answer goes wrong before the yes/no option matters.",
+      "A respondent who owns a portable computer hears \"notebook\" as another device family. The answer goes wrong before the yes/no option matters.",
     prerequisiteVocab: prerequisiteVocabByPattern.label_ambiguity,
     predictionCopy: predictionCopy(
       [
@@ -2613,8 +2988,8 @@ const authoredWorkbenchSpecimens: Array<
         "The highlighted label clearly points to the intended portable-computer category."
       ],
       [
-        "Notebook meaning shifts",
-        "Notebook can send the respondent toward a non-laptop or borderline device meaning."
+        "\"Notebook\" meaning shifts",
+        "\"Notebook\" can send the respondent toward a non-laptop or borderline device meaning."
       ],
       [
         "Not a laptop computer",
@@ -2624,7 +2999,7 @@ const authoredWorkbenchSpecimens: Array<
     vignettes: [
       {
         id: "notebook-lower-function",
-        text: 'A respondent defined notebook as "a computer with lower functionality."',
+        text: "A respondent defined \"notebook\" as \"a computer with lower functionality.\"",
         provenance: "direct_quote",
         citation: {
           reportTitle: ntia2021Title,
@@ -2643,7 +3018,7 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "notebook-chromebook",
-        text: 'A respondent mapped notebook to something "like a Chromebook."',
+        text: "A respondent mapped \"notebook\" to something \"like a Chromebook.\"",
         provenance: "direct_quote",
         citation: {
           reportTitle: ntia2021Title,
@@ -2662,7 +3037,7 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "notebook-tablet",
-        text: 'A respondent said notebook was "like a tablet."',
+        text: "A respondent said \"notebook\" was \"like a tablet.\"",
         provenance: "direct_quote",
         citation: {
           reportTitle: ntia2021Title,
@@ -2681,7 +3056,7 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "notebook-plain-laptop",
-        text: "A respondent with a conventional laptop recognizes laptop when notebook is not foregrounded.",
+        text: "A respondent with a conventional laptop recognizes \"laptop\" when \"notebook\" is not foregrounded.",
         provenance: "editorial",
         attributionNote:
           "Based on the Round 2 finding that deleting notebook removed confusion.",
@@ -2697,7 +3072,7 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "notebook-tablet-only",
-        text: "A household has only a tablet, and the respondent says Yes because notebook sounds tablet-like.",
+        text: "A household has only a tablet, and the respondent says \"Yes\" because \"notebook\" sounds tablet-like.",
         provenance: "editorial",
         attributionNote:
           "Based on the NTIA finding that some respondents mapped notebook to tablet-like devices.",
@@ -2718,10 +3093,10 @@ const authoredWorkbenchSpecimens: Array<
       choices: [
         {
           id: "notebook-label",
-          text: "The notebook label had several plausible everyday device meanings.",
+          text: "The \"notebook\" label had several plausible everyday device meanings.",
           isCorrect: true,
           explanation:
-            "Notebook sent respondents toward lower-function, Chromebook-like, or tablet-like device meanings before the yes/no answer was chosen."
+            "\"Notebook\" sent respondents toward lower-function, Chromebook-like, or tablet-like device meanings before the yes/no answer was chosen."
         },
         {
           id: "notebook-no-equipment",
@@ -2753,15 +3128,15 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Survey wording",
         title: "Laptop or notebook",
         detail:
-          "The item treats notebook as another name for laptop, while some respondents treat it as a different product family."
+          "The item treats \"notebook\" as another name for laptop, while some respondents treat it as a different product family."
       },
       {
         id: "notebook-break",
         kind: "route_break",
         eyebrow: "Where the answer choice stops fitting",
-        title: "Notebook points elsewhere",
+        title: "\"Notebook\" points elsewhere",
         detail:
-          "The respondent has to decide whether notebook means a laptop, a smaller computer, a Chromebook-like device, or a tablet-like device."
+          "The respondent has to decide whether \"notebook\" means a laptop, a smaller computer, a Chromebook-like device, or a tablet-like device."
       },
       {
         id: "notebook-consequence",
@@ -2776,7 +3151,7 @@ const authoredWorkbenchSpecimens: Array<
       pattern: "category_boundary_blur",
       neighborSpecimenId: "electric-vehicle-type",
       contrastText:
-        "This example is label ambiguity because notebook itself redirects the respondent before classification begins. The category-boundary neighbor is different: neighboring classes overlap even when the labels are understood."
+        "This example is label ambiguity because \"notebook\" itself redirects the respondent before classification begins. The category-boundary neighbor is different: neighboring classes overlap even when the labels are understood."
     },
     widget: {
       kind: "example_set_editor",
@@ -2815,7 +3190,7 @@ const authoredWorkbenchSpecimens: Array<
         }
       ]
     },
-    probePrompt: "Explore whether removing or replacing notebook narrows the label.",
+    probePrompt: "Explore whether removing or replacing \"notebook\" narrows the label.",
     reveal: {
       addresses: {
         revisionDescription:
@@ -2863,13 +3238,13 @@ const authoredWorkbenchSpecimens: Array<
         wording: "A smart TV, streaming box, or another device that plays through a TV",
         pattern: "category_boundary_blur",
         featureChoices: [
-          "A single word is misunderstood on entry",
+          "A single device word redirects the respondent before classification",
           "Neighboring device categories share features",
-          "A missing not-applicable answer absorbs No"
+          "A missing not-applicable answer absorbs \"No\""
         ],
         correctFeatureIndex: 1,
         explanation:
-          "Close, but this is category boundary blur: the device classes share functions even when the words are understood. Notebook is label ambiguity because one term redirects the respondent."
+          "Close, but this is category boundary blur: the device classes share functions even when the words are understood. \"Notebook\" is label ambiguity because one term redirects the respondent."
       }
     ],
     source: sourceReceipt(
@@ -2894,12 +3269,13 @@ const authoredWorkbenchSpecimens: Array<
     id: "ons-kashmiri",
     number: "08",
     railLabel: "Kashmiri",
+    fieldGuideLinkLabel: "Kashmiri write-in vs tick-box",
     pattern: "broad_bucket",
     patternLabel: "Broad bucket",
     canonicalSubtitle: canonicalSubtitleByPattern.broad_bucket,
     canonicalCitations: canonicalCitationByPattern.broad_bucket,
-    title: "When write-in recovery is not the same as a visible route",
-    subtitle: "A close-enough category and a write-in option do not behave like a visible box.",
+    title: "When a write-in option doesn't replace a visible answer choice",
+    subtitle: "A close-enough category and an \"Other, please specify\" write-in do not behave like a listed answer.",
     testedWording:
       "What is your ethnic group? Asian / Asian British ... Pakistani ... Kashmiri ... Any other Asian background, write in.",
     answerFrame: {
@@ -3044,7 +3420,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "kashmiri-word",
-          text: "The word Kashmiri itself had several everyday meanings.",
+          text: "The word \"Kashmiri\" itself had several everyday meanings.",
           isCorrect: false,
           explanation: "The form made the specific answer harder than broad boxes."
         },
@@ -3176,7 +3552,7 @@ const authoredWorkbenchSpecimens: Array<
         pattern: "category_boundary_blur",
         featureChoices: [
           "A visible broad category hides a subgroup",
-          "Adjacent section labels make several homes partly right",
+          "Adjacent section labels make several visible sections look partly right",
           "An exact number is required from a variable history"
         ],
         correctFeatureIndex: 1,
@@ -3198,12 +3574,13 @@ const authoredWorkbenchSpecimens: Array<
     id: "sump-pump",
     number: "09",
     railLabel: "Sump pump",
+    fieldGuideLinkLabel: "Sump-pump applicability",
     pattern: "false_premise",
     patternLabel: "False premise",
     canonicalSubtitle: canonicalSubtitleByPattern.false_premise,
     canonicalCitations: canonicalCitationByPattern.false_premise,
     title: "When flooding assumes the equipment exists",
-    subtitle: "No can mean no flooding, no pump, or no pump failure unless the answer choices separate them.",
+    subtitle: "\"No\" can mean no flooding, no pump, or no pump failure unless the answer choices separate them.",
     testedWording:
       "In the last 12 months/since you've lived here, did water collect in your basement or crawl space because your sump pump stopped working properly?",
     answerFrame: {
@@ -3238,8 +3615,8 @@ const authoredWorkbenchSpecimens: Array<
         "The answer choices separate in-scope pump-failure flooding from other states."
       ],
       [
-        "No can hide no pump",
-        "A No answer could mean no sump pump, no pump failure, or no water collection."
+        "\"No\" can hide \"no pump\"",
+        "A \"No\" answer could mean no sump pump, no pump failure, or no water collection."
       ],
       [
         "Outside pump-failure cause",
@@ -3249,34 +3626,34 @@ const authoredWorkbenchSpecimens: Array<
     vignettes: [
       {
         id: "sump-no-pump-no",
-        text: "A respondent with no sump pump answers No because the assumed equipment is absent.",
+        text: "A respondent with no sump pump answers \"No\" because the assumed equipment is absent.",
         provenance: "editorial",
         attributionNote:
-          "Source-grounded authored route based on the OUTFLOOD no-sump-pump disambiguator and proposed follow-up after No.",
+          "Authored teaching route based on the OUTFLOOD no-sump-pump disambiguator and proposed follow-up after \"No\".",
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "No could mean no pump, no failure, or no water, so the answer is not analytically clean.",
+          "\"No\" could mean no pump, no failure, or no water, so the answer is not analytically clean.",
         probeRationale: {
           covered:
-            "A No sump pump choice or follow-up keeps this respondent from being coded as a substantive No.",
+            "A \"No sump pump\" choice or follow-up keeps this respondent from being coded as a substantive \"No\".",
           notCovered:
-            "The edit still lets no equipment hide inside No."
+            "The edit still lets no equipment hide inside \"No\"."
         }
       },
       {
         id: "sump-has-pump-no-failure",
-        text: "A respondent has a sump pump, but it did not fail and no water collected, so they answer No.",
+        text: "A respondent has a sump pump, but it did not fail and no water collected, so they answer \"No\".",
         provenance: "editorial",
         attributionNote:
           "Based on the OUTFLOOD follow-up distinction between no sump pump and sump pump did not stop working properly.",
         expectedOutcome: "covered",
         outcomeRationale:
-          "This is the substantive No route: the household has the equipment, but the target pump-failure event did not occur.",
+          "This is the substantive \"No\" route: the household has the equipment, but the target pump-failure event did not occur.",
         probeRationale: {
           covered:
-            "The follow-up or screener keeps this substantive No separate from households with no sump pump.",
+            "The follow-up or screener keeps this substantive \"No\" separate from households with no sump pump.",
           notCovered:
-            "The edit should preserve a clear No for households with a sump pump and no pump-failure flooding."
+            "The edit should preserve a clear \"No\" for households with a sump pump and no pump-failure flooding."
         }
       },
       {
@@ -3290,7 +3667,7 @@ const authoredWorkbenchSpecimens: Array<
           "The respondent has the equipment, the failure occurred, and water collected for the intended reason.",
         probeRationale: {
           covered:
-            "The edit preserves a clear Yes answer for in-scope pump-failure flooding.",
+            "The edit preserves a clear \"Yes\" answer for in-scope pump-failure flooding.",
           notCovered:
             "The edit should not block the core failure event from being reported."
         }
@@ -3359,9 +3736,9 @@ const authoredWorkbenchSpecimens: Array<
         id: "sump-break",
         kind: "route_break",
         eyebrow: "Where the answer choice stops fitting",
-        title: "No event or no equipment?",
+        title: "\"No\" event or \"No\" equipment?",
         detail:
-          "The respondent has to decide whether No is the closest escape from the equipment premise or a substantive no-flooding answer."
+          "The respondent has to decide whether \"No\" is the closest escape from the equipment premise or a substantive no-flooding answer."
       },
       {
         id: "sump-consequence",
@@ -3369,7 +3746,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "What the recorded answer can hide",
         title: "The denominator remains unclear",
         detail:
-          "Without a follow-up, analysts may not know which No households had equipment at risk and which were never in scope."
+          "Without a follow-up, analysts may not know which \"No\" households had equipment at risk and which were never in scope."
       }
     ],
     neighborContrast: {
@@ -3380,7 +3757,7 @@ const authoredWorkbenchSpecimens: Array<
     },
     widget: {
       kind: "filter_path_toggle",
-      displayLabel: "Applicability path after No",
+      displayLabel: "Applicability path after \"No\"",
       initialState: { hasScreener: false, hasNotApplicable: true },
       diagnostic: {
         "sump-no-pump-no": {
@@ -3423,23 +3800,23 @@ const authoredWorkbenchSpecimens: Array<
         }
       ]
     },
-    probePrompt: "Explore how a screener or not-applicable option changes No.",
+    probePrompt: "Explore how a screener or not-applicable option changes \"No\".",
     reveal: {
       addresses: {
         revisionDescription:
-          "The outage-and-timeframe wording was adopted, but the no-sump-pump follow-up was not. The source directly documents a no-sump respondent who found the help text very helpful; the plain-No route here is an authored teaching scenario from the proposed follow-up.",
+          "The outage-and-timeframe wording was adopted, but the no-sump-pump follow-up was not. The source directly documents a no-sump respondent who found the help text very helpful; the plain-\"No\" route here is an authored teaching scenario from the proposed follow-up.",
         sourcePageRef: "AHS 2023 section 4.5.8 OUTFLOOD, pp. 57-59"
       },
       remainsUntested: {
         residualRisks: [
-          "The final wording can still collapse no equipment and no failure event inside No."
+          "The final wording can still collapse no equipment and no failure event inside \"No\"."
         ],
         claimBoundaryNote
       },
       pairBridge: {
         eyebrow: "Pair bridge",
         text:
-          "Same family, different trapdoor: medicine shows a missed not-applicable route that already existed; sump pump stacks equipment, failure, outage, and water before No can be interpreted."
+          "Same family, different trapdoor: medicine shows a missed not-applicable route that already existed; sump pump stacks equipment, failure, outage, and water before \"No\" can be interpreted."
       }
     },
     microCases: [
@@ -3504,12 +3881,13 @@ const authoredWorkbenchSpecimens: Array<
     id: "ons-ethnic-group-heading",
     number: "10",
     railLabel: "Heading",
+    fieldGuideLinkLabel: "Ethnic-group section heading",
     pattern: "category_boundary_blur",
     patternLabel: "Category boundary blur",
     canonicalSubtitle: canonicalSubtitleByPattern.category_boundary_blur,
     canonicalCitations: canonicalCitationByPattern.category_boundary_blur,
     title: "When a heading scrambles the category boundary",
-    subtitle: "The section label sends respondents searching by different cues.",
+    subtitle: "The section heading sends respondents searching by different cues.",
     testedWording: "African/Caribbean/Black/Black British",
     answerFrame: {
       eyebrow: "ONS ethnic-group heading test",
@@ -3613,10 +3991,10 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "heading-multiple-ticks",
-        text: "A respondent searches for a 'Black' cue, ticks the wrong section first, then adds a second mark when they find the right one.",
+        text: "A respondent searches for a \"Black\" cue, ticks the wrong section first, then adds a second mark when they find the right one.",
         provenance: "editorial",
         attributionNote:
-          "Based on the ONS finding that respondents missed the embedded 'Black' label, ticked the wrong section first, and corrected with a second mark.",
+          "Based on the ONS finding that respondents missed the embedded \"Black\" label, ticked the wrong section first, and corrected with a second mark.",
         expectedOutcome: "ambiguous",
         outcomeRationale:
           "Multiple marks show that the heading did not give the respondent a stable first section choice.",
@@ -3690,9 +4068,9 @@ const authoredWorkbenchSpecimens: Array<
         id: "heading-break",
         kind: "route_break",
         eyebrow: "Where the answer choice stops fitting",
-        title: "Which cue controls the section?",
+        title: "Which word tells the respondent where to go?",
         detail:
-          "The respondent has to decide whether colour, geography, or the combined phrase should control the section choice."
+          "The respondent has to decide whether colour, geography, or the combined heading tells them which section to use."
       },
       {
         id: "heading-consequence",
@@ -3828,12 +4206,13 @@ const authoredWorkbenchSpecimens: Array<
     id: "avoid-natural-disasters",
     number: "11",
     railLabel: "Disasters",
+    fieldGuideLinkLabel: "Disaster-avoidance reason series",
     pattern: "sequence_overlap",
     patternLabel: "Sequence overlap",
     canonicalSubtitle: canonicalSubtitleByPattern.sequence_overlap,
     canonicalCitations: canonicalCitationByPattern.sequence_overlap,
-    title: "When a reason series implies one primary reason",
-    subtitle: "Each item may be clear alone, but the sequence can make Yes feel too strong.",
+    title: "When a list of yes/no reasons makes \"Yes\" feel like the main one",
+    subtitle: "Each item may be clear alone, but the sequence can make \"Yes\" sound stronger than the respondent meant.",
     testedWording:
       "Did you move to avoid natural disasters, such as wildfires, earthquakes, tornados, hurricanes, landslides, and floods?",
     answerFrame: {
@@ -3862,12 +4241,12 @@ const authoredWorkbenchSpecimens: Array<
     prerequisiteVocab: prerequisiteVocabByPattern.sequence_overlap,
     predictionCopy: predictionCopy(
       [
-        "Yes means any influence",
+        "\"Yes\" means any influence",
         "The highlighted disaster item clearly covers this reason under the intended any-influence rule."
       ],
       [
-        "Yes feels primary",
-        "The sequence makes the respondent unsure whether a secondary reason is enough for Yes."
+        "\"Yes\" feels primary",
+        "The sequence makes the respondent unsure whether a secondary reason is enough for \"Yes\"."
       ],
       [
         "No disaster influence",
@@ -3937,7 +4316,7 @@ const authoredWorkbenchSpecimens: Array<
         text: "A constructed respondent treats the series as main-reason reporting and says No, even though disaster avoidance was one influence.",
         provenance: "editorial",
         attributionNote:
-          "Authored risk case based on the WMDISAS finding that respondents hesitated over primary versus secondary reasons; the report says hesitating respondents ultimately selected Yes.",
+          "Authored stress case based on the WMDISAS finding that respondents hesitated over primary versus secondary reasons; the report says hesitating respondents ultimately selected \"Yes\".",
         expectedOutcome: "ambiguous",
         outcomeRationale:
           "This No would underreport a real secondary influence, but it is an authored stress case rather than an observed source route.",
@@ -3993,7 +4372,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         {
           id: "disaster-label",
-          text: "The term natural disaster had several unrelated meanings.",
+          text: "The term \"natural disaster\" had several unrelated meanings.",
           isCorrect: false,
           explanation: "The report says the item text itself was not the problem; the series was."
         },
@@ -4028,7 +4407,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Where the answer choice stops fitting",
         title: "Any reason or main reason?",
         detail:
-          "The respondent has to decide whether Yes means any influence, a major influence, or the main reason for the move."
+          "The respondent has to decide whether \"Yes\" means any influence, a major influence, or the main reason for the move."
       },
       {
         id: "disaster-consequence",
@@ -4036,7 +4415,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "What the recorded answer can hide",
         title: "Secondary motives can disappear",
         detail:
-          "Respondents may say No to avoid overstating a real but non-primary motive."
+          "Respondents may say \"No\" to avoid overstating a real but non-primary motive."
       }
     ],
     neighborContrast: {
@@ -4108,20 +4487,20 @@ const authoredWorkbenchSpecimens: Array<
     reveal: {
       addresses: {
         revisionDescription:
-          "CBSM recommended a prefatory Yes-to-all-influences instruction, but it was not adopted.",
+          "CBSM recommended a prefatory \"Yes\"-to-all-influences instruction, but it was not adopted.",
         sourcePageRef: "AHS 2025 section 4.8.5 WMDISAS, pp. 92-93"
       },
       remainsUntested: {
         residualRisks: [
           "Without an all-influences instruction, secondary motives can still be underreported.",
-          "The source documented hesitation about primary versus secondary reasons; it did not document hesitant respondents ultimately answering No."
+          "The source documented hesitation about primary versus secondary reasons; it did not document hesitant respondents ultimately answering \"No\"."
         ],
         claimBoundaryNote
       },
       pairBridge: {
         eyebrow: "Pair bridge",
         text:
-          "Same family, different sequence pressure: owner advertising asks whether one source can count twice; disaster reasons asks whether a secondary influence is enough for Yes."
+          "Same family, different sequence pressure: owner advertising asks whether one source can count twice; disaster reasons asks whether a secondary influence is enough for \"Yes\"."
       }
     },
     microCases: [
@@ -4131,11 +4510,11 @@ const authoredWorkbenchSpecimens: Array<
         context:
           "A housing-search sequence first records an online listing, then asks whether owner advertising also helped with the same home search.",
         questionPrompt:
-          "Which part of the wording changes whether the next Yes is allowed?",
+          "Which part of the wording changes whether the next \"Yes\" is allowed?",
         wording: "After saying you found the home online, did owner advertising also help?",
         pattern: "sequence_overlap",
         featureChoices: [
-          "A prior answer changes whether the next Yes is allowed",
+          "A prior answer changes whether the next \"Yes\" is allowed",
           "A response label is lexically ambiguous",
           "A hidden not-applicable answer absorbs No"
         ],
@@ -4159,7 +4538,7 @@ const authoredWorkbenchSpecimens: Array<
         ],
         correctFeatureIndex: 1,
         explanation:
-          "Close, but this is forced precision: the respondent must build one exact-looking count from irregular history. Disaster is sequence overlap because the surrounding reason series changes what Yes seems to mean."
+          "Close, but this is forced precision: the respondent must build one exact-looking count from irregular history. Disaster is sequence overlap because the surrounding reason series changes what \"Yes\" seems to mean."
       }
     ],
     source: sourceReceipt(
@@ -4176,12 +4555,13 @@ const authoredWorkbenchSpecimens: Array<
     id: "acs-weeks-worked",
     number: "12",
     railLabel: "Weeks",
+    fieldGuideLinkLabel: "Weeks-worked count",
     pattern: "forced_precision",
     patternLabel: "Forced precision",
     canonicalSubtitle: canonicalSubtitleByPattern.forced_precision,
     canonicalCitations: canonicalCitationByPattern.forced_precision,
-    title: "When weeks worked asks for an exact-looking count",
-    subtitle: "Respondents remember work history in spells, months, days, and rough schedules.",
+    title: "When the \"weeks worked\" item asks for an exact-looking count",
+    subtitle: "Respondents remember work history in stretches, months, days, and rough schedules.",
     testedWording:
       "Over the past 52 weeks, how many WEEKS did this person work, even for a few hours, including any paid time off?",
     answerFrame: {
@@ -4263,7 +4643,7 @@ const authoredWorkbenchSpecimens: Array<
       },
       {
         id: "weeks-days-divided",
-        text: "One respondent added up the days and divided by 5.",
+        text: "Two respondents added up the days they had worked and divided by five.",
         provenance: "direct_quote",
         citation: {
           reportTitle: acs2016Title,
@@ -4405,7 +4785,7 @@ const authoredWorkbenchSpecimens: Array<
       addresses: {
         revisionDescription:
           "The report recommended clarifying the 50+ week gate and 52-week timeframe, routing full-year or nearly full-year workers past the follow-up, including paid time off, and retaining the cue that even a few hours in a week count.",
-        sourcePageRef: "2016 ACS Content Test sections 4.7.1 and 4.7.3, pp. 100-108"
+        sourcePageRef: "2016 ACS Content Test sections 4.7.1 and 4.7.3, pp. 100-107"
       },
       remainsUntested: {
         residualRisks: [
@@ -4433,7 +4813,7 @@ const authoredWorkbenchSpecimens: Array<
         featureChoices: [
           "One exact-looking value is required from variable schedules",
           "A label has several everyday meanings",
-          "A previous item changes what Yes means"
+          "A previous item changes what \"Yes\" means"
         ],
         correctFeatureIndex: 0,
         explanation:
@@ -4451,7 +4831,7 @@ const authoredWorkbenchSpecimens: Array<
         featureChoices: [
           "One field accepts unlike answer levels",
           "A week count is too exact for memory",
-          "A previous answer changes what Yes means"
+          "A previous answer changes what \"Yes\" means"
         ],
         correctFeatureIndex: 0,
         explanation:
@@ -4464,7 +4844,7 @@ const authoredWorkbenchSpecimens: Array<
       acs2016Title,
       "cognitive_testing",
       "2016",
-      "sections 4.7.1 and 4.7.3, pp. 100-108",
+      "sections 4.7.1 and 4.7.3, pp. 100-107",
       acs2016Url
     )
   }

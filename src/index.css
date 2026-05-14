@@ -1657,11 +1657,23 @@ summary:focus-visible {
 
 .workbench-beat:first-child {
   border-top: 0;
-  /* The frame beat gets a thin pattern-tinted top edge so the failure
-     pattern is visible at a glance, even before the visitor reads the
-     eyebrow. Falls back to the global accent when the workbench renders
-     outside walk/featured contexts. */
-  box-shadow: inset 0 3px 0 0 var(--workbench-accent, var(--accent));
+  position: relative;
+}
+
+/* The frame beat gets a thin pattern-tinted top edge so the failure
+   pattern is visible at a glance, even before the visitor reads the
+   eyebrow. Falls back to the global accent when the workbench renders
+   outside walk/featured contexts. The bar is horizontally inset to align
+   with the inner text column rather than the outer module edge. */
+.workbench-beat:first-child::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--s-7);
+  right: var(--s-7);
+  height: 3px;
+  background: var(--workbench-accent, var(--accent));
+  pointer-events: none;
 }
 
 .beat-eyebrow {
@@ -2025,35 +2037,102 @@ summary:focus-visible {
   gap: var(--s-2);
 }
 
+/* Step-through navigation between teaching cases. Visually subordinate
+   to the answer-choice buttons that sit just above it so the visitor
+   reads the choice row as the action and the prev/next row as paging.
+   A faint top divider and text-link styling carry the distinction. */
 .case-lab-deck-controls {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-2);
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px dashed var(--line-faint);
 }
 
-.case-lab-secondary-button,
+.case-lab-secondary-button {
+  min-height: 32px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  padding: 4px 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.case-lab-secondary-button:hover:not(:disabled),
+.case-lab-secondary-button:focus-visible:not(:disabled) {
+  color: var(--accent);
+}
+
+.case-lab-secondary-button:disabled {
+  cursor: not-allowed;
+  color: var(--ink-mute);
+}
+
+.case-lab-secondary-button-arrow {
+  font-size: 14px;
+  line-height: 1;
+}
+
 .case-lab-continue-button {
   min-height: 36px;
-  border: 1px solid var(--line);
-  background: var(--paper-card);
+  align-self: flex-start;
+  border: 1px solid var(--accent);
+  background: var(--accent-paper);
   color: var(--ink);
   padding: var(--s-2) var(--s-3);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
-.case-lab-secondary-button:disabled {
-  cursor: not-allowed;
-  color: var(--ink-soft);
-  background: transparent;
+/* Explanation gate. Shown for the last three case-lab scenarios so the
+   learner commits to a judgment before reading the route explanation. */
+.case-lab-explanation-gate {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border: 1px dashed var(--line);
+  background: var(--paper);
 }
 
-.case-lab-continue-button {
+.case-lab-explanation-gate-button {
   align-self: flex-start;
-  border-color: var(--accent);
+  min-height: 36px;
+  border: 1px solid var(--accent);
   background: var(--accent-paper);
+  color: var(--ink);
+  padding: var(--s-2) var(--s-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.case-lab-explanation-gate-button:hover,
+.case-lab-explanation-gate-button:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent-paper-2, var(--accent-paper));
+}
+
+.case-lab-explanation-gate-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
 }
 
 .case-lab-feedback,
@@ -3628,11 +3707,10 @@ summary:focus-visible {
 }
 
 .featured-example-head {
-  padding: var(--s-6) var(--s-7) var(--s-4);
+  padding: var(--s-6) var(--s-7) var(--s-5);
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
-  border-bottom: 1px dashed var(--line-soft);
 }
 
 .featured-example-eyebrow {
@@ -3661,6 +3739,32 @@ summary:focus-visible {
   color: var(--ink-soft);
   margin: 0;
   max-width: 64ch;
+}
+
+/* First-impression source receipt. Always visible above the embedded
+   workbench so a hub visitor can see the evidence anchor without
+   expanding any disclosure. The wording is consistent with the
+   `Real-world anchor` summary inside the case lab. */
+.featured-example-source-receipt {
+  margin: var(--s-1) 0 0;
+  padding-top: var(--s-3);
+  border-top: 1px dashed var(--line-faint);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.featured-example-source-receipt-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.featured-example-source-receipt-note {
+  color: var(--ink-soft);
+  font-style: italic;
 }
 
 /* The embedded workbench inherits its existing look. Only neutralize the
@@ -4666,6 +4770,35 @@ summary:focus-visible {
   margin-top: var(--s-2);
 }
 
+.pattern-checklist-examples {
+  margin: var(--s-3) 0 0;
+  padding-top: var(--s-3);
+  border-top: 1px dashed var(--line-faint);
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+.pattern-checklist-examples-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-right: var(--s-1);
+}
+
+.pattern-checklist-example-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pattern-checklist-example-link:hover,
+.pattern-checklist-example-link:focus-visible {
+  color: var(--accent);
+}
+
 .prompt-card-list {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -4863,6 +4996,10 @@ summary:focus-visible {
     padding-left: var(--s-6);
     padding-right: var(--s-6);
   }
+  .workbench-beat:first-child::before {
+    left: var(--s-6);
+    right: var(--s-6);
+  }
 }
 
 /* Tablet portrait — collapse the hero and walk-mode rail */
@@ -4937,6 +5074,10 @@ summary:focus-visible {
   .how-to-read,
   .workbench-beat {
     padding: var(--s-4);
+  }
+  .workbench-beat:first-child::before {
+    left: var(--s-4);
+    right: var(--s-4);
   }
   .hero-scope {
     flex-direction: row;

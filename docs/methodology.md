@@ -2,21 +2,22 @@
 
 Response Option Fit Lab treats a survey answer choice as a possible mismatch
 between what a person knows and what the form lets them record. The public page
-uses the literal title "When survey answer choices don't match real answers";
-the project name remains secondary. Each worked example starts with the
-surrounding question or question sequence, the highlighted answer choice, and
-the task the reader is being asked to judge. Newer examples may use synthetic
-teaching cases first, with the public source moved into a visible evidence
-anchor.
+uses the literal title "When answer choices don't give the respondent's answer
+a clear place to go"; the project name remains secondary. Each worked example
+starts with the surrounding question or question sequence, the highlighted
+answer choice, and the task the reader is being asked to judge. Newer examples
+may use synthetic teaching cases first, with the public source moved into a
+visible evidence anchor.
 
 ## Example Selection
 
 The twelve worked examples are anchored to public U.S. Census Bureau and Office
 for National Statistics testing materials because each source shows a distinct
 response-option fit problem without requiring sensitive personal examples or
-full-instrument critique. The Example 01 migration adds a synthetic-primary
-case lab: the night-market scenarios are invented for instruction, while the
-ACS ride-hailing report remains the evidence anchor.
+full-instrument critique. Examples 01 and 02 use synthetic-primary case labs:
+the night-market and city-employment scenarios are invented for instruction,
+while the ACS ride-hailing report and the CPS internet-self-response report
+remain the evidence anchors.
 
 - **Label ambiguity ("same words, several meanings"):** respondents may
   attach different everyday meanings to the same answer-choice wording.
@@ -45,35 +46,36 @@ contrast prompts. The field guide at
 `#field-guide` turns the examples into reusable checks, pattern-specific
 checklists, and static prompts for external research tool review. The reference shelf at
 `#reference` carries the glossary, method note, claim boundary, and source
-appendix as their own route. Example 01 now uses the integrated case-lab shell.
-The remaining examples still use the legacy five-beat shell until they are
-migrated.
+appendix as their own route. Examples 01 and 02 use the integrated case-lab
+format. The remaining examples use the five-step worked-example format.
 
 ## Worked-Example Model
 
-Two shells currently exist.
+Two worked-example formats currently exist.
 
-Example 01 uses the integrated case-lab shell:
+Examples 01 and 02 use the integrated case-lab format:
 
 1. Setup: a synthetic survey question and highlighted answer choice.
-2. Sort: a guided scenario deck with immediate teaching feedback.
+2. Sort: a guided scenario deck. The first three teaching cases reveal
+   feedback immediately on judgment (acquisition support); the last three
+   gate feedback behind an explicit Show explanation control (retrieval
+   support).
 3. Repair bench: preset wording changes and per-scenario consequences.
 4. Transfer check: one fresh scenario sorted with the same three judgments.
 5. Real-world anchor: collapsed source evidence and claim boundaries.
 
-The CaseLab shell intentionally reaches the active sorting task faster than
-the legacy shell. It shows the full answer list on larger screens, keeps the
-list behind disclosure on phones, gates the repair bench until the learner has
-sorted every teaching case, and gates the transfer check until the learner has
-reviewed the repair bench. This keeps source context and repair caveats visible
-without making them the first thing a novice has to parse.
+The case-lab format intentionally reaches the active sorting task faster than
+the five-step format. It shows the full answer list on larger screens, keeps
+the list behind disclosure on phones, gates the repair bench until the learner
+has sorted every teaching case, and gates the transfer check until the learner
+has reviewed the repair bench. This keeps source context and repair caveats
+visible without making them the first thing a novice has to parse.
 
-CaseLab scenario cards show the respondent-reading line before the judgment
+Case-lab scenario cards show the respondent-reading line before the judgment
 buttons. That line is part of the situation the learner is asked to reason
-from, not post-answer feedback. The feedback panel still waits until after a
-choice so the teaching route remains an explanation rather than a prompt.
+from, not post-answer feedback.
 
-The remaining examples are rendered in five legacy teaching beats:
+The remaining examples are rendered in five teaching beats:
 
 1. Frame: the surrounding survey question and highlighted answer choice.
 2. Predict: example-specific judgments for each scenario.
@@ -111,7 +113,7 @@ remain partial even when it improves one route. The second example in each
 pattern pair also carries a compact bridge note to help visitors compare the
 two shapes of the same problem family.
 
-CaseLab repair outcomes add **misread risk** for the current wording when a
+Case-lab repair outcomes add **misread risk** for the current wording when a
 nearby out-of-scope scenario can be tempted into the highlighted label without
 the exhibit claiming that the answer choice itself has been intentionally
 widened.
@@ -136,7 +138,7 @@ system:
 - **Source-grounded stress case:** constructed teaching case based on a cited
   source finding.
 
-Teaching cases, pair bridges, completion-review prompts, CaseLab repair
+Teaching cases, pair bridges, completion-review prompts, case-lab repair
 rationales, and Probe rationales are learning aids. They should not be read as
 official source-agency answer keys or as tested replacement wording.
 

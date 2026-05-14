@@ -78,6 +78,15 @@ export function CaseLab({
       ])
     )
   );
+  /* Feedback gating: the first three scenarios show feedback immediately on
+     judgment (scaffolded acquisition). The last three scenarios hide the
+     feedback behind a "Show explanation" button so the learner has to
+     commit to a judgment before reading the route explanation
+     (retrieval-practice support, per Karpicke & Blunt 2011 and Roediger &
+     Karpicke 2006). Ephemeral state: not persisted across reload. */
+  const [revealedFeedback, setRevealedFeedback] = useState<Record<string, boolean>>(
+    {}
+  );
   const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
   const firstRepairId = lab.repairBench.options[0].id;
   const [selectedRepairId, setSelectedRepairId] = useState(() =>
@@ -107,6 +116,16 @@ export function CaseLab({
   const activeScenarioAnswered = activeScenarioOutcome !== null;
   const activeScenarioCorrect =
     activeScenarioOutcome === activeScenario.expectedOutcome;
+  /* Cases at indices 0–2 show feedback immediately; cases 3+ gate it
+     behind an explicit reveal. See `revealedFeedback` comment above. */
+  const activeScenarioGated = activeScenarioIndex >= 3;
+  const activeScenarioFeedbackRevealed = activeScenarioGated
+    ? Boolean(revealedFeedback[activeScenario.id])
+    : true;
+  const showActiveScenarioFeedback =
+    activeScenarioAnswered && activeScenarioFeedbackRevealed;
+  const showActiveScenarioGate =
+    activeScenarioAnswered && activeScenarioGated && !activeScenarioFeedbackRevealed;
   const selectedRepair =
     lab.repairBench.options.find((option) => option.id === selectedRepairId) ??
     lab.repairBench.options[0];
@@ -309,7 +328,28 @@ export function CaseLab({
                     );
                   })}
                 </div>
-                {activeScenarioAnswered && (
+                {showActiveScenarioGate && (
+                  <div className="case-lab-explanation-gate">
+                    <button
+                      type="button"
+                      className="case-lab-explanation-gate-button"
+                      onClick={() =>
+                        setRevealedFeedback((current) => ({
+                          ...current,
+                          [activeScenario.id]: true
+                        }))
+                      }
+                      data-testid={`case-lab-show-explanation-${activeScenario.id}`}
+                    >
+                      Show explanation
+                    </button>
+                    <p className="case-lab-explanation-gate-note">
+                      Commit to your judgment first. Reveal the route
+                      explanation when you're ready.
+                    </p>
+                  </div>
+                )}
+                {showActiveScenarioFeedback && (
                   <div className="case-lab-feedback" aria-live="polite">
                     <p className="case-lab-feedback-title">
                       {activeScenarioCorrect ? "Yes." : "Not quite."}{" "}
@@ -334,6 +374,9 @@ export function CaseLab({
                       setActiveScenarioIndex((index) => Math.max(0, index - 1))
                     }
                   >
+                    <span aria-hidden="true" className="case-lab-secondary-button-arrow">
+                      ←
+                    </span>
                     Previous case
                   </button>
                   <button
@@ -347,6 +390,9 @@ export function CaseLab({
                     }
                   >
                     Next case
+                    <span aria-hidden="true" className="case-lab-secondary-button-arrow">
+                      →
+                    </span>
                   </button>
                 </div>
               </article>
@@ -580,7 +626,10 @@ export function CaseLab({
         <details className="case-lab-source-details">
           <summary>
             <span>Real-world anchor</span>
-            <span>{specimen.source.agency}</span>
+            <span>
+              {specimen.source.agency} ·{" "}
+              {specimen.source.documentCode} · {specimen.source.year}
+            </span>
           </summary>
           <div className="case-lab-source-body">
             <h3 id={`${specimen.id}-source-anchor-title`}>

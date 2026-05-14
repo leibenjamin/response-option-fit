@@ -32,20 +32,22 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
       <div className="hero-main">
         <p className="hero-kicker">Response Option Fit Lab</p>
         <h1 className="hero-title" id="exhibit-title" tabIndex={-1}>
-          When survey answer choices don't match real answers.
+          When answer choices don't give the respondent's answer a clear place to go.
         </h1>
         <p className="hero-subtitle">
-          A person can know their answer, but the available survey choices can
-          still push that answer into the wrong place.
+          A person can know their answer, but the available choices can still
+          push it into the wrong place.
         </p>
 
         <div className="hero-body-wrap">
           <p className="hero-body">
-            This page teaches answer-choice problems with synthetic case labs
-            and public questionnaire-testing anchors from the U.S. Census
-            Bureau and the Office for National Statistics. You read a survey
-            question, sort respondent situations, and see where an answer
-            choice records something different from what the person meant.
+            This page teaches answer-choice problems with synthetic teaching
+            cases and public questionnaire-testing reports from the U.S.
+            Census Bureau and the Office for National Statistics. You read a
+            survey question, work through several respondent situations, and
+            see where an answer choice captures something different from what
+            the person meant. If you write surveys, the field guide turns the
+            patterns into seven portable checks for your own drafts.
           </p>
         </div>
 
@@ -75,7 +77,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
             href={routeToHash({ kind: "fieldGuide" })}
             data-testid="hero-cta-field-guide"
           >
-            <span>Use the framework</span>
+            <span>Open the field guide</span>
             <span aria-hidden="true" className="cta-button-arrow">
               →
             </span>
@@ -129,9 +131,9 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
             <span className="hero-scope-val">0</span>
-            <span className="hero-scope-unit"> generated rewrites</span>
+            <span className="hero-scope-unit"> generated survey rewrites</span>
           </p>
-          <p className="hero-scope-note">no automation output, no model behind the page</p>
+          <p className="hero-scope-note">no in-page automation or model calls</p>
         </li>
       </ul>
     </header>

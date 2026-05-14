@@ -236,9 +236,14 @@ export type AnswerFrame = {
   methodNote?: string;
 };
 
-/* Predict beat: the user marks each scenario covered/ambiguous/not_covered,
-   rates confidence, and answers a required wording-feature question that anchors
-   diagnosis to a wording feature rather than to a respondent stereotype. */
+/* Predict beat: the user marks each scenario covered/ambiguous/not_covered and
+   answers a required wording-feature question that anchors diagnosis to a
+   wording feature rather than to a respondent stereotype. */
+/* Kept for backward compatibility with previously persisted practice state;
+   the confidence rating widget was removed in the 2026-05-13 pedagogy
+   refinement wave (see docs/page-walkthrough-audit.md § "local research pedagogy
+   audit"). The legacy practice-state record validator still accepts the
+   field; it is no longer written and no longer read. */
 export type ConfidenceLevel = "guessing" | "hunch" | "fairly_sure";
 
 export type MechanismChoice = {
@@ -470,7 +475,14 @@ export type WorkbenchSpecimen = {
   /* Identity */
   id: string;
   number: string;
+  /* Short label used in the sticky walk rail and subway strip. Optimized
+     for tight horizontal space (12–18 chars). */
   railLabel: string;
+  /* Slightly longer editorial label used in field-guide pattern checklists.
+     Optimized for visitors who land on `#field-guide` without context
+     and need a self-explanatory cross-link to the worked example.
+     Optional: components fall back to `railLabel` when missing. */
+  fieldGuideLinkLabel?: string;
   pattern: FailurePattern;
   patternLabel: string;
   canonicalSubtitle: string;

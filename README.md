@@ -2,14 +2,15 @@
 
 Response Option Fit Lab is the project name for a static editorial exhibit about
 survey answer choices that do not match what people know. The public page now
-leads with the literal title "When survey answer choices don't match real
-answers" and uses twelve worked examples from public questionnaire-testing
-materials and synthetic teaching cases to show six recurring answer-choice
-problems.
+leads with the literal title "When answer choices don't give the respondent's
+answer a clear place to go" and uses twelve worked examples from public
+questionnaire-testing materials and synthetic teaching cases to show six
+recurring answer-choice problems.
 
-The project demonstrates a React and TypeScript interface with synthetic-first
-case labs, source anchors, surrounding question context, source appendix, claim
-boundary, static security headers, and local-only settings controls. The page
+The project demonstrates a React and TypeScript interface with two
+synthetic-primary case labs, ten five-step worked examples, source anchors,
+surrounding question context, source appendix, claim boundary, static security
+headers, and local-only settings controls. The page
 is organized as four hash-routed views — an overview that carries the hero,
 the six-pattern knowledge map, and one fully-working embedded example; a
 walk-through that paginates the remaining examples with a sticky map and
@@ -77,8 +78,8 @@ See [docs/deployment.md](docs/deployment.md) and
 - It includes twelve worked examples and does not claim to generalize across all
   survey instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
-- Example 01 uses a synthetic-primary case lab. The remaining examples still use
-  the legacy five-beat worked-example shell until they are migrated.
+- Examples 01–02 use synthetic-primary case labs. Examples 03–12 use the
+  five-step worked-example format.
 - Teaching-case labels are not source claims. Public reports remain the
   authority for reported quotes, findings, and recommendations.
 - Repair directions are conceptual and are not validated replacement wording.

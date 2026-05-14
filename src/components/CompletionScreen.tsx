@@ -48,10 +48,11 @@ export function CompletionScreen({ visited }: Props) {
         <p className="completion-lede">
           {allVisited ? (
             <>
-              You've worked through every example. The first case used the
-              integrated case-lab shell; the remaining examples used the
-              legacy five-beat shell. The next read is the field guide, where
-              the examples turn into reusable checks and prompts.
+              You've worked through every example. Examples 01–02 taught
+              through case labs; examples 03–12 used a five-step
+              worked-example format. The next read is the field guide, where
+              the patterns turn into reusable checks and prompts for your own
+              survey drafts.
             </>
           ) : isEmpty ? (
             <>
