@@ -39,13 +39,43 @@ function injectProdSecurityHeaders(): Plugin {
 // http://127.0.0.1:5173/. Override either with VITE_BASE_PATH.
 const DEPLOY_BASE = "./";
 
+// A build-time banner is injected into every bundled JS chunk and CSS asset
+// so each build produces unique content hashes. Without this, two builds from
+// identical source produce byte-identical artifacts; if Cloudflare Pages ever
+// stores a corrupted copy of one of those artifacts, every later dedup-mapped
+// deploy will serve the same corruption forever. The banner is one line per
+// file, gzips down to ~30 bytes, and guarantees CF Pages actually re-uploads
+// on every deploy. Comment syntax `/* ... */` is valid in both JS and CSS.
+const BUILD_BANNER = `/*! response-option-fit-lab build ${new Date().toISOString()} */`;
+
+function injectCssBuildBanner(): Plugin {
+  return {
+    name: "inject-css-build-banner",
+    apply: "build",
+    transform(code, id) {
+      const cleanId = id.split("?")[0];
+      if (cleanId.endsWith(".css")) {
+        return { code: `${BUILD_BANNER}\n${code}`, map: null };
+      }
+      return null;
+    }
+  };
+}
+
 export default defineConfig(({ command, isPreview }) => {
   const buildOrPreview = command === "build" || isPreview === true;
   const appBase = process.env.VITE_BASE_PATH ?? (buildOrPreview ? DEPLOY_BASE : "/");
 
   return {
     base: appBase,
-    plugins: [react(), injectProdSecurityHeaders()],
-    server: { port: 5173, host: "127.0.0.1", strictPort: true }
+    plugins: [react(), injectProdSecurityHeaders(), injectCssBuildBanner()],
+    server: { port: 5173, host: "127.0.0.1", strictPort: true },
+    build: {
+      rollupOptions: {
+        output: {
+          banner: BUILD_BANNER
+        }
+      }
+    }
   };
 });
