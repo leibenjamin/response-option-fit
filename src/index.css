@@ -3669,6 +3669,34 @@ summary:focus-visible {
   flex-wrap: wrap;
   gap: var(--s-3);
   margin-top: var(--s-4);
+  align-items: baseline;
+}
+
+/* Quiet text-link row that lives next to the two CTA buttons. Carries
+   the lower-priority entry points so they stay reachable without
+   competing with the primary action visually. The full row wraps to a
+   new line on narrow screens; the inline middot separates the links
+   when there are two of them. */
+.hero-cta-quiet {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  flex-basis: 100%;
+  max-width: 56ch;
+}
+
+.hero-cta-text-link {
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.hero-cta-text-link:hover,
+.hero-cta-text-link:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
 }
 
 /* ===================== HUB =====================

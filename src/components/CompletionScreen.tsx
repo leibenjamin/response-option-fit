@@ -96,10 +96,10 @@ export function CompletionScreen({ visited }: Props) {
         >
           <header className="completion-review-head">
             <p className="completion-review-eyebrow">Mixed review</p>
-            <h2 id="completion-review-title">Distinguish the confusable pairs</h2>
+            <h2 id="completion-review-title">Tell the confusable pairs apart</h2>
             <p>
-              Pick a pattern, then read the distinction. This is retrieval
-              practice, not a saved score.
+              Pick the pattern the scenario most strongly fits, then read the
+              distinction. This is retrieval practice, not a saved score.
             </p>
           </header>
           <div className="completion-review-list">

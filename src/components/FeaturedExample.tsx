@@ -7,8 +7,11 @@ const second = workbenchSpecimens[1];
 const third = workbenchSpecimens[2];
 
 /* Embedded full workbench on the hub. The visitor sees one complete worked
-   example end to end without leaving the landing page; the "more like this"
-   chips below preview the next two examples and lead into walk mode. */
+   example end to end without leaving the landing page; the "more worked
+   examples" chips below preview the next two examples and lead into walk
+   mode. A compact source-receipt line above the workbench announces the
+   evidence anchor (agency · document code · year) so a 60-second visitor
+   can see the citation posture without expanding any details. */
 export function FeaturedExample() {
   if (!featured) return null;
 

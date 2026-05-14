@@ -997,7 +997,7 @@ const authoredWorkbenchSpecimens: Array<
     caseLab: {
       eyebrow: "Example 02 / Synthetic case lab",
       title:
-        "When \"Food service\" can mean a workplace, an industry, or the wrong question entirely",
+        "When \"Food service\" can mean an industry, a workplace, or another job",
       lede:
         "This lesson starts with an invented city-employment survey. The real CPS source tested a \"What kind of business or industry is this?\" write-in; \"Food service\" is a synthetic teaching label built here to make the level question easier to see.",
       setup:
@@ -1129,9 +1129,9 @@ const authoredWorkbenchSpecimens: Array<
           role: "neighbor_category",
           title: "Grocery-store worker who reads it as employer name",
           situation:
-            "Liam works at GreenGrocer Supermarket. When he reads the question, he thinks it is asking for the name of his employer and writes that into a \"Something else\" field, then picks the closest visible option.",
+            "Liam works at GreenGrocer Supermarket. When he reads the question, he thinks it is asking for the name of his employer, but no tick-box matches \"GreenGrocer.\"",
           respondentReading:
-            "He sees \"Retail\" as the closest match to a grocery store and selects it.",
+            "He scans the visible options for the closest match and picks \"Retail\" because a grocery store is a kind of store.",
           provenance: "teaching_case",
           expectedOutcome: "not_covered",
           feedbackTitle: "A grocery store is retail, not food service.",
@@ -1308,7 +1308,7 @@ const authoredWorkbenchSpecimens: Array<
         title:
           "Why the real CPS source belongs behind this teaching case",
         lede:
-          "The city-employment case is invented. The evidence anchor is the Census Bureau cognitive-testing report on the CPS internet self-response IO1IND/IO2IND items, where respondents documented the same level-of-answer problem in their own jobs.",
+          "The city-employment case is invented. The evidence anchor is the Census Bureau cognitive-testing report on the CPS internet-self-response industry-and-occupation write-in items, where real respondents made the same level-of-answer move in their own jobs.",
         evidence: [
           {
             provenance: "reported_quote",
@@ -1962,16 +1962,16 @@ const authoredWorkbenchSpecimens: Array<
     prerequisiteVocab: prerequisiteVocabByPattern.category_boundary_blur,
     predictionCopy: predictionCopy(
       [
-        "Belongs in other-EV item",
+        "Fits the \"Another EV\" choice",
         "The highlighted item clearly covers this vehicle under the intended hybrid or non-plug-in answer."
       ],
       [
         "Vehicle boundary unclear",
-        "Plug-in, hybrid, gasoline, and everyday electric cues point to more than one answer choice."
+        "Plug-in, hybrid, gasoline, and everyday \"electric\" cues point to more than one answer choice."
       ],
       [
         "Belongs elsewhere in sequence",
-        "The vehicle should be captured by another EV item, not the highlighted other-EV item."
+        "The vehicle should be captured by the prior plug-in item, not the highlighted other-EV item."
       ]
     ),
     vignettes: [
@@ -2005,7 +2005,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The vehicle is the kind the item hoped to capture, but the word electric can make a non-plug-in hybrid feel out of scope.",
+          "The vehicle is the kind the item hoped to capture, but the word \"electric\" can make a non-plug-in hybrid feel out of scope.",
         probeRationale: {
           covered:
             "A gas-plus-battery rule gives the hybrid a clear place even when it does not plug in.",
@@ -2024,7 +2024,7 @@ const authoredWorkbenchSpecimens: Array<
         },
         expectedOutcome: "ambiguous",
         outcomeRationale:
-          "The highlighted item depends on electric meaning more than plug-in, but the respondent reads electric as plug-in.",
+          "The highlighted item depends on \"electric\" meaning more than plug-in, but the respondent reads \"electric\" as plug-in.",
         probeRationale: {
           covered:
             "A plug-in rule separates the first item from non-plug-in hybrid vehicles.",
@@ -2090,7 +2090,7 @@ const authoredWorkbenchSpecimens: Array<
           text: "The response classes used overlapping vehicle features.",
           isCorrect: true,
           explanation:
-            "Plugging in, using gasoline, and being called electric all point to different classification rules."
+            "Plugging in, using gasoline, and being called \"electric\" all point to different classification rules."
         },
         {
           id: "bare-label",
@@ -2123,7 +2123,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Survey wording",
         title: "Another type of electric vehicle",
         detail:
-          "The item follows plug-in electric vehicle, then asks for another electric vehicle without naming hybrid directly."
+          "The item follows \"A plug-in electric vehicle?\" and then asks for another electric vehicle without naming \"hybrid\" directly."
       },
       {
         id: "ev-break",
@@ -2131,7 +2131,7 @@ const authoredWorkbenchSpecimens: Array<
         eyebrow: "Where the answer choice stops fitting",
         title: "The boundary is not obvious",
         detail:
-          "The respondent has to decide whether plug-in status, hybrid status, gasoline use, or the everyday electric label controls the answer."
+          "The respondent has to decide whether plug-in status, hybrid status, gasoline use, or the everyday \"electric\" label controls the answer."
       },
       {
         id: "ev-consequence",
@@ -2199,7 +2199,7 @@ const authoredWorkbenchSpecimens: Array<
     reveal: {
       addresses: {
         revisionDescription:
-          "The report documented a later version that named hybrid electric vehicle and plug-in electric vehicle directly instead of using another type of electric vehicle.",
+          "The report documented a later version that named \"A hybrid electric vehicle?\" and \"A plug-in electric vehicle?\" directly instead of using \"Another type of electric vehicle?\".",
         sourcePageRef: "ACS Round 1/Round 2 pp. 113-114 and 272-273"
       },
       remainsUntested: {

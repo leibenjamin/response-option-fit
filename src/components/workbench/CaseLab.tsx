@@ -341,11 +341,12 @@ export function CaseLab({
                       }
                       data-testid={`case-lab-show-explanation-${activeScenario.id}`}
                     >
-                      Show explanation
+                      Reveal the teaching route
                     </button>
                     <p className="case-lab-explanation-gate-note">
-                      Commit to your judgment first. Reveal the route
-                      explanation when you're ready.
+                      Make your call first, then reveal. The first three
+                      cases unlock as soon as you choose; this one waits so
+                      you commit to a judgment before reading the route.
                     </p>
                   </div>
                 )}
