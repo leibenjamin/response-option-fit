@@ -14,7 +14,7 @@ export function RevealBeat({ specimen }: Props) {
       <header className="beat-head">
         <p className="beat-eyebrow">Step 4 / What the source supports</p>
         <h3 className="beat-title" id={`${specimen.id}-reveal-title`}>
-          The cited revision: what it tackled, what's still untested
+          The cited revision: what it changed, what's still untested
         </h3>
       </header>
 

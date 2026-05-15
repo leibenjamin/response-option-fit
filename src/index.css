@@ -3693,6 +3693,29 @@ summary:focus-visible {
   color: var(--ink-2);
 }
 
+/* Stacked CTA — primary label + a small secondary line below it. Used for
+   the Hero's Resume affordance so the returning visitor sees both
+   "example NN" and the pattern/example title without an extra click. */
+.cta-button--stacked .cta-button-stacked-body {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+.cta-button--stacked .cta-button-stacked-primary {
+  display: inline-block;
+}
+.cta-button--stacked .cta-button-stacked-secondary {
+  display: inline-block;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  opacity: 0.78;
+  text-transform: none;
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
 .cta-button-arrow {
   font-family: var(--font-mono);
   font-size: 14px;
@@ -4728,6 +4751,40 @@ summary:focus-visible {
   color: var(--ink-2);
 }
 
+/* Newcomer affordance — appears just under the privacy block for visitors
+   who don't have their own survey to review yet. Quiet, single-link, points
+   to Example 01's tested wording as a practice target. */
+.field-guide-newcomer {
+  border-left: 2px solid var(--line);
+  padding: var(--s-3) var(--s-4);
+  max-width: 84ch;
+  background: var(--paper);
+}
+.field-guide-newcomer-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 var(--s-1);
+}
+.field-guide-newcomer-body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.field-guide-newcomer-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.field-guide-newcomer-link:hover,
+.field-guide-newcomer-link:focus-visible {
+  color: var(--accent-2);
+}
+
 .field-guide-section {
   display: flex;
   flex-direction: column;
@@ -5142,6 +5199,26 @@ summary:focus-visible {
     left: var(--s-4);
     right: var(--s-4);
   }
+  /* Hoist the scope receipt above the body and CTAs at phone widths so the
+     four trust stats arrive on the first scroll, not the third. Uses
+     display: contents on hero-main so its children flow as direct flex
+     children of hero, then orders them to keep title/subtitle first and
+     body/CTAs after the receipt. Desktop layout is unaffected. */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+  .hero-main {
+    display: contents;
+  }
+  .hero-rail { order: 1; }
+  .hero-kicker { order: 2; }
+  .hero-title { order: 3; }
+  .hero-subtitle { order: 4; }
+  .hero-scope { order: 5; }
+  .hero-body-wrap { order: 6; }
+  .hero-cta-row { order: 7; }
   .hero-scope {
     flex-direction: row;
     flex-wrap: wrap;

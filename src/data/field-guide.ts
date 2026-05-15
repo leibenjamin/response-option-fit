@@ -51,11 +51,11 @@ export const patternApplicationGuides: Record<
     pattern: "false_premise",
     fieldGuideId: "field-guide-false_premise",
     warning:
-      "\"No\" is dangerous when the item never first checks whether it applies to the respondent.",
+      "\"No\" is hard to interpret when the item never first checks whether it applies to the respondent.",
     checks: [
-      "Before the yes/no item, write the applicability condition the respondent must meet.",
+      "Before the yes/no item, write the condition the respondent must meet for the question to apply.",
       "Ask what \"No\" could mean: no event, no equipment, no exposure, no memory, or not applicable.",
-      "Choose the applicability path: screener, skip, follow-up after \"No\", or visible not-applicable route."
+      "Choose how the form decides whether the item applies to this respondent: a screener, a skip, a follow-up after \"No\", or a visible not-applicable route."
     ]
   },
   category_boundary_blur: {
@@ -76,7 +76,7 @@ export const patternApplicationGuides: Record<
       "A good answer choice can break when the previous answer changes what it seems to mean.",
     checks: [
       "Read the item aloud with the preceding question and answer choice, not as a standalone sentence.",
-      "Mark whether the current item asks for any influence, the main influence, a new source, or a repeated source.",
+      "Mark whether the item is asking about every reason that applied, only the main reason, or only new reasons not already named.",
       "Add instructions, reorder items, or allow multiple responses only after checking what the sequence is trying to measure."
     ]
   },
@@ -108,7 +108,7 @@ export const mixedReviewItems: readonly MixedReviewItem[] = [
       "A job question asks for business or industry in one field, so one person writes 'hospital' and another writes 'health care.'",
     options: ["broad_bucket", "false_premise"],
     explanation:
-      "The nearest wrong route is false premise. Here the item applies to both respondents; the problem is that one field accepts different answer levels."
+      "The nearest wrong route is false premise. False premise would require some respondents to not belong in the item at all; here both have a relevant job and the problem is that one field accepts different answer levels."
   },
   {
     id: "sequence-vs-precision",
