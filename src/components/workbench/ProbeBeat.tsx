@@ -17,23 +17,6 @@ type Props = {
   onWidgetStateChange: (state: WidgetState) => void;
 };
 
-function widgetLabel(kind: WorkbenchSpecimen["widget"]["kind"]) {
-  switch (kind) {
-    case "example_set_editor":
-      return "Examples to add to the wording";
-    case "bucket_splitter":
-      return "Where to split one answer space";
-    case "filter_path_toggle":
-      return "Who should answer this question";
-    case "classifier_radio":
-      return "Which feature classifies the answer";
-    case "sequence_reorderer":
-      return "Question order";
-    case "time_window_slider":
-      return "Time period to ask about";
-  }
-}
-
 export function ProbeBeat({ specimen, widgetState, onWidgetStateChange }: Props) {
   const renderWidget = () => {
     switch (specimen.widget.kind) {
@@ -114,9 +97,7 @@ export function ProbeBeat({ specimen, widgetState, onWidgetStateChange }: Props)
 
       <div className="probe-grid">
         <div className="probe-widget-panel">
-          <p className="probe-widget-label">
-            {specimen.widget.displayLabel ?? widgetLabel(specimen.widget.kind)}
-          </p>
+          <p className="probe-widget-label">{specimen.widget.displayLabel}</p>
           {renderWidget()}
         </div>
 

@@ -1881,7 +1881,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "medicine-near-elevator",
         kind: "near_transfer",
         context:
-          "An outage module asks whether the building elevator stopped working. Some respondents live in buildings with elevators; others live in homes with no elevator at all.",
+          "An outage module asks whether the building elevator stopped working. The item appears on every form, whether or not the home has an elevator.",
         questionPrompt:
           "Which part of the wording would make a plain No hard to interpret?",
         wording: "Did your building elevator stop working during the outage?",
@@ -1899,10 +1899,10 @@ const authoredWorkbenchSpecimens: Array<
         id: "medicine-distractor-owner-ad",
         kind: "distractor",
         context:
-          "A rental-search series first records that the respondent found the listing on an app, then asks about other advertising by the owner.",
+          "A rental-search series records the listing source first, then asks about other ways the respondent found out about the home.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
-        wording: "After saying you found the rental on an app, did you find it through other advertising by the owner?",
+        wording: "Did you find this rental through other advertising by the owner?",
         pattern: "sequence_overlap",
         featureChoices: [
           "A missing not-applicable option",
@@ -2214,7 +2214,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "ev-near-tv",
         kind: "near_transfer",
         context:
-          "A device survey asks which TV-connected devices a household uses. A smart TV, streaming box, and game console can all play streaming video through a television.",
+          "A device survey lists three answer choices for TV-connected hardware: a smart TV, a streaming box, and another device.",
         questionPrompt:
           "Which part of the wording would make these device categories overlap?",
         wording: "A smart TV, a streaming box, or another device that plays through a TV",
@@ -2232,7 +2232,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "ev-distractor-notebook",
         kind: "distractor",
         context:
-          "A household technology item asks about laptop or notebook computers. Some respondents use notebook to mean a paper notebook or a smaller device family.",
+          "A household technology item lists a single answer choice covering laptop and notebook computers.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
         wording: "A laptop or notebook computer",
@@ -2901,10 +2901,10 @@ const authoredWorkbenchSpecimens: Array<
         id: "hours-near-income",
         kind: "near_transfer",
         context:
-          "A worker earns a base wage plus tips that vary by week. The form asks for one usual weekly earnings amount.",
+          "An earnings item asks the respondent for one usual weekly amount. The respondent earns a base wage plus tips.",
         questionPrompt:
           "Which part of the wording would make the counting method unstable?",
-        wording: "How much do you usually earn in a week when your tips change?",
+        wording: "How much do you usually earn in a week?",
         pattern: "forced_precision",
         featureChoices: [
           "A single amount is required from variable weeks",
@@ -2919,7 +2919,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "hours-distractor-business-level",
         kind: "distractor",
         context:
-          "A work survey asks for the kind of business or industry. One respondent writes hospital, another writes health care, another writes cashier, and another writes an employer name.",
+          "A work survey asks one open field about the kind of business or industry, and accepts whatever the respondent writes.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
         wording: "What kind of business or industry was this?",
@@ -3232,7 +3232,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "notebook-distractor-smart-tv",
         kind: "distractor",
         context:
-          "A media-device item asks households to choose among smart TVs, streaming boxes, and other TV-connected devices that can perform similar functions.",
+          "A media-device item asks households to choose among smart TVs, streaming boxes, and other TV-connected devices.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
         wording: "A smart TV, streaming box, or another device that plays through a TV",
@@ -3527,7 +3527,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "kashmiri-near-language-route",
         kind: "near_transfer",
         context:
-          "A school form has a broad regional-language checkbox and a small write-in line for a specific home language. A family wants the specific language recorded but treats the visible broad checkbox as the safer route.",
+          "A school form offers a broad regional-language checkbox and a small write-in line for a specific home language. The respondent's specific language is not on any printed list.",
         questionPrompt:
           "Which part of the wording makes the specific route hard to use?",
         wording: "Regional language group, or write in another home language",
@@ -3824,7 +3824,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "sump-near-generator",
         kind: "near_transfer",
         context:
-          "An outage module asks about backup-generator failure. Some households have a generator; others have no generator at all.",
+          "An outage module asks about backup-generator failure. The item appears on every form regardless of whether the household has a generator.",
         questionPrompt:
           "Which part of the wording would make a plain No hard to interpret?",
         wording: "Did your backup generator stop working during the outage?",
@@ -3842,7 +3842,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "sump-distractor-notebook",
         kind: "distractor",
         context:
-          "A household technology item asks about laptop or notebook computers, and notebook may cue non-laptop devices.",
+          "A household technology item lists laptop or notebook computers as a single answer choice.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
         wording: "Do you use a laptop or notebook computer?",
@@ -4169,7 +4169,7 @@ const authoredWorkbenchSpecimens: Array<
         id: "heading-distractor-kashmiri",
         kind: "distractor",
         context:
-          "An ethnic-group form gives broad Asian / Asian British categories and a write-in option, while a respondent wants to report a specific Kashmiri identity.",
+          "An ethnic-group form lists Asian / Asian British categories and a write-in option. The respondent's specific identity is not among the printed options.",
         questionPrompt:
           "Which part of the wording is doing the work in this distractor?",
         wording: "Asian / Asian British, Pakistani, Any other Asian background, write in",
@@ -4508,10 +4508,10 @@ const authoredWorkbenchSpecimens: Array<
         id: "disaster-near-owner",
         kind: "near_transfer",
         context:
-          "A housing-search sequence first records an online listing, then asks whether owner advertising also helped with the same home search.",
+          "A housing-search sequence first records an online listing, then asks about owner advertising for the same home search.",
         questionPrompt:
           "Which part of the wording changes whether the next \"Yes\" is allowed?",
-        wording: "After saying you found the home online, did owner advertising also help?",
+        wording: "Did owner advertising help in your home search?",
         pattern: "sequence_overlap",
         featureChoices: [
           "A prior answer changes whether the next \"Yes\" is allowed",

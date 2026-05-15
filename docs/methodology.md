@@ -89,7 +89,7 @@ the same three judgments: the highlighted answer choice fits the scenario, the
 visible wording could send the scenario to more than one answer, or the scenario
 belongs outside the highlighted answer choice.
 
-Locked previews appear before gated legacy sections so visitors can see that
+Locked previews appear before each gated section so visitors can see that
 Compare routes, Probe, Reveal, and Quick practice are intentionally downstream
 of the first judgment. These previews do not expose the answer key.
 

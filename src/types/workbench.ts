@@ -355,7 +355,7 @@ export type TimeWindowSliderConfig = {
 };
 
 export type WidgetDisplayConfig = {
-  displayLabel?: string;
+  displayLabel: string;
   probeOutcomeRules?: ProbeOutcomeRule[];
 };
 

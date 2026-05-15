@@ -531,7 +531,7 @@ export function CaseLab({
                 className="case-lab-continue-button"
                 onClick={() => setRepairBenchSeen(true)}
               >
-                Continue to transfer check
+                Try one fresh case
               </button>
             </div>
           </div>

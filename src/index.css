@@ -1613,6 +1613,33 @@ summary:focus-visible {
   letter-spacing: 0.16em;
   color: var(--card-accent, var(--accent));
   margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+
+.pattern-catalog-card-mark-num {
+  /* Number is the stable identity — always shown, never changes. */
+  display: inline-block;
+}
+
+.pattern-catalog-card-mark-state {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  padding: 1px 6px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.pattern-catalog-card-mark-state--done {
+  background: color-mix(in srgb, var(--card-accent, var(--accent)) 14%, transparent);
+  color: var(--card-accent, var(--accent));
+  letter-spacing: 0;
+}
+
+.pattern-catalog-card-mark-state--now {
+  background: var(--card-accent, var(--accent));
+  color: var(--paper);
 }
 
 .pattern-catalog-label {
@@ -3569,6 +3596,14 @@ summary:focus-visible {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-soft);
+}
+
+.microcase-explanation--correct {
+  border-top-style: solid;
+}
+
+.microcase-explanation--correct .microcase-explanation-label {
+  color: var(--accent);
 }
 
 .workbench-beat--method-note {
