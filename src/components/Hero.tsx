@@ -28,7 +28,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
           Editorial exhibit
           <span className="hero-eyebrow-sep" aria-hidden="true">/</span>
           <span className="hero-eyebrow-kind">
-            Census + ONS questionnaire-testing review
+            U.S. Census + UK ONS questionnaire-testing review
           </span>
         </p>
       </div>
@@ -46,12 +46,14 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
         <div className="hero-body-wrap">
           <p className="hero-body">
             This page teaches answer-choice problems with synthetic teaching
-            cases and public questionnaire-testing reports from the U.S.
-            Census Bureau and the Office for National Statistics. You read a
-            survey question, work through several respondent situations, and
-            see where an answer choice captures something different from what
-            the person meant. If you write surveys, the field guide turns the
-            patterns into seven portable checks for your own drafts.
+            cases and public questionnaire-testing reports — pretesting and
+            cognitive-interview studies that agencies publish before they
+            field a survey — from the U.S. Census Bureau and the UK Office
+            for National Statistics. You read a survey question, work through
+            several respondent situations, and see where an answer choice
+            captures something different from what the person meant. If you
+            write surveys, the field guide turns the patterns into seven
+            portable checks for your own drafts.
           </p>
         </div>
 
@@ -65,15 +67,20 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
           {resumeSpecimen ? (
             <>
               <a
-                className="cta-button cta-button--primary"
+                className="cta-button cta-button--primary cta-button--stacked"
                 href={routeToHash({
                   kind: "walk",
                   slot: resumeSpecimen.id
                 })}
                 data-testid="hero-cta-resume"
               >
-                <span>
-                  Resume walk · example {resumeSpecimen.number}
+                <span className="cta-button-stacked-body">
+                  <span className="cta-button-stacked-primary">
+                    Resume walk · example {resumeSpecimen.number}
+                  </span>
+                  <span className="cta-button-stacked-secondary">
+                    {resumeSpecimen.patternLabel} · {resumeSpecimen.railLabel}
+                  </span>
                 </span>
                 <span aria-hidden="true" className="cta-button-arrow">
                   ↻

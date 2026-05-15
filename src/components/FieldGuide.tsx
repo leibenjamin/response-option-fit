@@ -76,6 +76,30 @@ export function FieldGuide() {
         </p>
       </section>
 
+      <aside
+        className="field-guide-newcomer"
+        aria-labelledby="field-guide-newcomer-title"
+      >
+        <p className="field-guide-newcomer-eyebrow">No survey draft yet?</p>
+        <p
+          className="field-guide-newcomer-body"
+          id="field-guide-newcomer-title"
+        >
+          The checks below assume you have your own draft to review. To try
+          one without leaving the page, apply the seven tests to{" "}
+          <a
+            className="field-guide-newcomer-link"
+            href={routeToHash({
+              kind: "walk",
+              slot: workbenchSpecimens[0]?.id ?? ""
+            })}
+          >
+            Example 01's tested wording
+          </a>{" "}
+          ("Taxi or ride-hailing services").
+        </p>
+      </aside>
+
       <section
         className="field-guide-section"
         aria-labelledby="response-fit-tests-title"

@@ -30,7 +30,7 @@ function provenanceLabel(provenance: WorkbenchSpecimen["vignettes"][number]["pro
 function provenanceDescription(provenance: WorkbenchSpecimen["vignettes"][number]["provenance"]) {
   return provenance === "direct_quote"
     ? "Finding, quotation, or close paraphrase from a cited public testing report."
-    : "Constructed by us, anchored to a specific report finding.";
+    : "Constructed by the author, anchored to a specific report finding.";
 }
 
 export function PredictBeat({

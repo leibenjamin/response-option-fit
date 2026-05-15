@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { PromptCard as PromptCardData } from "../data/field-guide-route";
 
 type Props = {
@@ -7,6 +7,12 @@ type Props = {
 
 export function PromptCard({ card }: Props) {
   const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    if (status === "" || status.startsWith("Copy unavailable")) return;
+    const timeout = window.setTimeout(() => setStatus(""), 2500);
+    return () => window.clearTimeout(timeout);
+  }, [status]);
 
   const handleCopy = () => {
     const clipboard = window.navigator.clipboard;
