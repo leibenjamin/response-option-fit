@@ -28,10 +28,12 @@ export function FeaturedExample() {
           Try one example before walking through the rest
         </h2>
         <p className="featured-example-lede">
-          Below is the first case lab, fully working: read the synthetic survey
-          question, work through the teaching cases, try a wording change, and
-          check the real-world source anchor. Examples 01–02 teach through case
-          labs; examples 03–12 use a five-step worked-example format.
+          Above, one quick question gave you the feel of a label-ambiguity
+          problem. This first worked example takes that same problem into a
+          real survey item, fully working: read the synthetic survey question,
+          work the teaching cases, try a wording change, and check the
+          real-world source anchor. Examples 01–02 teach through case labs;
+          examples 03–12 use a five-step worked-example format.
         </p>
         <p
           className="featured-example-source-receipt"

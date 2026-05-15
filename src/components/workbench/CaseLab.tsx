@@ -188,6 +188,19 @@ export function CaseLab({
             {lab.title}
           </h2>
           <p className="beat-lede">{lab.lede}</p>
+          {/* Plain-language definition of this example's pattern, surfaced
+             in-place so the case lab teaches its own pattern without
+             depending on the hub map. Mirrors the five-step Frame beat's
+             "Problem type in plain language" row. */}
+          <p
+            className="case-lab-pattern-gloss"
+            data-testid={`case-lab-pattern-gloss-${specimen.id}`}
+          >
+            <span className="case-lab-pattern-gloss-label">
+              Problem type in plain language
+            </span>
+            <span>{specimen.prerequisiteVocab}</span>
+          </p>
           <p className="case-lab-setup">{lab.setup}</p>
         </header>
 
