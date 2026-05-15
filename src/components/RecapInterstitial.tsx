@@ -123,7 +123,7 @@ export function RecapInterstitial({
           </div>
           {selectedPattern && (
             <p className="recap-retrieval-answer" data-testid="recap-retrieval-answer">
-              Useful distinction: {retrievalPrompt.explanation}
+              How they're different: {retrievalPrompt.explanation}
             </p>
           )}
         </section>

@@ -129,7 +129,7 @@ export function CompletionScreen({ visited }: Props) {
                   </div>
                   {selected && (
                     <p className="completion-review-answer">
-                      Useful distinction: {item.explanation}
+                      How they're different: {item.explanation}
                     </p>
                   )}
                 </fieldset>
