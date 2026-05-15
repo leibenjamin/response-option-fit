@@ -553,7 +553,7 @@ export function CaseLab({
         {!allScenariosAnswered && (
           <div className="case-lab-gate" role="note">
             <p className="case-lab-gate-label">Locked for now</p>
-            <p>Sort every teaching case before trying the transfer check.</p>
+            <p>Sort every teaching case first, then come back here for one fresh case.</p>
           </div>
         )}
         {allScenariosAnswered && !repairBenchSeen && (
