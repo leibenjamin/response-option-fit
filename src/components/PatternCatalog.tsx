@@ -119,13 +119,18 @@ export function PatternCatalog({
               data-testid={`pattern-card-${pattern}`}
             >
               <p className="pattern-catalog-card-mark" aria-hidden="true">
-                {allVisited
-                  ? "✓"
-                  : hasCurrent
-                  ? "▸"
-                  : isRail
-                  ? "·"
-                  : groupSpecimensList[0]?.number ?? ""}
+                <span className="pattern-catalog-card-mark-num">
+                  {groupSpecimensList[0]?.number ?? ""}
+                </span>
+                {(allVisited || hasCurrent) && (
+                  <span
+                    className={`pattern-catalog-card-mark-state pattern-catalog-card-mark-state--${
+                      allVisited ? "done" : "now"
+                    }`}
+                  >
+                    {allVisited ? "✓" : "now"}
+                  </span>
+                )}
               </p>
               <h3 className="pattern-catalog-label">{meta.label}</h3>
               <p className="pattern-catalog-canonical">

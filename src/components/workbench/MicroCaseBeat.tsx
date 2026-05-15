@@ -64,8 +64,17 @@ export function MicroCaseBeat({
       </button>
 
       {submitted && (
-        <div className="microcase-explanation" data-testid="microcase-explanation">
-          <p className="microcase-explanation-label">Why this choice fits</p>
+        <div
+          className={`microcase-explanation microcase-explanation--${
+            answer === microCase.correctFeatureIndex ? "correct" : "off"
+          }`}
+          data-testid="microcase-explanation"
+        >
+          <p className="microcase-explanation-label">
+            {answer === microCase.correctFeatureIndex
+              ? "On the teaching route"
+              : "Where the route turns instead"}
+          </p>
           <p className="microcase-result">
             What about the wording: {microCase.featureChoices[microCase.correctFeatureIndex]}
           </p>
