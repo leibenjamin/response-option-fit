@@ -32,7 +32,11 @@ function groupSpecimens(): SpecimensByPattern {
 const specimensByPattern = groupSpecimens();
 
 const railEyebrowText = "Knowledge map";
-const fullEyebrowText = "Before the examples";
+/* The full variant currently renders only inside PatternMapDialog with
+   showHeader={false}, so this eyebrow is unrendered today; it is kept
+   accurate in case a future caller shows the full variant with its
+   own header. */
+const fullEyebrowText = "The six patterns";
 
 export function PatternCatalog({
   variant = "full",

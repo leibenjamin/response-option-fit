@@ -4,7 +4,8 @@ import { Colophon } from "./components/Colophon";
 import { CompletionScreen } from "./components/CompletionScreen";
 import { FeaturedExample } from "./components/FeaturedExample";
 import { Hero } from "./components/Hero";
-import { PatternCatalog } from "./components/PatternCatalog";
+import { OpeningQuestion } from "./components/OpeningQuestion";
+import { PatternMapDialog } from "./components/PatternMapDialog";
 import { Reference } from "./components/Reference";
 import { SettingsButton } from "./components/SettingsButton";
 import { SettingsDrawer } from "./components/SettingsDrawer";
@@ -50,6 +51,10 @@ function Hub({
      active on, including revisits — not just the most recent newly-opened
      specimen — so navigating 1 → 2 → 1 leaves Resume pointing at 1. */
   const lastVisited = controller.state.lastSpecimenId;
+  /* The six-pattern map lives off-scroll in a modal; the hub carries only a
+     slim trigger band and the cold-open's reveal both open it. */
+  const [mapOpen, setMapOpen] = useState(false);
+  const openMap = () => setMapOpen(true);
   return (
     <div className="lab" data-testid="hub">
       <a href="#featured-example" className="skip-link" data-testid="skip-link">
@@ -61,9 +66,29 @@ function Hub({
         className="hub-main"
         aria-label="Overview of the response option fit exhibit"
       >
-        <PatternCatalog variant="full" visited={visitedSet} />
+        <OpeningQuestion onOpenMap={openMap} />
+        <section className="pattern-map-band" aria-label="The six-pattern map">
+          <p className="pattern-map-band-text">
+            Twelve worked examples, six recurring answer-choice problems. The
+            map names all six and links into every example.
+          </p>
+          <button
+            type="button"
+            className="cta-button cta-button--secondary pattern-map-band-button"
+            onClick={openMap}
+            data-testid="pattern-map-open"
+          >
+            <span>Open the six-pattern map</span>
+          </button>
+        </section>
         <FeaturedExample />
       </main>
+
+      <PatternMapDialog
+        open={mapOpen}
+        onClose={() => setMapOpen(false)}
+        visited={visitedSet}
+      />
 
       <footer className="foot">
         <p className="foot-line">

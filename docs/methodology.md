@@ -35,10 +35,13 @@ remain the evidence anchors.
 ## Page Layout
 
 The exhibit is laid out across four hash-routed views so the worked examples
-do not collapse into a single thirty-screen scroll. The overview at `#` keeps
-the hero, the six-pattern knowledge map, and one fully-working embedded
+do not collapse into a single thirty-screen scroll. The overview at `#` opens
+with a short interactive demonstration — one ordinary survey question the
+visitor answers as themselves — then carries one fully-working embedded
 worked example, so a visitor sees the work the exhibit can do without
-clicking through. The walk at `#walk/<id>` paginates the remaining examples
+clicking through. The six-pattern map opens on demand as an overlay rather
+than occupying the overview scroll as a block of taxonomy. The walk at
+`#walk/<id>` paginates the remaining examples
 one at a time, with a sticky pattern map on the right and prev/next
 navigation; mid-walk recap interstitials appear after the fourth and eighth
 examples, and a completion screen closes the sequence with six compact

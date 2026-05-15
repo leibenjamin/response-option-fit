@@ -1720,6 +1720,33 @@ summary:focus-visible {
   line-height: 1.6;
 }
 
+/* In-place plain-language definition of the case lab's pattern. A tinted
+   aside so it reads as a reference, not body prose; the body span inherits
+   the paragraph's text style and the label span overrides to a mono
+   eyebrow. */
+.case-lab-pattern-gloss {
+  margin: var(--s-3) 0 0;
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--workbench-accent, var(--accent));
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  max-width: 74ch;
+  color: var(--ink-2);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+.case-lab-pattern-gloss-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
 .case-lab-grid {
   display: grid;
   grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
@@ -3950,6 +3977,293 @@ summary:focus-visible {
   align-self: flex-start;
 }
 
+/* ===================== COLD-OPEN ("You answer it") =====================
+   The hub's opening interactive demonstration. A bordered paper panel with
+   an accent top edge so it reads as "start here / interactive" before the
+   eyebrow is even read. */
+
+.opening {
+  position: relative;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  padding: var(--s-6) var(--s-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+.opening::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--s-7);
+  right: var(--s-7);
+  height: 3px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.opening-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.opening-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+.opening-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(23px, 2.3vw, 31px);
+  line-height: 1.18;
+  letter-spacing: 0;
+  margin: 0;
+  color: var(--ink);
+  max-width: 28ch;
+}
+.opening-instruction {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.opening-question-card {
+  background: var(--paper);
+  border: 1px solid var(--line-soft);
+  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.opening-question-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.opening-question-text {
+  font-family: var(--font-serif);
+  font-size: clamp(19px, 1.9vw, 24px);
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0;
+}
+.opening-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+.opening-option {
+  flex: 1 1 130px;
+  min-height: 46px;
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+  transition: background-color 120ms ease, border-color 120ms ease,
+    color 120ms ease;
+}
+.opening-option:hover,
+.opening-option:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-2);
+  background: var(--paper);
+}
+.opening-option.is-active {
+  background: var(--accent-paper);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.opening-reveal-inner {
+  border-top: 1px solid var(--line-faint);
+  padding-top: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.opening-reveal-pick {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.opening-reveal-pick strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+.opening-reveal-body {
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 66ch;
+}
+.opening-reveal-name {
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: var(--s-1) 0 0;
+  max-width: 66ch;
+  border-left: 3px solid var(--accent);
+  padding-left: var(--s-4);
+}
+.opening-reveal-name strong {
+  font-weight: 500;
+}
+.opening-reveal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
+/* ===================== PATTERN MAP BAND =====================
+   Slim in-scroll trigger for the six-pattern map dialog. Keeps the
+   "twelve examples, six problems" signpost in the scroll without the
+   former six-card text wall. */
+
+.pattern-map-band {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  padding: var(--s-4) var(--s-6);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+.pattern-map-band-text {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 58ch;
+}
+.pattern-map-band-button {
+  flex: 0 0 auto;
+}
+
+/* ===================== PATTERN MAP DIALOG =====================
+   The six-pattern map as a centered modal. Mechanics mirror the settings
+   drawer (native <dialog> + showModal); only the panel placement differs. */
+
+.pattern-map-dialog {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  padding: var(--s-5);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pattern-map-dialog::backdrop {
+  background: rgba(20, 22, 26, 0.55);
+}
+.pattern-map-dialog:not([open]) {
+  display: none;
+}
+.pattern-map-dialog-panel {
+  width: min(920px, 100%);
+  max-height: min(86vh, 880px);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 44px rgba(20, 22, 26, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.pattern-map-dialog-head {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-5) var(--s-8) var(--s-4) var(--s-6);
+  border-bottom: 1px solid var(--line);
+}
+.pattern-map-dialog-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.pattern-map-dialog-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.22;
+  margin: 0;
+  color: var(--ink);
+}
+.pattern-map-dialog-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 60ch;
+}
+.pattern-map-dialog-close {
+  position: absolute;
+  top: var(--s-4);
+  right: var(--s-5);
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.pattern-map-dialog-close:hover,
+.pattern-map-dialog-close:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+}
+.pattern-map-dialog-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--s-5) var(--s-6) var(--s-6);
+}
+.pattern-map-dialog-body .pattern-catalog {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.pattern-map-dialog-body .pattern-catalog-grid--full {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 /* ===================== KNOWLEDGE MAP CARDS =====================
    Pattern catalog gets two presentations: full (3-col grid on the hub)
    and rail (compact stack in walk-mode aside). Both share the card
@@ -5112,11 +5426,13 @@ summary:focus-visible {
   }
   .shelf { padding: var(--s-7) var(--gutter); }
   .pattern-catalog,
-  .workbench-beat {
+  .workbench-beat,
+  .opening {
     padding-left: var(--s-6);
     padding-right: var(--s-6);
   }
-  .workbench-beat:first-child::before {
+  .workbench-beat:first-child::before,
+  .opening::before {
     left: var(--s-6);
     right: var(--s-6);
   }
@@ -5192,12 +5508,46 @@ summary:focus-visible {
   .lab { padding: var(--s-5) var(--s-4); }
   .pattern-catalog,
   .how-to-read,
-  .workbench-beat {
+  .workbench-beat,
+  .opening {
     padding: var(--s-4);
   }
-  .workbench-beat:first-child::before {
+  .opening {
+    gap: var(--s-4);
+  }
+  .workbench-beat:first-child::before,
+  .opening::before {
     left: var(--s-4);
     right: var(--s-4);
+  }
+  .opening-question-card {
+    padding: var(--s-4);
+  }
+  .pattern-map-band {
+    padding: var(--s-4);
+  }
+  .pattern-map-band-button {
+    width: 100%;
+    justify-content: center;
+  }
+  .pattern-map-dialog {
+    padding: var(--s-3);
+  }
+  .pattern-map-dialog-panel {
+    max-height: 92vh;
+  }
+  .pattern-map-dialog-head {
+    padding: var(--s-4) var(--s-7) var(--s-3) var(--s-4);
+  }
+  .pattern-map-dialog-close {
+    top: var(--s-3);
+    right: var(--s-4);
+  }
+  .pattern-map-dialog-body {
+    padding: var(--s-4);
+  }
+  .pattern-map-dialog-body .pattern-catalog-grid--full {
+    grid-template-columns: minmax(0, 1fr);
   }
   /* Hoist the scope receipt above the body and CTAs at phone widths so the
      four trust stats arrive on the first scroll, not the third. Uses
@@ -5741,6 +6091,7 @@ summary:focus-visible {
   .workbench,
   .workbench-beat,
   .case-lab-frame,
+  .case-lab-pattern-gloss,
   .case-lab-scenario,
   .case-lab-repair-panel,
   .case-lab-source-details,
@@ -5807,7 +6158,14 @@ summary:focus-visible {
   .prompt-card,
   .prompt-copy-button,
   .prompt-text,
-  .apply-pattern-details {
+  .apply-pattern-details,
+  .opening,
+  .opening-question-card,
+  .opening-option,
+  .opening-reveal-name,
+  .pattern-map-band,
+  .pattern-map-dialog-panel,
+  .pattern-map-dialog-close {
     color: CanvasText;
     background: Canvas;
     border-color: CanvasText;
@@ -5828,6 +6186,7 @@ summary:focus-visible {
   .checkbox-row input:checked + .checkbox-mark,
   .switch-row input:checked + .switch-track,
   .prediction-button.is-active,
+  .opening-option.is-active,
   .widget-option.is-selected .widget-toggle-button {
     color: HighlightText;
     background: Highlight;

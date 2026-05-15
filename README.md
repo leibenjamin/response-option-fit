@@ -11,12 +11,13 @@ The project demonstrates a React and TypeScript interface with two
 synthetic-primary case labs, ten five-step worked examples, source anchors,
 surrounding question context, source appendix, claim boundary, static security
 headers, and local-only settings controls. The page
-is organized as four hash-routed views — an overview that carries the hero,
-the six-pattern knowledge map, and one fully-working embedded example; a
-walk-through that paginates the remaining examples with a sticky map and
-recap interstitials; a field guide with reusable tests, checklists, and
-static prompts for visitors reviewing their own surveys; and a reference shelf for the
-glossary, method note, claim boundary, and source appendix.
+is organized as four hash-routed views — an overview that opens with a short
+interactive demonstration, carries one fully-working embedded example, and
+keeps the six-pattern map an overlay a click away; a walk-through that
+paginates the remaining examples with a sticky map and recap interstitials; a
+field guide with reusable tests, checklists, and static prompts for visitors
+reviewing their own surveys; and a reference shelf for the glossary, method
+note, claim boundary, and source appendix.
 
 ## Sources And Attribution
 

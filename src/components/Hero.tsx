@@ -175,7 +175,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
             <span className="hero-scope-val">6</span>
             <span className="hero-scope-unit"> problem types</span>
           </p>
-          <p className="hero-scope-note">defined before the examples</p>
+          <p className="hero-scope-note">defined inside each example</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
