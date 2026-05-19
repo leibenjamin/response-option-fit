@@ -11,6 +11,7 @@ import type {
 } from "../types/workbench";
 import { CaseLab } from "./workbench/CaseLab";
 import { DiagnoseBeat } from "./workbench/DiagnoseBeat";
+import { ExampleExperienceRouter } from "./workbench/ExampleExperience";
 import { FrameBeat } from "./workbench/FrameBeat";
 import { MicroCaseBeat } from "./workbench/MicroCaseBeat";
 import { PredictBeat } from "./workbench/PredictBeat";
@@ -416,7 +417,12 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
       aria-labelledby={titleId}
       style={style}
     >
-      {specimen.caseLab ? (
+      {specimen.experience ? (
+        <ExampleExperienceRouter
+          specimen={specimen as WorkbenchSpecimen & { experience: NonNullable<WorkbenchSpecimen["experience"]> }}
+          titleId={titleId}
+        />
+      ) : specimen.caseLab ? (
         <CaseLab
           specimen={specimen}
           titleId={titleId}

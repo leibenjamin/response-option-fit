@@ -1,4 +1,5 @@
 import type { FailurePattern, WorkbenchSpecimen } from "../types/workbench";
+import { experienceBySpecimenId } from "./example-experiences";
 
 const claimBoundaryNote =
   "This is one change the survey team considered or used. Your edit may address the issue differently. This page does not validate replacement wording.";
@@ -4853,6 +4854,7 @@ const authoredWorkbenchSpecimens: Array<
 export const workbenchSpecimens: WorkbenchSpecimen[] = authoredWorkbenchSpecimens.map(
   (specimen) => ({
     ...specimen,
+    experience: experienceBySpecimenId[specimen.id],
     verifiedAgainstSource,
     methodNote: methodNotesById[specimen.id] ?? null
   })
