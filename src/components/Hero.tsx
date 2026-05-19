@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { workbenchSpecimens } from "../data/workbench-specimens";
 import { routeToHash } from "../lib/routes";
 
@@ -6,6 +7,61 @@ type Props = {
      "Resume walk" affordance appears alongside the standard CTAs. */
   resumeSpecimenId?: string | null;
 };
+
+const heroTrips = [
+  {
+    id: "app",
+    label: "Lyft ride",
+    route: "Answer route: app-based paid ride",
+    note: "The label has a clear place when the service model is visible."
+  },
+  {
+    id: "carpool",
+    label: "Coworker carpool",
+    route: "Boundary risk: shared car, not paid service",
+    note: "The everyday word can invite a trip the answer choice was not built to count."
+  },
+  {
+    id: "bike",
+    label: "Bike-share dock",
+    route: "Boundary risk: shared vehicle, not ride service",
+    note: "The shared object is salient, but it does not follow the same response route."
+  }
+];
+
+function HeroMiniPuzzle() {
+  const [activeId, setActiveId] = useState(heroTrips[0].id);
+  const active = heroTrips.find((trip) => trip.id === activeId) ?? heroTrips[0];
+
+  return (
+    <aside className="hero-mini-puzzle" aria-labelledby="hero-mini-puzzle-title">
+      <p className="hero-mini-eyebrow">Live specimen</p>
+      <h2 id="hero-mini-puzzle-title">Which trip does “rideshare” invite?</h2>
+      <div
+        className="hero-mini-trips"
+        role="group"
+        aria-label="Try a trip route"
+      >
+        {heroTrips.map((trip) => (
+          <button
+            type="button"
+            className={`hero-mini-trip ${trip.id === active.id ? "is-active" : ""}`}
+            aria-pressed={trip.id === active.id}
+            onClick={() => setActiveId(trip.id)}
+            key={trip.id}
+            data-testid={`hero-mini-trip-${trip.id}`}
+          >
+            {trip.label}
+          </button>
+        ))}
+      </div>
+      <p className="hero-mini-route" aria-live="polite">
+        <strong>{active.route}</strong>
+        <span>{active.note}</span>
+      </p>
+    </aside>
+  );
+}
 
 /* The hub Hero. Top-of-page identity carrier: editorial-exhibit eyebrow,
    project kicker, plain-language title, mechanism subtitle, body that
@@ -45,15 +101,10 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
 
         <div className="hero-body-wrap">
           <p className="hero-body">
-            This page teaches answer-choice problems with synthetic teaching
-            cases and public questionnaire-testing reports — pretesting and
-            cognitive-interview studies that agencies publish before they
-            field a survey — from the U.S. Census Bureau and the UK Office
-            for National Statistics. You read a survey question, work through
-            several respondent situations, and see where an answer choice
-            captures something different from what the person meant. If you
-            write surveys, the field guide turns the patterns into seven
-            portable checks for your own drafts.
+            Twelve public-source-backed specimens show how labels, buckets,
+            premises, boundaries, sequences, and counting rules can move a
+            respondent's answer. Each specimen starts with a small reviewer
+            task before the source receipt and repair notes.
           </p>
         </div>
 
@@ -157,6 +208,8 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
           )}
         </div>
       </div>
+
+      <HeroMiniPuzzle />
 
       <ul
         className="hero-scope"

@@ -2,12 +2,12 @@
 
    This file is the single source of truth for route shape and parsing.
    App.tsx subscribes to hashchange and renders one of:
-     hub       - the landing overview (Hero + Pattern Catalog + Featured
+     hub       - the landing overview (Hero + live specimen puzzle + Featured
                  Example)
      walk      - paginated walk-through; walk.specimenId names the active
                  specimen, or "done" for the completion screen
      reference - Glossary + Method note + Claim boundary + Source appendix
-     fieldGuide - reusable tests, checklists, and static prompt pack
+     fieldGuide - reviewer console, reusable tests, and static prompt pack
      colophon  - production notes (already exists)
 
    Old `#exhibit` URLs continue to land on the hub so a stale link from the

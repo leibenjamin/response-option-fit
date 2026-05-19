@@ -9,9 +9,9 @@ type Props = {
   visited: ReadonlySet<string>;
 };
 
-/* End-of-walk completion screen. Lives at #walk/done. Renders the full
-   knowledge map with everything filled in and points the visitor toward
-   the reference shelf and the colophon as the natural next reads. */
+/* End-of-walk completion screen. Lives at #walk/done. Opens with a remix board
+   so the route is useful even without saved progress; the full map remains
+   available behind a disclosure. */
 export function CompletionScreen({ visited }: Props) {
   const [reviewAnswers, setReviewAnswers] = useState<Record<string, string>>({});
   const allVisited =
@@ -48,25 +48,25 @@ export function CompletionScreen({ visited }: Props) {
         <p className="completion-lede">
           {allVisited ? (
             <>
-              You've worked through every example. Examples 01–02 taught
-              through case labs; examples 03–12 used a five-step
-              worked-example format. The next read is the field guide, where
-              the patterns turn into reusable checks and prompts for your own
-              survey drafts.
+              You've worked through every example. The twelve engines each
+              used a different reviewer surface, from route maps and timelines
+              to premise stacks and counting benches. The next read is the
+              field guide, where the patterns turn into reusable checks and
+              prompts for your own survey drafts.
             </>
           ) : isEmpty ? (
             <>
               You haven't started the walk yet. The exhibit threads twelve
               worked examples through six recurring answer-choice problems,
-              one example at a time, with a knowledge map that fills in as
-              you go. The first example is one click away.
+              one example at a time, with a compact map drawer that fills in as
+              you go. The first engine is one click away.
             </>
           ) : (
             <>
               You've reached the wrap-up. You worked through{" "}
               <strong>{visitedCount}</strong> of 12 examples this session.
-              The full set is always one click away in the knowledge map
-              below, and the field guide turns the patterns into portable
+              The full set is always one click away in the map drawer below,
+              and the field guide turns the patterns into portable
               checks for your own survey drafts.
             </>
           )}
@@ -74,70 +74,65 @@ export function CompletionScreen({ visited }: Props) {
       </header>
 
       <section
-        className="completion-map"
-        aria-labelledby="completion-map-title"
+        className="completion-review"
+        aria-labelledby="completion-review-title"
+        data-testid="completion-mixed-review"
       >
-        <h2 className="completion-map-title" id="completion-map-title">
-          What you saw
-        </h2>
+        <header className="completion-review-head">
+          <p className="completion-review-eyebrow">Remix board</p>
+          <h2 id="completion-review-title">Tell the close routes apart</h2>
+          <p>
+            Use these compact contrasts even if you opened the wrap-up directly.
+            The point is the distinction, not a saved score.
+          </p>
+        </header>
+        <div className="completion-review-list">
+          {mixedReviewItems.map((item) => {
+            const selected = reviewAnswers[item.id] ?? null;
+            return (
+              <fieldset className="completion-review-card" key={item.id}>
+                <legend>{item.prompt}</legend>
+                <div className="completion-review-options">
+                  {item.options.map((pattern) => (
+                    <label className="segmented-radio" key={pattern}>
+                      <input
+                        type="radio"
+                        name={`completion-review-${item.id}`}
+                        value={pattern}
+                        checked={selected === pattern}
+                        onChange={() =>
+                          setReviewAnswers((answers) => ({
+                            ...answers,
+                            [item.id]: pattern
+                          }))
+                        }
+                      />
+                      <span>{patternMeta[pattern].label}</span>
+                    </label>
+                  ))}
+                </div>
+                {selected && (
+                  <p className="completion-review-answer">
+                    Route distinction: {item.explanation}
+                  </p>
+                )}
+              </fieldset>
+            );
+          })}
+        </div>
+      </section>
+
+      <details className="completion-map">
+        <summary className="completion-map-title" id="completion-map-title">
+          Pattern map and examples
+        </summary>
         <PatternCatalog
           variant="full"
           visited={visited}
           currentSpecimenId={null}
           showHeader={false}
         />
-      </section>
-
-      {!isEmpty && (
-        <section
-          className="completion-review"
-          aria-labelledby="completion-review-title"
-          data-testid="completion-mixed-review"
-        >
-          <header className="completion-review-head">
-            <p className="completion-review-eyebrow">Mixed review</p>
-            <h2 id="completion-review-title">Tell the confusable pairs apart</h2>
-            <p>
-              Pick the pattern the scenario most strongly fits, then read the
-              distinction. This is retrieval practice, not a saved score.
-            </p>
-          </header>
-          <div className="completion-review-list">
-            {mixedReviewItems.map((item) => {
-              const selected = reviewAnswers[item.id] ?? null;
-              return (
-                <fieldset className="completion-review-card" key={item.id}>
-                  <legend>{item.prompt}</legend>
-                  <div className="completion-review-options">
-                    {item.options.map((pattern) => (
-                      <label className="segmented-radio" key={pattern}>
-                        <input
-                          type="radio"
-                          name={`completion-review-${item.id}`}
-                          value={pattern}
-                          checked={selected === pattern}
-                          onChange={() =>
-                            setReviewAnswers((answers) => ({
-                              ...answers,
-                              [item.id]: pattern
-                            }))
-                          }
-                        />
-                        <span>{patternMeta[pattern].label}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {selected && (
-                    <p className="completion-review-answer">
-                      How they're different: {item.explanation}
-                    </p>
-                  )}
-                </fieldset>
-              );
-            })}
-          </div>
-        </section>
-      )}
+      </details>
 
       <nav className="completion-actions" aria-label="What to read next">
         {isEmpty ? (

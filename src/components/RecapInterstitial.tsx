@@ -27,10 +27,10 @@ function nextPatternUp(currentSpecimenId: string): FailurePattern | null {
   return workbenchSpecimens[idx]?.pattern ?? null;
 }
 
-/* Mid-walk recap interstitial. Appears as the first thing in the walk's
-   main column when the visitor has just crossed a recap threshold (4 or 8)
-   and hasn't dismissed that threshold yet. The recap is inline (not a
-   modal); the visitor can scroll past or hit the explicit Skip link. */
+/* Mid-walk recap interstitial. Appears inline below the active engine when the
+   visitor has just crossed a recap threshold (4 or 8) and has not dismissed
+   that threshold yet. The visitor can scroll past or hit the explicit Skip
+   link. */
 export function RecapInterstitial({
   threshold,
   visited,
