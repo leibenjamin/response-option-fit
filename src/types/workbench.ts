@@ -469,6 +469,143 @@ export type MethodNote = {
   whatOmitted: string;
 };
 
+export type ExampleExperienceKind =
+  | "meaning_lens"
+  | "level_ladder"
+  | "eligibility_fork"
+  | "feature_rule_board"
+  | "source_timeline"
+  | "schedule_trace"
+  | "device_label_splitter"
+  | "visibility_route"
+  | "premise_stack"
+  | "heading_scanner"
+  | "reason_strength_board"
+  | "counting_workbench";
+
+export type ExperienceTone =
+  | "target"
+  | "edge"
+  | "outside"
+  | "warning"
+  | "method"
+  | "neutral";
+
+export type ExperienceZone = {
+  id: string;
+  label: string;
+  description: string;
+  tone?: ExperienceTone;
+};
+
+export type ExperienceControl = {
+  id: string;
+  label: string;
+  description: string;
+  effect: string;
+};
+
+export type ExperienceCaseResult = {
+  zoneId: string;
+  note: string;
+};
+
+export type ExperienceCase = {
+  id: string;
+  title: string;
+  body: string;
+  reading: string;
+  provenance: "reported" | "source_grounded" | "teaching";
+  defaultZoneId: string;
+  tags: string[];
+  resultByControl?: Record<string, ExperienceCaseResult>;
+};
+
+export type ExperienceEngineInteraction =
+  | "lens_map"
+  | "level_ladder"
+  | "eligibility_fork"
+  | "feature_matrix"
+  | "source_timeline"
+  | "schedule_trace"
+  | "device_shelf"
+  | "visibility_route"
+  | "premise_stack"
+  | "heading_scanner"
+  | "reason_lanes"
+  | "counting_calendar";
+
+type ExperienceEngineBase<
+  Kind extends ExampleExperienceKind,
+  Interaction extends ExperienceEngineInteraction
+> = {
+  kind: Kind;
+  interaction: Interaction;
+  actionLabel: string;
+  objectLabel: string;
+  surfaceLabel: string;
+  feedbackLabel: string;
+};
+
+export type ExperienceEngineSpec =
+  | ExperienceEngineBase<"meaning_lens", "lens_map">
+  | ExperienceEngineBase<"level_ladder", "level_ladder">
+  | ExperienceEngineBase<"eligibility_fork", "eligibility_fork">
+  | ExperienceEngineBase<"feature_rule_board", "feature_matrix">
+  | ExperienceEngineBase<"source_timeline", "source_timeline">
+  | ExperienceEngineBase<"schedule_trace", "schedule_trace">
+  | ExperienceEngineBase<"device_label_splitter", "device_shelf">
+  | ExperienceEngineBase<"visibility_route", "visibility_route">
+  | ExperienceEngineBase<"premise_stack", "premise_stack">
+  | ExperienceEngineBase<"heading_scanner", "heading_scanner">
+  | ExperienceEngineBase<"reason_strength_board", "reason_lanes">
+  | ExperienceEngineBase<"counting_workbench", "counting_calendar">;
+
+export type ExperienceRepairOption = {
+  id: string;
+  label: string;
+  headline: string;
+  body: string;
+  effects: [string, ...string[]];
+  caution: string;
+};
+
+export type ExperienceTransfer = {
+  title: string;
+  prompt: string;
+  options: [string, string, ...string[]];
+  preferredIndex: number;
+  feedback: string;
+};
+
+export type WorkbenchExperience = {
+  kind: ExampleExperienceKind;
+  engine: ExperienceEngineSpec;
+  title: string;
+  lede: string;
+  stakes: string;
+  reviewerGoal: string;
+  surfaceTitle: string;
+  controlLabel: string;
+  caseLabel: string;
+  mapLabel: string;
+  instrumentNote: string;
+  zones: [ExperienceZone, ExperienceZone, ...ExperienceZone[]];
+  controls: [ExperienceControl, ...ExperienceControl[]];
+  cases: [ExperienceCase, ...ExperienceCase[]];
+  repair: {
+    title: string;
+    lede: string;
+    options: [ExperienceRepairOption, ...ExperienceRepairOption[]];
+  };
+  transfer: ExperienceTransfer;
+  sourceBoundary: {
+    title: string;
+    body: string;
+    limits: [string, ...string[]];
+  };
+};
+
 /* The worked example. Every beat's content lives here; the component
    tree renders this without computing pedagogically meaningful state. */
 export type WorkbenchSpecimen = {
@@ -530,6 +667,10 @@ export type WorkbenchSpecimen = {
   /* Optional synthetic-primary teaching flow. When present, Workbench renders
      this integrated case lab instead of the legacy beat sequence. */
   caseLab?: CaseLab;
+
+  /* Specimen-specific reviewer interaction engine. When present, Workbench
+     renders this instead of either older teaching shell. */
+  experience?: WorkbenchExperience;
 };
 
 /* Catalog metadata: the ordered set of examples, with the pacing model the
