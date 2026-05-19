@@ -14,10 +14,9 @@ visible evidence anchor.
 The twelve worked examples are anchored to public U.S. Census Bureau and Office
 for National Statistics testing materials because each source shows a distinct
 response-option fit problem without requiring sensitive personal examples or
-full-instrument critique. Examples 01 and 02 use synthetic-primary case labs:
-the night-market and city-employment scenarios are invented for instruction,
-while the ACS ride-hailing report and the CPS internet-self-response report
-remain the evidence anchors.
+full-instrument critique. Some engines use synthetic or source-grounded
+teaching cases to make the response route inspectable, while the public
+reports remain the evidence anchors.
 
 - **Label ambiguity ("same words, several meanings"):** respondents may
   attach different everyday meanings to the same answer-choice wording.
@@ -36,71 +35,53 @@ remain the evidence anchors.
 
 The exhibit is laid out across four hash-routed views so the worked examples
 do not collapse into a single thirty-screen scroll. The overview at `#` opens
-with a short interactive demonstration — one ordinary survey question the
-visitor answers as themselves — then carries one fully-working embedded
+with a live specimen puzzle and then carries one fully-working embedded
 worked example, so a visitor sees the work the exhibit can do without
 clicking through. The six-pattern map opens on demand as an overlay rather
 than occupying the overview scroll as a block of taxonomy. The walk at
-`#walk/<id>` paginates the remaining examples
-one at a time, with a sticky pattern map on the right and prev/next
-navigation; mid-walk recap interstitials appear after the fourth and eighth
-examples, and a completion screen closes the sequence with six compact
-contrast prompts. The field guide at
-`#field-guide` turns the examples into reusable checks, pattern-specific
-checklists, and static prompts for external research tool review. The reference shelf at
+`#walk/<id>` paginates the remaining examples one at a time, with a compact
+knowledge-map drawer and prev/next navigation; mid-walk recap interstitials
+appear after the fourth and eighth examples, and a completion screen closes
+the sequence with a remix board of compact contrast prompts. The field guide at
+`#field-guide` is a reviewer console with risk tabs, reusable checks, and
+static prompts for external research tool review. The reference shelf at
 `#reference` carries the glossary, method note, claim boundary, and source
-appendix as their own route. Examples 01 and 02 use the integrated case-lab
-format. The remaining examples use the five-step worked-example format.
+appendix as their own route. Each example route now renders a specimen-specific
+reviewer interaction engine: a lens map, level ladder, eligibility fork,
+feature matrix, source timeline, schedule trace, device shelf, visibility
+route map, premise stack, heading scanner, reason lanes, or counting calendar.
 
 ## Worked-Example Model
 
-Two worked-example formats currently exist.
+The current model is a specimen-specific reviewer interaction engine. Every example
+keeps a common evidence spine but changes the surface to match the actual
+review task:
 
-Examples 01 and 02 use the integrated case-lab format:
+1. **Reviewer action:** a page-specific control that appears near the top of
+   the route, such as a lens toggle, level cue, threshold rule, section cue, or
+   counting method.
+2. **Case trace:** one respondent situation at a time, with a visible route
+   into the map, stack, timeline, lane, or counting surface.
+3. **Survey instrument drawer:** surrounding question, highlighted target
+   answer, and source-boundary note, collapsed until the reviewer needs the
+   exact wording.
+4. **Repair sandbox:** preset repair directions and consequences, worded as
+   design options rather than validated replacements.
+5. **Apply-the-trace and source boundary:** a short application puzzle plus a
+   collapsible receipt for the cited public report.
 
-1. Setup: a synthetic survey question and highlighted answer choice.
-2. Sort: a guided scenario deck. The first three teaching cases reveal
-   feedback immediately on judgment (acquisition support); the last three
-   gate feedback behind an explicit Show explanation control (retrieval
-   support).
-3. Repair bench: preset wording changes and per-scenario consequences.
-4. Transfer check: one fresh scenario sorted with the same three judgments.
-5. Real-world anchor: collapsed source evidence and claim boundaries.
+The older integrated case-lab renderer and five-step renderer remain in the
+codebase as compatibility fallbacks for historical data, but the twelve current
+specimens render through `experience.engine`. This removes the public split
+between "case lab" and "five-step" examples and avoids repeating the same
+scenario text through prediction, diagnosis, probe, reveal, and quick-practice
+blocks.
 
-The case-lab format intentionally reaches the active sorting task faster than
-the five-step format. It shows the full answer list on larger screens, keeps
-the list behind disclosure on phones, gates the repair bench until the learner
-has sorted every teaching case, and gates the transfer check until the learner
-has reviewed the repair bench. This keeps source context and repair caveats
-visible without making them the first thing a novice has to parse.
-
-Case-lab scenario cards show the respondent-reading line before the judgment
-buttons. That line is part of the situation the learner is asked to reason
-from, not post-answer feedback.
-
-The remaining examples are rendered in five teaching beats:
-
-1. Frame: the surrounding survey question and highlighted answer choice.
-2. Predict: example-specific judgments for each scenario.
-3. Diagnose: teaching diagnosis and answer-choice diagram.
-4. Probe: a small preset wording change with diagnostic outcomes for each scenario.
-5. Reveal: what the source-supported revision addresses and what remains untested.
-
-The prediction labels are authored per example so the learner sees local,
-concrete language instead of generic fit terms. Every label set still maps to
-the same three judgments: the highlighted answer choice fits the scenario, the
-visible wording could send the scenario to more than one answer, or the scenario
-belongs outside the highlighted answer choice.
-
-Locked previews appear before each gated section so visitors can see that
-Compare routes, Probe, Reveal, and Quick practice are intentionally downstream
-of the first judgment. These previews do not expose the answer key.
-
-The app also carries opt-in local practice notes. They remember only predefined
-choice IDs and outcomes when the visitor has enabled Remember in Settings. The
-notes can show counts such as routes marked, teaching routes matched, and
-practice items completed, but they are not grades, survey scores, analytics,
-or evidence that a replacement wording has been validated.
+The app also carries opt-in local walk progress. The current twelve engines
+do not persist per-choice interaction state; older fallback renderers can still
+read and write lightweight predefined-choice practice records when enabled.
+Those records are not grades, survey scores, analytics, or evidence that a
+replacement wording has been validated.
 
 The answer-choice diagram uses four explanatory stages: what the person knows,
 the tested wording, where the answer choice stops fitting, and what the
@@ -141,9 +122,9 @@ system:
 - **Source-grounded stress case:** constructed teaching case based on a cited
   source finding.
 
-Teaching cases, pair bridges, completion-review prompts, case-lab repair
-rationales, and Probe rationales are learning aids. They should not be read as
-official source-agency answer keys or as tested replacement wording.
+Teaching cases, pair bridges, completion-review prompts, repair rationales, and
+workspace route notes are learning aids. They should not be read as official
+source-agency answer keys or as tested replacement wording.
 
 ## Claim Boundary
 

@@ -77,17 +77,20 @@ section or page reference, and a direct public PDF URL:
   diagram-stage summaries, data-consequence descriptions, repair directions,
   and takeaways are editorial teaching material unless explicitly marked as
   reported source material.
-- Provenance labels now separate **Teaching case**, **Reported quote**,
-  **Reported finding**, and **Source-grounded stress case**. Legacy examples
-  may still display the older **Source-backed finding** and **Authored
-  scenario** labels until migrated.
+- Provenance labels in the current reviewer engines separate **Teaching
+  case**, **Reported source finding**, and **Source-grounded case**. Older
+  fallback renderers still contain the prior label vocabulary in code, but the
+  public twelve-example walk no longer depends on that shell.
 - **Reported quote** is reserved for direct or close quote material from a
   cited report. A paraphrased participant description or summarized observation
   is a **Reported finding** even when it describes one participant.
-- Example 01 currently uses invented night-market teaching cases in the main
-  deck. Its real-world anchor uses reported ACS findings plus a
-  source-grounded constructed stress case; the synthetic `Rideshare` wording
-  was not fielded by the Census Bureau.
+- Example 01 now renders as a lens-map engine. The real ACS source
+  supports the ride-hailing comprehension concern; the teaching trips are
+  editorial cases used to expose the boundary.
+- The current engine surfaces are authored diagrams and interaction sketches.
+  They make source-grounded response-route risks visible, but they are not
+  source-agency screenshots, tested prototypes, or validated replacement
+  instruments.
 - Repair directions identify the type of clarification suggested by the source
   finding; they are not validated replacement questions.
 - Probe outcomes are authored teaching diagnostics. They show whether a preset

@@ -7,21 +7,21 @@ answer a clear place to go" and uses twelve worked examples from public
 questionnaire-testing materials and synthetic teaching cases to show six
 recurring answer-choice problems.
 
-The project demonstrates a React and TypeScript interface with two
-synthetic-primary case labs, ten five-step worked examples, source anchors,
-surrounding question context, source appendix, claim boundary, static security
-headers, and local-only settings controls. The page
+The project demonstrates a React and TypeScript interface with twelve
+specimen-specific survey-review interaction engines, source anchors, surrounding
+question context, source appendix, claim boundary, static security headers,
+and local-only settings controls. The page
 is organized as four hash-routed views — an overview that opens with a short
-interactive demonstration, carries one fully-working embedded example, and
+live specimen puzzle, carries one fully-working embedded example, and
 keeps the six-pattern map an overlay a click away; a walk-through that
-paginates the remaining examples with a sticky map and recap interstitials; a
-field guide with reusable tests, checklists, and static prompts for visitors
+paginates the remaining examples with a compact map drawer and recap interstitials; a
+field guide with a reviewer console, reusable tests, and static prompts for visitors
 reviewing their own surveys; and a reference shelf for the glossary, method
 note, claim boundary, and source appendix.
 
 ## Sources And Attribution
 
-Examples use a hybrid posture. Synthetic teaching cases may lead a lesson when
+Examples use a hybrid posture. Synthetic teaching cases may open an example when
 that improves clarity, and public U.S. Census Bureau or Office for National
 Statistics materials provide the evidence anchors. The app uses short wording
 excerpts and public report references for editorial study. It does not
@@ -76,8 +76,9 @@ See [docs/deployment.md](docs/deployment.md) and
 - It includes twelve worked examples and does not claim to generalize across all
   survey instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
-- Examples 01–02 use synthetic-primary case labs. Examples 03–12 use the
-  five-step worked-example format.
+- Each example now uses a distinct reviewer interaction engine instead of a
+  shared article, quiz, or lesson shell. The older case-lab and five-step
+  renderers remain in the code only as fallback compatibility paths.
 - Teaching-case labels are not source claims. Public reports remain the
   authority for reported quotes, findings, and recommendations.
 - Repair directions are conceptual and are not validated replacement wording.
@@ -111,11 +112,11 @@ to:
 - Current persistence is limited to opt-in, on-device settings data
   (`localStorage`). The Settings surface supports JSON export/import/clear and
   shows the exact stored keys and values for transparency. When Remember is on,
-  the names of examples opened in walk mode and local practice notes from
-  predefined choices are stored locally so the knowledge map and practice
-  state can resume across visits; when Remember is off, walk and practice
-  progress is in-memory only and is lost on reload.
-- Practice notes are lightweight teaching-state records, not a score,
+  the names of examples opened in walk mode are stored locally so the knowledge
+  map can resume across visits; when Remember is off, walk progress is
+  in-memory only and is lost on reload. The current twelve reviewer engines
+  do not persist per-choice interaction state.
+- Any local teaching-state records from fallback renderers are not a score,
   account, analytics trail, or validation of any survey wording.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
