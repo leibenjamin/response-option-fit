@@ -28,12 +28,10 @@ export function FeaturedExample() {
           Try one example before walking through the rest
         </h2>
         <p className="featured-example-lede">
-          Above, one quick question gave you the feel of a label-ambiguity
-          problem. This first worked example takes that same problem into a
-          real survey item, fully working: read the synthetic survey question,
-          work the teaching cases, try a wording change, and check the
-          real-world source anchor. Examples 01–02 teach through case labs;
-          examples 03–12 use a five-step worked-example format.
+          Above, one quick specimen shows how an ordinary label can pull
+          nearby cases into the wrong route. This first full workspace uses a
+          lens-map engine: switch the lens, move through trip tokens, compare
+          repair directions, and check the source boundary.
         </p>
         <p
           className="featured-example-source-receipt"

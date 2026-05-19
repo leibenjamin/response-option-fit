@@ -10,9 +10,8 @@ type Props = {
   next: WorkbenchSpecimen | null;
 };
 
-/* Sticky right-rail aside in walk mode. Stacks the K4 pattern map, the
-   prev/next nav, and a quiet "Sources & methodology" link to the
-   reference route. */
+/* Compact walk-mode aside. The full knowledge map is available, but it no
+   longer competes with the active specimen in the first viewport. */
 export function WalkRail({ specimen, visited, prev, next }: Props) {
   return (
     <aside
@@ -20,12 +19,18 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
       aria-label="Knowledge map and walk navigation"
       data-testid="walk-rail"
     >
-      <PatternCatalog
-        variant="rail"
-        visited={visited}
-        currentSpecimenId={specimen.id}
-        showHeader={true}
-      />
+      <details className="walk-rail-map" data-testid="walk-rail-map">
+        <summary className="walk-rail-map-summary">
+          <span>Knowledge map</span>
+          <strong>{visited.size}/12 opened</strong>
+        </summary>
+        <PatternCatalog
+          variant="rail"
+          visited={visited}
+          currentSpecimenId={specimen.id}
+          showHeader={true}
+        />
+      </details>
 
       <nav className="walk-rail-nav" aria-label="Walk through examples">
         <a

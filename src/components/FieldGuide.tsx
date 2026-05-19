@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { patternApplicationGuides } from "../data/field-guide";
 import { promptCards, responseFitTests } from "../data/field-guide-route";
 import { patternMeta, patternOrder } from "../lib/pattern-meta";
@@ -44,6 +45,13 @@ const researchLinks = [
 ];
 
 export function FieldGuide() {
+  const [activePattern, setActivePattern] = useState<FailurePattern>(
+    patternOrder[0]
+  );
+  const activeGuide = patternApplicationGuides[activePattern];
+  const activeMeta = patternMeta[activePattern];
+  const activeExamples = specimensByPattern[activePattern];
+
   return (
     <main
       id="field-guide"
@@ -57,11 +65,81 @@ export function FieldGuide() {
           Check your own survey answer choices
         </h1>
         <p className="field-guide-lede">
-          These are portable tests, checklists, and prompt templates for
-          reviewing your own survey answer choices before analysis begins. They
-          are not a validator, score, or replacement for cognitive testing.
+          A static reviewer console for choosing a risk, running a compact
+          checklist, and copying source-bounded prompts. It is not a validator,
+          score, or replacement for cognitive testing.
         </p>
       </header>
+
+      <section
+        className="field-guide-console"
+        aria-labelledby="field-guide-console-title"
+        data-testid="field-guide-console"
+      >
+        <header className="field-guide-section-head">
+          <p className="field-guide-section-eyebrow">Choose a risk</p>
+          <h2 id="field-guide-console-title">Reviewer console</h2>
+          <p>
+            Start from the failure mode you suspect, then use the checklist as a
+            desk-review script before rewriting anything.
+          </p>
+        </header>
+        <div
+          className="field-guide-risk-tabs"
+          role="tablist"
+          aria-label="Response-option fit risks"
+        >
+          {patternOrder.map((pattern) => (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={pattern === activePattern}
+              className={`field-guide-risk-tab ${
+                pattern === activePattern ? "is-active" : ""
+              }`}
+              onClick={() => setActivePattern(pattern)}
+              key={pattern}
+            >
+              <span>{patternMeta[pattern].label}</span>
+              <small>{patternMeta[pattern].canonicalSubtitle}</small>
+            </button>
+          ))}
+        </div>
+        <article
+          className="field-guide-console-panel"
+          role="tabpanel"
+          tabIndex={-1}
+          data-testid={`field-guide-${activePattern}`}
+        >
+          <p className="pattern-checklist-eyebrow">
+            {activeMeta.canonicalSubtitle}
+          </p>
+          <h3>{activeMeta.label}</h3>
+          <p className="pattern-checklist-warning">{activeGuide.warning}</p>
+          <ol>
+            {activeGuide.checks.map((check) => (
+              <li key={check}>{check}</li>
+            ))}
+          </ol>
+          <p className="pattern-checklist-examples">
+            <span className="pattern-checklist-examples-label">
+              Worked examples:
+            </span>
+            {activeExamples.map((specimen, index) => (
+              <span key={specimen.id}>
+                {index > 0 ? ", " : " "}
+                <a
+                  className="pattern-checklist-example-link"
+                  href={routeToHash({ kind: "walk", slot: specimen.id })}
+                >
+                  {specimen.number} —{" "}
+                  {specimen.fieldGuideLinkLabel ?? specimen.railLabel}
+                </a>
+              </span>
+            ))}
+          </p>
+        </article>
+      </section>
 
       <section
         className="field-guide-warning"
@@ -131,65 +209,6 @@ export function FieldGuide() {
             </li>
           ))}
         </ol>
-      </section>
-
-      <section
-        className="field-guide-section"
-        aria-labelledby="pattern-checklists-title"
-        data-testid="pattern-checklists"
-      >
-        <header className="field-guide-section-head">
-          <p className="field-guide-section-eyebrow">Pattern checklists</p>
-          <h2 id="pattern-checklists-title">What to test for each pattern</h2>
-          <p>
-            Each checklist maps the exhibit's teaching category back to
-            practical survey-review moves.
-          </p>
-        </header>
-        <div className="pattern-checklist-grid">
-          {patternOrder.map((pattern) => {
-            const guide = patternApplicationGuides[pattern];
-            const meta = patternMeta[pattern];
-            const examples = specimensByPattern[pattern];
-            return (
-              <article
-                className="pattern-checklist-card"
-                id={guide.fieldGuideId}
-                data-testid={`field-guide-${pattern}`}
-                key={pattern}
-                tabIndex={-1}
-              >
-                <p className="pattern-checklist-eyebrow">{meta.canonicalSubtitle}</p>
-                <h3>{meta.label}</h3>
-                <p className="pattern-checklist-warning">{guide.warning}</p>
-                <ol>
-                  {guide.checks.map((check) => (
-                    <li key={check}>{check}</li>
-                  ))}
-                </ol>
-                {examples.length > 0 && (
-                  <p className="pattern-checklist-examples">
-                    <span className="pattern-checklist-examples-label">
-                      Worked examples:
-                    </span>
-                    {examples.map((specimen, index) => (
-                      <span key={specimen.id}>
-                        {index > 0 ? ", " : " "}
-                        <a
-                          className="pattern-checklist-example-link"
-                          href={routeToHash({ kind: "walk", slot: specimen.id })}
-                        >
-                          {specimen.number} —{" "}
-                          {specimen.fieldGuideLinkLabel ?? specimen.railLabel}
-                        </a>
-                      </span>
-                    ))}
-                  </p>
-                )}
-              </article>
-            );
-          })}
-        </div>
       </section>
 
       <section

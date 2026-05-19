@@ -16,7 +16,7 @@ type Props = {
 
 /* Walk-mode layout. Responsible for:
    - calling controller.visit() when a new specimen is mounted
-   - rendering the recap interstitial above the workbench at thresholds
+   - rendering the recap interstitial after the active workbench at thresholds
    - rendering the completion screen when the walk slot is "done"
    - composing ribbon + main column + sticky rail
 */
@@ -43,8 +43,8 @@ export function WalkLayout({ specimen, controller }: Props) {
 
   /* When the recap is dismissed, focus is on the Continue/Skip button that
      just unmounted; the browser would otherwise drop focus to <body>. Move
-     focus to the workbench frame title so the screen-reader user lands on
-     the example they were already on. */
+     focus back to the workbench title so the screen-reader user stays
+     anchored to the example they are on. */
   const handleDismissRecap = useCallback(
     (threshold: number) => {
       dismissRecap(threshold);
@@ -69,6 +69,8 @@ export function WalkLayout({ specimen, controller }: Props) {
           id="main-exhibit"
           aria-label={`Worked example ${specimen.number}: ${specimen.title}`}
         >
+          <Workbench key={specimen.id} specimen={specimen} />
+
           {recapThreshold !== null && (
             <RecapInterstitial
               threshold={recapThreshold}
@@ -78,8 +80,6 @@ export function WalkLayout({ specimen, controller }: Props) {
               onSkip={() => handleDismissRecap(recapThreshold)}
             />
           )}
-
-          <Workbench key={specimen.id} specimen={specimen} />
 
           <footer className="walk-bottom-nav" aria-label="Continue walking">
             <a

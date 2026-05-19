@@ -25,13 +25,15 @@ export function Reference() {
           Reference material
         </h1>
         <p className="reference-route-lede">
-          Four short reference sections behind the worked examples — a
-          glossary of the six problem types, a method note, an explicit
-          boundary on what this exhibit does and does not claim, and the
-          source provenance behind every quote and finding. Start with the
-          glossary for vocabulary, or the source appendix if you are checking
-          evidence.
+          Four compact shelves behind the worked examples: pattern vocabulary,
+          method note, claim boundary, and source provenance.
         </p>
+        <nav className="reference-quick-index" aria-label="Reference sections">
+          <a href="#glossary-title">Pattern glossary</a>
+          <a href="#method-title">Method note</a>
+          <a href="#claims-title">Claim boundary</a>
+          <a href="#appendix-title">Source appendix</a>
+        </nav>
       </header>
 
       <article className="shelf-section shelf-section--a">
