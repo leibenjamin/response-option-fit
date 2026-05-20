@@ -327,17 +327,24 @@ summary:focus-visible {
   max-width: 50ch;
   line-height: 1.4;
 }
-.hero-body-wrap {
-  border-top: 1px solid var(--line-faint);
-  padding-top: var(--s-3);
-  margin-top: var(--s-1);
-  max-width: 72ch;
-}
-.hero-body {
-  font-size: 15.5px;
-  line-height: 1.55;
-  color: var(--ink-2);
+/* Audience caption sits just under the subtitle. Names who the exhibit
+   is for so a cold visitor or a returning visitor can self-select
+   without opening the colophon. Slightly smaller and quieter than the
+   subtitle so it does not compete with it. */
+.hero-audience {
   margin: 0;
+  font-family: var(--font-sans, var(--font-serif));
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  max-width: 56ch;
+}
+/* On the smallest phones, the audience caption pushes the first hook
+   route button below the fold. Hide there so the hook stays touchable
+   on cold load; visitors who scroll the smallest screen still arrive
+   at the hook fast. Tablet and up keep the caption. */
+@media (max-width: 400px) {
+  .hero-audience { display: none; }
 }
 /* Scope receipt — compact slip in the right margin column. Tighten spacing
    so the receipt's column height does not exceed the main column and push
@@ -394,18 +401,58 @@ summary:focus-visible {
   line-height: 1.4;
   max-width: 30ch;
 }
-.hero-mini-puzzle {
+.hero-scope-trust {
+  /* Single-line trust receipt under the scope stats. Replaces the older
+     fourth stat that read as a defensive disclaimer. Keeps the no-automation /
+     no-analytics promise visible without making the scope receipt
+     entirely negative. Spans both columns at row 2 of the hero. */
+  grid-column: 2 / 4;
+  grid-row: 3;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  max-width: 68ch;
+}
+/* ===================== FEATURED HOOK =====================
+   The live-specimen interactive that sits in the hero's right column on
+   desktop (and full-width on mobile). Replaces the older corner
+   "hero-mini-puzzle" and the below-hero "opening question" cold-open,
+   collapsing both into one richer demonstration that lands above the
+   fold. See FeaturedHook.tsx and
+   docs/design-passes/2026-05-19-opening-hook-overhaul.md. */
+.featured-hook {
   grid-column: 3;
   grid-row: 1;
+  align-self: start;
   border: 1px solid var(--line-soft);
-  background: linear-gradient(160deg, rgba(255,255,255,0.78), rgba(239,233,220,0.7));
+  background: linear-gradient(160deg, rgba(255,255,255,0.85), rgba(239,233,220,0.78));
   padding: var(--s-4);
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
   min-width: 0;
+  position: relative;
 }
-.hero-mini-eyebrow {
+.featured-hook::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--s-4);
+  right: var(--s-4);
+  height: 3px;
+  background: var(--accent);
+  pointer-events: none;
+}
+.featured-hook-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding-top: var(--s-2);
+}
+.featured-hook-eyebrow {
   margin: 0;
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -413,46 +460,287 @@ summary:focus-visible {
   text-transform: uppercase;
   color: var(--accent);
 }
-.hero-mini-puzzle h2 {
+.featured-hook-title {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: 20px;
+  font-size: clamp(18px, 1.4vw, 21px);
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: 0;
-}
-.hero-mini-trips {
-  display: grid;
-  gap: var(--s-2);
-}
-.hero-mini-trip {
-  border: 1px solid var(--line-soft);
-  background: var(--paper);
-  padding: var(--s-2) var(--s-3);
-  text-align: left;
-  color: var(--ink-2);
-}
-.hero-mini-trip:hover,
-.hero-mini-trip:focus-visible,
-.hero-mini-trip.is-active {
-  border-color: var(--accent);
-  background: var(--accent-paper);
   color: var(--ink);
 }
-.hero-mini-route {
+.featured-hook-instrument {
+  border: 1px solid var(--line-faint);
+  background: var(--paper);
+  padding: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.featured-hook-instrument-label {
   margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.featured-hook-instrument-text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.featured-hook-instrument-rule {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  background: var(--paper-card);
+  border: 1px solid var(--line-faint);
+  padding: 2px var(--s-2);
+  color: var(--ink);
+}
+.featured-hook-instrument-options {
+  margin: 0;
+  display: flex;
+  gap: var(--s-2);
+}
+.featured-hook-instrument-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  padding: 2px var(--s-3);
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.featured-hook-cases {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.featured-hook-case {
+  position: relative;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  padding: var(--s-3);
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  column-gap: var(--s-3);
+  row-gap: var(--s-2);
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+.featured-hook-case.is-placed {
+  border-color: var(--accent);
+}
+.featured-hook-case.is-placed--doesnt {
+  border-color: var(--ink-mute);
+}
+.featured-hook-case.is-placed--unsure {
+  border-color: var(--line);
+  border-style: dashed;
+}
+.featured-hook-case-num {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  align-self: start;
+  padding-top: 2px;
+}
+.featured-hook-case-body {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.featured-hook-case-label {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.featured-hook-case-value {
+  /* Renders the case value as a specimen of intake data: monospace, a
+     soft paper background, and a hairline border so each value reads as
+     a field value rather than a grammar-class example. */
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  background: var(--paper-card);
+  border: 1px solid var(--line-faint);
+  padding: 1px var(--s-2);
+}
+.featured-hook-case-detail {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.featured-hook-case-routes {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+.featured-hook-route {
+  flex: 1 1 88px;
+  min-height: 34px;
+  padding: 4px var(--s-2);
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.featured-hook-route:hover,
+.featured-hook-route:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+.featured-hook-route--counts.is-chosen {
+  background: var(--accent-paper);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.featured-hook-route--doesnt.is-chosen {
+  background: var(--paper);
+  border-color: var(--ink-mute);
+  color: var(--ink);
+}
+.featured-hook-route--unsure.is-chosen {
+  background: var(--paper);
+  border-color: var(--line);
+  border-style: dashed;
+  color: var(--ink-2);
+}
+.featured-hook-case-note {
+  grid-column: 2;
+  grid-row: 3;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  border-left: 3px solid var(--accent);
+  padding-left: var(--s-3);
+}
+.featured-hook-case.is-placed--doesnt .featured-hook-case-note {
+  border-left-color: var(--ink-mute);
+}
+.featured-hook-case.is-placed--unsure .featured-hook-case-note {
+  border-left-color: var(--line);
+  border-left-style: dashed;
+}
+.featured-hook-ledger {
+  border-top: 1px dashed var(--line);
+  padding-top: var(--s-3);
   display: flex;
   flex-direction: column;
   gap: var(--s-1);
+}
+.featured-hook-ledger-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.featured-hook-ledger-counts {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.featured-hook-ledger-counts strong {
+  color: var(--ink);
+  font-weight: 500;
+  font-feature-settings: "lnum" 1;
+  margin-right: 4px;
+}
+.featured-hook-ledger-sep {
+  color: var(--ink-mute);
+}
+.featured-hook-ledger-rest {
+  color: var(--ink-soft);
+}
+.featured-hook-reveal-inner {
+  border-top: 1px solid var(--line-faint);
+  padding-top: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.featured-hook-reveal-body {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.featured-hook-reveal-name {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
   border-left: 3px solid var(--accent);
   padding-left: var(--s-3);
-  color: var(--ink-2);
-  font-size: 14px;
-  line-height: 1.45;
 }
-.hero-mini-route strong {
-  color: var(--ink);
-  font-weight: 600;
+.featured-hook-reveal-name strong {
+  font-weight: 500;
+}
+.featured-hook-reveal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+}
+.featured-hook-reset {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.featured-hook-reset:hover,
+.featured-hook-reset:focus-visible {
+  color: var(--accent);
 }
 .hero-scope {
   grid-column: 2 / 4;
@@ -1491,19 +1779,16 @@ summary:focus-visible {
 
 /* ===================== WORKBENCH FLOW ===================== */
 .pattern-catalog,
-.how-to-read,
 .workbench {
   background: var(--paper-card);
   border: 1px solid var(--line);
 }
 
-.pattern-catalog,
-.how-to-read {
+.pattern-catalog {
   padding: var(--s-6) var(--s-7);
 }
 
 .pattern-catalog-head,
-.how-to-read-head,
 .beat-head {
   display: flex;
   flex-direction: column;
@@ -1512,7 +1797,6 @@ summary:focus-visible {
 }
 
 .pattern-catalog-eyebrow,
-.how-to-read-eyebrow,
 .beat-eyebrow,
 .tested-wording-eyebrow,
 .frame-meta dt,
@@ -1533,7 +1817,6 @@ summary:focus-visible {
 }
 
 .pattern-catalog-title,
-.how-to-read-title,
 .beat-title {
   font-family: var(--font-serif);
   font-weight: 500;
@@ -1566,110 +1849,6 @@ summary:focus-visible {
   color: var(--ink-soft);
   margin: 0;
   max-width: 64ch;
-}
-
-.how-to-read-lede {
-  color: var(--ink-2);
-  margin: 0;
-  line-height: 1.55;
-  max-width: 64ch;
-}
-
-.how-to-read-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--s-4);
-}
-
-.how-to-read-block {
-  min-width: 0;
-  background: var(--paper);
-  border: 1px solid var(--line-soft);
-  padding: var(--s-4);
-}
-
-.how-to-read-block--wide {
-  grid-column: 1 / -1;
-}
-
-.how-to-read-subtitle {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  line-height: 1.25;
-  font-weight: 500;
-  margin: 0 0 var(--s-3);
-  color: var(--ink);
-}
-
-.how-to-read-beats {
-  margin: 0;
-  padding-left: 1.3rem;
-  color: var(--ink-2);
-  line-height: 1.55;
-}
-
-.how-to-read-beats li + li {
-  margin-top: var(--s-2);
-}
-
-.how-to-read-provenance {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--s-3);
-}
-
-.how-to-read-provenance-card {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--s-2);
-  background: var(--paper-card);
-  border: 1px solid var(--line-soft);
-  padding: var(--s-3);
-}
-
-.how-to-read-provenance-card p {
-  margin: 0;
-  color: var(--ink-2);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.how-to-read-outcomes {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--s-3);
-  margin: 0;
-}
-.how-to-read-label-note {
-  color: var(--ink-2);
-  font-size: 14px;
-  line-height: 1.5;
-  margin: calc(-1 * var(--s-1)) 0 var(--s-3);
-}
-
-.how-to-read-outcome {
-  min-width: 0;
-  background: var(--paper-card);
-  border: 1px solid var(--line-soft);
-  padding: var(--s-3);
-}
-
-.how-to-read-outcome dt {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin: 0 0 var(--s-1);
-}
-
-.how-to-read-outcome dd {
-  margin: 0;
-  color: var(--ink-2);
-  font-size: 14px;
-  line-height: 1.5;
 }
 
 .pattern-catalog-grid {
@@ -3048,7 +3227,6 @@ summary:focus-visible {
 }
 
 .mechanism-fieldset,
-.confidence-fieldset,
 .microcase-fieldset,
 .widget {
   min-width: 0;
@@ -3059,7 +3237,6 @@ summary:focus-visible {
 }
 
 .mechanism-fieldset legend,
-.confidence-fieldset legend,
 .microcase-fieldset legend {
   max-width: 100%;
   font-family: var(--font-mono);
@@ -4061,186 +4238,109 @@ summary:focus-visible {
   align-self: flex-start;
 }
 
-/* ===================== COLD-OPEN ("You answer it") =====================
-   The hub's opening interactive demonstration. A bordered paper panel with
-   an accent top edge so it reads as "start here / interactive" before the
-   eyebrow is even read. */
+/* ===================== PATTERN STRIP =====================
+   In-scroll six-tile preview of the failure-pattern taxonomy. Replaces
+   the slimmer pattern-map-band that the 2026-05-15 hub-engagement wave
+   shipped. The full PatternMapDialog is still the canonical home of
+   the six patterns; this strip surfaces the names + canonical
+   subtitles so a cold visitor sees the taxonomy without needing to
+   discover the modal. Clicking any tile opens the dialog. */
 
-.opening {
-  position: relative;
-  background: var(--paper-card);
-  border: 1px solid var(--line);
-  padding: var(--s-6) var(--s-7);
+.pattern-strip {
   display: flex;
   flex-direction: column;
-  gap: var(--s-5);
+  gap: var(--s-4);
+  padding: var(--s-5) 0;
 }
-.opening::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: var(--s-7);
-  right: var(--s-7);
-  height: 3px;
-  background: var(--accent);
-  pointer-events: none;
-}
-
-.opening-head {
+.pattern-strip-head {
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  gap: var(--s-1);
 }
-.opening-eyebrow {
+.pattern-strip-eyebrow {
+  margin: 0;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
-  margin: 0;
 }
-.opening-title {
+.pattern-strip-title {
+  margin: 0;
   font-family: var(--font-serif);
+  font-size: clamp(22px, 2.2vw, 28px);
   font-weight: 500;
-  font-size: clamp(23px, 2.3vw, 31px);
-  line-height: 1.18;
-  letter-spacing: 0;
-  margin: 0;
+  line-height: 1.2;
   color: var(--ink);
-  max-width: 28ch;
+  max-width: 36ch;
 }
-.opening-instruction {
+.pattern-strip-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--s-3);
+}
+.pattern-strip-tile {
+  background: var(--paper-card);
+  border: 1px solid var(--line-soft);
+  border-top: 3px solid var(--card-accent, var(--accent));
+  transition: border-color 120ms ease, background-color 120ms ease;
+  min-height: 0;
+}
+.pattern-strip-tile:hover,
+.pattern-strip-tile:focus-within {
+  border-color: var(--accent);
+  background: var(--paper);
+}
+.pattern-strip-tile-button {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  padding: var(--s-3);
+  cursor: pointer;
+  color: var(--ink);
+}
+.pattern-strip-tile-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pattern-strip-tile-num {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+}
+.pattern-strip-tile-label {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.pattern-strip-tile-canonical {
+  margin: 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 16px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.pattern-strip-foot {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 14px;
   line-height: 1.5;
   color: var(--ink-soft);
-  margin: 0;
-}
-
-.opening-question-card {
-  background: var(--paper);
-  border: 1px solid var(--line-soft);
-  padding: var(--s-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-}
-.opening-question-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  margin: 0;
-}
-.opening-question-text {
-  font-family: var(--font-serif);
-  font-size: clamp(19px, 1.9vw, 24px);
-  line-height: 1.3;
-  color: var(--ink);
-  margin: 0;
-}
-.opening-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-  margin-top: var(--s-2);
-}
-.opening-option {
-  flex: 1 1 130px;
-  min-height: 46px;
-  padding: var(--s-3) var(--s-4);
-  background: var(--paper-card);
-  border: 1px solid var(--line);
-  color: var(--ink-2);
-  font-family: var(--font-serif);
-  font-size: 16px;
-  line-height: 1.2;
-  text-align: center;
-  transition: background-color 120ms ease, border-color 120ms ease,
-    color 120ms ease;
-}
-.opening-option:hover,
-.opening-option:focus-visible {
-  border-color: var(--accent);
-  color: var(--accent-2);
-  background: var(--paper);
-}
-.opening-option.is-active {
-  background: var(--accent-paper);
-  border-color: var(--accent);
-  color: var(--ink);
-}
-
-.opening-reveal-inner {
-  border-top: 1px solid var(--line-faint);
-  padding-top: var(--s-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-}
-.opening-reveal-pick {
-  font-family: var(--font-serif);
-  font-size: 15px;
-  color: var(--ink-soft);
-  margin: 0;
-}
-.opening-reveal-pick strong {
-  color: var(--ink);
-  font-weight: 500;
-}
-.opening-reveal-body {
-  font-size: 15.5px;
-  line-height: 1.6;
-  color: var(--ink-2);
-  margin: 0;
-  max-width: 66ch;
-}
-.opening-reveal-name {
-  font-size: 15.5px;
-  line-height: 1.6;
-  color: var(--ink);
-  margin: var(--s-1) 0 0;
-  max-width: 66ch;
-  border-left: 3px solid var(--accent);
-  padding-left: var(--s-4);
-}
-.opening-reveal-name strong {
-  font-weight: 500;
-}
-.opening-reveal-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-  margin-top: var(--s-3);
-}
-
-/* ===================== PATTERN MAP BAND =====================
-   Slim in-scroll trigger for the six-pattern map dialog. Keeps the
-   "twelve examples, six problems" signpost in the scroll without the
-   former six-card text wall. */
-
-.pattern-map-band {
-  background: var(--paper-card);
-  border: 1px solid var(--line);
-  padding: var(--s-4) var(--s-6);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-4);
-}
-.pattern-map-band-text {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--ink-2);
-  margin: 0;
-  max-width: 58ch;
-}
-.pattern-map-band-button {
-  flex: 0 0 auto;
+  max-width: 64ch;
 }
 
 /* ===================== PATTERN MAP DIALOG =====================
@@ -6736,13 +6836,11 @@ summary:focus-visible {
   }
   .shelf { padding: var(--s-7) var(--gutter); }
   .pattern-catalog,
-  .workbench-beat,
-  .opening {
+  .workbench-beat {
     padding-left: var(--s-6);
     padding-right: var(--s-6);
   }
-  .workbench-beat:first-child::before,
-  .opening::before {
+  .workbench-beat:first-child::before {
     left: var(--s-6);
     right: var(--s-6);
   }
@@ -6755,20 +6853,26 @@ summary:focus-visible {
     row-gap: var(--s-4);
   }
   .hero-rail { padding-top: 0; }
-  .hero-mini-puzzle,
-  .hero-scope {
+  .featured-hook,
+  .hero-scope,
+  .hero-scope-trust {
     grid-column: auto;
     grid-row: auto;
   }
   .hero-scope {
-    /* Re-flow as a 2-up grid so it doesn't dominate the page */
+    /* Re-flow as a 3-up grid so it doesn't dominate the page */
     flex-direction: row;
     flex-wrap: wrap;
   }
   .hero-scope-item {
-    flex: 1 1 calc(50% - var(--s-2));
+    flex: 1 1 calc(33% - var(--s-2));
     border-bottom: 0;
     padding-bottom: 0;
+  }
+  .pattern-strip-grid {
+    /* Tablet: three across, two rows, so each tile still has room to
+       read without forcing the eye across six narrow columns. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .exhibit {
     gap: var(--s-6);
@@ -6829,9 +6933,7 @@ summary:focus-visible {
 @media (max-width: 720px) {
   .lab { padding: var(--s-5) var(--s-4); }
   .pattern-catalog,
-  .how-to-read,
   .workbench-beat,
-  .opening,
   .experience-hero,
   .experience-top-grid,
   .experience-bottom-grid,
@@ -6839,11 +6941,28 @@ summary:focus-visible {
   .experience-apply-strip {
     padding: var(--s-4);
   }
-  .opening {
-    gap: var(--s-4);
+  /* Tighten the FeaturedHook on phone so the first trip's routing buttons
+     stay above the fold on 375x667. The desktop padding is var(--s-4)
+     everywhere; on phone we trim the outer chrome and the instrument card,
+     keep trip cards readable, and let the title scale with vw. */
+  .featured-hook {
+    padding: var(--s-3);
+    gap: var(--s-3);
+  }
+  .featured-hook::before {
+    left: var(--s-3);
+    right: var(--s-3);
+  }
+  .featured-hook-instrument {
+    padding: var(--s-2) var(--s-3);
+    gap: var(--s-1);
+  }
+  .featured-hook-case {
+    padding: var(--s-2) var(--s-3);
+    grid-template-columns: 24px minmax(0, 1fr);
+    row-gap: 6px;
   }
   .workbench-beat:first-child::before,
-  .opening::before,
   .experience-hero::before {
     left: var(--s-4);
     right: var(--s-4);
@@ -6888,15 +7007,10 @@ summary:focus-visible {
     justify-self: start;
     white-space: normal;
   }
-  .opening-question-card {
-    padding: var(--s-4);
-  }
-  .pattern-map-band {
-    padding: var(--s-4);
-  }
-  .pattern-map-band-button {
-    width: 100%;
-    justify-content: center;
+  .pattern-strip-grid {
+    /* On phone the six tiles stack into two columns so the labels stay
+       readable without forcing horizontal cramming. */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .pattern-map-dialog {
     padding: var(--s-3);
@@ -6934,10 +7048,11 @@ summary:focus-visible {
   .hero-kicker { order: 2; }
   .hero-title { order: 3; }
   .hero-subtitle { order: 4; }
-  .hero-mini-puzzle { order: 5; }
-  .hero-body-wrap { order: 6; }
+  .hero-audience { order: 5; }
+  .featured-hook { order: 6; }
   .hero-cta-row { order: 7; }
   .hero-scope { order: 8; }
+  .hero-scope-trust { order: 9; }
   .hero-scope {
     flex-direction: row;
     flex-wrap: wrap;
@@ -6988,9 +7103,6 @@ summary:focus-visible {
     grid-template-columns: minmax(0, 1fr);
   }
   .pattern-catalog-grid--full,
-  .how-to-read-grid,
-  .how-to-read-provenance,
-  .how-to-read-outcomes,
   .case-lab-judgment-legend,
   .reveal-card-grid,
   .counterexample-grid,
@@ -7121,9 +7233,6 @@ summary:focus-visible {
   }
   .research-link-list {
     columns: 1;
-  }
-  .how-to-read-block--wide {
-    grid-column: auto;
   }
   .prediction-mini-chip {
     width: 100%;
@@ -7529,7 +7638,6 @@ summary:focus-visible {
   .diagnosis-card,
   .probe-outcome-card,
   .mechanism-fieldset,
-  .confidence-fieldset,
   .microcase-fieldset,
   .widget,
   .radio-card,
@@ -7583,11 +7691,13 @@ summary:focus-visible {
   .prompt-copy-button,
   .prompt-text,
   .apply-pattern-details,
-  .opening,
-  .opening-question-card,
-  .opening-option,
-  .opening-reveal-name,
-  .pattern-map-band,
+  .featured-hook,
+  .featured-hook-instrument,
+  .featured-hook-case,
+  .featured-hook-route,
+  .featured-hook-reveal-name,
+  .pattern-strip-tile,
+  .pattern-strip-tile-button,
   .pattern-map-dialog-panel,
   .pattern-map-dialog-close,
   .experience-panel,
@@ -7629,7 +7739,7 @@ summary:focus-visible {
   .checkbox-row input:checked + .checkbox-mark,
   .switch-row input:checked + .switch-track,
   .prediction-button.is-active,
-  .opening-option.is-active,
+  .featured-hook-route.is-chosen,
   .widget-option.is-selected .widget-toggle-button,
   .experience-control.is-active,
   .experience-case-button.is-active,

@@ -11,9 +11,12 @@ The project demonstrates a React and TypeScript interface with twelve
 specimen-specific survey-review interaction engines, source anchors, surrounding
 question context, source appendix, claim boundary, static security headers,
 and local-only settings controls. The page
-is organized as four hash-routed views — an overview that opens with a short
-live specimen puzzle, carries one fully-working embedded example, and
-keeps the six-pattern map an overlay a click away; a walk-through that
+is organized as four hash-routed views — an overview that opens with a live
+field-value routing specimen in the hero (a "one word only" intake rule
+against four real-shaped values), then names the failure taxonomy in an
+inline six-pattern strip, then carries one fully-working embedded example
+on a U.S. Census commute item, with the full six-pattern map one click
+away as an overlay; a walk-through that
 paginates the remaining examples with a compact map drawer and recap interstitials; a
 field guide with a reviewer console, reusable tests, and static prompts for visitors
 reviewing their own surveys; and a reference shelf for the glossary, method

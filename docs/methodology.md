@@ -34,10 +34,15 @@ reports remain the evidence anchors.
 ## Page Layout
 
 The exhibit is laid out across four hash-routed views so the worked examples
-do not collapse into a single thirty-screen scroll. The overview at `#` opens
-with a live specimen puzzle and then carries one fully-working embedded
-worked example, so a visitor sees the work the exhibit can do without
-clicking through. The six-pattern map opens on demand as an overlay rather
+do not collapse into a single thirty-screen scroll. The overview at `#` is
+anchored by a live specimen hook in the hero that routes four field values
+(`can't`, `New York`, `follow-up`, `Q2 FY26`) against a tiny intake rule
+("one word only"), an inline six-pattern strip that names the failure
+taxonomy on the scroll, and one fully-working embedded worked example on
+the U.S. Census ACS commute item — so a visitor sees the central failure
+in miniature, the six recurring shapes it takes, and one full source-
+anchored review without clicking through. The full six-pattern map stays
+one click away as an overlay. The six-pattern map opens on demand as an overlay rather
 than occupying the overview scroll as a block of taxonomy. The walk at
 `#walk/<id>` paginates the remaining examples one at a time, with a compact
 knowledge-map drawer and prev/next navigation; mid-walk recap interstitials

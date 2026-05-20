@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { workbenchSpecimens } from "../data/workbench-specimens";
 import { routeToHash } from "../lib/routes";
+import { FeaturedHook } from "./FeaturedHook";
 
 type Props = {
   /* Last specimen the visitor opened in walk mode. When provided, a
@@ -8,69 +8,14 @@ type Props = {
   resumeSpecimenId?: string | null;
 };
 
-const heroTrips = [
-  {
-    id: "app",
-    label: "Lyft ride",
-    route: "Answer route: app-based paid ride",
-    note: "The label has a clear place when the service model is visible."
-  },
-  {
-    id: "carpool",
-    label: "Coworker carpool",
-    route: "Boundary risk: shared car, not paid service",
-    note: "The everyday word can invite a trip the answer choice was not built to count."
-  },
-  {
-    id: "bike",
-    label: "Bike-share dock",
-    route: "Boundary risk: shared vehicle, not ride service",
-    note: "The shared object is salient, but it does not follow the same response route."
-  }
-];
-
-function HeroMiniPuzzle() {
-  const [activeId, setActiveId] = useState(heroTrips[0].id);
-  const active = heroTrips.find((trip) => trip.id === activeId) ?? heroTrips[0];
-
-  return (
-    <aside className="hero-mini-puzzle" aria-labelledby="hero-mini-puzzle-title">
-      <p className="hero-mini-eyebrow">Live specimen</p>
-      <h2 id="hero-mini-puzzle-title">Which trip does “rideshare” invite?</h2>
-      <div
-        className="hero-mini-trips"
-        role="group"
-        aria-label="Try a trip route"
-      >
-        {heroTrips.map((trip) => (
-          <button
-            type="button"
-            className={`hero-mini-trip ${trip.id === active.id ? "is-active" : ""}`}
-            aria-pressed={trip.id === active.id}
-            onClick={() => setActiveId(trip.id)}
-            key={trip.id}
-            data-testid={`hero-mini-trip-${trip.id}`}
-          >
-            {trip.label}
-          </button>
-        ))}
-      </div>
-      <p className="hero-mini-route" aria-live="polite">
-        <strong>{active.route}</strong>
-        <span>{active.note}</span>
-      </p>
-    </aside>
-  );
-}
-
-/* The hub Hero. Top-of-page identity carrier: editorial-exhibit eyebrow,
-   project kicker, plain-language title, mechanism subtitle, body that
-   names the source posture and the field-guide value, two CTA-shaped
-   actions whose hierarchy flips for returning visitors, a quiet text-link
-   row for the lower-priority entry points, and a four-stat scope receipt
-   that doubles as a trust receipt. The lastVisited prop drives the
-   CTA-hierarchy flip: returning visitors lead with Resume walk and demote
-   the first-time entry points to text links. */
+/* The hub Hero. Identity carrier paired with the live FeaturedHook so a
+   cold visitor can touch the work above the fold. Earlier hero versions
+   carried a small right-corner "live specimen" preview and a separate
+   below-hero "Start here" cold-open; both were collapsed into the single
+   FeaturedHook in the 2026-05-19 opening-hook overhaul (see
+   docs/design-passes/2026-05-19-opening-hook-overhaul.md). The
+   resumeSpecimenId prop continues to flip the CTA hierarchy for
+   returning visitors. */
 export function Hero({ resumeSpecimenId = null }: Props = {}) {
   const firstSpecimenId = workbenchSpecimens[0]?.id ?? "";
   const resumeSpecimen = resumeSpecimenId
@@ -95,18 +40,14 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
           When answer choices don't give the respondent's answer a clear place to go.
         </h1>
         <p className="hero-subtitle">
-          A person can know their answer, but the available choices can still
-          push it into the wrong place.
+          A form's rule can look obvious until a real value tries to land
+          in it. Place four below and watch the recorded data lose the
+          route.
         </p>
-
-        <div className="hero-body-wrap">
-          <p className="hero-body">
-            Twelve public-source-backed specimens show how labels, buckets,
-            premises, boundaries, sequences, and counting rules can move a
-            respondent's answer. Each specimen starts with a small reviewer
-            task before the source receipt and repair notes.
-          </p>
-        </div>
+        <p className="hero-audience" data-testid="hero-audience">
+          For survey writers, reviewers, analysts, and anyone who has
+          watched a clean form turn into messy data.
+        </p>
 
         {/* CTA hierarchy depends on whether the visitor has walked before.
            First-time visitors get a strong "Try the first example" as
@@ -142,7 +83,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                 href={routeToHash({ kind: "fieldGuide" })}
                 data-testid="hero-cta-field-guide"
               >
-                <span>Open the field guide</span>
+                <span>Check your own survey draft</span>
                 <span aria-hidden="true" className="cta-button-arrow">
                   →
                 </span>
@@ -186,7 +127,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                 href={routeToHash({ kind: "fieldGuide" })}
                 data-testid="hero-cta-field-guide"
               >
-                <span>Open the field guide</span>
+                <span>Check your own survey draft</span>
                 <span aria-hidden="true" className="cta-button-arrow">
                   →
                 </span>
@@ -209,42 +150,39 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
         </div>
       </div>
 
-      <HeroMiniPuzzle />
+      <FeaturedHook />
 
       <ul
         className="hero-scope"
-        aria-label="What this exhibit does and does not do"
+        aria-label="What this exhibit covers"
         data-testid="scope-receipt"
       >
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
             <span className="hero-scope-val">12</span>
-            <span className="hero-scope-unit"> examples</span>
+            <span className="hero-scope-unit"> worked examples</span>
           </p>
-          <p className="hero-scope-note">with public source anchors</p>
+          <p className="hero-scope-note">each tied to a public report</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
             <span className="hero-scope-val">6</span>
-            <span className="hero-scope-unit"> problem types</span>
+            <span className="hero-scope-unit"> response-option failure patterns</span>
           </p>
-          <p className="hero-scope-note">defined inside each example</p>
+          <p className="hero-scope-note">named, defined, and contrasted</p>
         </li>
         <li className="hero-scope-item">
           <p className="hero-scope-stat">
-            <span className="hero-scope-val">0</span>
-            <span className="hero-scope-unit"> survey scores</span>
+            <span className="hero-scope-val">12</span>
+            <span className="hero-scope-unit"> public source receipts</span>
           </p>
-          <p className="hero-scope-note">no question is graded</p>
-        </li>
-        <li className="hero-scope-item">
-          <p className="hero-scope-stat">
-            <span className="hero-scope-val">0</span>
-            <span className="hero-scope-unit"> generated survey rewrites</span>
-          </p>
-          <p className="hero-scope-note">no in-page automation or model calls</p>
+          <p className="hero-scope-note">Census Bureau and ONS, with PDF links</p>
         </li>
       </ul>
+      <p className="hero-scope-trust" data-testid="scope-trust">
+        No surveys graded. No in-page automation. No analytics, no third-party
+        requests. Editorial study only.
+      </p>
     </header>
   );
 }

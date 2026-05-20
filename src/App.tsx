@@ -4,8 +4,8 @@ import { Colophon } from "./components/Colophon";
 import { CompletionScreen } from "./components/CompletionScreen";
 import { FeaturedExample } from "./components/FeaturedExample";
 import { Hero } from "./components/Hero";
-import { OpeningQuestion } from "./components/OpeningQuestion";
 import { PatternMapDialog } from "./components/PatternMapDialog";
+import { patternMeta, patternOrder } from "./lib/pattern-meta";
 import { Reference } from "./components/Reference";
 import { SettingsButton } from "./components/SettingsButton";
 import { SettingsDrawer } from "./components/SettingsDrawer";
@@ -66,20 +66,52 @@ function Hub({
         className="hub-main"
         aria-label="Overview of the response option fit exhibit"
       >
-        <OpeningQuestion onOpenMap={openMap} />
-        <section className="pattern-map-band" aria-label="The six-pattern map">
-          <p className="pattern-map-band-text">
-            Twelve worked examples, six recurring answer-choice problems. The
-            map names all six and links into every example.
+        <section
+          className="pattern-strip"
+          aria-labelledby="pattern-strip-title"
+          data-testid="pattern-strip"
+        >
+          <header className="pattern-strip-head">
+            <p className="pattern-strip-eyebrow">The six recurring problems</p>
+            <h2 className="pattern-strip-title" id="pattern-strip-title">
+              The hook above is one of six. Here are the other five.
+            </h2>
+          </header>
+          <ol className="pattern-strip-grid">
+            {patternOrder.map((pattern, index) => {
+              const meta = patternMeta[pattern];
+              return (
+                <li
+                  key={pattern}
+                  className="pattern-strip-tile"
+                  style={{
+                    ["--card-accent" as string]: `var(${meta.accentVar})`
+                  }}
+                  data-testid={`pattern-strip-tile-${pattern}`}
+                >
+                  <button
+                    type="button"
+                    className="pattern-strip-tile-button"
+                    onClick={openMap}
+                    data-testid={`pattern-strip-open-${pattern}`}
+                    aria-label={`Open the six-pattern map at ${meta.label}`}
+                  >
+                    <p className="pattern-strip-tile-num" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <p className="pattern-strip-tile-label">{meta.label}</p>
+                    <p className="pattern-strip-tile-canonical">
+                      {meta.canonicalSubtitle}
+                    </p>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="pattern-strip-foot">
+            Click any tile to open the full six-pattern map. Each pattern
+            shows up in two of the twelve worked examples below.
           </p>
-          <button
-            type="button"
-            className="cta-button cta-button--secondary pattern-map-band-button"
-            onClick={openMap}
-            data-testid="pattern-map-open"
-          >
-            <span>Open the six-pattern map</span>
-          </button>
         </section>
         <FeaturedExample />
       </main>
