@@ -11,7 +11,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Lens rings",
       feedbackLabel: "Route shift"
     },
-    title: "Meaning lens for paid rides",
+    title: "Sort four trips into the answer the ACS built for paid rides.",
     lede:
       "Start by changing the lens, then trace each trip to the answer choice it would likely hit.",
     stakes:
@@ -223,7 +223,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Reporting stack",
       feedbackLabel: "Level collision"
     },
-    title: "Level ladder for business and industry",
+    title: "Pick the level the form needs before judging the answer.",
     lede:
       "Move the job description up and down the reporting levels before deciding whether the field is doing too much.",
     stakes:
@@ -412,7 +412,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Branching fork",
       feedbackLabel: "No meaning"
     },
-    title: "Eligibility fork for refrigerated medicine",
+    title: "Separate the spoilage outcome from the eligibility question.",
     lede:
       "Walk the household through the hidden fork before treating a No answer as no loss.",
     stakes:
@@ -601,7 +601,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Feature board",
       feedbackLabel: "Classification rule"
     },
-    title: "Feature rule board for electric vehicles",
+    title: "Decide what makes an EV count, then watch examples land.",
     lede:
       "Choose the rule a respondent might use, then watch vehicle cards move across the boundary.",
     stakes:
@@ -790,7 +790,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Exposure timeline",
       feedbackLabel: "Overlap trace"
     },
-    title: "Source timeline for owner advertising",
+    title: "Trace where each lead came from before the all-that-apply collapse.",
     lede:
       "Put the same listing on the timeline before deciding whether a later Yes is a repeat or a new source.",
     stakes:
@@ -979,7 +979,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Week trace",
       feedbackLabel: "Provenance"
     },
-    title: "Schedule trace for usual hours",
+    title: "Pick the counting rule, then read what the week's number means.",
     lede:
       "Switch the counting rule and watch the same work history produce different exact-looking answers.",
     stakes:
@@ -1169,7 +1169,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Device shelf",
       feedbackLabel: "Invited device"
     },
-    title: "Device label splitter",
+    title: "Sort four devices the survey thinks are one word.",
     lede:
       "Toggle the label terms and watch which devices are invited into the yes answer.",
     stakes:
@@ -1358,7 +1358,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Form route map",
       feedbackLabel: "Visibility tradeoff"
     },
-    title: "Visibility route for Kashmiri identity",
+    title: "Compare two answer paths before reading either as endorsement.",
     lede:
       "Compare printed tick-box, broad category, and write-in routes as respondent effort and visibility change.",
     stakes:
@@ -1547,7 +1547,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Premise stack",
       feedbackLabel: "No meaning"
     },
-    title: "Premise stack for sump-pump flooding",
+    title: "Stack the eligibility check above the yes/no answer.",
     lede:
       "Turn each premise on and off before treating No as a clean outcome.",
     stakes:
@@ -1736,7 +1736,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Heading scanner",
       feedbackLabel: "Section route"
     },
-    title: "Section navigation test for ethnic-group headings",
+    title: "Watch a heading reroute the respondent across sections.",
     lede:
       "Choose the cue the respondent scans for first, then see which heading lights up.",
     stakes:
@@ -1925,7 +1925,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Reason lanes",
       feedbackLabel: "Yes threshold"
     },
-    title: "Reason strength board for disaster avoidance",
+    title: "Weigh a primary cause against any contributing reason.",
     lede:
       "Move the reason across strength lanes before deciding whether Yes means main reason or any influence.",
     stakes:
@@ -2114,7 +2114,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
       surfaceLabel: "Counting calendar",
       feedbackLabel: "Method provenance"
     },
-    title: "Counting workbench for weeks worked",
+    title: "Pick the counting method before the number means anything.",
     lede:
       "Choose the counting method before reading the final number.",
     stakes:

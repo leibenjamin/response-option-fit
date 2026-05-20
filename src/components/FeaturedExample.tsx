@@ -25,13 +25,14 @@ export function FeaturedExample() {
       <header className="featured-example-head">
         <p className="featured-example-eyebrow">A worked example, end to end</p>
         <h2 className="featured-example-title" id="featured-example-title">
-          Try one example before walking through the rest
+          How one Census answer choice moves with the word.
         </h2>
         <p className="featured-example-lede">
-          Above, one quick specimen shows how an ordinary label can pull
-          nearby cases into the wrong route. This first full workspace uses a
-          lens-map engine: switch the lens, move through trip tokens, compare
-          repair directions, and check the source boundary.
+          The &ldquo;one word only&rdquo; hook above shows the contract
+          quietly failing on a small intake field. The U.S. Census Bureau's
+          ACS commute item runs the same shape at higher stakes. Switch
+          the lens, route each trip token, compare repair directions, and
+          check what the source actually supports.
         </p>
         <p
           className="featured-example-source-receipt"

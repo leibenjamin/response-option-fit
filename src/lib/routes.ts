@@ -2,8 +2,9 @@
 
    This file is the single source of truth for route shape and parsing.
    App.tsx subscribes to hashchange and renders one of:
-     hub       - the landing overview (Hero + live specimen puzzle + Featured
-                 Example)
+     hub       - the landing overview: Hero with embedded FeaturedHook
+                 (one-word field-value router) + inline six-pattern strip
+                 + FeaturedExample (ride-hailing lens-map engine)
      walk      - paginated walk-through; walk.specimenId names the active
                  specimen, or "done" for the completion screen
      reference - Glossary + Method note + Claim boundary + Source appendix
