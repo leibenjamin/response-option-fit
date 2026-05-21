@@ -140,10 +140,8 @@ export function PatternCatalog({
               <p className="pattern-catalog-canonical">
                 {meta.canonicalSubtitle}
               </p>
-              {!isRail && (
-                <p className="pattern-catalog-body">
-                  {groupSpecimensList[0]?.prerequisiteVocab}
-                </p>
+              {!isRail && meta.expandedBody && (
+                <p className="pattern-catalog-body">{meta.expandedBody}</p>
               )}
               <ul
                 className="pattern-catalog-chip-row"

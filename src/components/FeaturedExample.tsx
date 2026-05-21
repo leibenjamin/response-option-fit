@@ -28,11 +28,15 @@ export function FeaturedExample() {
           How one Census answer choice moves with the word.
         </h2>
         <p className="featured-example-lede">
-          The &ldquo;one word only&rdquo; hook above shows the contract
-          quietly failing on a small intake field. The U.S. Census Bureau's
-          ACS commute item runs the same shape at higher stakes. Switch
-          the lens, route each trip token, compare repair directions, and
-          check what the source actually supports.
+          The hook above tried four values against the rule{" "}
+          <code className="featured-example-specimen">one word only</code>.
+          The U.S. Census Bureau's ACS commute item runs the same shape on
+          a real-stakes rule:{" "}
+          <code className="featured-example-specimen">
+            Taxi or ride-hailing services
+          </code>
+          . Switch the lens, route each trip token, compare repair
+          directions, and check what the source actually supports.
         </p>
         <p
           className="featured-example-source-receipt"

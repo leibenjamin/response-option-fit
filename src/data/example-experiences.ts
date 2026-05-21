@@ -17,7 +17,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: app rides, taxis, carpools, and bike-share can collapse under one familiar word.",
     reviewerGoal:
-      "Decide whether the label names the service model, the act of sharing, or the vehicle.",
+      "Pick what the label is meant to name; watch each trip land in a different answer choice.",
     surfaceTitle: "Mobility map",
     controlLabel: "Lens",
     caseLabel: "Trip",
@@ -229,7 +229,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: one answer space can collect employer names, job tasks, workplaces, and industries as if they were equivalent.",
     reviewerGoal:
-      "Identify the level the instrument needs before judging whether the option set is clear.",
+      "Pick the level the form needs; watch each job find or miss its slot.",
     surfaceTitle: "Reporting-level ladder",
     controlLabel: "Level cue",
     caseLabel: "Job card",
@@ -418,7 +418,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: No can mean no refrigerated medicine, no spoilage, no outage effect, or not applicable.",
     reviewerGoal:
-      "Separate eligibility from the loss outcome before evaluating the yes/no item.",
+      "Pull the eligibility check out from under the loss outcome; re-read each No.",
     surfaceTitle: "Hidden fork",
     controlLabel: "Question route",
     caseLabel: "Household",
@@ -607,7 +607,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: everyday electric labels and technical vehicle categories do not line up cleanly.",
     reviewerGoal:
-      "Find the feature that defines the answer choice before judging whether examples clarify it.",
+      "Pick the feature that defines an EV; watch the borderline vehicles land or miss.",
     surfaceTitle: "Vehicle feature matrix",
     controlLabel: "Classifying feature",
     caseLabel: "Vehicle",
@@ -796,7 +796,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: one listing can be counted as internet exposure, owner advertising, both, or neither depending on sequence instructions.",
     reviewerGoal:
-      "Inspect whether the sequence asks for exclusive causes or all channels that contributed.",
+      "Set whether the series wants exclusive causes or every channel that helped; re-read the answers.",
     surfaceTitle: "Exposure timeline",
     controlLabel: "Sequence rule",
     caseLabel: "Listing source",
@@ -985,7 +985,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: a single number can conceal average, mode, last week, desired schedule, or guess.",
     reviewerGoal:
-      "Attach a provenance label to the number before treating it as a stable measure.",
+      "Pick how the weekly number was built; then read what it actually reports.",
     surfaceTitle: "Weekly schedule trace",
     controlLabel: "Counting rule",
     caseLabel: "Schedule",
@@ -1175,7 +1175,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: notebook can mean laptop, small paper notebook, Chromebook, tablet, or lower-function device depending on the respondent.",
     reviewerGoal:
-      "Decide whether examples clarify the device family or accidentally change it.",
+      "Swap the example anchor; watch the device boundary slide with it.",
     surfaceTitle: "Device shelf",
     controlLabel: "Label term",
     caseLabel: "Device",
@@ -1364,7 +1364,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: a specific identity can be reportable yet practically less visible if the route is broad or buried.",
     reviewerGoal:
-      "Separate response-route visibility from endorsement of any classification policy.",
+      "Compare two answer routes; read what each leaves visible — without reading the comparison as endorsement.",
     surfaceTitle: "Form route mockup",
     controlLabel: "Visible route",
     caseLabel: "Respondent route",
@@ -1553,7 +1553,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: No can mean no basement, no pump, pump worked, no outage, or no water.",
     reviewerGoal:
-      "Inspect the hidden eligibility stack before interpreting the yes/no answer.",
+      "Stack the hidden eligibility checks above the yes/no; watch what each No actually says.",
     surfaceTitle: "Premise stack",
     controlLabel: "Visible premise",
     caseLabel: "Home",
@@ -1742,7 +1742,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: color, geography, and national identity cues can send people to different sections.",
     reviewerGoal:
-      "Inspect navigation cues without treating a hypothetical route as an ONS-tested finding.",
+      "Watch each heading reroute the respondent; the alternate paths are stress routes, not ONS recommendations.",
     surfaceTitle: "Heading scanner",
     controlLabel: "First cue searched",
     caseLabel: "Navigation case",
@@ -1777,21 +1777,21 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     ],
     controls: [
       {
-        id: "black-first",
-        label: "Black",
-        description: "The respondent searches for Black first.",
-        effect: "The target heading is easier to find."
+        id: "color-cue",
+        label: "Color cue",
+        description: "The respondent scans for a color word (Black, White) first.",
+        effect: "Color-named sections are found first."
       },
       {
-        id: "african-first",
-        label: "African",
-        description: "The respondent searches for African first.",
-        effect: "Geographic and race/color cues overlap."
+        id: "geography-cue",
+        label: "Geography cue",
+        description: "The respondent scans for a place word (African, Caribbean, Asian) first.",
+        effect: "Geography-named sections are found first."
       },
       {
-        id: "white-african-path",
-        label: "White African",
-        description: "The respondent searches for White and African cues together.",
+        id: "both-cues",
+        label: "Both at once",
+        description: "The respondent weighs the color and geography cues together.",
         effect: "This is a hypothetical stress route, not an ONS-tested result."
       }
     ],
@@ -1800,45 +1800,45 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
         id: "black-african",
         title: "Black African",
         body: "A respondent identifies as Black African.",
-        reading: "Both Black and African cues are relevant.",
+        reading: "A color cue (Black) and a place cue (African) point to the same section.",
         provenance: "reported",
         defaultZoneId: "black-heading",
         tags: ["center", "reported"],
         resultByControl: {
-          "black-first": {
+          "color-cue": {
             zoneId: "black-heading",
-            note: "Black-first scanning sends the respondent to the intended section."
+            note: "The color cue Black lands in the intended section."
           },
-          "african-first": {
+          "geography-cue": {
             zoneId: "black-heading",
-            note: "African also appears in the heading, but shares space with other cues."
+            note: "African also appears in the heading, so the place cue still works."
           },
-          "white-african-path": {
-            zoneId: "multi-route",
-            note: "Combining White and African cues creates a harder navigation case."
+          "both-cues": {
+            zoneId: "black-heading",
+            note: "Both cues point to the same section, so the heading holds."
           }
         }
       },
       {
-        id: "white-african",
-        title: "White African stress route",
-        body: "A respondent identifies as White African.",
-        reading: "White and African cues point to different headings.",
+        id: "mixed-white-asian",
+        title: "Mixed: White and Asian",
+        body: "A respondent identifies as mixed White and Asian, an official census Mixed category.",
+        reading: "A color cue (White) and a place cue (Asian) point to different sections.",
         provenance: "teaching",
         defaultZoneId: "multi-route",
-        tags: ["hypothetical", "source boundary"],
+        tags: ["mixed heritage", "source boundary"],
         resultByControl: {
-          "black-first": {
-            zoneId: "black-heading",
-            note: "A Black-first path is not the likely first cue for this stress case."
+          "color-cue": {
+            zoneId: "white-heading",
+            note: "Scanning the color word White points toward the White section."
           },
-          "african-first": {
-            zoneId: "multi-route",
-            note: "African points toward the target heading but does not settle White identity."
+          "geography-cue": {
+            zoneId: "asian-heading",
+            note: "Scanning the place word Asian points toward the Asian section."
           },
-          "white-african-path": {
+          "both-cues": {
             zoneId: "multi-route",
-            note: "This route is explicitly hypothetical and remains ambiguous."
+            note: "White and Asian cues point to different sections; the heading does not settle the path."
           }
         }
       },
@@ -1846,22 +1846,22 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
         id: "black-british",
         title: "Black British",
         body: "A respondent identifies as Black British.",
-        reading: "The Black cue is the first visible anchor.",
+        reading: "The Black color cue is the first visible anchor.",
         provenance: "source_grounded",
         defaultZoneId: "black-heading",
         tags: ["center", "navigation"],
         resultByControl: {
-          "black-first": {
+          "color-cue": {
             zoneId: "black-heading",
             note: "The heading works for this center navigation route."
           },
-          "african-first": {
+          "geography-cue": {
             zoneId: "black-heading",
-            note: "African is not needed for this case."
+            note: "Black British sits inside the same heading."
           },
-          "white-african-path": {
+          "both-cues": {
             zoneId: "black-heading",
-            note: "The stress cue is irrelevant to this center case."
+            note: "Both cues resolve to the same section for this case."
           }
         }
       }
@@ -1881,7 +1881,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
             "Surfaces multi-route cases.",
             "Does not settle classification policy."
           ],
-          caution: "The White African case here is a stress route, not a reported ONS test case."
+          caution: "The mixed-heritage case here is a stress route, not a reported ONS test case."
         },
         {
           id: "write-in-safety",
@@ -1907,9 +1907,9 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     sourceBoundary: {
       title: "Source boundary",
       body:
-        "The source supports the heading concern and recommendation context. The White African route is an authored stress case.",
+        "The source supports the heading concern and recommendation context. The mixed-heritage route is an authored stress case.",
       limits: [
-        "No claim that ONS tested the White African route as shown here.",
+        "No claim that ONS tested the mixed-heritage route as shown here.",
         "No universal heading order is endorsed.",
         "The scanner is an editorial abstraction."
       ]
@@ -1931,7 +1931,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: a secondary reason can become No under one sequence and Yes under another.",
     reviewerGoal:
-      "Check whether the series asks for primary causes or any contributing reason.",
+      "Move each reason between the primary and any-contributing lanes; re-read the Yes.",
     surfaceTitle: "Reason-strength board",
     controlLabel: "Yes threshold",
     caseLabel: "Move reason",
@@ -2120,7 +2120,7 @@ export const experienceBySpecimenId: Record<string, WorkbenchExperience> = {
     stakes:
       "What the data can hide: the same work history can become exact count, rounded guess, month conversion, or wrong method.",
     reviewerGoal:
-      "Attach provenance to the number so exact-looking data does not imply exact recall.",
+      "Pick the counting method first; then read what the count actually reports.",
     surfaceTitle: "Weeks-worked counter",
     controlLabel: "Counting method",
     caseLabel: "Work history",

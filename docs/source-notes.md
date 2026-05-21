@@ -99,8 +99,9 @@ section or page reference, and a direct public PDF URL:
   replacement item.
 - The ONS Kashmiri example tests visibility of the specific answer route while
   preserving the report's documented tradeoff decision. The ONS ethnic-heading
-  example marks the White African path as an authored stress route, not an
-  ONS-tested replacement.
+  example marks the mixed-heritage navigation case (a mixed White-and-Asian
+  respondent, an official census Mixed category) as an authored stress route,
+  not an ONS-tested replacement.
 - The sump-pump plain-No route, disaster underreporting risk, and several
   weeks-worked counting cases are authored or source-grounded teaching
   scenarios. The source notes in the interface should remain visible wherever

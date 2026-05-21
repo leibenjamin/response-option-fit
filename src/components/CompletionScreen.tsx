@@ -152,7 +152,7 @@ export function CompletionScreen({ visited }: Props) {
             href={routeToHash({ kind: "fieldGuide" })}
             data-testid="completion-field-guide"
           >
-            <span>Use the field guide</span>
+            <span>Check your own survey draft</span>
             <span aria-hidden="true" className="cta-button-arrow">
               →
             </span>

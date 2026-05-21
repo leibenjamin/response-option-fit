@@ -8,13 +8,18 @@ type Props = {
   resumeSpecimenId?: string | null;
 };
 
-/* The hub Hero. Identity carrier paired with the live FeaturedHook so a
-   cold visitor can touch the work above the fold. Earlier hero versions
-   carried a small right-corner "live specimen" preview and a separate
-   below-hero "Start here" cold-open; both were collapsed into the single
-   FeaturedHook in the 2026-05-19 opening-hook overhaul (see
-   docs/design-passes/2026-05-19-opening-hook-overhaul.md). The
-   resumeSpecimenId prop continues to flip the CTA hierarchy for
+/* The hub Hero. A two-up identity column + live FeaturedHook so a cold
+   visitor can touch the work above the fold. The identity column carries
+   the eyebrow, project kicker, title, subtitle, audience caption, CTAs,
+   and the scope/trust receipt; the hook sits beside it in a wider column
+   (wide enough that its route buttons no longer wrap, which keeps the
+   hook — and therefore the hero — short).
+
+   The six-pattern taxonomy is NOT in the hero anymore: it lives in the
+   hub's sticky knowledge-map rail (see PatternStrip + App.tsx), so it
+   runs alongside the hero and featured example without pushing the
+   featured example down. See docs/design-passes/2026-05-20-knowledge-rail.md.
+   The resumeSpecimenId prop continues to flip the CTA hierarchy for
    returning visitors. */
 export function Hero({ resumeSpecimenId = null }: Props = {}) {
   const firstSpecimenId = workbenchSpecimens[0]?.id ?? "";
@@ -23,7 +28,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
     : null;
   return (
     <header className="hero" data-testid="hero">
-      <div className="hero-rail">
+      <div className="hero-main">
         <p className="hero-eyebrow eyebrow">
           <span className="hero-eyebrow-mark" aria-hidden="true" />
           Editorial exhibit
@@ -32,17 +37,14 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
             U.S. Census + UK ONS questionnaire-testing review
           </span>
         </p>
-      </div>
-
-      <div className="hero-main">
         <p className="hero-kicker">Response Option Fit Lab</p>
         <h1 className="hero-title" id="exhibit-title" tabIndex={-1}>
           When answer choices don't give the respondent's answer a clear place to go.
         </h1>
         <p className="hero-subtitle">
           A form's rule can look obvious until a real value tries to land
-          in it. Place four below and watch the recorded data lose the
-          route.
+          in it. Place the four values and watch the recorded data lose
+          the route.
         </p>
         <p className="hero-audience" data-testid="hero-audience">
           For survey writers, reviewers, analysts, and anyone who has
@@ -148,41 +150,43 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
             </>
           )}
         </div>
+
+        {/* Scope receipt + trust line: the identity column's trust
+           footer, below the CTAs. */}
+        <ul
+          className="hero-scope"
+          aria-label="What this exhibit covers"
+          data-testid="scope-receipt"
+        >
+            <li className="hero-scope-item">
+              <p className="hero-scope-stat">
+                <span className="hero-scope-val">12</span>
+                <span className="hero-scope-unit"> worked examples</span>
+              </p>
+              <p className="hero-scope-note">each tied to a public report</p>
+            </li>
+            <li className="hero-scope-item">
+              <p className="hero-scope-stat">
+                <span className="hero-scope-val">6</span>
+                <span className="hero-scope-unit"> response-option failure patterns</span>
+              </p>
+              <p className="hero-scope-note">named, defined, and contrasted</p>
+            </li>
+            <li className="hero-scope-item">
+              <p className="hero-scope-stat">
+                <span className="hero-scope-val">12</span>
+                <span className="hero-scope-unit"> public source receipts</span>
+              </p>
+              <p className="hero-scope-note">Census Bureau and ONS, with PDF links</p>
+            </li>
+          </ul>
+          <p className="hero-scope-trust" data-testid="scope-trust">
+            No surveys graded. No in-page AI. No analytics, no third-party
+            requests. Editorial study only.
+          </p>
       </div>
 
       <FeaturedHook />
-
-      <ul
-        className="hero-scope"
-        aria-label="What this exhibit covers"
-        data-testid="scope-receipt"
-      >
-        <li className="hero-scope-item">
-          <p className="hero-scope-stat">
-            <span className="hero-scope-val">12</span>
-            <span className="hero-scope-unit"> worked examples</span>
-          </p>
-          <p className="hero-scope-note">each tied to a public report</p>
-        </li>
-        <li className="hero-scope-item">
-          <p className="hero-scope-stat">
-            <span className="hero-scope-val">6</span>
-            <span className="hero-scope-unit"> response-option failure patterns</span>
-          </p>
-          <p className="hero-scope-note">named, defined, and contrasted</p>
-        </li>
-        <li className="hero-scope-item">
-          <p className="hero-scope-stat">
-            <span className="hero-scope-val">12</span>
-            <span className="hero-scope-unit"> public source receipts</span>
-          </p>
-          <p className="hero-scope-note">Census Bureau and ONS, with PDF links</p>
-        </li>
-      </ul>
-      <p className="hero-scope-trust" data-testid="scope-trust">
-        No surveys graded. No in-page AI. No analytics, no third-party
-        requests. Editorial study only.
-      </p>
     </header>
   );
 }

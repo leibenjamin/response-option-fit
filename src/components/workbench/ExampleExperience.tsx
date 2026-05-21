@@ -6,6 +6,7 @@ import type {
   WorkbenchExperience,
   WorkbenchSpecimen
 } from "../../types/workbench";
+import { EngineGlyph } from "./EngineGlyph";
 
 type ExperienceSpecimen = WorkbenchSpecimen & {
   experience: WorkbenchExperience;
@@ -879,7 +880,10 @@ export function ExampleExperienceRouter({
         aria-labelledby={titleId}
       >
         <div className="experience-hero-copy">
-          <p className="beat-eyebrow">
+          <p className="beat-eyebrow experience-hero-eyebrow">
+            <span className="experience-hero-glyph" aria-hidden="true">
+              <EngineGlyph kind={experience.kind} />
+            </span>
             <span>Example {specimen.number}</span>
             <span aria-hidden="true">/</span>
             <span>{specimen.patternLabel}</span>

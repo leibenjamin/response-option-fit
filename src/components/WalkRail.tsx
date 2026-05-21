@@ -10,8 +10,13 @@ type Props = {
   next: WorkbenchSpecimen | null;
 };
 
-/* Compact walk-mode aside. The full knowledge map is available, but it no
-   longer competes with the active specimen in the first viewport. */
+/* Compact walk-mode aside. The knowledge map is now open by default so a
+   walk visitor can always see where they are in the six-pattern x twelve-
+   example space without having to click an extra disclosure. The second
+   engine wave collapsed this behind <details> for attention-cost reasons;
+   the 2026-05-20 audit found the cost was too high — visitors lost their
+   walk position. The disclosure stays so visitors can collapse on a small
+   screen if they prefer. */
 export function WalkRail({ specimen, visited, prev, next }: Props) {
   return (
     <aside
@@ -19,7 +24,7 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
       aria-label="Knowledge map and walk navigation"
       data-testid="walk-rail"
     >
-      <details className="walk-rail-map" data-testid="walk-rail-map">
+      <details className="walk-rail-map" data-testid="walk-rail-map" open>
         <summary className="walk-rail-map-summary">
           <span>Knowledge map</span>
           <strong>{visited.size}/12 opened</strong>
@@ -82,7 +87,7 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
             href={routeToHash({ kind: "fieldGuide" })}
             data-testid="walk-rail-field-guide"
           >
-            Field guide →
+            Check your own survey draft →
           </a>
         </p>
         <p className="walk-rail-foot-row">
@@ -96,7 +101,7 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
         </p>
         <p className="walk-rail-foot-row">
           <a className="walk-rail-foot-link" href={routeToHash({ kind: "colophon" })}>
-            Colophon →
+            Read the colophon →
           </a>
         </p>
       </div>
