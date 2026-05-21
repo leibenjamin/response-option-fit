@@ -11,16 +11,19 @@ The project demonstrates a React and TypeScript interface with twelve
 specimen-specific survey-review interaction engines, source anchors, surrounding
 question context, source appendix, claim boundary, static security headers,
 and local-only settings controls. The page
-is organized as four hash-routed views — an overview that opens with a live
+is organized as five primary hash-routed views — an overview that opens with a live
 field-value routing specimen in the hero (a "one word only" intake rule
 against four real-shaped values), names the failure taxonomy in a sticky
 knowledge-map rail along the right side, and carries one fully-working
 embedded example on a U.S. Census commute item, with the full six-pattern
 map one click away as an overlay; a walk-through that
-paginates the remaining examples with a compact map drawer and recap interstitials; a
-field guide with a reviewer console, reusable tests, and static prompts for visitors
+paginates the remaining examples with a compact map drawer and recap
+interstitials; a build-and-break route where visitors assemble answer choices
+and watch computed edge cases split, get forced, or fall through; a field guide
+with a reviewer console, reusable tests, and static prompts for visitors
 reviewing their own surveys; and a reference shelf for the glossary, method
-note, claim boundary, and source appendix.
+note, claim boundary, and source appendix. A colophon route carries production
+notes.
 
 ## Sources And Attribution
 
@@ -79,10 +82,12 @@ See [docs/deployment.md](docs/deployment.md) and
 - It includes twelve worked examples and does not claim to generalize across all
   survey instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
-- Each example uses a specimen-specific reviewer interaction engine; the
-  older case-lab and five-step fallback renderers were removed in the
-  2026-05-20 legacy-cleanup wave, along with their per-specimen data
-  fields and orphan CSS.
+- Each worked example uses a specimen-specific reviewer interaction engine.
+  Build-and-break is a separate teaching mechanic, not a thirteenth worked
+  example and not part of the engine union.
+- The commute build-and-break topic is anchored to ACS commute materials, but
+  its named situations are authored teaching situations. The sandwich topic is
+  a teaching case only.
 - Teaching-case labels are not source claims. Public reports remain the
   authority for reported quotes, findings, and recommendations.
 - Repair directions are conceptual and are not validated replacement wording.
@@ -99,7 +104,7 @@ exceed them when the added weight is explicit, measured, and worth the tradeoff.
 - Total CSS under 90 KB gzipped.
 - All interaction is client-side; no third-party runtime requests. Lazy route
   chunks may load from the same origin when the visitor opens a route such as
-  the field guide.
+  the build-and-break route or field guide.
 - Any budget overage should be called out in release notes with current build
   numbers and the reason the added weight is justified. Useful teaching content
   should be measured and route-split where appropriate, not trimmed merely to
@@ -119,9 +124,7 @@ to:
   the names of examples opened in walk mode are stored locally so the knowledge
   map can resume across visits; when Remember is off, walk progress is
   in-memory only and is lost on reload. The current twelve reviewer engines
-  do not persist per-choice interaction state.
-- Any local teaching-state records from fallback renderers are not a score,
-  account, analytics trail, or validation of any survey wording.
+  and the build-and-break route do not persist per-choice interaction state.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
   chooses outside this site when reviewing their own survey material.
@@ -131,9 +134,10 @@ to:
 The application source code is licensed under the **MIT License**; see
 [LICENSE](LICENSE).
 
-Editorial content (exhibit text, answer frames, answer-choice diagrams, authored
-scenario wording, wording-feature questions, quick-practice cases, method notes, glossary entries,
-claim-boundary language, and colophon prose) is licensed under
+Editorial content (exhibit text, answer frames, authored interaction surfaces,
+build-and-break situation wording, scenario wording, wording-feature questions,
+quick-practice cases, method notes, glossary entries, claim-boundary language,
+and colophon prose) is licensed under
 **Creative Commons Attribution 4.0 International (CC BY 4.0)**; see
 [CONTENT-LICENSE.md](CONTENT-LICENSE.md).
 

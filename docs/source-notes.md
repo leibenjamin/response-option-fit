@@ -9,8 +9,8 @@
 - The exhibit uses short substantive wording excerpts and report references for
   editorial study.
 - The exhibit also adds answer frames, synthetic scenarios, compact surrounding
-  question context, and highlighted answer choices needed to make each teaching
-  task fair.
+  question context, highlighted answer choices, and build-and-break situation
+  sets needed to make each teaching task fair.
 - No agency logos, screenshots, or PDF imagery are reproduced.
 - No source-agency endorsement is implied.
 - The original reports remain authoritative for context, findings, and
@@ -68,19 +68,34 @@ section or page reference, and a direct public PDF URL:
     sections 4.7.1 and 4.7.3, pp. 100-108.
     https://www.census.gov/content/dam/Census/library/working-papers/2016/acs/2016_Westat_02.pdf
 
+## Build-And-Break Source Boundary
+
+The `#build` route is a standalone teaching route, not a thirteenth worked
+example.
+
+- **Commute build-and-break** uses the ACS Round 3 means-of-transportation
+  report above and Census commuting definitions/FAQ as its source anchors. The
+  source support is limited to the ACS commute item context, the single
+  method used for the longest distance when multiple commute modes are used,
+  ride-hailing/carpooling findings, and the presence of "Worked from this
+  address" in the ACS commute list. The named commuters are authored teaching
+  situations.
+  https://www.census.gov/content/dam/Census/library/working-papers/2022/acs/2022_Wilson_02.pdf
+  https://www.census.gov/topics/employment/commuting/about/faq.html
+- **Sandwich build-and-break** is a labeled teaching case. It uses no Census or
+  ONS source claim and should not be described as source-grounded.
+
 ## Wording Notes
 
 - Direct source material is limited to short tested-wording excerpts, short
   respondent quotations, report titles, years, section/page references, and
   URLs.
-- Exhibit titles, synthetic scenarios, answer frames, scenario rationales,
-  diagram-stage summaries, data-consequence descriptions, repair directions,
-  and takeaways are editorial teaching material unless explicitly marked as
-  reported source material.
+- Exhibit titles, synthetic scenarios, answer frames, build-and-break fates,
+  scenario rationales, data-consequence descriptions, repair directions, and
+  takeaways are editorial teaching material unless explicitly marked as reported
+  source material.
 - Provenance labels in the current reviewer engines separate **Teaching
-  case**, **Reported source finding**, and **Source-grounded case**. Older
-  fallback renderers still contain the prior label vocabulary in code, but the
-  public twelve-example walk no longer depends on that shell.
+  case**, **Reported source finding**, and **Source-grounded case**.
 - **Reported quote** is reserved for direct or close quote material from a
   cited report. A paraphrased participant description or summarized observation
   is a **Reported finding** even when it describes one participant.
@@ -93,10 +108,9 @@ section or page reference, and a direct public PDF URL:
   instruments.
 - Repair directions identify the type of clarification suggested by the source
   finding; they are not validated replacement questions.
-- Probe outcomes are authored teaching diagnostics. They show whether a preset
-  wording change clarifies the route, leaves ambiguity, stays outside target,
-  leaves a tradeoff, hides a method, or widens scope; they do not validate a
-  replacement item.
+- Build-and-break fates are deterministic teaching diagnostics from the selected
+  answer chips; they do not validate an answer set or estimate how often each
+  fate would occur.
 - The ONS Kashmiri example tests visibility of the specific answer route while
   preserving the report's documented tradeoff decision. The ONS ethnic-heading
   example marks the mixed-heritage navigation case (a mixed White-and-Asian
