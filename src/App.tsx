@@ -20,6 +20,11 @@ const FieldGuide = lazy(() =>
     default: module.FieldGuide
   }))
 );
+const BuildAndBreakRoute = lazy(() =>
+  import("./components/BuildAndBreakRoute").then((module) => ({
+    default: module.BuildAndBreakRoute
+  }))
+);
 
 function currentRoute(): Route {
   if (typeof window === "undefined") return { kind: "hub" };
@@ -101,6 +106,10 @@ function Hub({
             Field guide
           </a>
           <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "build" })}>
+            Build-and-break
+          </a>
+          <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
             Reference shelf
           </a>
@@ -130,6 +139,10 @@ function ReferenceRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
             Field guide
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "build" })}>
+            Build-and-break
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -171,6 +184,63 @@ function FieldGuideRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
         <p className="foot-line foot-line--quiet hub-foot-links">
           <a className="foot-link" href={routeToHash({ kind: "hub" })}>
             ← Back to overview
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "reference" })}>
+            Reference shelf
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "build" })}>
+            Build-and-break
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
+            Colophon
+          </a>
+        </p>
+      </footer>
+    </div>
+  );
+}
+
+function BuildRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
+  return (
+    <div className="lab lab--build">
+      <a href="#build-and-break" className="skip-link" data-testid="skip-link">
+        Skip to build-and-break
+      </a>
+      <SettingsButton onClick={onSettingsOpen} />
+      <Suspense
+        fallback={
+          <main
+            id="build-and-break"
+            className="build-route"
+            aria-labelledby="build-and-break-title"
+          >
+            <h1
+              className="build-route-title"
+              id="build-and-break-title"
+              tabIndex={-1}
+            >
+              Loading build-and-break
+            </h1>
+          </main>
+        }
+      >
+        <BuildAndBreakRoute />
+      </Suspense>
+      <footer className="foot">
+        <p className="foot-line foot-line--quiet hub-foot-links">
+          <a className="foot-link" href={routeToHash({ kind: "hub" })}>
+            ← Back to overview
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "walk", slot: "ride-hailing" })}>
+            Worked examples
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
+            Field guide
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
@@ -225,6 +295,10 @@ function WalkRoute({
               Field guide
             </a>
             <span aria-hidden="true">·</span>
+            <a className="foot-link" href={routeToHash({ kind: "build" })}>
+              Build-and-break
+            </a>
+            <span aria-hidden="true">·</span>
             <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
               Colophon
             </a>
@@ -255,6 +329,10 @@ function WalkRoute({
             Field guide
           </a>
           <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "build" })}>
+            Build-and-break
+          </a>
+          <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
             Colophon
           </a>
@@ -270,6 +348,8 @@ function routeAnnouncement(route: Route): string {
       return "Loaded overview.";
     case "reference":
       return "Loaded reference material.";
+    case "build":
+      return "Loaded build-and-break.";
     case "fieldGuide":
       return "Loaded field guide.";
     case "colophon":
@@ -289,6 +369,8 @@ function pageTitle(route: Route): string {
       return "Response Option Fit Lab";
     case "reference":
       return "Reference — Response Option Fit Lab";
+    case "build":
+      return "Build-and-break — Response Option Fit Lab";
     case "fieldGuide":
       return "Field guide — Response Option Fit Lab";
     case "colophon":
@@ -310,6 +392,8 @@ function focusHeadingId(route: Route): string {
       return "exhibit-title";
     case "reference":
       return "reference-title";
+    case "build":
+      return "build-and-break-title";
     case "fieldGuide":
       return "field-guide-title";
     case "colophon":
@@ -385,6 +469,8 @@ function AppShell() {
         <Colophon />
       ) : route.kind === "reference" ? (
         <ReferenceRoute onSettingsOpen={openSettings} />
+      ) : route.kind === "build" ? (
+        <BuildRoute onSettingsOpen={openSettings} />
       ) : route.kind === "fieldGuide" ? (
         <FieldGuideRoute onSettingsOpen={openSettings} />
       ) : route.kind === "walk" ? (

@@ -105,6 +105,14 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                 <span aria-hidden="true"> · </span>
                 <a
                   className="hero-cta-text-link"
+                  href={routeToHash({ kind: "build" })}
+                  data-testid="hero-cta-build"
+                >
+                  Build your own answer set
+                </a>
+                <span aria-hidden="true"> · </span>
+                <a
+                  className="hero-cta-text-link"
                   href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
                   data-testid="hero-cta-walk"
                 >
@@ -145,6 +153,14 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                   data-testid="hero-cta-walk"
                 >
                   Walk through all twelve
+                </a>
+                <span aria-hidden="true"> · </span>
+                <a
+                  className="hero-cta-text-link"
+                  href={routeToHash({ kind: "build" })}
+                  data-testid="hero-cta-build"
+                >
+                  Build your own answer set
                 </a>
               </p>
             </>

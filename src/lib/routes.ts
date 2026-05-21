@@ -1,4 +1,4 @@
-/* Hash-based routing for the five top-level views.
+/* Hash-based routing for the six top-level views.
 
    This file is the single source of truth for route shape and parsing.
    App.tsx subscribes to hashchange and renders one of:
@@ -7,6 +7,8 @@
                  + FeaturedExample (ride-hailing lens-map engine)
      walk      - paginated walk-through; walk.specimenId names the active
                  specimen, or "done" for the completion screen
+     build     - standalone build-and-break mechanic: visitors assemble
+                 answer choices, then computed situations drop through them
      reference - Glossary + Method note + Claim boundary + Source appendix
      fieldGuide - reviewer console, reusable tests, and static prompt pack
      colophon  - production notes (already exists)
@@ -19,6 +21,7 @@ export type WalkSpecimenSlot = string | "done";
 export type Route =
   | { kind: "hub" }
   | { kind: "walk"; slot: WalkSpecimenSlot }
+  | { kind: "build" }
   | { kind: "reference" }
   | { kind: "fieldGuide" }
   | { kind: "colophon" };
@@ -33,6 +36,9 @@ export function parseHash(hash: string, knownSpecimenIds: readonly string[]): Ro
   }
   if (normalized === "reference") {
     return { kind: "reference" };
+  }
+  if (normalized === "build") {
+    return { kind: "build" };
   }
   if (normalized === "field-guide" || normalized.startsWith("field-guide-")) {
     return { kind: "fieldGuide" };
@@ -57,6 +63,8 @@ export function routeToHash(route: Route): string {
       return "#";
     case "walk":
       return `#walk/${route.slot}`;
+    case "build":
+      return "#build";
     case "reference":
       return "#reference";
     case "fieldGuide":

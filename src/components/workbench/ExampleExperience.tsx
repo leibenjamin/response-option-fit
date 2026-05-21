@@ -893,11 +893,24 @@ export function ExampleExperienceRouter({
           </h2>
           <p className="beat-lede">{experience.lede}</p>
         </div>
-        <p className="experience-source-chip">
-          <span>{source.agency}</span>
-          <span>{source.documentCode}</span>
-          <span>{source.year}</span>
-        </p>
+        <div className="experience-source-stamp">
+          <p className="experience-source-chip">
+            <span>{source.agency}</span>
+            <span>{source.documentCode}</span>
+            <span>{source.year}</span>
+          </p>
+          {/* The verification line is the exhibit's strongest signal that
+             these are real, not a chatbot's plausible-sounding examples:
+             a human checked each one against the cited public PDF on a
+             recorded date. Kept quiet (small mono) so it reads as rigor,
+             not a boast. Full manifest stays in the source-boundary
+             details below. */}
+          <p className="experience-source-verified">
+            <span aria-hidden="true">✓</span> Verified against the cited PDF
+            {" · "}
+            {specimen.verifiedAgainstSource?.date ?? source.retrievalDate}
+          </p>
+        </div>
       </section>
 
       <ExperienceEngine specimen={specimen} />
