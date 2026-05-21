@@ -60,14 +60,15 @@ export function FieldGuide() {
       data-testid="field-guide"
     >
       <header className="field-guide-head">
-        <p className="field-guide-eyebrow">Reusable field guide</p>
+        <p className="field-guide-eyebrow">Take it to your own draft</p>
         <h1 className="field-guide-title" id="field-guide-title" tabIndex={-1}>
           Check your own survey answer choices
         </h1>
         <p className="field-guide-lede">
-          A static reviewer console for choosing a risk, running a compact
-          checklist, and copying source-bounded prompts. It is not a validator,
-          score, or replacement for cognitive testing.
+          A reviewer console for choosing a risk, running a compact
+          checklist, and copying source-bounded prompts you can take into
+          your own draft. It is not a validator, score, or replacement
+          for cognitive testing.
         </p>
       </header>
 

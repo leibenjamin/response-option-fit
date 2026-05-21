@@ -13,10 +13,10 @@ question context, source appendix, claim boundary, static security headers,
 and local-only settings controls. The page
 is organized as four hash-routed views — an overview that opens with a live
 field-value routing specimen in the hero (a "one word only" intake rule
-against four real-shaped values), then names the failure taxonomy in an
-inline six-pattern strip, then carries one fully-working embedded example
-on a U.S. Census commute item, with the full six-pattern map one click
-away as an overlay; a walk-through that
+against four real-shaped values), names the failure taxonomy in a sticky
+knowledge-map rail along the right side, and carries one fully-working
+embedded example on a U.S. Census commute item, with the full six-pattern
+map one click away as an overlay; a walk-through that
 paginates the remaining examples with a compact map drawer and recap interstitials; a
 field guide with a reviewer console, reusable tests, and static prompts for visitors
 reviewing their own surveys; and a reference shelf for the glossary, method
@@ -79,9 +79,10 @@ See [docs/deployment.md](docs/deployment.md) and
 - It includes twelve worked examples and does not claim to generalize across all
   survey instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
-- Each example now uses a distinct reviewer interaction engine instead of a
-  shared article, quiz, or lesson shell. The older case-lab and five-step
-  renderers remain in the code only as fallback compatibility paths.
+- Each example uses a specimen-specific reviewer interaction engine; the
+  older case-lab and five-step fallback renderers were removed in the
+  2026-05-20 legacy-cleanup wave, along with their per-specimen data
+  fields and orphan CSS.
 - Teaching-case labels are not source claims. Public reports remain the
   authority for reported quotes, findings, and recommendations.
 - Repair directions are conceptual and are not validated replacement wording.

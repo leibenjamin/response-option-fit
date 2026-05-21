@@ -37,15 +37,18 @@ The exhibit is laid out across four hash-routed views so the worked examples
 do not collapse into a single thirty-screen scroll. The overview at `#` is
 anchored by a live specimen hook in the hero that routes four field values
 (`can't`, `New York`, `follow-up`, `Q2 FY26`) against a tiny intake rule
-("one word only"), an inline six-pattern strip that names the failure
-taxonomy on the scroll, and one fully-working embedded worked example on
-the U.S. Census ACS commute item — so a visitor sees the central failure
-in miniature, the six recurring shapes it takes, and one full source-
-anchored review without clicking through. The full six-pattern map stays
-one click away as an overlay. The six-pattern map opens on demand as an overlay rather
+("one word only"); a sticky knowledge-map rail names the six-pattern
+taxonomy along the right side of the page (alongside both the hero and the
+embedded example, so it never pushes the example down); and one
+fully-working embedded worked example on the U.S. Census ACS commute item
+shows the same shape at higher stakes — so a visitor sees the central
+failure in miniature, the six recurring shapes it takes, and one full
+source-anchored review without clicking through. The full six-pattern map
+opens on demand as an overlay rather
 than occupying the overview scroll as a block of taxonomy. The walk at
-`#walk/<id>` paginates the remaining examples one at a time, with a compact
-knowledge-map drawer and prev/next navigation; mid-walk recap interstitials
+`#walk/<id>` paginates the remaining examples one at a time, with a knowledge-map
+drawer that stays open by default (so the visitor sees where they are
+without an extra click), prev/next navigation, and mid-walk recap interstitials
 appear after the fourth and eighth examples, and a completion screen closes
 the sequence with a remix board of compact contrast prompts. The field guide at
 `#field-guide` is a reviewer console with risk tabs, reusable checks, and
@@ -75,18 +78,19 @@ review task:
 5. **Apply-the-trace and source boundary:** a short application puzzle plus a
    collapsible receipt for the cited public report.
 
-The older integrated case-lab renderer and five-step renderer remain in the
-codebase as compatibility fallbacks for historical data, but the twelve current
-specimens render through `experience.engine`. This removes the public split
-between "case lab" and "five-step" examples and avoids repeating the same
-scenario text through prediction, diagnosis, probe, reveal, and quick-practice
-blocks.
+Every public specimen renders through `experience.engine`. The older
+integrated case-lab renderer, five-step renderer, and the per-specimen
+data fields that fed them were removed in the 2026-05-20 legacy-cleanup
+wave; the renderer is now one path, and the data shape per specimen is
+identity + claim title + survey instrument (`answerFrame`) + the
+experience engine + source receipt.
 
-The app also carries opt-in local walk progress. The current twelve engines
-do not persist per-choice interaction state; older fallback renderers can still
-read and write lightweight predefined-choice practice records when enabled.
-Those records are not grades, survey scores, analytics, or evidence that a
-replacement wording has been validated.
+The app also carries opt-in local walk progress. Settings and the walk
+visited/recap-dismissed snapshots persist to `localStorage` only after
+explicit consent through the Remember toggle; the engines themselves do
+not persist per-choice interaction state. Stored data is never a grade,
+survey score, analytics record, or evidence that a replacement wording
+has been validated.
 
 The answer-choice diagram uses four explanatory stages: what the person knows,
 the tested wording, where the answer choice stops fitting, and what the

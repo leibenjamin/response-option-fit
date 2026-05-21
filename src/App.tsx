@@ -5,14 +5,13 @@ import { CompletionScreen } from "./components/CompletionScreen";
 import { FeaturedExample } from "./components/FeaturedExample";
 import { Hero } from "./components/Hero";
 import { PatternMapDialog } from "./components/PatternMapDialog";
-import { patternMeta, patternOrder } from "./lib/pattern-meta";
+import { PatternStrip } from "./components/PatternStrip";
 import { Reference } from "./components/Reference";
 import { SettingsButton } from "./components/SettingsButton";
 import { SettingsDrawer } from "./components/SettingsDrawer";
 import { WalkLayout } from "./components/WalkLayout";
 import { parseHash, routeToHash, type Route } from "./lib/routes";
 import { SettingsProvider } from "./lib/settings";
-import { PracticeProvider } from "./lib/practice-state";
 import { useWalkController, type WalkController } from "./lib/walk-state";
 
 const knownSpecimenIds: readonly string[] = workbenchSpecimens.map((s) => s.id);
@@ -61,60 +60,27 @@ function Hub({
         Skip to worked example
       </a>
       <SettingsButton onClick={onSettingsOpen} />
-      <Hero resumeSpecimenId={lastVisited} />
-      <main
-        className="hub-main"
-        aria-label="Overview of the response option fit exhibit"
-      >
-        <section
-          className="pattern-strip"
-          aria-labelledby="pattern-strip-title"
-          data-testid="pattern-strip"
+      {/* Hub shell: a grid whose right column is a sticky knowledge-map
+         rail spanning both the hero row and the featured-example row, so
+         the six-pattern taxonomy runs alongside the hub instead of
+         pushing the featured example down. On tablet/phone the grid
+         collapses to one column ordered hero → knowledge map → featured
+         example. See docs/design-passes/2026-05-20-knowledge-rail.md. */}
+      <div className="hub-shell">
+        <Hero resumeSpecimenId={lastVisited} />
+        <aside
+          className="hub-knowledge-rail"
+          aria-label="Six-pattern knowledge map"
         >
-          <header className="pattern-strip-head">
-            <p className="pattern-strip-eyebrow">The six recurring problems</p>
-            <h2 className="pattern-strip-title" id="pattern-strip-title">
-              The hook above is one of six. Here are the other five.
-            </h2>
-          </header>
-          <ol className="pattern-strip-grid">
-            {patternOrder.map((pattern, index) => {
-              const meta = patternMeta[pattern];
-              return (
-                <li
-                  key={pattern}
-                  className="pattern-strip-tile"
-                  style={{
-                    ["--card-accent" as string]: `var(${meta.accentVar})`
-                  }}
-                  data-testid={`pattern-strip-tile-${pattern}`}
-                >
-                  <button
-                    type="button"
-                    className="pattern-strip-tile-button"
-                    onClick={openMap}
-                    data-testid={`pattern-strip-open-${pattern}`}
-                    aria-label={`Open the six-pattern map at ${meta.label}`}
-                  >
-                    <p className="pattern-strip-tile-num" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
-                    </p>
-                    <p className="pattern-strip-tile-label">{meta.label}</p>
-                    <p className="pattern-strip-tile-canonical">
-                      {meta.canonicalSubtitle}
-                    </p>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-          <p className="pattern-strip-foot">
-            Click any tile to open the full six-pattern map. Each pattern
-            shows up in two of the twelve worked examples below.
-          </p>
-        </section>
-        <FeaturedExample />
-      </main>
+          <PatternStrip onOpenMap={openMap} />
+        </aside>
+        <main
+          className="hub-main"
+          aria-label="Overview of the response option fit exhibit"
+        >
+          <FeaturedExample />
+        </main>
+      </div>
 
       <PatternMapDialog
         open={mapOpen}
@@ -447,9 +413,7 @@ function AppShell() {
 export default function App() {
   return (
     <SettingsProvider>
-      <PracticeProvider>
-        <AppShell />
-      </PracticeProvider>
+      <AppShell />
     </SettingsProvider>
   );
 }
