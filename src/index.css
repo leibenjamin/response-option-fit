@@ -173,8 +173,6 @@ summary:focus-visible {
   border-radius: 2px;
 }
 
-.case-lab-options-details summary,
-.case-lab-source-details summary,
 .answer-frame-details summary,
 .source-manifest-summary,
 .method-note-summary,
@@ -194,8 +192,6 @@ summary:focus-visible {
   display: none;
 }
 
-.case-lab-options-details summary::after,
-.case-lab-source-details summary::after,
 .answer-frame-details summary::after,
 .source-manifest-summary::after,
 .method-note-summary::after,
@@ -220,8 +216,6 @@ summary:focus-visible {
   transform: translateY(-50%);
 }
 
-.case-lab-options-details[open] summary::after,
-.case-lab-source-details[open] summary::after,
 .answer-frame-details[open] summary::after,
 .source-manifest[open] .source-manifest-summary::after,
 .method-note-details[open] .method-note-summary::after,
@@ -1412,17 +1406,7 @@ summary:focus-visible {
 }
 
 .pattern-catalog-eyebrow,
-.beat-eyebrow,
-.tested-wording-eyebrow,
-.frame-meta dt,
-.widget-subtitle,
-.probe-widget-label,
-.mechanism-result-eyebrow,
-.neighbor-contrast-eyebrow,
-.reveal-card-eyebrow,
-.counterexample-eyebrow,
-.counterexample-label,
-.microcase-eyebrow {
+.beat-eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.16em;
@@ -1449,6 +1433,7 @@ summary:focus-visible {
 .hero-title[tabindex="-1"]:focus,
 .workbench-title[tabindex="-1"]:focus,
 .completion-title[tabindex="-1"]:focus,
+.build-route-title[tabindex="-1"]:focus,
 .field-guide-title[tabindex="-1"]:focus,
 .reference-route-title[tabindex="-1"]:focus,
 .colophon-title[tabindex="-1"]:focus {
@@ -1588,48 +1573,6 @@ summary:focus-visible {
   color: var(--workbench-accent, var(--accent));
 }
 
-/* In-place plain-language definition of the case lab's pattern. A tinted
-   aside so it reads as a reference, not body prose; the body span inherits
-   the paragraph's text style and the label span overrides to a mono
-   eyebrow. */
-
-.case-lab-option.is-target {
-  color: var(--ink);
-}
-
-.case-lab-option.is-target .case-lab-option-text {
-  border-left: 3px solid var(--accent);
-  background: var(--accent-paper);
-  padding: 2px 4px;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-}
-
-.case-lab-deck-button.is-answered {
-  color: var(--ink);
-  background: var(--paper-card);
-}
-
-.case-lab-deck-button.is-active {
-  color: var(--ink);
-  border-color: var(--accent);
-  background: var(--accent-paper);
-}
-
-/* Step-through navigation between teaching cases. Visually subordinate
-   to the answer-choice buttons that sit just above it so the visitor
-   reads the choice row as the action and the prev/next row as paging.
-   A faint top divider and text-link styling carry the distinction. */
-
-/* Explanation gate. Shown for the last three case-lab scenarios so the
-   learner commits to a judgment before reading the route explanation. */
-
-.case-lab-repair-button:hover,
-.case-lab-repair-button.is-active {
-  border-color: var(--accent);
-  background: var(--accent-paper);
-}
-
 .answer-frame {
   border-top: 1px dashed var(--line-soft);
   padding-top: var(--s-4);
@@ -1717,8 +1660,6 @@ summary:focus-visible {
   word-break: break-all;
 }
 
-.prediction-controls,
-.segmented-radios,
 .settings-actions,
 .settings-confirm-actions {
   display: flex;
@@ -1726,29 +1667,11 @@ summary:focus-visible {
   gap: var(--s-2);
 }
 
-.prediction-button.is-active,
-.widget-option.is-selected .widget-toggle-button {
-  color: var(--ink);
-  border-color: var(--accent);
-  background: var(--accent-paper);
-}
-
 .workbench-beat--practice-notes,
 .workbench-beat--locked-preview {
   background: var(--paper-card);
 }
 
-.mechanism-fieldset,
-.microcase-fieldset,
-.widget {
-  min-width: 0;
-  border: 1px solid var(--line-soft);
-  background: var(--paper);
-  padding: var(--s-4);
-  margin: var(--s-5) 0 0;
-}
-
-.radio-card,
 .segmented-radio {
   min-width: 0;
   min-height: 24px;
@@ -1767,7 +1690,6 @@ summary:focus-visible {
   grid-template-columns: 24px auto;
 }
 
-.radio-card input,
 .segmented-radio input {
   width: 18px;
   height: 18px;
@@ -1775,33 +1697,9 @@ summary:focus-visible {
   accent-color: var(--accent);
 }
 
-.radio-card input:focus-visible + .radio-card-mark,
 .segmented-radio input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-}
-
-.widget {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
-  margin: 0;
-}
-
-.widget-option.is-selected {
-  border-color: var(--accent-soft);
-}
-
-.bucket-divider.is-active::before,
-.bucket-divider.is-active::after,
-.bucket-divider.is-active .bucket-divider-line {
-  border-top-color: var(--accent);
-}
-
-.bucket-divider.is-active .widget-secondary-button {
-  grid-column: 2;
-  grid-row: 1;
-  position: relative;
 }
 
 .workbench-beat--method-note {
@@ -3107,6 +3005,411 @@ summary:focus-visible {
   align-items: center;
 }
 
+/* ===================== BUILD-AND-BREAK ROUTE ===================== */
+
+.lab--build {
+  padding-top: var(--s-7);
+}
+
+.build-route {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-7);
+  margin-bottom: var(--s-9);
+}
+
+.build-route-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: 82ch;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: var(--s-5);
+}
+
+.build-route-eyebrow,
+.build-section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.build-route-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.04;
+  margin: 0;
+  color: var(--ink);
+  max-width: 24ch;
+}
+
+.build-route-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 64ch;
+}
+
+.build-topic-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-3);
+}
+
+.build-topic-tab {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  color: var(--ink-2);
+  padding: var(--s-4);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.build-topic-tab span {
+  font-family: var(--font-serif);
+  font-size: 21px;
+  line-height: 1.15;
+}
+
+.build-topic-tab small {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.build-topic-tab:hover,
+.build-topic-tab:focus-visible,
+.build-topic-tab.is-active {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--ink);
+}
+
+.build-topic {
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  display: flex;
+  flex-direction: column;
+}
+
+.build-instrument,
+.build-palette,
+.build-results {
+  padding: var(--s-6) var(--s-7);
+  border-top: 1px solid var(--line-faint);
+}
+
+.build-instrument {
+  border-top: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.36fr);
+  gap: var(--s-5);
+  align-items: start;
+  position: relative;
+}
+
+.build-instrument::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--s-7);
+  right: var(--s-7);
+  height: 3px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.build-instrument-copy,
+.build-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.build-instrument h2,
+.build-section-head h2,
+.build-reveal h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 2.5vw, 34px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.build-instrument p,
+.build-section-head p,
+.build-reveal p {
+  margin: 0;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+.build-source-note {
+  border-left: 3px solid var(--accent);
+  background: var(--paper);
+  padding: var(--s-3) var(--s-4);
+  font-size: 13.5px;
+}
+
+.build-option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+}
+
+.build-option {
+  min-width: 0;
+  min-height: 112px;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  padding: var(--s-4);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.build-option:hover,
+.build-option:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.build-option.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--ink);
+}
+
+.build-option-label {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.build-option-blurb {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.build-run-row {
+  margin-top: var(--s-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+}
+
+.build-run-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.build-reset {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.build-reset:hover,
+.build-reset:focus-visible {
+  color: var(--accent);
+}
+
+.build-run-status {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.build-live-summary {
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  padding: var(--s-3) var(--s-4);
+  margin-top: var(--s-5);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.build-live-summary p {
+  margin: 0;
+}
+
+.build-scoreboard {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-3);
+  margin: var(--s-4) 0 var(--s-5);
+}
+
+.build-score {
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  padding: var(--s-3);
+}
+
+.build-score dt {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.build-score dd {
+  margin: var(--s-1) 0 0;
+  font-family: var(--font-serif);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.build-score--split,
+.build-score--forced,
+.build-score--lost {
+  border-color: var(--accent-soft);
+}
+
+.build-situations {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s-3);
+}
+
+.build-situation {
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  padding: var(--s-4);
+}
+
+.build-situation--split,
+.build-situation--forced,
+.build-situation--lost {
+  border-color: var(--accent-soft);
+}
+
+.build-situation-head {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  gap: var(--s-3);
+  align-items: start;
+}
+
+.build-situation-num,
+.build-fate,
+.build-situation-detail dt {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.build-situation-person {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.build-situation-reading {
+  margin: var(--s-1) 0 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.build-fate {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  padding: 4px var(--s-2);
+  color: var(--ink-2);
+}
+
+.build-fate--split,
+.build-fate--forced,
+.build-fate--lost {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--accent-2);
+}
+
+.build-situation-detail {
+  margin: var(--s-3) 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 0.4fr);
+  gap: var(--s-3);
+  border-top: 1px dashed var(--line-faint);
+  padding-top: var(--s-3);
+}
+
+.build-situation-detail dd {
+  margin: var(--s-1) 0 0;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+
+.build-situation-copy {
+  margin: var(--s-3) 0 0;
+  border-left: 3px solid var(--accent);
+  padding-left: var(--s-3);
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+.build-reveal,
+.build-results-placeholder {
+  margin-top: var(--s-5);
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, var(--paper), var(--paper-card));
+  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-width: 84ch;
+}
+
+.build-reveal-foot {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
 /* ===================== FIELD GUIDE ROUTE ===================== */
 
 .lab--field-guide {
@@ -4172,9 +4475,8 @@ summary:focus-visible {
   border-color: var(--workbench-accent, var(--accent));
 }
 
-/* Second-wave interaction engines. The older generic workspace classes are
-   still present for fallback renderers, but the twelve active examples now
-   use compact, direct-manipulation surfaces with one early task. */
+/* Second-wave interaction engines: compact, direct-manipulation surfaces
+   with one early task for each of the twelve worked examples. */
 .experience-hero {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -4187,6 +4489,13 @@ summary:focus-visible {
 .experience-hero .beat-lede {
   max-width: 58ch;
 }
+.experience-source-stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s-1);
+  min-width: 0;
+}
 .experience-source-chip {
   margin: 0;
   display: flex;
@@ -4194,6 +4503,18 @@ summary:focus-visible {
   justify-content: flex-end;
   gap: var(--s-1);
   max-width: 260px;
+}
+.experience-source-verified {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  text-align: right;
+  max-width: 260px;
+}
+.experience-source-verified span {
+  color: var(--accent);
 }
 .experience-source-chip span {
   border: 1px solid var(--line-soft);
@@ -4806,10 +5127,6 @@ summary:focus-visible {
   .pattern-catalog-grid--full {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .frame-grid,
-  .probe-grid,
-  .case-lab-grid,
-  .case-lab-repair-grid,
   .experience-top-grid,
   .experience-bottom-grid,
   .experience-live-surface {
@@ -4820,6 +5137,8 @@ summary:focus-visible {
     width: 100%;
   }
   .completion-review-list,
+  .build-instrument,
+  .build-situation-detail,
   .fit-test-grid,
   .pattern-checklist-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -4981,15 +5300,10 @@ summary:focus-visible {
     grid-template-columns: minmax(0, 1fr);
   }
   .pattern-catalog-grid--full,
-  .case-lab-judgment-legend,
   .reveal-card-grid,
   .counterexample-grid,
-  .microcase-list,
   .time-window-ticks {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .case-lab-head .beat-lede {
-    display: none;
   }
   .featured-example-head,
   .featured-example-foot {
@@ -5011,6 +5325,9 @@ summary:focus-visible {
     padding: var(--s-4);
   }
   .completion-review,
+  .build-instrument,
+  .build-palette,
+  .build-results,
   .field-guide-console,
   .field-guide-warning,
   .fit-test-card,
@@ -5020,6 +5337,22 @@ summary:focus-visible {
   }
   .field-guide-console {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .build-instrument::before {
+    left: var(--s-4);
+    right: var(--s-4);
+  }
+  .build-topic-tabs,
+  .build-option-grid,
+  .build-scoreboard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .build-situation-head {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+  .build-fate {
+    grid-column: 2;
+    justify-self: start;
   }
   .prompt-card-head {
     grid-template-columns: minmax(0, 1fr);
@@ -5085,9 +5418,16 @@ summary:focus-visible {
     font-size: 14px;
     line-height: 1.4;
   }
+  .experience-source-stamp {
+    align-items: flex-start;
+  }
   .experience-source-chip {
     max-width: none;
     justify-content: flex-start;
+  }
+  .experience-source-verified {
+    text-align: left;
+    max-width: none;
   }
   .lens-map-surface,
   .ladder-surface,
@@ -5403,54 +5743,14 @@ summary:focus-visible {
   .pattern-catalog-card,
   .workbench,
   .workbench-beat,
-  .case-lab-frame,
-  .case-lab-pattern-gloss,
-  .case-lab-scenario,
-  .case-lab-repair-panel,
-  .case-lab-source-details,
-  .case-lab-transfer-feedback,
-  .case-lab-judgment-chip,
-  .case-lab-repair-button,
-  .case-lab-repair-result,
-  .case-lab-source-evidence li,
-  .tested-wording,
-  .vignette-card,
-  .diagnosis-card,
-  .probe-outcome-card,
-  .mechanism-fieldset,
-  .microcase-fieldset,
-  .widget,
-  .radio-card,
   .segmented-radio,
-  .prediction-button,
-  .reveal-gate-button,
-  .neighbor-contrast-button,
-  .widget-toggle-button,
-  .widget-secondary-button,
-  .bucket-split-button,
-  .icon-text-button,
-  .microcase-submit,
-  .example-chip,
-  .chip-remove,
   .source-chip,
   .citation-chip-summary,
   .citation-chip-full,
-  .widget-option,
-  .sequence-item,
-  .bucket-item,
-  .checkbox-row,
-  .checkbox-mark,
-  .switch-row,
-  .switch-track,
   .source-manifest,
   .source-manifest-list,
   .method-note-details,
   .colophon-admonition,
-  .reveal-card,
-  .counterexample-card,
-  .provenance-badge,
-  .outcome-badge,
-  .edit-outcome-badge,
   .cta-button,
   .subway-dot,
   .walk-rail-nav-btn,
@@ -5464,6 +5764,17 @@ summary:focus-visible {
   .recap-retrieval-option,
   .completion-review,
   .completion-review-card,
+  .build-topic,
+  .build-topic-tab,
+  .build-instrument,
+  .build-source-note,
+  .build-option,
+  .build-live-summary,
+  .build-score,
+  .build-situation,
+  .build-fate,
+  .build-reveal,
+  .build-results-placeholder,
   .field-guide-warning,
   .fit-test-card,
   .pattern-checklist-card,
@@ -5506,6 +5817,11 @@ summary:focus-visible {
   .subway-dot.is-current,
   .pattern-catalog-chip.is-current,
   .cta-button--primary,
+  .build-topic-tab.is-active,
+  .build-option.is-selected,
+  .build-fate--split,
+  .build-fate--forced,
+  .build-fate--lost,
   .recap-retrieval-option.is-active {
     color: HighlightText;
     background: Highlight;
@@ -5515,12 +5831,7 @@ summary:focus-visible {
     content: "✓ ";
     margin-right: 2px;
   }
-  .radio-card input:checked + .radio-card-mark,
-  .checkbox-row input:checked + .checkbox-mark,
-  .switch-row input:checked + .switch-track,
-  .prediction-button.is-active,
   .featured-hook-route.is-chosen,
-  .widget-option.is-selected .widget-toggle-button,
   .experience-control.is-active,
   .experience-case-button.is-active,
   .experience-repair-tab.is-active,

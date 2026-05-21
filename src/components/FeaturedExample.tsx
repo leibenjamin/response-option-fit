@@ -50,7 +50,11 @@ export function FeaturedExample() {
             {featured.source.year}.
           </span>{" "}
           <span className="featured-example-source-receipt-note">
-            Teaching cases below are synthetic.
+            Checked by hand against the cited PDF
+            {featured.verifiedAgainstSource?.date
+              ? ` on ${featured.verifiedAgainstSource.date}`
+              : ""}
+            ; teaching cases below are synthetic and labeled.
           </span>
         </p>
       </header>
