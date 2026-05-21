@@ -33,7 +33,7 @@ reports remain the evidence anchors.
 
 ## Page Layout
 
-The exhibit is laid out across four hash-routed views so the worked examples
+The exhibit is laid out across five primary hash-routed views so the worked examples
 do not collapse into a single thirty-screen scroll. The overview at `#` is
 anchored by a live specimen hook in the hero that routes four field values
 (`can't`, `New York`, `follow-up`, `Q2 FY26`) against a tiny intake rule
@@ -50,14 +50,18 @@ than occupying the overview scroll as a block of taxonomy. The walk at
 drawer that stays open by default (so the visitor sees where they are
 without an extra click), prev/next navigation, and mid-walk recap interstitials
 appear after the fourth and eighth examples, and a completion screen closes
-the sequence with a remix board of compact contrast prompts. The field guide at
-`#field-guide` is a reviewer console with risk tabs, reusable checks, and
-static prompts for external LLM review. The reference shelf at
-`#reference` carries the glossary, method note, claim boundary, and source
-appendix as their own route. Each example route now renders a specimen-specific
-reviewer interaction engine: a lens map, level ladder, eligibility fork,
-feature matrix, source timeline, schedule trace, device shelf, visibility
-route map, premise stack, heading scanner, reason lanes, or counting calendar.
+the sequence with a remix board of compact contrast prompts. The
+build-and-break route at `#build` lets visitors assemble answer choices for two
+topics, then drops authored situations through the selected set with a computed
+clean/split/forced/lost fate. The field guide at `#field-guide` is a reviewer
+console with risk tabs, reusable checks, and static prompts for external LLM
+review. The reference shelf at `#reference` carries the glossary, method note,
+claim boundary, and source appendix as their own route. The colophon remains a
+separate production-notes route. Each example route renders a
+specimen-specific reviewer interaction engine: a lens map, level ladder,
+eligibility fork, feature matrix, source timeline, schedule trace, device
+shelf, visibility route map, premise stack, heading scanner, reason lanes, or
+counting calendar.
 
 ## Worked-Example Model
 
@@ -78,52 +82,59 @@ review task:
 5. **Apply-the-trace and source boundary:** a short application puzzle plus a
    collapsible receipt for the cited public report.
 
-Every public specimen renders through `experience.engine`. The older
-integrated case-lab renderer, five-step renderer, and the per-specimen
-data fields that fed them were removed in the 2026-05-20 legacy-cleanup
-wave; the renderer is now one path, and the data shape per specimen is
-identity + claim title + survey instrument (`answerFrame`) + the
-experience engine + source receipt.
+Every public specimen renders through `experience.engine`. The renderer is now
+one path, and the data shape per specimen is identity + claim title + survey
+instrument (`answerFrame`) + the experience engine + source receipt.
+
+## Build-And-Break Model
+
+Build-and-break is intentionally outside the worked-example engine union. It
+does not ask the visitor to choose a case and read a prewritten outcome. Instead
+it asks the visitor to build a small answer set from fixed chips, then computes
+each situation's fate from that selected set:
+
+1. **Clean:** exactly one honest home is available.
+2. **Split:** two or more honest homes are available, so the answer overlaps.
+3. **Forced:** no honest home is available, but a misleading nearby answer can
+   absorb the case.
+4. **Lost:** no selected answer can hold the case.
+
+The commute topic is source-anchored to ACS journey-to-work materials, but its
+named commuters are authored teaching situations. The source support is limited
+to the ACS commute item context, the Census FAQ rule that multimodal commutes
+are counted by the single method used for the longest distance, the
+ride-hailing/carpooling concern, and the placement of "Worked from this address."
+The sandwich topic is labeled as a teaching case and makes no source claim.
+Neither topic estimates frequency, error rates, or population effects.
 
 The app also carries opt-in local walk progress. Settings and the walk
 visited/recap-dismissed snapshots persist to `localStorage` only after
 explicit consent through the Remember toggle; the engines themselves do
-not persist per-choice interaction state. Stored data is never a grade,
-survey score, analytics record, or evidence that a replacement wording
-has been validated.
+not persist per-choice interaction state, and build-and-break selections are
+session-only React state. Stored data is never a grade, survey score, analytics
+record, or evidence that a replacement wording has been validated.
 
-The answer-choice diagram uses four explanatory stages: what the person knows,
-the tested wording, where the answer choice stops fitting, and what the
-recorded answer can hide. Each stage includes short detail copy from the
-person's perspective. This structure is not a statistical model and does not
-estimate respondent counts, error rates, or distributional effects.
+Each engine surface routes a case through the answer space and shows where the
+recorded answer stops matching what the respondent knew. This is a teaching
+abstraction, not a statistical model: it does not estimate respondent counts,
+error rates, or distributional effects.
 
-Repair and Probe outcomes are visitor-facing teaching diagnostics, not
-validation results.
-They distinguish route clearer, still ambiguous, still outside target, tradeoff
-remains, method still hidden, and scope widened states so a wording change can
-remain partial even when it improves one route. The second example in each
-pattern pair also carries a compact bridge note to help visitors compare the
-two shapes of the same problem family.
-
-Case-lab repair outcomes add **misread risk** for the current wording when a
-nearby out-of-scope scenario can be tempted into the highlighted label without
-the exhibit claiming that the answer choice itself has been intentionally
-widened.
+The repair sandbox presents candidate wording directions and their effects as
+design options, each with an explicit caution that the direction is not
+validated replacement wording. The apply-the-trace prompt is a short transfer
+check, not a graded quiz. Every worked example also carries a visible source
+verification line (the cited public PDF, checked by hand on a recorded date)
+and a collapsible full source manifest.
 
 ## Authored Versus Source Material
 
 The source reports provide the public evidence base, tested-wording excerpts,
 report citations, and direct PDF links. The exhibit adds neutral framing,
-synthetic teaching cases, answer frames, diagram-stage summaries, prediction
-labels, pattern labels, and concise takeaways so the examples can be compared
-in a single interface.
+synthetic teaching cases, surrounding question context, highlighted answer
+choices, pattern labels, repair directions, and concise takeaways so the
+examples can be compared in a single interface.
 
-See [specimen-red-team.md](specimen-red-team.md) for the current ambiguity
-audit, copy decisions, and future-wave risks.
-
-The current provenance vocabulary is more specific than the old two-label
-system:
+The current provenance vocabulary is:
 
 - **Teaching case:** invented for the lesson; not reported by the source.
 - **Reported quote:** direct or close quote from a cited public report.
@@ -131,9 +142,11 @@ system:
 - **Source-grounded stress case:** constructed teaching case based on a cited
   source finding.
 
-Teaching cases, pair bridges, completion-review prompts, repair rationales, and
-workspace route notes are learning aids. They should not be read as official
-source-agency answer keys or as tested replacement wording.
+Teaching cases, build-and-break situations, completion-review prompts, repair
+rationales, and workspace route notes are learning aids. Build-and-break cards
+use a status label for authored teaching situations rather than a source
+provenance claim. They should not be read as official source-agency answer keys
+or as tested replacement wording.
 
 ## Claim Boundary
 
