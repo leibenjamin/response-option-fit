@@ -258,6 +258,12 @@ const verbatimById: Partial<
     quote:
       "It was a small factor, but was it the primary factor? No … it wasn't the primary reason, it was part of the reason, because I thought about floods.",
     attribution: "AHS pretest, 2024"
+  },
+  // 2016 ACS Content Test (Westat 02), p.113 (case 510055, on a household member)
+  "acs-weeks-worked": {
+    quote:
+      "It's a bit difficult because it varies a lot. I just took a rounded guess.",
+    attribution: "ACS Content Test, 2016"
   }
 };
 
