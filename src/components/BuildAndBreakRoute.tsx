@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   buildTopics,
   evaluateTopic,
+  makeExportTable,
   optionLabel,
   type BuildSituationResult,
   type BuildTopic,
@@ -26,8 +27,10 @@ function formatLabels(topic: BuildTopic, ids: readonly string[]) {
 }
 
 function resultCopy(topic: BuildTopic, result: BuildSituationResult) {
+  if (result.ruleCopy) return result.ruleCopy;
+
   if (result.fate === "clean") {
-    return `Recorded as ${formatLabels(topic, result.cleanHomes)}. This situation has one stable home in the form you built.`;
+    return `Recorded as ${formatLabels(topic, result.cleanHomes)}. One stable home in the form you built.`;
   }
 
   const authoredCopy = result.situation.fateCopy?.[result.fate];
@@ -42,14 +45,14 @@ function resultCopy(topic: BuildTopic, result: BuildSituationResult) {
   return "No selected answer can hold this situation, so the form loses it before analysis starts.";
 }
 
-function resultHomes(topic: BuildTopic, result: BuildSituationResult) {
-  if (result.fate === "lost") return "No offered answer";
-  if (result.fate === "forced") return formatLabels(topic, result.forcedHomes);
-  return formatLabels(topic, result.cleanHomes);
-}
-
 function makeInitialRecord() {
   return Object.fromEntries(buildTopics.map((topic) => [topic.id, [] as string[]]));
+}
+
+function makeInitialRuleRecord() {
+  return Object.fromEntries(
+    buildTopics.map((topic) => [topic.id, null as string | null])
+  );
 }
 
 function runStatus(selectedCount: number, canRun: boolean, hasRun: boolean) {
@@ -61,12 +64,51 @@ function runStatus(selectedCount: number, canRun: boolean, hasRun: boolean) {
   return `${count}; choose ${MIN_CHOICES - selectedCount} more to run`;
 }
 
+function resultSignature(result: BuildSituationResult) {
+  return `${result.fate}:${result.cleanHomes.join("|")}:${result.forcedHomes.join("|")}`;
+}
+
+/* One record inside the export — a single authored situation, shown with its
+   fate. The same testids (`build-result-*`, `build-fate-*`) ride here so the
+   route's behavior contract is unchanged even though the layout moved from a
+   flat "break" list into the export the analyst would actually receive. */
+function ExportRecord({
+  topic,
+  result
+}: {
+  topic: BuildTopic;
+  result: BuildSituationResult;
+}) {
+  return (
+    <li
+      className={`build-record build-record--${result.fate}`}
+      data-testid={`build-result-${topic.id}-${result.situation.id}`}
+    >
+      <p
+        className={`build-fate build-fate--${result.fate}`}
+        data-testid={`build-fate-${topic.id}-${result.situation.id}`}
+      >
+        {fateLabels[result.fate]}
+      </p>
+      <div className="build-record-body">
+        <p className="build-record-person">{result.situation.who}</p>
+        <p className="build-record-copy">{resultCopy(topic, result)}</p>
+        <p className="build-record-status">Status: {topic.situationStatus}</p>
+      </div>
+    </li>
+  );
+}
+
 export function BuildAndBreakRoute() {
   const [activeTopicId, setActiveTopicId] = useState(buildTopics[0].id);
   const [chosenByTopic, setChosenByTopic] = useState<Record<string, string[]>>(
     makeInitialRecord
   );
+  const [ruleByTopic, setRuleByTopic] = useState<Record<string, string | null>>(
+    makeInitialRuleRecord
+  );
   const [runTopics, setRunTopics] = useState<Record<string, boolean>>({});
+  const [openTopics, setOpenTopics] = useState<Record<string, boolean>>({});
 
   const topic =
     buildTopics.find((candidate) => candidate.id === activeTopicId) ??
@@ -75,9 +117,20 @@ export function BuildAndBreakRoute() {
   const selectedCount = chosenIds.length;
   const canRun = selectedCount >= MIN_CHOICES;
   const hasRun = runTopics[topic.id] === true;
-  const result = evaluateTopic(topic, chosenIds);
+  const isOpen = openTopics[topic.id] === true;
+  const activeRuleId = ruleByTopic[topic.id] ?? null;
+  const baseResult = evaluateTopic(topic, chosenIds);
+  const result = evaluateTopic(topic, chosenIds, activeRuleId);
+  const activeRule = result.rule;
+  const exportTable = makeExportTable(result, chosenIds);
+  const baseBrokenCount =
+    baseResult.counts.split + baseResult.counts.forced + baseResult.counts.lost;
   const brokenCount =
     result.counts.split + result.counts.forced + result.counts.lost;
+  const changedByRule = result.results.filter(
+    (item, index) => resultSignature(item) !== resultSignature(baseResult.results[index])
+  ).length;
+  const unplaced = exportTable.ambiguous.length + exportTable.lost.length;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -97,12 +150,22 @@ export function BuildAndBreakRoute() {
 
   const resetTopic = () => {
     setChosenByTopic((previous) => ({ ...previous, [topic.id]: [] }));
+    setRuleByTopic((previous) => ({ ...previous, [topic.id]: null }));
     setRunTopics((previous) => ({ ...previous, [topic.id]: false }));
+    setOpenTopics((previous) => ({ ...previous, [topic.id]: false }));
   };
 
   const runCurrentTopic = () => {
     if (!canRun) return;
     setRunTopics((previous) => ({ ...previous, [topic.id]: true }));
+  };
+
+  const toggleOpen = () => {
+    setOpenTopics((previous) => ({ ...previous, [topic.id]: !previous[topic.id] }));
+  };
+
+  const selectRule = (ruleId: string | null) => {
+    setRuleByTopic((previous) => ({ ...previous, [topic.id]: ruleId }));
   };
 
   return (
@@ -119,12 +182,12 @@ export function BuildAndBreakRoute() {
           id="build-and-break-title"
           tabIndex={-1}
         >
-          Build the answer choices. Then watch the edge cases use them.
+          Build the answer choices. Then read the data they would have left you.
         </h1>
         <p className="build-route-lede">
-          This is not a quiz about picking the correct list. It is a small
-          deterministic test of what happens after a reasonable answer set
-          meets people who do not fit one box cleanly.
+          Not a quiz about the correct list. You assemble a reasonable answer
+          set, then see the tidy export it produces — and what that clean-looking
+          column quietly threw away before any analysis started.
         </p>
       </header>
 
@@ -171,8 +234,8 @@ export function BuildAndBreakRoute() {
             <p className="build-section-eyebrow">1. Build</p>
             <h2 id={`build-palette-${topic.id}`}>Choose at least four answer choices</h2>
             <p>
-              Every chip is plausible. Add more if you think the form needs
-              more places for reality to land.
+              Every chip is plausible. Add more if you think the form needs more
+              places for reality to land — more is not automatically safer.
             </p>
           </header>
 
@@ -205,7 +268,7 @@ export function BuildAndBreakRoute() {
               onClick={runCurrentTopic}
               data-testid={`build-run-${topic.id}`}
             >
-              <span>Run the situations</span>
+              <span>Export the responses</span>
               <span aria-hidden="true" className="cta-button-arrow">↓</span>
             </button>
             <button
@@ -227,11 +290,11 @@ export function BuildAndBreakRoute() {
           aria-labelledby={`build-results-${topic.id}`}
         >
           <header className="build-section-head">
-            <p className="build-section-eyebrow">2. Break</p>
-            <h2 id={`build-results-${topic.id}`}>Drop the situations through your form</h2>
+            <p className="build-section-eyebrow">2. The export</p>
+            <h2 id={`build-results-${topic.id}`}>Your form would hand you this</h2>
             <p>
-              The fates below are computed from the answer choices you selected.
-              Change a chip after running and the same situations move.
+              {topic.situations.length} people answered the question. This is the
+              column an analyst would open next. It looks ready to chart.
             </p>
           </header>
 
@@ -245,86 +308,259 @@ export function BuildAndBreakRoute() {
               <p>
                 {result.counts.clean} clean · {result.counts.split} split ·{" "}
                 {result.counts.forced} forced · {result.counts.lost} lost
+                {activeRule ? ` · rule: ${activeRule.shortLabel}` : ""}
                 {!canRun
                   ? " · below the start gate, still recomputing from your current chips"
                   : ""}
               </p>
             ) : (
-              <p>Run the situations after choosing at least four answers.</p>
+              <p>Export the responses after choosing at least four answers.</p>
             )}
           </div>
 
           {hasRun ? (
             <>
-              <dl className="build-scoreboard" aria-label="Computed outcome counts">
-                {(["clean", "split", "forced", "lost"] as const).map((fate) => (
-                  <div
-                    className={`build-score build-score--${fate}`}
-                    key={fate}
-                    data-testid={`build-score-${topic.id}-${fate}`}
-                  >
-                    <dt>{fateLabels[fate]}</dt>
-                    <dd>{result.counts[fate]}</dd>
-                  </div>
-                ))}
-              </dl>
+              <div
+                className={`build-export ${isOpen ? "is-open" : ""}`}
+                data-testid={`build-export-${topic.id}`}
+              >
+                <div className="build-export-frame">
+                  <p className="build-export-caption">
+                    Export · {topic.stem} · n&nbsp;=&nbsp;{topic.situations.length}
+                  </p>
+                  <ol className="build-export-rows">
+                    {exportTable.rows.map((row) => (
+                      <li
+                        className="build-export-row"
+                        key={row.optionId}
+                        data-testid={`build-export-row-${topic.id}-${row.optionId}`}
+                      >
+                        <div className="build-export-cell">
+                          <span className="build-export-cell-label">{row.label}</span>
+                          <span className="build-export-cell-count">{row.count}</span>
+                        </div>
+                        {isOpen && (
+                          <ul className="build-records">
+                            {row.results.map((item) => (
+                              <ExportRecord
+                                key={item.situation.id}
+                                topic={topic}
+                                result={item}
+                              />
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ol>
 
-              <ol className="build-situations">
-                {result.results.map((item, index) => (
-                  <li
-                    className={`build-situation build-situation--${item.fate}`}
-                    key={item.situation.id}
-                    data-testid={`build-result-${topic.id}-${item.situation.id}`}
+                  <p className="build-export-total">
+                    <span>Rows the export can file</span>
+                    <strong data-testid={`build-export-placed-${topic.id}`}>
+                      {exportTable.placedCount}
+                    </strong>
+                  </p>
+                </div>
+
+                <div className="build-export-controls">
+                  <button
+                    type="button"
+                    className="build-export-toggle"
+                    aria-pressed={isOpen}
+                    onClick={toggleOpen}
+                    data-testid={`build-export-decompose-${topic.id}`}
                   >
-                    <article>
-                      <header className="build-situation-head">
-                        <p className="build-situation-num" aria-hidden="true">
-                          {String(index + 1).padStart(2, "0")}
+                    {isOpen ? "Hide what each cell contains" : "Open the cells →"}
+                  </button>
+                  {!isOpen && unplaced > 0 && (
+                    <p className="build-export-hint">
+                      {topic.situations.length} people answered, but the export
+                      could file only {exportTable.placedCount}. Open the cells to
+                      see who it merged and who it dropped.
+                    </p>
+                  )}
+                </div>
+
+                {isOpen && (
+                  <div
+                    className="build-export-reconcile"
+                    data-testid={`build-export-reconcile-${topic.id}`}
+                  >
+                    <p className="build-export-reconcile-lead">
+                      {exportTable.placedCount} of {topic.situations.length} people
+                      became a tidy cell.
+                      {exportTable.rows.some((row) =>
+                        row.results.some((item) => item.fate === "forced")
+                      )
+                        ? " Inside the cells, clean answers and forced answers carry the same number — the export cannot tell them apart, and neither could the chart."
+                        : " Each filed answer had one honest home this time."}
+                    </p>
+
+                    {exportTable.ambiguous.length > 0 && (
+                      <div
+                        className="build-tray build-tray--ambiguous"
+                        data-testid={`build-tray-ambiguous-${topic.id}`}
+                      >
+                        <p className="build-tray-label">
+                          Counted in more than one place ({exportTable.ambiguous.length})
                         </p>
-                        <div>
-                          <p className="build-situation-person">
-                            {item.situation.who}
-                          </p>
-                          <p className="build-situation-reading">
-                            {item.situation.reading}
-                          </p>
-                        </div>
-                        <p
-                          className={`build-fate build-fate--${item.fate}`}
-                          data-testid={`build-fate-${topic.id}-${item.situation.id}`}
-                        >
-                          {fateLabels[item.fate]}
+                        <p className="build-tray-note">
+                          The same trip honestly fits two selected answers, so the
+                          respondent's pick is a toss-up. Whichever cell they chose
+                          is now polluted, and your total double-counts them.
                         </p>
-                      </header>
-                      <dl className="build-situation-detail">
-                        <div>
-                          <dt>Where it lands</dt>
-                          <dd>{resultHomes(topic, item)}</dd>
-                        </div>
-                        <div>
-                          <dt>Status</dt>
-                          <dd>{topic.situationStatus}</dd>
-                        </div>
-                      </dl>
-                      <p className="build-situation-copy">
-                        {resultCopy(topic, item)}
+                        <ul className="build-records">
+                          {exportTable.ambiguous.map((item) => (
+                            <ExportRecord
+                              key={item.situation.id}
+                              topic={topic}
+                              result={item}
+                            />
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {exportTable.lost.length > 0 && (
+                      <div
+                        className="build-tray build-tray--lost"
+                        data-testid={`build-tray-lost-${topic.id}`}
+                      >
+                        <p className="build-tray-label">
+                          Never reached the export ({exportTable.lost.length})
+                        </p>
+                        <p className="build-tray-note">
+                          These people answered. No selected box could hold them, so
+                          they are absent from the column you would have analyzed —
+                          and absence does not show up in a chart.
+                        </p>
+                        <ul className="build-records">
+                          {exportTable.lost.map((item) => (
+                            <ExportRecord
+                              key={item.situation.id}
+                              topic={topic}
+                              result={item}
+                            />
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {exportTable.emptySelectedLabels.length > 0 && (
+                      <p className="build-export-empty">
+                        Answer choices that caught no one:{" "}
+                        {exportTable.emptySelectedLabels.join(", ")}.
                       </p>
-                    </article>
-                  </li>
-                ))}
-              </ol>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <section
+                className="build-rule-lab"
+                aria-labelledby={`build-rule-${topic.id}`}
+                data-testid={`build-rule-panel-${topic.id}`}
+              >
+                <header className="build-section-head">
+                  <p className="build-section-eyebrow">3. Add a rule</p>
+                  <h2 id={`build-rule-${topic.id}`}>Try an instruction, not another box</h2>
+                  <p>
+                    More labels are not the only repair. A rule makes a private
+                    classification decision public — or exposes that the answer set
+                    is still missing the right place.
+                  </p>
+                </header>
+
+                <div
+                  className="build-rule-grid"
+                  role="group"
+                  aria-label={`Choose a ${topic.label.toLowerCase()} rule`}
+                >
+                  <button
+                    type="button"
+                    className={`build-rule-chip ${!activeRule ? "is-selected" : ""}`}
+                    aria-pressed={!activeRule}
+                    onClick={() => selectRule(null)}
+                    data-testid={`build-rule-${topic.id}-none`}
+                  >
+                    <span>No added rule</span>
+                    <small>Palette only</small>
+                  </button>
+                  {topic.rules.map((rule) => (
+                    <button
+                      type="button"
+                      className={`build-rule-chip ${
+                        activeRule?.id === rule.id ? "is-selected" : ""
+                      }`}
+                      aria-pressed={activeRule?.id === rule.id}
+                      onClick={() => selectRule(rule.id)}
+                      key={rule.id}
+                      data-testid={`build-rule-${topic.id}-${rule.id}`}
+                    >
+                      <span>{rule.label}</span>
+                      <small>{rule.shortLabel}</small>
+                    </button>
+                  ))}
+                </div>
+
+                <article
+                  className={`build-rule-note ${
+                    activeRule?.sourcePosture === "source_supported"
+                      ? "build-rule-note--source"
+                      : ""
+                  }`}
+                  data-testid={`build-rule-note-${topic.id}`}
+                >
+                  {activeRule ? (
+                    <>
+                      <p className="build-rule-note-label">
+                        {activeRule.sourceLabel}
+                      </p>
+                      <h3>{activeRule.label}</h3>
+                      <p>{activeRule.body}</p>
+                      <p>{activeRule.sourceNote}</p>
+                      <p className="build-rule-impact">
+                        This rule changed {changedByRule} of{" "}
+                        {topic.situations.length} situations and moved the broken
+                        count from {baseBrokenCount} to {brokenCount}.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="build-rule-note-label">Palette only</p>
+                      <h3>The export is still using only your answer choices.</h3>
+                      <p>
+                        Select a rule to see whether the problem was missing labels,
+                        a missing instruction, or a tidy export hiding a forced
+                        decision.
+                      </p>
+                    </>
+                  )}
+                </article>
+              </section>
 
               <section
                 className="build-reveal"
                 aria-labelledby={`build-reveal-${topic.id}`}
                 data-testid={`build-reveal-${topic.id}`}
               >
-                <p className="build-section-eyebrow">3. Reveal</p>
+                <p className="build-section-eyebrow">4. Reveal</p>
                 <h2 id={`build-reveal-${topic.id}`}>{topic.reveal.lead}</h2>
+                <p
+                  className="build-reveal-stat"
+                  data-testid={`build-reveal-stat-${topic.id}`}
+                >
+                  <strong>{result.counts.clean}</strong> of{" "}
+                  {topic.situations.length} people got a clean, honest cell
+                  {result.counts.clean === topic.situations.length
+                    ? "."
+                    : " — the rest were forced, split, or dropped, and the export still looked complete."}
+                </p>
                 <p>{topic.reveal.body}</p>
                 <p className="build-reveal-foot">
-                  Your build left {brokenCount} of {topic.situations.length} situations split,
-                  forced, or lost.
+                  {activeRule
+                    ? `With ${activeRule.label}, your build left ${brokenCount} of ${topic.situations.length} situations split, forced, or lost.`
+                    : `Your build left ${brokenCount} of ${topic.situations.length} situations split, forced, or lost.`}
                 </p>
                 <a
                   className="cta-button cta-button--secondary"
@@ -339,8 +575,8 @@ export function BuildAndBreakRoute() {
           ) : (
             <div className="build-results-placeholder">
               <p>
-                The important part happens after you commit. Until then, the
-                form is only an intention.
+                The important part happens after you commit. Until then, the form
+                is only an intention.
               </p>
             </div>
           )}
