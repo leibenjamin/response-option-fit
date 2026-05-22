@@ -1,5 +1,4 @@
 import type { FailurePattern, WorkbenchSpecimen } from "../types/workbench";
-import { experienceBySpecimenId } from "./example-experiences";
 
 const canonicalSubtitleByPattern = {
   label_ambiguity: "Same words, several meanings",
@@ -110,10 +109,6 @@ const acs2016Url =
 const censusAgency = "U.S. Census Bureau";
 const onsAgency = "Office for National Statistics";
 const retrievalDate = "2026-05-01";
-const verifiedAgainstSource = {
-  date: retrievalDate,
-  method: "manual_pdf_check"
-} satisfies NonNullable<WorkbenchSpecimen["verifiedAgainstSource"]>;
 
 function sourceReceipt(
   agency: string,
@@ -214,7 +209,7 @@ const methodNotesById: Partial<
 };
 
 const authoredWorkbenchSpecimens: Array<
-  Omit<WorkbenchSpecimen, "experience" | "methodNote" | "verifiedAgainstSource">
+  Omit<WorkbenchSpecimen, "methodNote">
 > = [
   {
     id: "ride-hailing",
@@ -718,8 +713,6 @@ const authoredWorkbenchSpecimens: Array<
 export const workbenchSpecimens: WorkbenchSpecimen[] = authoredWorkbenchSpecimens.map(
   (specimen) => ({
     ...specimen,
-    experience: experienceBySpecimenId[specimen.id],
-    verifiedAgainstSource,
     methodNote: methodNotesById[specimen.id] ?? null
   })
 );

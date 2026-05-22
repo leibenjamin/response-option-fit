@@ -1,8 +1,10 @@
-/* Type shapes for the worked-example walk. After the 2026-05-19 second-
-   engine wave every public specimen renders through the experience engine
-   (see ExampleExperience.tsx). The 2026-05-20 legacy-cleanup wave removed
-   the older case-lab / five-step types that used to live here; what
-   remains is the minimum the current code path actually needs.
+/* Type shapes for the worked-example walk. The 2026-05-21 engine-retirement
+   wave removed the twelve "experience engine" types (one interaction primitive
+   reskinned twelve times); walk examples now render either a bespoke puzzle
+   (see src/components/puzzles/) or the lightweight ExampleExposition from this
+   same specimen data. What remains here is the minimum the current code path
+   needs: the failure pattern, the source receipt, the survey instrument
+   (answerFrame), and the specimen itself.
 
    The shape stays here, rather than next to each consumer, so the data
    author can lock the contract in one place. */
@@ -33,11 +35,6 @@ export type CanonicalCitation = {
   author: string;
   year: number;
   locator: string;
-};
-
-export type VerifiedAgainstSource = {
-  date: string;
-  method: "manual_pdf_check" | "automated";
 };
 
 export type MethodNote = {
@@ -75,145 +72,6 @@ export type AnswerFrame = {
   methodNote?: string;
 };
 
-/* Specimen-specific interaction engine. One per worked example. */
-
-export type ExampleExperienceKind =
-  | "meaning_lens"
-  | "level_ladder"
-  | "eligibility_fork"
-  | "feature_rule_board"
-  | "source_timeline"
-  | "schedule_trace"
-  | "device_label_splitter"
-  | "visibility_route"
-  | "premise_stack"
-  | "heading_scanner"
-  | "reason_strength_board"
-  | "counting_workbench";
-
-export type ExperienceTone =
-  | "target"
-  | "edge"
-  | "outside"
-  | "warning"
-  | "method"
-  | "neutral";
-
-export type ExperienceZone = {
-  id: string;
-  label: string;
-  description: string;
-  tone?: ExperienceTone;
-};
-
-export type ExperienceControl = {
-  id: string;
-  label: string;
-  description: string;
-  effect: string;
-};
-
-export type ExperienceCaseResult = {
-  zoneId: string;
-  note: string;
-};
-
-export type ExperienceCase = {
-  id: string;
-  title: string;
-  body: string;
-  reading: string;
-  provenance: "reported" | "source_grounded" | "teaching";
-  defaultZoneId: string;
-  tags: string[];
-  resultByControl?: Record<string, ExperienceCaseResult>;
-};
-
-export type ExperienceEngineInteraction =
-  | "lens_map"
-  | "level_ladder"
-  | "eligibility_fork"
-  | "feature_matrix"
-  | "source_timeline"
-  | "schedule_trace"
-  | "device_shelf"
-  | "visibility_route"
-  | "premise_stack"
-  | "heading_scanner"
-  | "reason_lanes"
-  | "counting_calendar";
-
-type ExperienceEngineBase<
-  Kind extends ExampleExperienceKind,
-  Interaction extends ExperienceEngineInteraction
-> = {
-  kind: Kind;
-  interaction: Interaction;
-  actionLabel: string;
-  objectLabel: string;
-  surfaceLabel: string;
-  feedbackLabel: string;
-};
-
-export type ExperienceEngineSpec =
-  | ExperienceEngineBase<"meaning_lens", "lens_map">
-  | ExperienceEngineBase<"level_ladder", "level_ladder">
-  | ExperienceEngineBase<"eligibility_fork", "eligibility_fork">
-  | ExperienceEngineBase<"feature_rule_board", "feature_matrix">
-  | ExperienceEngineBase<"source_timeline", "source_timeline">
-  | ExperienceEngineBase<"schedule_trace", "schedule_trace">
-  | ExperienceEngineBase<"device_label_splitter", "device_shelf">
-  | ExperienceEngineBase<"visibility_route", "visibility_route">
-  | ExperienceEngineBase<"premise_stack", "premise_stack">
-  | ExperienceEngineBase<"heading_scanner", "heading_scanner">
-  | ExperienceEngineBase<"reason_strength_board", "reason_lanes">
-  | ExperienceEngineBase<"counting_workbench", "counting_calendar">;
-
-export type ExperienceRepairOption = {
-  id: string;
-  label: string;
-  headline: string;
-  body: string;
-  effects: [string, ...string[]];
-  caution: string;
-};
-
-export type ExperienceTransfer = {
-  title: string;
-  prompt: string;
-  options: [string, string, ...string[]];
-  preferredIndex: number;
-  feedback: string;
-};
-
-export type WorkbenchExperience = {
-  kind: ExampleExperienceKind;
-  engine: ExperienceEngineSpec;
-  title: string;
-  lede: string;
-  stakes: string;
-  reviewerGoal: string;
-  surfaceTitle: string;
-  controlLabel: string;
-  caseLabel: string;
-  mapLabel: string;
-  instrumentNote: string;
-  zones: [ExperienceZone, ExperienceZone, ...ExperienceZone[]];
-  controls: [ExperienceControl, ...ExperienceControl[]];
-  cases: [ExperienceCase, ...ExperienceCase[]];
-  repair: {
-    title: string;
-    lede: string;
-    options: [ExperienceRepairOption, ...ExperienceRepairOption[]];
-  };
-  transfer: ExperienceTransfer;
-  sourceBoundary: {
-    title: string;
-    body: string;
-    limits: [string, ...string[]];
-  };
-};
-
 /* The worked example as exposed to the renderer. */
 export type WorkbenchSpecimen = {
   /* Identity */
@@ -241,10 +99,5 @@ export type WorkbenchSpecimen = {
 
   /* Source */
   source: SourceReceipt;
-  verifiedAgainstSource?: VerifiedAgainstSource;
   methodNote?: MethodNote | null;
-
-  /* Specimen-specific reviewer interaction engine. Every current public
-     specimen carries one; the renderer narrows on this. */
-  experience: WorkbenchExperience;
 };

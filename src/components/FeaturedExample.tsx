@@ -30,31 +30,22 @@ export function FeaturedExample() {
         <p className="featured-example-lede">
           The hook above tried four values against the rule{" "}
           <code className="featured-example-specimen">one word only</code>.
-          The U.S. Census Bureau's ACS commute item runs the same shape on
-          a real-stakes rule:{" "}
+          The U.S. Census Bureau's ACS commute item runs the same shape at
+          real stakes — one option,{" "}
           <code className="featured-example-specimen">
             Taxi or ride-hailing services
           </code>
-          . Switch the lens, route each trip token, compare repair
-          directions, and check what the source actually supports.
+          , that one rider reads as an app ride, another as a taxi, another as
+          a carpool. Here is the actual item; reveal what breaks.
         </p>
         <p
           className="featured-example-source-receipt"
           data-testid="featured-example-source-receipt"
         >
-          <span className="featured-example-source-receipt-label">
-            Evidence anchor:
-          </span>{" "}
+          <span className="featured-example-source-receipt-label">Source:</span>{" "}
           <span>
             {featured.source.agency} · {featured.source.documentCode} ·{" "}
             {featured.source.year}.
-          </span>{" "}
-          <span className="featured-example-source-receipt-note">
-            Checked by hand against the cited PDF
-            {featured.verifiedAgainstSource?.date
-              ? ` on ${featured.verifiedAgainstSource.date}`
-              : ""}
-            ; teaching cases below are synthetic and labeled.
           </span>
         </p>
       </header>
