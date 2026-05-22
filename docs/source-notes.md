@@ -79,11 +79,15 @@ example.
   method used for the longest distance when multiple commute modes are used,
   ride-hailing/carpooling findings, and the presence of "Worked from this
   address" in the ACS commute list. The named commuters are authored teaching
-  situations.
+  situations. The `#build` rule layer uses source-supported posture only for
+  the longest-distance rule. The usual-reference-week and residual-last rules
+  are authored teaching rules that clarify the lesson; they are not official
+  Census instructions.
   https://www.census.gov/content/dam/Census/library/working-papers/2022/acs/2022_Wilson_02.pdf
   https://www.census.gov/topics/employment/commuting/about/faq.html
 - **Sandwich build-and-break** is a labeled teaching case. It uses no Census or
-  ONS source claim and should not be described as source-grounded.
+  ONS source claim and should not be described as source-grounded. Its rule
+  chips are also authored teaching rules.
 
 ## Wording Notes
 
@@ -91,26 +95,27 @@ example.
   respondent quotations, report titles, years, section/page references, and
   URLs.
 - Exhibit titles, synthetic scenarios, answer frames, build-and-break fates,
-  scenario rationales, data-consequence descriptions, repair directions, and
-  takeaways are editorial teaching material unless explicitly marked as reported
-  source material.
-- Provenance labels in the current reviewer engines separate **Teaching
-  case**, **Reported source finding**, and **Source-grounded case**.
+  build rules, export-autopsy buckets, scenario rationales, data-consequence
+  descriptions, repair directions, and takeaways are editorial teaching
+  material unless explicitly marked as reported source material.
+- Provenance labels separate **Teaching case**, **Reported source finding**,
+  and **Source-grounded case**.
 - **Reported quote** is reserved for direct or close quote material from a
   cited report. A paraphrased participant description or summarized observation
   is a **Reported finding** even when it describes one participant.
-- Example 01 now renders as a lens-map engine. The real ACS source
-  supports the ride-hailing comprehension concern; the teaching trips are
-  editorial cases used to expose the boundary.
-- The current engine surfaces are authored diagrams and interaction sketches.
-  They make source-grounded response-route risks visible, but they are not
-  source-agency screenshots, tested prototypes, or validated replacement
-  instruments.
+- Most examples render as a lightweight exposition (the real instrument + a
+  one-line finding); a few render bespoke interactive puzzles. Either way the
+  cited public report is the evidence anchor and any invented people or trips
+  are labeled teaching content used to expose the boundary.
+- The walk surfaces are authored presentations of the cited material. They make
+  source-grounded response-route risks visible, but they are not source-agency
+  screenshots, tested prototypes, or validated replacement instruments.
 - Repair directions identify the type of clarification suggested by the source
   finding; they are not validated replacement questions.
 - Build-and-break fates are deterministic teaching diagnostics from the selected
-  answer chips; they do not validate an answer set or estimate how often each
-  fate would occur.
+  answer chips and selected rule; they do not validate an answer set or estimate
+  how often each fate would occur. Export-autopsy counts are counts of the
+  authored situations on the page, not frequencies.
 - The ONS Kashmiri example tests visibility of the specific answer route while
   preserving the report's documented tradeoff decision. The ONS ethnic-heading
   example marks the mixed-heritage navigation case (a mixed White-and-Asian
