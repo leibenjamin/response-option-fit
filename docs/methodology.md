@@ -94,7 +94,7 @@ render paths remain, both drawn from the same hand-verified specimen data
 2. **Bespoke puzzle** (a self-contained component, mounted via a per-specimen
    override in `Workbench`). Used where a purpose-built interaction earns its
    keep — a few examples, each with its own distinct verb, sharing only the
-   puzzle frame (hero / reveal / source). Today there are three, across three
+   puzzle frame (hero / reveal / source). Today there are four, across four
    patterns:
    - **Example 02 (business/industry), "Zoom to the right altitude"** —
      broad bucket. The reader codes one worker's open-text answer ("I work at a
@@ -109,6 +109,16 @@ render paths remain, both drawn from the same hand-verified specimen data
      The reader records one respondent across two adjacent questions whose
      categories overlap, watches a single listing double-count, and discovers
      reordering does nothing while scoping or merging closes the leak.
+   - **Example 06 (usual-hours), "Flatten the week"** — forced precision. The
+     reader is the respondent: their four weeks swing 31–52 hours, the field
+     wants one "usual" number, and whichever defensible number they pick erases
+     the variation and makes them indistinguishable from a steady worker.
+
+   The remaining patterns stay exposition deliberately: label ambiguity and
+   category-boundary blur have no distinct deep-puzzle mechanic that would not
+   either overlap one of these four or regress toward the retired engine
+   primitive — so forcing puzzles onto them would recreate the sameness the
+   retirement removed. Four genuinely distinct verbs is the ceiling here.
 
    Puzzles reuse only hand-verified specimen wording and findings; any invented
    people or candidate fixes are labeled teaching content. The deeper hands-on
