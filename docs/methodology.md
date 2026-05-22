@@ -125,7 +125,7 @@ render paths remain, both drawn from the same hand-verified specimen data
    teaching lives here, in `#build`, and in the capstone — not in twelve
    near-identical engines.
 
-   **Real respondent words.** Seven examples (three puzzles, four expositions)
+   **Real respondent words.** Eight examples (three puzzles, five expositions)
    close their reveal with a real respondent's *verbatim* sentence pulled from
    the cited cognitive-testing report — for instance the person who said the
    business field "is asking what kind of business or industry is this, which is
