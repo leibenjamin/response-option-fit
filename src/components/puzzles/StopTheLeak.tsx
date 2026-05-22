@@ -7,6 +7,7 @@ import {
   type LeakAnswer
 } from "../../data/stop-the-leak";
 import type { WorkbenchSpecimen } from "../../types/workbench";
+import { VerbatimQuote } from "../workbench/VerbatimQuote";
 
 /* "Stop the leak" — bespoke puzzle for Example 05 (owner-advertising, sequence
    overlap). The visitor plays the form recording one respondent across two
@@ -146,6 +147,7 @@ export function StopTheLeak({
             overlapping channels double-count unless one of them is scoped to say
             what it does <em>not</em> include.
           </p>
+          {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </section>
       )}
 

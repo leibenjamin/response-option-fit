@@ -208,8 +208,61 @@ const methodNotesById: Partial<
   }
 };
 
+/* Real respondents' verbatim words, read off the cited PDFs (page noted) and
+   confirmed character-for-character before shipping. This is the un-replicable
+   layer: a model can paraphrase a finding, but it can't hand you a real
+   person's confused sentence. Surfaced as a quiet pulled quote in the reveal,
+   with light attribution (survey + year) — realness as delight, not a citation
+   parade. Examples without a vivid, on-point respondent sentence get none, and
+   identity examples never do (sensitive-example rule). */
+const verbatimById: Partial<
+  Record<string, NonNullable<WorkbenchSpecimen["verbatim"]>>
+> = {
+  // CPS RSM2025-03, p.71 (participant P505)
+  "business-industry": {
+    quote:
+      "It is asking what kind of business or industry is this, which is two different questions … the business is a hospital and the industry is health care.",
+    attribution: "CPS cognitive test, 2025"
+  },
+  // CPS RSM2025-03, p.55 (participant P1124)
+  "usual-hours": {
+    quote:
+      "Sometimes I work a lot during the week and sometimes not at all … it varies … This is more of an average.",
+    attribution: "CPS cognitive test, 2025"
+  },
+  // AHS RSM2024-11, p.99 (RMOVHS findings)
+  "owner-advertising": {
+    quote: "I just said I found it on Zillow.",
+    attribution: "AHS pretest, 2024"
+  },
+  // ACS Content Test R3 (Wilson 02), p.38
+  "ride-hailing": {
+    quote:
+      "I don't have a car readily available, so I would need to use Lyft to get to and from jobs.",
+    attribution: "ACS Content Test, 2022"
+  },
+  // NTIA Internet Use Survey pretest, RSM2022-08, p.10
+  "notebook-computer": {
+    quote:
+      "Like a Chromebook. Very small thin and light. Not a tablet, but not a laptop either.",
+    attribution: "NTIA Internet Use Survey pretest, 2022"
+  },
+  // ACS Content Test R1/2 (Wilson 01), p.114
+  "electric-vehicle-type": {
+    quote:
+      "I don't really think of it as an electric vehicle because it does not plug in. It is just a regular hybrid that needs gas and has one of those battery things.",
+    attribution: "ACS Content Test, 2022"
+  },
+  // AHS RSM2024-11, p.98 (WMDISAS findings)
+  "avoid-natural-disasters": {
+    quote:
+      "It was a small factor, but was it the primary factor? No … it wasn't the primary reason, it was part of the reason, because I thought about floods.",
+    attribution: "AHS pretest, 2024"
+  }
+};
+
 const authoredWorkbenchSpecimens: Array<
-  Omit<WorkbenchSpecimen, "methodNote">
+  Omit<WorkbenchSpecimen, "methodNote" | "verbatim">
 > = [
   {
     id: "ride-hailing",
@@ -689,7 +742,8 @@ const authoredWorkbenchSpecimens: Array<
 export const workbenchSpecimens: WorkbenchSpecimen[] = authoredWorkbenchSpecimens.map(
   (specimen) => ({
     ...specimen,
-    methodNote: methodNotesById[specimen.id] ?? null
+    methodNote: methodNotesById[specimen.id] ?? null,
+    verbatim: verbatimById[specimen.id]
   })
 );
 

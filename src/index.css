@@ -4908,6 +4908,65 @@ summary:focus-visible {
   color: var(--ink-soft);
 }
 
+/* Verbatim pulled quote — a real respondent's words, shared by the exposition
+   reveal and the bespoke puzzle reveals (see VerbatimQuote.tsx). The exhibit's
+   un-replicable layer: realness as delight, so it reads as a human voice, not a
+   citation. Accent-tinted per pattern via --workbench-accent. */
+.verbatim {
+  margin: var(--s-1) 0 0;
+  border-left: 3px solid var(--workbench-accent, var(--accent));
+  background: color-mix(
+    in srgb,
+    var(--workbench-accent, var(--accent)) 7%,
+    var(--paper-card)
+  );
+  padding: var(--s-3) var(--s-4) var(--s-3) var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: 84ch;
+}
+.verbatim-quote {
+  position: relative;
+  margin: 0;
+  padding-left: var(--s-5);
+}
+.verbatim-mark {
+  position: absolute;
+  left: 0;
+  top: -0.08em;
+  font-family: var(--font-serif);
+  font-size: 2.6em;
+  line-height: 1;
+  color: var(--workbench-accent, var(--accent));
+  opacity: 0.55;
+}
+.verbatim-quote p {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.5;
+  color: var(--ink) !important;
+}
+.verbatim-attr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px var(--s-2);
+  padding-left: var(--s-5);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+.verbatim-attr-who {
+  color: var(--workbench-accent, var(--accent));
+  font-weight: 600;
+}
+.verbatim-attr-src {
+  color: var(--ink-soft);
+}
+
 /* ===================== REFERENCE ROUTE ===================== */
 
 
@@ -5610,6 +5669,7 @@ summary:focus-visible {
 .exposition-option,
 .exposition-reveal-toggle,
 .exposition-finding,
+.verbatim,
 .zoom-stop,
 .zoom-readout,
 .zoom-spread li,

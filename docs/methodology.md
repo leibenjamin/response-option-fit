@@ -125,6 +125,20 @@ render paths remain, both drawn from the same hand-verified specimen data
    teaching lives here, in `#build`, and in the capstone — not in twelve
    near-identical engines.
 
+   **Real respondent words.** Seven examples (three puzzles, four expositions)
+   close their reveal with a real respondent's *verbatim* sentence pulled from
+   the cited cognitive-testing report — for instance the person who said the
+   business field "is asking what kind of business or industry is this, which is
+   two different questions … the business is a hospital and the industry is
+   health care." Each quote was read straight out of the source PDF and
+   confirmed character-for-character (page noted in the data) before shipping.
+   This is the exhibit's un-replicable layer: a model can paraphrase a finding,
+   but it cannot hand you a real person's confused sentence. The quotes are
+   surfaced as quiet pulled quotes with light attribution (survey + year) —
+   realness as a teaching asset, not citation ceremony. Examples without a
+   vivid, on-point respondent sentence carry none, and the identity examples
+   never do (see the sensitive-example rule below).
+
 ## Build-And-Break Model
 
 Build-and-break is its own standalone route, separate from the walk's render
@@ -212,7 +226,11 @@ attribution (agency, document code, year) with the full citation and direct
 PDF link in a collapsible manifest. Sources were hand-checked against the cited
 PDFs, but that check is kept in the background — a quiet credibility backbone,
 not a foreground claim — because the exhibit's job is an engaging, hands-on
-read, not a display of citation ceremony.
+read, not a display of citation ceremony. The one place verified source
+material is brought to the foreground is a real respondent's own verbatim words
+in the reveal (see "Real respondent words" above): that is surfaced as delight —
+a striking human voice — rather than as a citation, which is why its attribution
+stays light and never becomes a page-number parade.
 
 ## Authored Versus Source Material
 

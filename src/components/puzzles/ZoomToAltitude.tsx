@@ -6,6 +6,7 @@ import {
   type Altitude
 } from "../../data/zoom-altitude";
 import type { WorkbenchSpecimen } from "../../types/workbench";
+import { VerbatimQuote } from "../workbench/VerbatimQuote";
 
 /* "Zoom to the right altitude" — bespoke puzzle for Example 02 (business /
    industry, broad bucket). The visitor codes one worker's answer to the open
@@ -137,6 +138,7 @@ export function ZoomToAltitude({
             &ldquo;hospitals&rdquo; can&rsquo;t be compared with a count of
             &ldquo;health care&rdquo; — the open box quietly mixed the levels.
           </p>
+          {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </section>
       )}
 
