@@ -7,6 +7,28 @@ export type BuildOption = {
 export type SituationFate = "clean" | "split" | "forced" | "lost";
 export type NonCleanSituationFate = Exclude<SituationFate, "clean">;
 
+export type BuildRuleSourcePosture = "source_supported" | "teaching";
+
+export type BuildRule = {
+  id: string;
+  label: string;
+  shortLabel: string;
+  body: string;
+  sourcePosture: BuildRuleSourcePosture;
+  sourceLabel: string;
+  sourceNote: string;
+  blockedForcedOptionIds?: string[];
+  blockedForcedCopy?: string;
+};
+
+export type BuildRuleOutcome = {
+  recordAs?: string;
+  forceFate?: SituationFate;
+  forceHomes?: string[];
+  copy: string;
+  missingCopy?: string;
+};
+
 export type BuildSituation = {
   id: string;
   who: string;
@@ -14,6 +36,7 @@ export type BuildSituation = {
   fitsClean: string[];
   fitsForced: string[];
   fateCopy?: Partial<Record<NonCleanSituationFate, string>>;
+  ruleOutcomes?: Record<string, BuildRuleOutcome>;
 };
 
 export type BuildTopic = {
@@ -23,6 +46,7 @@ export type BuildTopic = {
   stem: string;
   framing: string;
   palette: BuildOption[];
+  rules: [BuildRule, ...BuildRule[]];
   situations: BuildSituation[];
   reveal: {
     lead: string;
@@ -40,17 +64,58 @@ export type BuildSituationResult = {
   fate: SituationFate;
   cleanHomes: string[];
   forcedHomes: string[];
+  ruleId?: string;
+  ruleLabel?: string;
+  ruleApplied?: boolean;
+  ruleMissing?: boolean;
+  ruleCopy?: string;
 };
 
 export type BuildTopicResult = {
   topic: BuildTopic;
   results: BuildSituationResult[];
   counts: Record<SituationFate, number>;
+  rule?: BuildRule;
 };
+
+/* The "export" the analyst would actually receive: a tidy frequency table.
+   Rows are the selected answer options that caught at least one record that
+   the form can place deterministically (clean or forced) — and a clean
+   record and a forced record look identical once they are a count. Split
+   cases cannot be placed in a single cell, and lost cases never enter the
+   table at all, so both sit outside the rows. The point the table makes is
+   that respondentCount (people who answered) does not equal placedCount
+   (people the export can file). */
+export type BuildExportRow = {
+  optionId: string;
+  label: string;
+  results: BuildSituationResult[];
+  count: number;
+};
+
+export type BuildExportTable = {
+  rows: BuildExportRow[];
+  ambiguous: BuildSituationResult[];
+  lost: BuildSituationResult[];
+  respondentCount: number;
+  placedCount: number;
+  emptySelectedLabels: string[];
+};
+
+function emptyCounts(): Record<SituationFate, number> {
+  return {
+    clean: 0,
+    split: 0,
+    forced: 0,
+    lost: 0
+  };
+}
 
 export function evaluateSituation(
   situation: BuildSituation,
-  chosen: ReadonlySet<string>
+  chosen: ReadonlySet<string>,
+  topic?: BuildTopic,
+  rule?: BuildRule
 ): BuildSituationResult {
   const cleanHomes = situation.fitsClean.filter((id) => chosen.has(id));
   const forcedHomes = situation.fitsForced.filter((id) => chosen.has(id));
@@ -63,33 +128,154 @@ export function evaluateSituation(
           ? "forced"
           : "lost";
 
-  return { situation, fate, cleanHomes, forcedHomes };
+  const baseResult = { situation, fate, cleanHomes, forcedHomes };
+  if (!topic || !rule) return baseResult;
+
+  const outcome = situation.ruleOutcomes?.[rule.id];
+  if (outcome?.recordAs) {
+    if (chosen.has(outcome.recordAs)) {
+      return {
+        situation,
+        fate: "clean",
+        cleanHomes: [outcome.recordAs],
+        forcedHomes: [],
+        ruleId: rule.id,
+        ruleLabel: rule.label,
+        ruleApplied: true,
+        ruleCopy: outcome.copy
+      };
+    }
+
+    return {
+      situation,
+      fate: "lost",
+      cleanHomes: [],
+      forcedHomes: [],
+      ruleId: rule.id,
+      ruleLabel: rule.label,
+      ruleApplied: true,
+      ruleMissing: true,
+      ruleCopy:
+        outcome.missingCopy ??
+        `${rule.label} needs ${optionLabel(topic, outcome.recordAs)}, which is not in the answer set you built.`
+    };
+  }
+
+  if (outcome?.forceFate) {
+    const forceHomes = (outcome.forceHomes ?? []).filter((id) => chosen.has(id));
+    return {
+      situation,
+      fate: outcome.forceFate,
+      cleanHomes: outcome.forceFate === "clean" || outcome.forceFate === "split" ? forceHomes : [],
+      forcedHomes: outcome.forceFate === "forced" ? forceHomes : [],
+      ruleId: rule.id,
+      ruleLabel: rule.label,
+      ruleApplied: true,
+      ruleCopy: outcome.copy
+    };
+  }
+
+  if (rule.blockedForcedOptionIds?.length && baseResult.fate === "forced") {
+    const blocked = new Set(rule.blockedForcedOptionIds);
+    const allowedForcedHomes = baseResult.forcedHomes.filter((id) => !blocked.has(id));
+    if (allowedForcedHomes.length !== baseResult.forcedHomes.length) {
+      return {
+        situation,
+        fate: allowedForcedHomes.length >= 1 ? "forced" : "lost",
+        cleanHomes: [],
+        forcedHomes: allowedForcedHomes,
+        ruleId: rule.id,
+        ruleLabel: rule.label,
+        ruleApplied: true,
+        ruleCopy:
+          rule.blockedForcedCopy ??
+          "The rule refuses to let a residual answer hide a named-mode or instruction problem."
+      };
+    }
+  }
+
+  return {
+    ...baseResult,
+    ruleId: rule.id,
+    ruleLabel: rule.label
+  };
 }
 
 export function evaluateTopic(
   topic: BuildTopic,
-  chosenIds: readonly string[]
+  chosenIds: readonly string[],
+  ruleId?: string | null
 ): BuildTopicResult {
   const chosen = new Set(chosenIds);
+  const rule = ruleId ? topic.rules.find((candidate) => candidate.id === ruleId) : undefined;
   const results = topic.situations.map((situation) =>
-    evaluateSituation(situation, chosen)
+    evaluateSituation(situation, chosen, topic, rule)
   );
-  const counts: Record<SituationFate, number> = {
-    clean: 0,
-    split: 0,
-    forced: 0,
-    lost: 0
-  };
+  const counts = emptyCounts();
 
   for (const result of results) {
     counts[result.fate] += 1;
   }
 
-  return { topic, results, counts };
+  return { topic, results, counts, rule };
 }
 
 export function optionLabel(topic: BuildTopic, id: string): string {
   return topic.palette.find((option) => option.id === id)?.label ?? id;
+}
+
+export function makeExportTable(
+  result: BuildTopicResult,
+  chosenIds: readonly string[]
+): BuildExportTable {
+  const placedByOption = new Map<string, BuildSituationResult[]>();
+  const ambiguous: BuildSituationResult[] = [];
+  const lost: BuildSituationResult[] = [];
+
+  for (const item of result.results) {
+    if (item.fate === "clean" || item.fate === "forced") {
+      const home =
+        item.fate === "clean" ? item.cleanHomes[0] : item.forcedHomes[0];
+      if (!home) {
+        lost.push(item);
+        continue;
+      }
+      const list = placedByOption.get(home) ?? [];
+      list.push(item);
+      placedByOption.set(home, list);
+    } else if (item.fate === "split") {
+      ambiguous.push(item);
+    } else {
+      lost.push(item);
+    }
+  }
+
+  const rows: BuildExportRow[] = result.topic.palette
+    .filter((option) => chosenIds.includes(option.id) && placedByOption.has(option.id))
+    .map((option) => {
+      const results = placedByOption.get(option.id) ?? [];
+      return {
+        optionId: option.id,
+        label: option.label,
+        results,
+        count: results.length
+      };
+    });
+
+  const emptySelectedLabels = result.topic.palette
+    .filter((option) => chosenIds.includes(option.id) && !placedByOption.has(option.id))
+    .map((option) => option.label);
+
+  const placedCount = rows.reduce((total, row) => total + row.count, 0);
+
+  return {
+    rows,
+    ambiguous,
+    lost,
+    respondentCount: result.results.length,
+    placedCount,
+    emptySelectedLabels
+  };
 }
 
 export const buildTopics: [BuildTopic, BuildTopic] = [
@@ -152,6 +338,44 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           "An honest residual for trips outside the named list; a hiding place when the named list should have fit."
       }
     ],
+    rules: [
+      {
+        id: "longest-distance",
+        label: "Longest-distance rule",
+        shortLabel: "Census-supported",
+        body:
+          "When one commute uses multiple methods, record the single method used for the longest distance.",
+        sourcePosture: "source_supported",
+        sourceLabel: "Census FAQ",
+        sourceNote:
+          "Census commuting guidance supports this rule for multimodal ACS journey-to-work answers."
+      },
+      {
+        id: "usual-week",
+        label: "Usual reference-week rule",
+        shortLabel: "Authored teaching rule",
+        body:
+          "Record the pattern that best represents the reference week, not the memorable exception.",
+        sourcePosture: "teaching",
+        sourceLabel: "Authored teaching rule",
+        sourceNote:
+          "This is an authored teaching instruction for the route, not an additional Census rule claim."
+      },
+      {
+        id: "residual-last",
+        label: "Residual-last rule",
+        shortLabel: "Authored teaching rule",
+        body:
+          "Use Other method only when the situation honestly sits outside the named modes; do not use it to bury a missing rule.",
+        sourcePosture: "teaching",
+        sourceLabel: "Authored teaching rule",
+        sourceNote:
+          "This clarifies the exhibit's residual-category posture rather than adding an official Census instruction.",
+        blockedForcedOptionIds: ["other"],
+        blockedForcedCopy:
+          "Other method is blocked as a hiding place here; the rule would rather expose the missing instruction than export a tidy residual."
+      }
+    ],
     situations: [
       {
         id: "dana",
@@ -167,6 +391,15 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "Other method keeps Dana from disappearing, but it hides the two named modes the form actually offered.",
           lost:
             "No offered choice can hold the mixed commute, so the trip falls out before analysis starts."
+        },
+        ruleOutcomes: {
+          "longest-distance": {
+            recordAs: "train",
+            copy:
+              "The longest-distance rule records Dana by the train leg. The drive is still real; it just stops being the stored commute method.",
+            missingCopy:
+              "The longest-distance rule points to rail, but your answer set did not include it. The rule exposes the missing option instead of quietly recording the drive."
+          }
         }
       },
       {
@@ -181,6 +414,15 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "The office-day route becomes Sam's whole week. The bus answer is true and still misleading.",
           lost:
             "With no home-work option and no usable commute mode, Sam's week has nowhere honest to go."
+        },
+        ruleOutcomes: {
+          "usual-week": {
+            recordAs: "wfh",
+            copy:
+              "The reference-week rule records Sam as working from home because that is the usual pattern in this authored week.",
+            missingCopy:
+              "The reference-week rule points to Worked from home, but your answer set did not offer it. The bus days are true and still not the week."
+          }
         }
       },
       {
@@ -195,6 +437,15 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "The form can file Lin under a familiar ride label, but that invents the wrong kind of trip.",
           lost:
             "The parent ride is ordinary in life and absent in the answer list."
+        },
+        ruleOutcomes: {
+          "residual-last": {
+            recordAs: "other",
+            copy:
+              "The residual-last rule lets Other method work here because the parent ride is outside the named worker-carpool and hired-ride modes.",
+            missingCopy:
+              "The residual-last rule needs an honest residual for Lin. Carpool and ride-hailing no longer get to impersonate the parent ride."
+          }
         }
       },
       {
@@ -209,6 +460,18 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "The form records a commute mode for someone whose edge case is whether there was a commute at all.",
           lost:
             "No commute answer fits because the question assumes a trip to work."
+        },
+        ruleOutcomes: {
+          "usual-week": {
+            forceFate: "lost",
+            copy:
+              "The reference-week rule cannot summarize Marco as traveling to work; the case is an eligibility problem wearing a commute-mode costume."
+          },
+          "residual-last": {
+            forceFate: "lost",
+            copy:
+              "Residual-last refuses to file Marco under Other method because the missing decision is whether this is a commute at all."
+          }
         }
       },
       {
@@ -225,6 +488,15 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "Other method keeps a count, but it throws away the very modes the form seemed to care about.",
           lost:
             "The multimodal trip has no declared route through the answer list."
+        },
+        ruleOutcomes: {
+          "longest-distance": {
+            recordAs: "bus",
+            copy:
+              "The longest-distance rule records Priya by the bus leg. The bicycle leg remains part of the story, not the stored method.",
+            missingCopy:
+              "The longest-distance rule points to Bus, but your answer set did not include it. The bike leg cannot carry the whole record by itself."
+          }
         }
       },
       {
@@ -239,13 +511,22 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "The exceptional app ride is true, but it becomes the recorded commute pattern.",
           lost:
             "The trip history is knowable; the form just did not offer a stable way to summarize it."
+        },
+        ruleOutcomes: {
+          "usual-week": {
+            recordAs: "car-alone",
+            copy:
+              "The reference-week rule records Owen by the usual solo driving pattern and keeps the one-off app ride from taking over the column.",
+            missingCopy:
+              "The reference-week rule points to Drove alone, but your answer set did not include it. The exceptional app ride is still a bad proxy."
+          }
         }
       }
     ],
     reveal: {
       lead: "No answer set made the commute world tidy.",
       body:
-        "Adding more choices helped some people and created new overlaps for others. That is the point: the form keeps one recorded box, while the respondent's rule for getting there stays off the spreadsheet.",
+        "Adding more choices helped some people and created new overlaps for others. A public rule can repair some of that, but the export still keeps the recorded box more clearly than the route that produced it.",
       bridgeHref: "#walk/ride-hailing",
       bridgeLabel: "Open the sourced ride-hailing example"
     }
@@ -304,6 +585,41 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           "An honest residual only for foods outside the categories you meant to name."
       }
     ],
+    rules: [
+      {
+        id: "hierarchy",
+        label: "Named exception beats family",
+        shortLabel: "Authored teaching rule",
+        body:
+          "If a food has a named edge category, record that before the broad family label.",
+        sourcePosture: "teaching",
+        sourceLabel: "Authored teaching rule",
+        sourceNote:
+          "A playful taxonomy rule for the teaching case; it is not a food-law or source claim."
+      },
+      {
+        id: "structure",
+        label: "Structure beats name",
+        shortLabel: "Authored teaching rule",
+        body:
+          "Classify by the physical architecture first: carrier, filling, closure, and wrapper.",
+        sourcePosture: "teaching",
+        sourceLabel: "Authored teaching rule",
+        sourceNote:
+          "A teaching rule for making private category logic visible before the export happens."
+      },
+      {
+        id: "context",
+        label: "Meal context beats shape",
+        shortLabel: "Authored teaching rule",
+        body:
+          "Let use-context settle the border cases: lunch object, dessert object, pastry object, or deliberate non-sandwich.",
+        sourcePosture: "teaching",
+        sourceLabel: "Authored teaching rule",
+        sourceNote:
+          "A deliberately unserious rule with a serious purpose: the category has to say which feature wins."
+      }
+    ],
     situations: [
       {
         id: "club",
@@ -317,6 +633,23 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "Other records the food, but it makes the easiest case look exceptional.",
           lost:
             "If even the club has no place to go, the form is not classifying sandwiches yet."
+        },
+        ruleOutcomes: {
+          hierarchy: {
+            recordAs: "sandwich",
+            copy:
+              "The hierarchy rule does not need an exception here. The club gets to be the boring control case."
+          },
+          structure: {
+            recordAs: "sandwich",
+            copy:
+              "The structure rule sees bread enclosing filling and records the club as Sandwich."
+          },
+          context: {
+            recordAs: "sandwich",
+            copy:
+              "The context rule keeps the lunch object in Sandwich. Civilization survives one card."
+          }
         }
       },
       {
@@ -333,6 +666,29 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "Other avoids the argument by hiding the category decision.",
           lost:
             "The hot dog has no official home, which will not end the argument outside the form."
+        },
+        ruleOutcomes: {
+          hierarchy: {
+            recordAs: "hotdog",
+            copy:
+              "The hierarchy rule records the named exception first: Hot dog beats the broader sandwich family.",
+            missingCopy:
+              "The hierarchy rule points to Hot dog, but your answer set did not include the exception it needs."
+          },
+          structure: {
+            recordAs: "sandwich",
+            copy:
+              "The structure rule treats the split bun as sandwich architecture and records the hot dog under Sandwich.",
+            missingCopy:
+              "The structure rule points to Sandwich, but your answer set did not include the broad family label."
+          },
+          context: {
+            recordAs: "hotdog",
+            copy:
+              "The context rule keeps the cookout category separate. This is the polite version of the internet argument.",
+            missingCopy:
+              "The context rule wants the Hot dog category; without it, the form has to admit the exception is missing."
+          }
         }
       },
       {
@@ -349,6 +705,29 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "Other keeps peace by throwing away the distinction the menu was supposed to make.",
           lost:
             "The burrito falls through because the taxonomy forgot its own borderlands."
+        },
+        ruleOutcomes: {
+          hierarchy: {
+            recordAs: "wrap",
+            copy:
+              "The hierarchy rule sends the burrito to the named wrap/burrito exception before the broad sandwich family.",
+            missingCopy:
+              "The hierarchy rule points to Wrap / burrito, but your answer set did not include it."
+          },
+          structure: {
+            recordAs: "wrap",
+            copy:
+              "The structure rule sees a flexible wrapper doing the work and records Wrap / burrito.",
+            missingCopy:
+              "The structure rule needs Wrap / burrito; Sandwich alone is too coarse for this rule."
+          },
+          context: {
+            recordAs: "wrap",
+            copy:
+              "The context rule keeps the burrito in the wrap lane rather than turning lunch into a bread seminar.",
+            missingCopy:
+              "The context rule points to Wrap / burrito, which your answer set did not offer."
+          }
         }
       },
       {
@@ -365,6 +744,29 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "Other records the exception but hides why the label was easy and strange at the same time.",
           lost:
             "The form has no way to honor either the name or the dessert logic."
+        },
+        ruleOutcomes: {
+          hierarchy: {
+            recordAs: "dessert",
+            copy:
+              "The hierarchy rule lets the named dessert category beat the broad sandwich family.",
+            missingCopy:
+              "The hierarchy rule points to Dessert sandwich, but your answer set did not include it."
+          },
+          structure: {
+            recordAs: "sandwich",
+            copy:
+              "The structure rule takes the two-sided architecture literally and records Sandwich.",
+            missingCopy:
+              "The structure rule points to Sandwich, but your answer set did not include it."
+          },
+          context: {
+            recordAs: "dessert",
+            copy:
+              "The context rule records the frozen dessert as Dessert sandwich. Nobody is putting mustard on this.",
+            missingCopy:
+              "The context rule needs Dessert sandwich; without it, the dessert becomes a taxonomy spill."
+          }
         }
       },
       {
@@ -381,6 +783,29 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "Other preserves the count and loses the structural question.",
           lost:
             "The missing top slice makes the whole answer list go quiet."
+        },
+        ruleOutcomes: {
+          hierarchy: {
+            recordAs: "open-faced",
+            copy:
+              "The hierarchy rule records the named open-faced exception before the broad sandwich family.",
+            missingCopy:
+              "The hierarchy rule points to Open-faced, but your answer set did not include it."
+          },
+          structure: {
+            recordAs: "open-faced",
+            copy:
+              "The structure rule treats the missing top slice as decisive and records Open-faced.",
+            missingCopy:
+              "The structure rule needs Open-faced; Sandwich alone forgot the top-slice rule."
+          },
+          context: {
+            recordAs: "open-faced",
+            copy:
+              "The context rule keeps the melt in Open-faced. The roof matters.",
+            missingCopy:
+              "The context rule points to Open-faced, which your answer set did not offer."
+          }
         }
       },
       {
@@ -397,13 +822,36 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             "The form can cram the Pop-Tart into a nearby sweet or sandwich-ish bucket, and the result looks cleaner than the decision was.",
           lost:
             "The pastry has no home because the form only prepared for the argument it expected."
+        },
+        ruleOutcomes: {
+          hierarchy: {
+            recordAs: "pastry",
+            copy:
+              "The hierarchy rule records Pastry before the negative label. It is what it is before it is what it is not.",
+            missingCopy:
+              "The hierarchy rule points to Pastry, but your answer set did not include the category that makes the joke stop."
+          },
+          structure: {
+            recordAs: "not",
+            copy:
+              "The structure rule treats the sealed pastry shell as outside sandwich architecture and records Not a sandwich.",
+            missingCopy:
+              "The structure rule points to Not a sandwich, but your answer set did not include the escape hatch."
+          },
+          context: {
+            recordAs: "pastry",
+            copy:
+              "The context rule records Pastry. Breakfast toaster rectangles do not become lunch just because they have a filling.",
+            missingCopy:
+              "The context rule needs Pastry; otherwise the toaster rectangle starts freelancing."
+          }
         }
       }
     ],
     reveal: {
       lead: "The silly taxonomy broke for the same serious reason.",
       body:
-        "Categories feel obvious when they live in your head. The moment a form has to store one answer, private rules become public data loss.",
+        "Categories feel obvious when they live in your head. The moment a form has to store one answer, the private rule has to become public or the export starts laundering the argument.",
       bridgeHref: "#field-guide",
       bridgeLabel: "Take the same check to a real survey draft"
     }
