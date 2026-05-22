@@ -2,7 +2,8 @@ import { useState } from "react";
 import { mixedReviewItems } from "../data/field-guide";
 import { workbenchSpecimens } from "../data/workbench-specimens";
 import { patternMeta } from "../lib/pattern-meta";
-import { routeToHash } from "../lib/routes";
+import { Capstone } from "./Capstone";
+import { ExitArtifact } from "./ExitArtifact";
 import { PatternCatalog } from "./PatternCatalog";
 
 type Props = {
@@ -48,9 +49,8 @@ export function CompletionScreen({ visited }: Props) {
         <p className="completion-lede">
           {allVisited ? (
             <>
-              You've worked through every example. The twelve engines each
-              used a different reviewer surface, from route maps and timelines
-              to premise stacks and counting benches. The next read is the
+              You've worked through every example — twelve real survey items,
+              each one breaking in its own quiet way. The next read is the
               field guide, where the patterns turn into reusable checks and
               prompts for your own survey drafts.
             </>
@@ -59,7 +59,7 @@ export function CompletionScreen({ visited }: Props) {
               You haven't started the walk yet. The exhibit threads twelve
               worked examples through six recurring answer-choice problems,
               one example at a time, with a compact map drawer that fills in as
-              you go. The first engine is one click away.
+              you go. The first example is one click away.
             </>
           ) : (
             <>
@@ -73,17 +73,20 @@ export function CompletionScreen({ visited }: Props) {
         </p>
       </header>
 
+      <Capstone />
+
       <section
         className="completion-review"
         aria-labelledby="completion-review-title"
         data-testid="completion-mixed-review"
       >
         <header className="completion-review-head">
-          <p className="completion-review-eyebrow">Remix board</p>
+          <p className="completion-review-eyebrow">More practice · remix board</p>
           <h2 id="completion-review-title">Tell the close routes apart</h2>
           <p>
-            Use these compact contrasts even if you opened the wrap-up directly.
-            The point is the distinction, not a saved score.
+            A different drill: these compact contrasts test whether you can
+            separate the patterns that look alike. The point is the distinction,
+            not a saved score.
           </p>
         </header>
         <div className="completion-review-list">
@@ -134,63 +137,7 @@ export function CompletionScreen({ visited }: Props) {
         />
       </details>
 
-      <nav className="completion-actions" aria-label="What to read next">
-        {isEmpty ? (
-          <a
-            className="cta-button cta-button--primary"
-            href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
-            data-testid="completion-start"
-          >
-            <span>Start with example 01</span>
-            <span aria-hidden="true" className="cta-button-arrow">
-              →
-            </span>
-          </a>
-        ) : (
-          <a
-            className="cta-button cta-button--primary"
-            href={routeToHash({ kind: "fieldGuide" })}
-            data-testid="completion-field-guide"
-          >
-            <span>Check your own survey draft</span>
-            <span aria-hidden="true" className="cta-button-arrow">
-              →
-            </span>
-          </a>
-        )}
-        {!isEmpty && (
-          <a
-            className="cta-button cta-button--secondary"
-            href={routeToHash({ kind: "reference" })}
-            data-testid="completion-reference"
-          >
-            <span>Read the reference shelf</span>
-            <span aria-hidden="true" className="cta-button-arrow">
-              →
-            </span>
-          </a>
-        )}
-        <a
-          className="cta-button cta-button--secondary"
-          href={routeToHash({ kind: "colophon" })}
-          data-testid="completion-colophon"
-        >
-          <span>Read the colophon</span>
-          <span aria-hidden="true" className="cta-button-arrow">
-            →
-          </span>
-        </a>
-        <a
-          className="cta-button cta-button--ghost"
-          href={routeToHash({ kind: "hub" })}
-          data-testid="completion-hub"
-        >
-          <span>Back to the overview</span>
-          <span aria-hidden="true" className="cta-button-arrow">
-            ↑
-          </span>
-        </a>
-      </nav>
+      <ExitArtifact isEmpty={isEmpty} firstSpecimenId={firstSpecimenId} />
     </main>
   );
 }
