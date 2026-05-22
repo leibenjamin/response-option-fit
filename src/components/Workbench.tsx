@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { patternMeta } from "../lib/pattern-meta";
 import type { WorkbenchSpecimen } from "../types/workbench";
+import { FlattenTheWeek } from "./puzzles/FlattenTheWeek";
 import { PlayTheForm } from "./puzzles/PlayTheForm";
 import { StopTheLeak } from "./puzzles/StopTheLeak";
 import { ZoomToAltitude } from "./puzzles/ZoomToAltitude";
@@ -22,7 +23,8 @@ const bespokePuzzleBySpecimenId: Record<
 > = {
   "business-industry": ZoomToAltitude,
   "refrigerated-medicine": PlayTheForm,
-  "owner-advertising": StopTheLeak
+  "owner-advertising": StopTheLeak,
+  "usual-hours": FlattenTheWeek
 };
 
 export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
