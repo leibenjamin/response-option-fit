@@ -68,7 +68,6 @@ export type AnswerFrame = {
   targetLabel: string;
   targetText: string;
   responseOptions?: [AnswerFrameLine, ...AnswerFrameLine[]];
-  taskPrompt: string;
   methodNote?: string;
 };
 

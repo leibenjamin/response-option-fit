@@ -245,8 +245,6 @@ const authoredWorkbenchSpecimens: Array<
         { id: "home", text: "Worked from this address" },
         { id: "other", text: "Other Method" }
       ],
-      taskPrompt:
-        "For each scenario, decide whether this highlighted commute option names the intended paid ride service, could be read multiple ways, or should not include the trip.",
       methodNote:
         "The source also discusses working-from-home placement. This example narrows the task to the ride-hailing label."
     },
@@ -287,8 +285,6 @@ const authoredWorkbenchSpecimens: Array<
           isTarget: true
         }
       ],
-      taskPrompt:
-        "Judge whether the text field tells this respondent the right level of answer to give.",
       methodNote:
         "The source's Round 2 examples clarified answer level; this worked example focuses on the field's broad response task."
     },
@@ -327,8 +323,6 @@ const authoredWorkbenchSpecimens: Array<
         { id: "no", text: "No", isTarget: true },
         { id: "no-medicine", text: "No refrigerated medicine", isTarget: true }
       ],
-      taskPrompt:
-        "Judge whether these answer choices separate spoilage, no spoilage, and no refrigerated medicine.",
       methodNote:
         "The source recommended keeping the no-medicine option and adding a follow-up after No because some respondents did not volunteer the inapplicable state."
     },
@@ -366,8 +360,6 @@ const authoredWorkbenchSpecimens: Array<
         { id: "plug-in", text: "A plug-in electric vehicle?" },
         { id: "another-ev", text: "Another type of electric vehicle?", isTarget: true }
       ],
-      taskPrompt:
-        "Judge whether the highlighted item gives each vehicle a clean home, or whether plug-in, hybrid, gasoline, and everyday electric labels compete.",
       methodNote:
         "The later version named plug-in electric vehicle and hybrid electric vehicle directly. This example evaluates the earlier broader label."
     },
@@ -412,8 +404,6 @@ const authoredWorkbenchSpecimens: Array<
           isTarget: true
         }
       ],
-      taskPrompt:
-        "Judge whether the highlighted owner-advertising item captures a separate way the home was found, or whether the prior internet-site answer changes its meaning.",
       methodNote:
         "The issue is not that respondents could not define owner advertising; it is that the same listing can look relevant to two adjacent items."
     },
@@ -450,8 +440,6 @@ const authoredWorkbenchSpecimens: Array<
       responseOptions: [
         { id: "hours", text: "Usual hours worked each week: [number]", isTarget: true }
       ],
-      taskPrompt:
-        "Judge whether one usual-hours number can be given as-is, or whether the respondent must pick an unstated counting method such as average, most common week, or recent week.",
       methodNote:
         "Averaging is not automatically wrong. The fit problem is that different respondents may use different counting methods while entering the same clean-looking field."
     },
@@ -490,8 +478,6 @@ const authoredWorkbenchSpecimens: Array<
         { id: "yes", text: "Yes, someone uses a laptop or notebook computer", isTarget: true },
         { id: "no", text: "No" }
       ],
-      taskPrompt:
-        "Judge whether the label gives the respondent a clear answer for portable-computer use, or whether notebook points to another device family.",
       methodNote:
         "The report found laptop was understood, while notebook sent several respondents to tablet-like or lower-function devices."
     },
@@ -531,8 +517,6 @@ const authoredWorkbenchSpecimens: Array<
         { id: "kashmiri", text: "Kashmiri tick-box", isTarget: true },
         { id: "write-in", text: "Any other Asian background, write in", isTarget: true }
       ],
-      taskPrompt:
-        "Judge whether the answer choices let a Kashmiri respondent report the specific identity cleanly, or whether broad boxes and write-in effort change the recorded answer.",
       methodNote:
         "The source found higher Kashmiri identification with a tick-box, while also weighing comparability and parallel-subgroup tradeoffs."
     },
@@ -572,8 +556,6 @@ const authoredWorkbenchSpecimens: Array<
         { id: "no", text: "No", isTarget: true },
         { id: "no-pump", text: "No sump pump", isTarget: true }
       ],
-      taskPrompt:
-        "Judge whether these answer choices separate no flooding, no pump, no pump failure, and out-of-scope water causes.",
       methodNote:
         "The final wording adopted the outage wording but did not adopt the proposed follow-up after No."
     },
@@ -615,8 +597,6 @@ const authoredWorkbenchSpecimens: Array<
         { id: "black-heading", text: "African/Caribbean/Black/Black British", isTarget: true },
         { id: "other", text: "Other ethnic group" }
       ],
-      taskPrompt:
-        "Judge whether the highlighted heading helps the respondent find the right section, or whether color and geography cues make several sections partly plausible.",
       methodNote:
         "The ONS recommendation reordered the heading to put Black first; this example focuses on navigation through section cues."
     },
@@ -654,8 +634,6 @@ const authoredWorkbenchSpecimens: Array<
         { id: "other-reasons", text: "Other moving-reason items in the series" },
         { id: "disaster", text: "Did you move to avoid natural disasters?", isTarget: true }
       ],
-      taskPrompt:
-        "Judge whether the highlighted Yes answer means any influence or whether the sequence makes it feel like a main-reason answer.",
       methodNote:
         "The report found that the item text was not the main issue; the sequence needed an all-influences instruction."
     },
@@ -693,8 +671,6 @@ const authoredWorkbenchSpecimens: Array<
       responseOptions: [
         { id: "weeks", text: "Weeks worked: [number]", isTarget: true }
       ],
-      taskPrompt:
-        "Judge whether the respondent can recover one weeks-worked count, or whether the field invites rounding, conversion, or a wrong counting rule.",
       methodNote:
         "This example is about the burden and counting method behind an exact-looking number, not about whether annual work-duration data are useful."
     },
