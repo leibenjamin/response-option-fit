@@ -7,8 +7,10 @@ answer a clear place to go" and uses twelve worked examples from public
 questionnaire-testing materials and synthetic teaching cases to show six
 recurring answer-choice problems.
 
-The project demonstrates a React and TypeScript interface with twelve
-specimen-specific survey-review interaction engines, source anchors, surrounding
+The project demonstrates a React and TypeScript interface with twelve worked
+examples (each shown as the real survey instrument with a one-line finding, a
+few promoted to bespoke interactive puzzles), an interactive hook, a
+build-and-break route, a cold-read capstone, source anchors, surrounding
 question context, source appendix, claim boundary, static security headers,
 and local-only settings controls. The page
 is organized as five primary hash-routed views — an overview that opens with a live
@@ -18,12 +20,18 @@ knowledge-map rail along the right side, and carries one fully-working
 embedded example on a U.S. Census commute item, with the full six-pattern
 map one click away as an overlay; a walk-through that
 paginates the remaining examples with a compact map drawer and recap
-interstitials; a build-and-break route where visitors assemble answer choices
-and watch computed edge cases split, get forced, or fall through; a field guide
-with a reviewer console, reusable tests, and static prompts for visitors
-reviewing their own surveys; and a reference shelf for the glossary, method
-note, claim boundary, and source appendix. A colophon route carries production
-notes.
+interstitials, then a cold-read capstone where four real instruments are
+shown with no pattern label and the visitor taps where they think the answer
+choices break before seeing what cognitive testing actually caught, and a
+closing exit artifact that names the four-role arc and the one habit to keep;
+a build-and-break route where visitors assemble answer choices, see the tidy
+frequency table that selection would export, then open the cells to find clean
+and forced records sharing one count and people the column never placed at all —
+before adding a classification rule to test whether an instruction repairs it;
+a field guide with a
+reviewer console, reusable tests, and static prompts for visitors reviewing
+their own surveys; and a reference shelf for the glossary, method note, claim
+boundary, and source appendix. A colophon route carries production notes.
 
 ## Sources And Attribution
 
@@ -82,12 +90,15 @@ See [docs/deployment.md](docs/deployment.md) and
 - It includes twelve worked examples and does not claim to generalize across all
   survey instruments, modes, or populations.
 - Summaries are neutral paraphrases; the cited reports remain authoritative.
-- Each worked example uses a specimen-specific reviewer interaction engine.
-  Build-and-break is a separate teaching mechanic, not a thirteenth worked
-  example and not part of the engine union.
+- Each worked example renders either a lightweight exposition (the real
+  instrument + a one-line finding + an opt-in reveal) or, for a few, a bespoke
+  interactive puzzle. Build-and-break and the capstone are separate teaching
+  mechanics, not additional worked examples.
 - The commute build-and-break topic is anchored to ACS commute materials, but
-  its named situations are authored teaching situations. The sandwich topic is
-  a teaching case only.
+  its named situations are authored teaching situations. Its official
+  longest-distance rule is the only source-supported build rule; the other
+  commute rules are authored teaching instructions. The sandwich topic and all
+  sandwich rules are teaching cases only.
 - Teaching-case labels are not source claims. Public reports remain the
   authority for reported quotes, findings, and recommendations.
 - Repair directions are conceptual and are not validated replacement wording.
@@ -123,8 +134,8 @@ to:
   shows the exact stored keys and values for transparency. When Remember is on,
   the names of examples opened in walk mode are stored locally so the knowledge
   map can resume across visits; when Remember is off, walk progress is
-  in-memory only and is lost on reload. The current twelve reviewer engines
-  and the build-and-break route do not persist per-choice interaction state.
+  in-memory only and is lost on reload. The walk examples, the puzzles, and the
+  build-and-break route do not persist per-choice or per-rule interaction state.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
   chooses outside this site when reviewing their own survey material.
@@ -135,9 +146,9 @@ The application source code is licensed under the **MIT License**; see
 [LICENSE](LICENSE).
 
 Editorial content (exhibit text, answer frames, authored interaction surfaces,
-build-and-break situation wording, scenario wording, wording-feature questions,
-quick-practice cases, method notes, glossary entries, claim-boundary language,
-and colophon prose) is licensed under
+build-and-break situation wording, build rules, export-autopsy copy, scenario
+wording, wording-feature questions, quick-practice cases, method notes,
+glossary entries, claim-boundary language, and colophon prose) is licensed under
 **Creative Commons Attribution 4.0 International (CC BY 4.0)**; see
 [CONTENT-LICENSE.md](CONTENT-LICENSE.md).
 

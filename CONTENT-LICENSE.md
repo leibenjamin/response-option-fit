@@ -2,7 +2,8 @@
 
 The editorial content of Response Option Fit Lab — including all exhibit
 text, answer frames, authored interaction surfaces, build-and-break situation
-wording, compact practice cases, method notes, glossary entries,
+wording, build rules, export-autopsy wording, compact practice cases, method
+notes, glossary entries,
 claim-boundary language, and the colophon — is licensed under the **Creative
 Commons Attribution 4.0 International License** (CC BY 4.0).
 
