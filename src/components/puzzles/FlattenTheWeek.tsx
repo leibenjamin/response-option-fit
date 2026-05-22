@@ -7,6 +7,7 @@ import {
   type FlattenOption
 } from "../../data/flatten-the-week";
 import type { WorkbenchSpecimen } from "../../types/workbench";
+import { VerbatimQuote } from "../workbench/VerbatimQuote";
 
 /* "Flatten the week" — bespoke puzzle for Example 06 (usual-hours, forced
    precision). The visitor is the respondent: their weeks vary 31–52, the field
@@ -102,6 +103,7 @@ export function FlattenTheWeek({
             variation that defines your job never made it in. Whichever number you
             picked, the truth didn’t fit one box.
           </p>
+          {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </section>
       )}
 

@@ -42,6 +42,16 @@ export type MethodNote = {
   whatOmitted: string;
 };
 
+/* A real respondent's own words from the cited cognitive-testing report —
+   verbatim, hand-/machine-verified against the source PDF. This is the
+   un-replicable content: an research tool can paraphrase a finding, but it can't hand you
+   a real person's confused sentence. Surfaced as a quiet pulled quote, not a
+   citation parade. Attribution stays light (survey + year), not a page parade. */
+export type Verbatim = {
+  quote: string;
+  attribution: string;
+};
+
 /* The survey instrument shown inside the engine. Holds the tested
    wording, the surrounding question, and the highlighted answer
    choice. */
@@ -99,4 +109,10 @@ export type WorkbenchSpecimen = {
   /* Source */
   source: SourceReceipt;
   methodNote?: MethodNote | null;
+
+  /* A real respondent's verbatim words from the cited report, surfaced as a
+     quiet pulled quote in the reveal. Optional: only the examples whose source
+     carries a vivid, on-point respondent sentence get one (identity examples
+     never do — see the sensitive-example rule). */
+  verbatim?: Verbatim;
 };

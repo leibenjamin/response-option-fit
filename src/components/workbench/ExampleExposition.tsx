@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { WorkbenchSpecimen } from "../../types/workbench";
+import { VerbatimQuote } from "./VerbatimQuote";
 
 /* The lightweight walk renderer. Replaces the twelve bespoke "engines" (one
    interaction primitive reskinned twelve times — the exhibit's deepest stale
@@ -88,6 +89,7 @@ export function ExampleExposition({
           {answerFrame.methodNote && (
             <p className="exposition-finding-nuance">{answerFrame.methodNote}</p>
           )}
+          {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </div>
       )}
 
