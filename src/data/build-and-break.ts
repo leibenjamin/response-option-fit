@@ -541,7 +541,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
     isTeachingCase: true,
     situationStatus: "Authored teaching situation",
     sourceNote:
-      "Teaching case only: these foods are authored boundary cases, not source claims from Census or ONS materials.",
+      "Teaching case only: these foods are authored boundary cases, not source claims from public survey materials.",
     palette: [
       {
         id: "sandwich",

@@ -11,10 +11,8 @@ import { workbenchSpecimens } from "./workbench-specimens";
    so the cold read never drifts from the sourced wording. A capstone case adds
    only three things: which option the testers flagged (`culpritOptionId`), one
    terse plain-language statement of the finding (`caught`), and a short framing
-   line. The identity examples (08 Kashmiri, 10 ethnic-group heading) are
-   deliberately excluded — a "spot the flaw in this ethnicity form" prompt is
-   the kind of out-of-context artifact the project's sensitive-example red-team
-   rules out, and the cold read does not need them.
+   line. The capstone uses four high-contrast mechanics and does not need to
+   repeat every active specimen.
 
    `culpritOptionId` values:
      - an option id present in the specimen's responseOptions, or

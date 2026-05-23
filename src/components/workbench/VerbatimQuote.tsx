@@ -5,8 +5,8 @@ import type { Verbatim } from "../../types/workbench";
    un-replicable layer of the exhibit: a model can paraphrase a finding, but it
    can't hand you a real person's confused sentence. Rendered as a quiet pulled
    quote — realness as delight, not citation ceremony — so the attribution stays
-   light (survey + year), never a page-number parade. Shared by the exposition
-   and every bespoke puzzle so the human voice reads the same everywhere. */
+   light (survey + year), never a page-number parade. Shared by puzzle reveals
+   so the human voice reads the same everywhere. */
 export function VerbatimQuote({ verbatim }: { verbatim: Verbatim }) {
   return (
     <figure className="verbatim">

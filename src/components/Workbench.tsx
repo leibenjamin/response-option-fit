@@ -1,30 +1,38 @@
 import type { CSSProperties, ReactNode } from "react";
 import { patternMeta } from "../lib/pattern-meta";
 import type { WorkbenchSpecimen } from "../types/workbench";
+import { ElectricVehicleRuleBoard } from "./puzzles/ElectricVehicleRuleBoard";
 import { FlattenTheWeek } from "./puzzles/FlattenTheWeek";
+import { MoveReasonCatchall } from "./puzzles/MoveReasonCatchall";
+import { NaturalDisasterThreshold } from "./puzzles/NaturalDisasterThreshold";
+import { NotebookLabelDeck } from "./puzzles/NotebookLabelDeck";
 import { PlayTheForm } from "./puzzles/PlayTheForm";
+import { RideHailingModeCollision } from "./puzzles/RideHailingModeCollision";
 import { StopTheLeak } from "./puzzles/StopTheLeak";
+import { SumpPumpGate } from "./puzzles/SumpPumpGate";
+import { TvDeviceBoundary } from "./puzzles/TvDeviceBoundary";
+import { WeeksWorkedCalculator } from "./puzzles/WeeksWorkedCalculator";
 import { ZoomToAltitude } from "./puzzles/ZoomToAltitude";
-import { ExampleExposition } from "./workbench/ExampleExposition";
 
-/* The walk-mode workbench shell. Two render paths only:
-   - a BESPOKE puzzle for the few examples that earn a purpose-built
-     interaction (the override map below), or
-   - the lightweight ExampleExposition for the rest (the real instrument + a
-     one-line finding + an opt-in reveal).
-   The twelve "set a control, read the result" engines — one interaction
-   primitive reskinned twelve times — were retired on 2026-05-21 (they made the
-   walk a textbook and were ~3,000 lines of dead-weight machinery). See
-   docs/design-passes/2026-05-21-engine-retirement.md. Adding a bespoke puzzle
-   is one map entry; removing it falls back to exposition. */
-const bespokePuzzleBySpecimenId: Record<
+/* Delight-first registry: every walk specimen must render an interactive
+   puzzle. Source-backed exposition is now optional backmatter, never the
+   default walk experience. */
+export const interactivePuzzleBySpecimenId: Record<
   string,
   (props: { specimen: WorkbenchSpecimen; titleId: string }) => ReactNode
 > = {
+  "ride-hailing": RideHailingModeCollision,
   "business-industry": ZoomToAltitude,
   "refrigerated-medicine": PlayTheForm,
+  "electric-vehicle-type": ElectricVehicleRuleBoard,
   "owner-advertising": StopTheLeak,
-  "usual-hours": FlattenTheWeek
+  "usual-hours": FlattenTheWeek,
+  "notebook-computer": NotebookLabelDeck,
+  "move-reason-catchall": MoveReasonCatchall,
+  "sump-pump": SumpPumpGate,
+  "tv-connected-devices": TvDeviceBoundary,
+  "avoid-natural-disasters": NaturalDisasterThreshold,
+  "acs-weeks-worked": WeeksWorkedCalculator
 };
 
 export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
@@ -34,7 +42,7 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
     "--workbench-accent": `var(${accentVar})`
   } as CSSProperties;
 
-  const BespokePuzzle = bespokePuzzleBySpecimenId[specimen.id];
+  const Puzzle = interactivePuzzleBySpecimenId[specimen.id];
 
   return (
     <article
@@ -44,11 +52,7 @@ export function Workbench({ specimen }: { specimen: WorkbenchSpecimen }) {
       aria-labelledby={titleId}
       style={style}
     >
-      {BespokePuzzle ? (
-        <BespokePuzzle specimen={specimen} titleId={titleId} />
-      ) : (
-        <ExampleExposition specimen={specimen} titleId={titleId} />
-      )}
+      <Puzzle specimen={specimen} titleId={titleId} />
     </article>
   );
 }
