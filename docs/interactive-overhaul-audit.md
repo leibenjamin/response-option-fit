@@ -15,7 +15,7 @@ drives the primary route.
 
 ## Product Principles
 
-- Every walk example must be an interactive puzzle.
+- Every walk route must render an interactive puzzle.
 - The visitor should do something before the pattern is explained.
 - Feedback should show what the data kept, merged, split, dropped, or hid.
 - Authored cases are preferred when they make the mechanic clearer or more
@@ -44,6 +44,9 @@ drives the primary route.
   pass for stronger visible consequences.
 - The hero, featured example, completion copy, source notes, and methodology now
   describe the app as an authored interactive lab.
+- The opening hook now uses a plausible mini survey intake scenario instead of
+  an abstract word-count question: one commute question, four honest answers,
+  and three storage decisions.
 - Playwright is promoted into the tracked project surface and asserts that every
   route is interactive and no route falls back to exposition.
 - Tests now exercise every one of the twelve walk puzzles, not only sampled
@@ -70,6 +73,33 @@ drives the primary route.
 - **Replacement anchors:** move-reason catch-alls turn broad buckets into
   drawers with hidden write-ins; TV-connected devices turn category boundaries
   into a hidden-rule device board.
+
+## Chronological Copy Alignment Pass
+
+- **Problem found:** the old hook asked whether a field saying "one word only"
+  would count, then presented answers from the first puzzles. Cold visitors had
+  not yet learned why a survey would ask that, why those values were grouped
+  together, or how the hook related to response-option fit. It read as a
+  detached grammar puzzle.
+- **Replacement:** the hook now frames the action as a tiny commute survey
+  intake: "In one word, what was your usual way to get to work last week?"
+  Responses are `bus`, `ride-hailing`, `car pool`, and `bike share`; actions are
+  Store it, Reject it, and Needs a rule. The reveal waits until all four are
+  placed so the timing matches the visible "Four honest answers" setup.
+- **Bridge:** the reveal explicitly says the respondent's answer can be true
+  while the storage rule is underspecified, then previews the later forms of
+  the same problem: answer choices, yes/no paths, catch-alls, boundaries, and
+  numeric fields.
+- **Noun pass:** primary route copy now says puzzle rather than worked example.
+  "Example" remains acceptable in source/reference prose only when it means an
+  illustrative case or historical material.
+- **CTA pass:** the primary journey uses Try the first puzzle, Walk all twelve
+  puzzles, Build an answer set, Check your own survey draft, and Open the
+  reference shelf. Footer and route copy were aligned where those surfaces act
+  as navigation.
+- **Red-team note:** future copy should read the app sequentially from a cold
+  user's point of view. A phrase can be accurate and still fail if the app has
+  not yet taught the user what that phrase is doing.
 
 ## Per-Example Mechanics
 
@@ -115,6 +145,9 @@ drives the primary route.
   hashes fall back to the hub.
 - Replacement source anchors remain in optional source/backmatter surfaces, not
   primary task copy.
+- The opening hook no longer renders the old detached "A field says..." title,
+  and it requires all four response placements before the response-option-fit
+  bridge appears.
 
 ## Residual Risks
 
