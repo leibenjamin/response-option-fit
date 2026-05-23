@@ -1777,6 +1777,12 @@ summary:focus-visible {
 .featured-example > .workbench {
   background: var(--paper-card);
   border: 0;
+  /* The embedded workbench has no card chrome of its own here, so it must
+     carry the same horizontal gutter as the head/foot above and below it.
+     Without this the instrument, the reveal button, and the source fold bleed
+     to the card edges while everything else is inset. */
+  padding-left: var(--s-7);
+  padding-right: var(--s-7);
 }
 
 .featured-example-foot {
@@ -2285,6 +2291,19 @@ summary:focus-visible {
   font-style: italic;
   font-size: 15px;
   color: var(--ink);
+}
+
+/* Right-hand cluster of the ribbon: back link + settings gear, sharing the
+   corner the page-level settings button used to overlap. */
+.walk-ribbon-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+.walk-ribbon-actions .settings-button {
+  position: static;
+  top: auto;
+  right: auto;
 }
 
 .walk-ribbon-back {
@@ -5229,7 +5248,8 @@ summary:focus-visible {
     grid-template-columns: minmax(0, 1fr);
   }
   .featured-example-head,
-.featured-example-foot {
+.featured-example-foot,
+.featured-example > .workbench {
     padding-left: var(--s-4);
     padding-right: var(--s-4);
   }

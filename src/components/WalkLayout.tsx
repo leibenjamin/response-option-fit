@@ -12,6 +12,7 @@ import { Workbench } from "./Workbench";
 type Props = {
   specimen: WorkbenchSpecimen | null;
   controller: WalkController;
+  onSettingsOpen: () => void;
 };
 
 /* Walk-mode layout. Responsible for:
@@ -20,7 +21,7 @@ type Props = {
    - rendering the completion screen when the walk slot is "done"
    - composing ribbon + main column + sticky rail
 */
-export function WalkLayout({ specimen, controller }: Props) {
+export function WalkLayout({ specimen, controller, onSettingsOpen }: Props) {
   const { state, visit, dismissRecap } = controller;
   const visitedSet = new Set(state.visited);
 
@@ -61,7 +62,11 @@ export function WalkLayout({ specimen, controller }: Props) {
 
   return (
     <div className="walk" data-testid="walk-layout">
-      <WalkRibbon specimen={specimen} visited={visitedSet} />
+      <WalkRibbon
+        specimen={specimen}
+        visited={visitedSet}
+        onSettingsOpen={onSettingsOpen}
+      />
 
       <div className="walk-grid">
         <main
