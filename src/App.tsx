@@ -313,8 +313,15 @@ function WalkRoute({
       <a href="#main-exhibit" className="skip-link" data-testid="skip-link">
         Skip to worked example
       </a>
-      <SettingsButton onClick={onSettingsOpen} />
-      <WalkLayout specimen={specimen} controller={controller} />
+      {/* In normal walk mode the settings gear lives inside the sticky ribbon
+         (see WalkRibbon); only fall back to the page-level button when an
+         invalid slot leaves us without a ribbon. */}
+      {!specimen && <SettingsButton onClick={onSettingsOpen} />}
+      <WalkLayout
+        specimen={specimen}
+        controller={controller}
+        onSettingsOpen={onSettingsOpen}
+      />
       <footer className="foot">
         <p className="foot-line foot-line--quiet hub-foot-links">
           <a className="foot-link" href={routeToHash({ kind: "hub" })}>
