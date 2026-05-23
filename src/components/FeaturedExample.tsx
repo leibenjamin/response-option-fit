@@ -6,12 +6,9 @@ const featured = workbenchSpecimens[0];
 const second = workbenchSpecimens[1];
 const third = workbenchSpecimens[2];
 
-/* Embedded full workbench on the hub. The visitor sees one complete worked
-   example end to end without leaving the landing page; the "more worked
-   examples" chips below preview the next two examples and lead into walk
-   mode. A compact source-receipt line above the workbench announces the
-   evidence anchor (agency · document code · year) so a 60-second visitor
-   can see the citation posture without expanding any details. */
+/* Embedded full puzzle on the hub. The visitor sees one complete interaction
+   without leaving the landing page; the "more puzzles" chips below preview the
+   next two examples and lead into walk mode. */
 export function FeaturedExample() {
   if (!featured) return null;
 
@@ -23,37 +20,26 @@ export function FeaturedExample() {
       data-testid="featured-example"
     >
       <header className="featured-example-head">
-        <p className="featured-example-eyebrow">A worked example, end to end</p>
+        <p className="featured-example-eyebrow">One puzzle, end to end</p>
         <h2 className="featured-example-title" id="featured-example-title">
-          How one Census answer choice moves with the word.
+          One commute option, four reasonable routes.
         </h2>
         <p className="featured-example-lede">
           The hook above tried four values against the rule{" "}
           <code className="featured-example-specimen">one word only</code>.
-          The U.S. Census Bureau's ACS commute item runs the same shape at
-          real stakes — one option,{" "}
+          The first full puzzle uses the same move at higher stakes: one option,{" "}
           <code className="featured-example-specimen">
             Taxi or ride-hailing services
           </code>
           , that one rider reads as an app ride, another as a taxi, another as
-          a carpool. Here is the actual item; reveal what breaks.
-        </p>
-        <p
-          className="featured-example-source-receipt"
-          data-testid="featured-example-source-receipt"
-        >
-          <span className="featured-example-source-receipt-label">Source:</span>{" "}
-          <span>
-            {featured.source.agency} · {featured.source.documentCode} ·{" "}
-            {featured.source.year}.
-          </span>
+          a carpool. Route the trips and watch the tidy column stop being tidy.
         </p>
       </header>
 
       <Workbench specimen={featured} />
 
       <footer className="featured-example-foot">
-        <p className="featured-example-foot-eyebrow">More worked examples</p>
+        <p className="featured-example-foot-eyebrow">More puzzles</p>
         <ul className="featured-example-next">
           {[second, third].filter(Boolean).map((specimen) => (
             <li key={specimen.id} className="featured-example-next-item">
@@ -85,7 +71,7 @@ export function FeaturedExample() {
           href={routeToHash({ kind: "walk", slot: featured.id })}
           data-testid="featured-walk-cta"
         >
-          <span>Walk through all twelve</span>
+          <span>Play all twelve</span>
           <span aria-hidden="true" className="cta-button-arrow">
             →
           </span>

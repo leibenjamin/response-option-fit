@@ -126,10 +126,9 @@ export function Capstone() {
         <p className="capstone-eyebrow">The cold read</p>
         <h2 id="capstone-title">Can you still see it?</h2>
         <p className="capstone-lede">
-          Every item below shipped on a real U.S. or U.K. government form — and
-          then a cognitive-testing report flagged a response-option problem. No
-          pattern labels this time, no engine to walk you through it. Tap where
-          you think it breaks, then see what the testers caught.
+          No labels this time, no guided mechanic to carry you. Tap where you
+          think each clean-looking form breaks, then compare your read with the
+          route problem the puzzle path has been training you to see.
         </p>
       </header>
 
@@ -141,8 +140,8 @@ export function Capstone() {
 
       <p className="capstone-note">
         Catching it cold, on someone else's form, is the skill the walk was
-        building. Missing one is the ordinary case — that is why these forms get
-        tested before they ship.
+        building. Missing one is ordinary; the win is learning where to look
+        next.
       </p>
     </section>
   );
