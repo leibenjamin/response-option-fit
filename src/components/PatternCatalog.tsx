@@ -67,13 +67,13 @@ export function PatternCatalog({
           </p>
           <h2 className="pattern-catalog-title" id={titleId}>
             {isRail
-              ? "Six patterns × twelve examples"
+              ? "Six patterns × twelve puzzles"
               : "Six recurring answer-choice problems"}
           </h2>
           {isRail ? (
             <p className="pattern-catalog-lede">
               <span data-testid="pattern-map-counter">
-                <strong>{visitedCount}</strong> / 12 examples
+                <strong>{visitedCount}</strong> / 12 puzzles
                 <span className="pattern-catalog-sep" aria-hidden="true">
                   {" · "}
                 </span>
@@ -82,7 +82,7 @@ export function PatternCatalog({
             </p>
           ) : (
             <p className="pattern-catalog-lede">
-              Name the failure once, then watch the twelve worked examples
+              Name the failure once, then watch the twelve puzzles
               take it twelve different turns.
             </p>
           )}
@@ -145,7 +145,7 @@ export function PatternCatalog({
               )}
               <ul
                 className="pattern-catalog-chip-row"
-                aria-label={`${meta.label} examples`}
+                aria-label={`${meta.label} puzzles`}
               >
                 {groupSpecimensList.map((specimen) => {
                   const isCurrent = specimen.id === currentSpecimenId;

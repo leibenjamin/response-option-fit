@@ -29,7 +29,7 @@ export function WalkRibbon({ specimen, visited, onSettingsOpen }: Props) {
     >
       <div className="walk-ribbon-row">
         <p className="walk-ribbon-counter" data-testid="walk-counter">
-          <span className="walk-ribbon-counter-eyebrow">Example</span>
+          <span className="walk-ribbon-counter-eyebrow">Puzzle</span>
           <span className="walk-ribbon-counter-now">{specimen.number}</span>
           <span className="walk-ribbon-counter-sep" aria-hidden="true">
             of
@@ -58,7 +58,7 @@ export function WalkRibbon({ specimen, visited, onSettingsOpen }: Props) {
       </div>
       <SubwayStrip currentSpecimenId={specimen.id} visited={visited} />
       <p className="sr-only" data-testid="walk-position">
-        Example {position} of {workbenchSpecimens.length}.
+        Puzzle {position} of {workbenchSpecimens.length}.
       </p>
     </div>
   );

@@ -13,14 +13,14 @@ export function MethodNotes() {
       </header>
       <div className="method-grid">
         <p className="method-body">
-          These examples are intentionally narrow. The lab uses short
+          These puzzles are intentionally narrow. The lab uses short
           substantive wording excerpts from public testing materials to show
           one kind of measurement failure: the respondent has an answer, but
           the survey choices do not give that answer a clear place to go.
         </p>
         <p className="method-body method-body--quiet">
           The exhibit does not reproduce full instruments, validate revised
-          wording, or claim the selected examples generalize to every survey
+          wording, or claim the selected puzzles generalize to every survey
           mode.
         </p>
       </div>

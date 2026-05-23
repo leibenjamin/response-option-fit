@@ -11,7 +11,7 @@ import { routeToHash } from "../lib/routes";
 const ROLE_ARC = [
   {
     role: "Respondent",
-    where: "the hook — your honest answer wouldn’t fit “one word only.”"
+    where: "the hook — a truthful commute answer met “one word only.”"
   },
   {
     role: "Form",
@@ -37,12 +37,12 @@ export function ExitArtifact({
   const primary = isEmpty
     ? {
         href: routeToHash({ kind: "walk", slot: firstSpecimenId }),
-        label: "Start with example 01",
+        label: "Start with puzzle 01",
         testid: "exit-cta-start"
       }
     : {
         href: routeToHash({ kind: "fieldGuide" }),
-        label: "Take that question to your own survey draft",
+        label: "Check your own survey draft",
         testid: "exit-cta-field-guide"
       };
 
@@ -94,7 +94,7 @@ export function ExitArtifact({
           <span aria-hidden="true" className="cta-button-arrow">→</span>
         </a>
         <p className="exit-artifact-secondary">
-          or revisit the{" "}
+          or open the{" "}
           <a href={routeToHash({ kind: "reference" })} data-testid="exit-link-reference">
             reference shelf
           </a>

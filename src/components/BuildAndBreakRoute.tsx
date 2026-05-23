@@ -176,13 +176,13 @@ export function BuildAndBreakRoute() {
       data-testid="build-and-break-route"
     >
       <header className="build-route-head">
-        <p className="build-route-eyebrow">Build-and-break</p>
+        <p className="build-route-eyebrow">Build an answer set</p>
         <h1
           className="build-route-title"
           id="build-and-break-title"
           tabIndex={-1}
         >
-          Build the answer choices. Then read the data they would have left you.
+          Build an answer set. Then read the data it would have left you.
         </h1>
         <p className="build-route-lede">
           Not a quiz about the correct list. You assemble a reasonable answer
@@ -191,7 +191,7 @@ export function BuildAndBreakRoute() {
         </p>
       </header>
 
-      <section className="build-topic-tabs" aria-label="Build-and-break topics">
+      <section className="build-topic-tabs" aria-label="Answer-set topics">
         {buildTopics.map((candidate) => (
           <button
             type="button"
@@ -214,7 +214,7 @@ export function BuildAndBreakRoute() {
         <section className="build-instrument" aria-labelledby="build-stem">
           <div className="build-instrument-copy">
             <p className="build-section-eyebrow">
-              {topic.isTeachingCase ? "Teaching case" : "Source-anchored topic"}
+              {topic.isTeachingCase ? "Teaching case" : "Survey topic"}
             </p>
             <h2 id="build-stem">{topic.stem}</h2>
             <p>{topic.framing}</p>

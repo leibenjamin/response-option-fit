@@ -39,7 +39,7 @@ const shown: Altitude | undefined =
     >
       <header className="puzzle-hero">
         <p className="puzzle-eyebrow">
-          <span>Example {specimen.number}</span>
+          <span>Puzzle {specimen.number}</span>
           <span aria-hidden="true">/</span>
           <span>{specimen.patternLabel}</span>
           <span aria-hidden="true">/</span>

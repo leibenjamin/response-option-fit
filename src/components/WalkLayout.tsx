@@ -72,7 +72,7 @@ export function WalkLayout({ specimen, controller, onSettingsOpen }: Props) {
         <main
           className="walk-main"
           id="main-exhibit"
-          aria-label={`Worked example ${specimen.number}: ${specimen.title}`}
+          aria-label={`Puzzle ${specimen.number}: ${specimen.title}`}
         >
           <Workbench key={specimen.id} specimen={specimen} />
 
@@ -100,7 +100,7 @@ export function WalkLayout({ specimen, controller, onSettingsOpen }: Props) {
               <span className="walk-bottom-nav-title">
                 {next
                   ? `${next.number} — ${next.title}`
-                  : "Wrap up the walk"}
+                  : "Wrap up the puzzle walk"}
               </span>
               <span className="walk-bottom-nav-pattern">
                 {next ? next.patternLabel : "Knowledge map · finish"}

@@ -148,7 +148,7 @@ export const recapRetrievalPrompts: Record<number, RecapRetrievalPrompt> = {
   4: {
     threshold: 4,
     prompt:
-      "Before example 05, which earlier pattern is easiest to confuse with sequence overlap?",
+      "Before puzzle 05, which earlier pattern is easiest to confuse with sequence overlap?",
     options: ["label_ambiguity", "broad_bucket", "false_premise"],
     explanation:
       "Broad bucket is one field too wide; owner advertising is two adjacent items making one source look countable twice."
@@ -156,7 +156,7 @@ export const recapRetrievalPrompts: Record<number, RecapRetrievalPrompt> = {
   8: {
     threshold: 8,
     prompt:
-      "Before example 09, which earlier pattern can look like false premise if you only read the \"No\" answer?",
+      "Before puzzle 09, which earlier pattern can look like false premise if you only read the \"No\" answer?",
     options: ["broad_bucket", "sequence_overlap", "forced_precision"],
     explanation:
       "Sequence overlap asks what an earlier answer made \"No\" or \"Yes\" mean. False premise asks whether the person belonged in the item at all."

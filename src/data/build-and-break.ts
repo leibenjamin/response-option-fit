@@ -528,7 +528,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
       body:
         "Adding more choices helped some people and created new overlaps for others. A public rule can repair some of that, but the export still keeps the recorded box more clearly than the route that produced it.",
       bridgeHref: "#walk/ride-hailing",
-      bridgeLabel: "Open the sourced ride-hailing example"
+      bridgeLabel: "Open the ride-hailing puzzle"
     }
   },
   {

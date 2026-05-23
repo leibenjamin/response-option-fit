@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { workbenchSpecimens } from "../data/workbench-specimens";
 import { routeToHash } from "../lib/routes";
 
-type RouteId = "counts" | "doesnt" | "unsure";
+type RouteId = "store" | "reject" | "rule";
 
 type FieldCase = {
   id: string;
@@ -19,50 +19,50 @@ type FieldCase = {
 };
 
 const ROUTE_LABELS: Record<RouteId, string> = {
-  counts: "Counts",
-  doesnt: "Doesn't count",
-  unsure: "Not sure"
+  store: "Store it",
+  reject: "Reject it",
+  rule: "Needs a rule"
 };
 
 const cases: FieldCase[] = [
   {
-    id: "cant",
-    value: "can't",
-    detail: "Contraction with apostrophe.",
+    id: "bus",
+    value: "bus",
+    detail: "One-word commute mode.",
     notes: {
-      counts: "Most editorial styles read a contraction as one written word.",
-      doesnt: "Underneath, it is two words bound by an apostrophe.",
-      unsure: "The form did not say whether \"word\" means written, spoken, or tokenized."
+      store: "Clean center case. The form can store the word, even if it still does not know which kind of bus.",
+      reject: "That makes the rule stricter than the respondent would expect; this is the easiest answer the field can hold.",
+      rule: "A rule may still be needed if the survey must split city bus, shuttle, or school bus."
     }
   },
   {
-    id: "new-york",
-    value: "New York",
-    detail: "Proper noun with a space.",
+    id: "ride-hailing",
+    value: "ride-hailing",
+    detail: "Hyphenated service label.",
     notes: {
-      counts: "It is one place name even though it has whitespace in it.",
-      doesnt: "A naive splitter records two tokens here.",
-      unsure: "Place names with spaces are common; the field's rule is silent."
+      store: "You keep a truthful commute answer, but the form never said whether a hyphenated label counts as one word.",
+      reject: "The respondent gave a real mode. The punctuation rule, not the answer, is doing the damage.",
+      rule: "This needs a public rule for compounds, or better yet a list of answer choices."
     }
   },
   {
-    id: "follow-up",
-    value: "follow-up",
-    detail: "Hyphenated compound.",
+    id: "car-pool",
+    value: "car pool",
+    detail: "Two words for one shared commute.",
     notes: {
-      counts: "Most style guides count a hyphenated compound as a single word.",
-      doesnt: "The hyphen is a token boundary in many text processors.",
-      unsure: "Editorial style and the machine tokenizer disagree on this one."
+      store: "You preserve the respondent's meaning, but the stored answer breaks the one-word instruction.",
+      reject: "You enforce the visible rule and lose a normal commute answer.",
+      rule: "The form needs a mode rule, not just a word-count rule."
     }
   },
   {
-    id: "q2-fy26",
-    value: "Q2 FY26",
-    detail: "Fiscal-period shorthand.",
+    id: "bike-share",
+    value: "bike share",
+    detail: "Two-word name for a rented-bike service.",
     notes: {
-      counts: "It is one label for a single period — the meaning is unitary.",
-      doesnt: "Two tokens by whitespace, and arguably four by character grouping.",
-      unsure: "Fiscal shorthand is a field-specific convention the rule never named."
+      store: "You catch the truthful answer, but the field now holds a multiword service label.",
+      reject: "The form rejects a legitimate mode because the instruction did not name this edge.",
+      rule: "Clarify whether named services count, or give the respondent a response list."
     }
   }
 ];
@@ -72,19 +72,19 @@ type Placements = Record<string, RouteId | undefined>;
 const ALL_CASE_IDS = cases.map((c) => c.id);
 
 function tally(placements: Placements) {
-  let counts = 0;
-  let doesnt = 0;
-  let unsure = 0;
+  let stored = 0;
+  let rejected = 0;
+  let needsRule = 0;
   let placed = 0;
   for (const id of ALL_CASE_IDS) {
     const r = placements[id];
     if (!r) continue;
     placed += 1;
-    if (r === "counts") counts += 1;
-    else if (r === "doesnt") doesnt += 1;
-    else unsure += 1;
+    if (r === "store") stored += 1;
+    else if (r === "reject") rejected += 1;
+    else needsRule += 1;
   }
-  return { counts, doesnt, unsure, placed };
+  return { stored, rejected, needsRule, placed };
 }
 
 /* The hub's interactive hook. Sits inside the hero so it's the first
@@ -96,15 +96,12 @@ function tally(placements: Placements) {
    - the first FeaturedHook iteration, which routed four trip cases
      into Yes/No against an ACS commute item.
 
-   The current mechanic: a tiny intake contract ("one word only") that
-   looks obvious until a real value tries to land in it. The visitor
-   places four field values — `can't`, `New York`, `follow-up`, and
-   `Q2 FY26` — into Counts / Doesn't count / Not sure. A running ledger
-   tallies what the field would record; once any three are placed, a
-   pattern-name reveal labels what the visitor just experienced (label
-   ambiguity) and bridges into the first full worked example, which
-   shows the same shape at higher stakes inside a real Census commute
-   item.
+   The current mechanic: a tiny commute-survey intake contract ("one word
+   only") that looks obvious until truthful commute answers try to land in it.
+   The visitor places four responses — `bus`, `ride-hailing`, `car pool`, and
+   `bike share` — into Store it / Reject it / Needs a rule. A running ledger
+   shows what the form would keep, and the reveal bridges from this small
+   one-word field into the twelve richer response-option puzzles.
 
    Two design constraints worth preserving across future waves:
 
@@ -122,6 +119,7 @@ function tally(placements: Placements) {
       the third refinement turn. */
 export function FeaturedHook() {
   const [placements, setPlacements] = useState<Placements>({});
+  const revealRef = useRef<HTMLDivElement | null>(null);
 
   const firstSpecimenId = workbenchSpecimens[0]?.id ?? "";
 
@@ -131,11 +129,27 @@ export function FeaturedHook() {
 
   const reset = () => setPlacements({});
 
-  const { counts, doesnt, unsure, placed } = tally(placements);
+  const { stored, rejected, needsRule, placed } = tally(placements);
   const allPlaced = placed === ALL_CASE_IDS.length;
-  const showReveal = placed >= 3;
-  const usedUnsure = unsure > 0;
-  const usedBoth = counts > 0 && doesnt > 0;
+  const showReveal = allPlaced;
+  const usedRule = needsRule > 0;
+  const usedStoreAndReject = stored > 0 && rejected > 0;
+
+  useEffect(() => {
+    if (!allPlaced) return;
+    const node = revealRef.current;
+    if (!node) return;
+
+    const reduceMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    const frame = window.requestAnimationFrame(() => {
+      node.scrollIntoView({
+        block: "nearest",
+        behavior: reduceMotion ? "auto" : "smooth"
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [allPlaced]);
 
   return (
     <aside
@@ -146,28 +160,34 @@ export function FeaturedHook() {
       <header className="featured-hook-head">
         <p className="featured-hook-eyebrow">Try it · about 30 seconds</p>
         <h2 id="featured-hook-title" className="featured-hook-title">
-          A field says &ldquo;one word only.&rdquo; Would this count?
+          A survey asks for one word. Four honest answers arrive.
         </h2>
       </header>
 
       <div
         className="featured-hook-instrument"
-        aria-label="The field rule being tested"
+        aria-label="The survey question and storage rule being tested"
       >
         <p className="featured-hook-instrument-label">
-          The field's only instruction:
+          The survey asks:
+        </p>
+        <p className="featured-hook-instrument-text">
+          In one word, what was your usual way to get to work last week?
+        </p>
+        <p className="featured-hook-instrument-label">
+          The form's only instruction:
         </p>
         <p className="featured-hook-instrument-text">
           <code className="featured-hook-instrument-rule">one word only</code>
         </p>
         <p className="featured-hook-instrument-options" aria-hidden="true">
-          <span className="featured-hook-instrument-pill">Counts</span>
-          <span className="featured-hook-instrument-pill">Doesn't</span>
-          <span className="featured-hook-instrument-pill">Not sure</span>
+          <span className="featured-hook-instrument-pill">Stored</span>
+          <span className="featured-hook-instrument-pill">Rejected</span>
+          <span className="featured-hook-instrument-pill">Needs rule</span>
         </p>
       </div>
 
-      <ol className="featured-hook-cases" aria-label="Place each value">
+      <ol className="featured-hook-cases" aria-label="Place each response">
         {cases.map((fieldCase, index) => {
           const chosen = placements[fieldCase.id];
           return (
@@ -192,7 +212,7 @@ export function FeaturedHook() {
               <div
                 className="featured-hook-case-routes"
                 role="group"
-                aria-label={`Record “${fieldCase.value}” as`}
+                aria-label={`Decide how the form should handle “${fieldCase.value}”`}
               >
                 {(Object.keys(ROUTE_LABELS) as RouteId[]).map((route) => (
                   <button
@@ -228,46 +248,51 @@ export function FeaturedHook() {
         <p className="featured-hook-ledger-label">Recorded so far</p>
         <p className="featured-hook-ledger-counts">
           <span className="featured-hook-ledger-yes">
-            <strong>{counts}</strong> Counts
+            <strong>{stored}</strong> Stored
           </span>
           <span className="featured-hook-ledger-sep" aria-hidden="true">·</span>
           <span className="featured-hook-ledger-no">
-            <strong>{doesnt}</strong> Doesn't
+            <strong>{rejected}</strong> Rejected
           </span>
           <span className="featured-hook-ledger-sep" aria-hidden="true">·</span>
           <span className="featured-hook-ledger-rest">
-            <strong>{unsure}</strong> Not sure
+            <strong>{needsRule}</strong> Needs rule
           </span>
           <span className="featured-hook-ledger-sep" aria-hidden="true">·</span>
           <span className="featured-hook-ledger-rest">
-            <strong>{ALL_CASE_IDS.length - placed}</strong> not yet placed
+            <strong>{ALL_CASE_IDS.length - placed}</strong> Not placed
           </span>
         </p>
+        {!allPlaced && (
+          <p className="featured-hook-ledger-hint">
+            Place all four responses to open the bridge to the full lab.
+          </p>
+        )}
       </div>
 
       <div
         className="featured-hook-reveal"
         aria-live="polite"
         data-testid="featured-hook-reveal"
+        ref={revealRef}
       >
         {showReveal && (
           <div className="featured-hook-reveal-inner">
             <p className="featured-hook-reveal-body">
-              {allPlaced && usedBoth && usedUnsure
-                ? "You used all three columns. That is the field's rule arriving in three different shapes from one reader. Another honest reader would draw the lines somewhere else again."
-                : allPlaced && usedBoth
-                ? "You committed on every value, but the line you drew between Counts and Doesn't is not the line another careful reader would draw. The field records the column, not the line."
-                : usedUnsure
-                ? "You flagged at least one value as Not sure. That is the rule failing visibly: “one word only” did not tell you enough to commit."
-                : "Three honest readers with the same four values can produce three different recorded counts. The field keeps the count; the rule that produced it stays in the reader's head."}
+              {allPlaced && usedStoreAndReject && usedRule
+                ? "You used all three outcomes. That is the point: every response can be truthful, while the form still has no public rule for what it can store."
+                : allPlaced && usedStoreAndReject
+                ? "You drew a line between answers the form stores and answers it rejects. Another careful reviewer could draw that line somewhere else."
+                : usedRule
+                ? "You made the missing rule visible. The answer is not the problem; the storage rule is underpowered."
+                : "Three honest commute answers can produce different storage decisions. The form keeps the decision, but the rule that produced it stays in the reviewer's head."}
             </p>
             <p className="featured-hook-reveal-name">
-              That gap between the value and the recorded count is{" "}
-              <strong>label ambiguity</strong> — &ldquo;one word only&rdquo;
-              needs a counting rule before the answer has a clear place to
-              go. This is one of six recurring problems the exhibit walks
-              through, using twelve worked examples from public
-              questionnaire-testing materials.
+              This is the smallest version of <strong>response-option fit</strong>:
+              a truthful answer meets an underspecified answer place. Later
+              puzzles swap this one-word field for answer choices, yes/no paths,
+              catch-alls, device boundaries, and numeric fields. The problem is
+              the same: the form stores something before the rule is clear.
             </p>
             <div className="featured-hook-reveal-actions">
               <a
@@ -275,9 +300,7 @@ export function FeaturedHook() {
                 href="#featured-example"
                 data-testid="featured-hook-cta-featured"
               >
-                <span>
-                  See the same shape in a real Census item
-                </span>
+                <span>Try the first puzzle</span>
                 <span aria-hidden="true" className="cta-button-arrow">↓</span>
               </a>
               <a
@@ -285,7 +308,7 @@ export function FeaturedHook() {
                 href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
                 data-testid="featured-hook-cta-walk"
               >
-                <span>Walk all twelve</span>
+                <span>Walk all twelve puzzles</span>
                 <span aria-hidden="true" className="cta-button-arrow">→</span>
               </a>
               <button
@@ -294,7 +317,7 @@ export function FeaturedHook() {
                 onClick={reset}
                 data-testid="featured-hook-reset"
               >
-                Reset values
+                Reset answers
               </button>
             </div>
           </div>

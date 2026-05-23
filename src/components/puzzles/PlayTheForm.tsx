@@ -42,14 +42,14 @@ export function PlayTheForm({
     >
       <header className="puzzle-hero">
         <p className="puzzle-eyebrow">
-          <span>Example {specimen.number}</span>
+          <span>Puzzle {specimen.number}</span>
           <span aria-hidden="true">/</span>
           <span>{specimen.patternLabel}</span>
           <span aria-hidden="true">/</span>
           <span className="puzzle-role">You are the form</span>
         </p>
         <h2 className="puzzle-title" id={titleId} tabIndex={-1}>
-          Record three real people. Watch one fall through.
+          Record three households. Watch one fall through.
         </h2>
         <p className="puzzle-lede">
           A power-outage survey asks one yes/no question. Three people answer in

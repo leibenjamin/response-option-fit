@@ -182,6 +182,66 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("exposition-ride-hailing")).toHaveCount(0);
   });
 
+  test("opening hook is a plausible survey intake, not a detached word puzzle", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    const hook = page.getByTestId("featured-hook");
+    await expect(hook).not.toContainText("A field says “one word only.” Would this count?");
+    await expect(hook).toContainText("A survey asks for one word. Four honest answers arrive.");
+    await expect(hook).toContainText("In one word, what was your usual way to get to work last week?");
+    await expect(hook).toContainText("one word only");
+
+    for (const [id, value] of [
+      ["bus", "bus"],
+      ["ride-hailing", "ride-hailing"],
+      ["car-pool", "car pool"],
+      ["bike-share", "bike share"]
+    ] as const) {
+      await expect(page.getByTestId(`featured-hook-case-${id}`)).toContainText(value);
+    }
+
+    await expect(page.locator(".featured-hook-reveal-inner")).toHaveCount(0);
+    await page.getByTestId("featured-hook-route-bus-store").click();
+    await expect(page.getByTestId("featured-hook-ledger")).toContainText(/1\s*Stored/);
+    await page.getByTestId("featured-hook-route-ride-hailing-rule").click();
+    await page.getByTestId("featured-hook-route-car-pool-reject").click();
+    await expect(page.getByTestId("featured-hook-ledger")).toContainText("Not placed");
+    await expect(page.locator(".featured-hook-reveal-inner")).toHaveCount(0);
+    await expect(page.getByTestId("featured-hook-ledger")).toContainText(
+      "Place all four responses"
+    );
+    await page.getByTestId("featured-hook-route-bike-share-rule").click();
+    await expect(page.getByTestId("featured-hook-reveal")).toContainText(
+      "truthful answer meets an underspecified answer place"
+    );
+    await expect(page.locator(".featured-hook-reveal-inner")).toBeInViewport();
+  });
+
+  test("main journey copy uses the current puzzle-first CTA labels", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    await expect(page.locator("body")).not.toContainText("sourced example");
+    await expect(page.getByTestId("hero-cta-row")).toContainText("Try the first puzzle");
+    await expect(page.getByTestId("hero-cta-row")).toContainText(
+      "Check your own survey draft"
+    );
+    await expect(page.getByTestId("hero-cta-row")).toContainText(
+      "Build an answer set"
+    );
+    await expect(page.getByTestId("hero-cta-row")).toContainText(
+      "Walk all twelve puzzles"
+    );
+    await expect(page.locator("body")).toContainText("Open the reference shelf");
+
+    await page.goto(`${BASE_URL}/#build`);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Build an answer set"
+    );
+
+    await page.goto(`${BASE_URL}/#reference`);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Reference shelf"
+    );
+  });
+
   test("all twelve walk routes render an interaction and never fall back to exposition", async ({ page }) => {
     for (const specimen of workbenchSpecimens) {
       await page.goto(`${BASE_URL}/#walk/${specimen.id}`);

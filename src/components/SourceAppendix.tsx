@@ -19,8 +19,9 @@ export function SourceAppendix({ specimens }: { specimens: WorkbenchSpecimen[] }
               Direct links to the public testing materials
             </span>
             <span className="section-lede">
-              Each worked example cites a specific passage in a public testing report.
-              Use these links to read the original context.
+              Each puzzle keeps a public source anchor for the underlying
+              answer-choice problem. Use these links to read the original
+              context.
             </span>
           </span>
           <span className="appendix-summary-toggle" aria-hidden="true">

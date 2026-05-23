@@ -22,17 +22,17 @@ export function FeaturedExample() {
       <header className="featured-example-head">
         <p className="featured-example-eyebrow">One puzzle, end to end</p>
         <h2 className="featured-example-title" id="featured-example-title">
-          One commute option, four reasonable routes.
+          One answer place, four reasonable commute stories.
         </h2>
         <p className="featured-example-lede">
-          The hook above tried four values against the rule{" "}
-          <code className="featured-example-specimen">one word only</code>.
-          The first full puzzle uses the same move at higher stakes: one option,{" "}
+          The hook used the smallest version of the problem: a truthful answer
+          met a storage rule that did not say enough. The first full puzzle uses
+          an answer choice instead of a one-word field:{" "}
           <code className="featured-example-specimen">
             Taxi or ride-hailing services
           </code>
-          , that one rider reads as an app ride, another as a taxi, another as
-          a carpool. Route the trips and watch the tidy column stop being tidy.
+          . Route four commute stories around that one place and watch the tidy
+          column absorb several meanings.
         </p>
       </header>
 
@@ -71,7 +71,7 @@ export function FeaturedExample() {
           href={routeToHash({ kind: "walk", slot: featured.id })}
           data-testid="featured-walk-cta"
         >
-          <span>Play all twelve</span>
+          <span>Walk all twelve puzzles</span>
           <span aria-hidden="true" className="cta-button-arrow">
             →
           </span>

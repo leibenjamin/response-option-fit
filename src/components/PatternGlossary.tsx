@@ -35,7 +35,7 @@ export function PatternGlossary() {
           Six ways answer choices can miss real situations
         </h2>
         <p className="section-lede">
-          Each worked example demonstrates one of these problem types. The
+          Each puzzle demonstrates one of these problem types. The
           plain-language description comes first; the method label is secondary.
         </p>
       </header>

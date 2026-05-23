@@ -169,8 +169,8 @@ export function PatternMapDialog({ open, onClose, visited }: Props) {
             Six recurring answer-choice problems
           </h2>
           <p className="pattern-map-dialog-lede">
-            Every one of the twelve worked examples is a turn on one of these
-            six. Open an example from any card.
+            Every one of the twelve puzzles is a turn on one of these six. Open
+            a puzzle from any card.
           </p>
           <button
             type="button"
