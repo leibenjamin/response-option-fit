@@ -3,14 +3,15 @@
 Response Option Fit Lab is a static interactive problem-solving lab about survey
 answer choices that do not give a respondent's answer a clear route. The public
 page leads with the title "When answer choices don't give the respondent's
-answer a clear place to go" and now treats the twelve examples as authored
+answer a clear place to go" and now treats the twelve puzzles as authored
 interactive puzzles, not as a source-first article or citation exhibit.
 
 The project demonstrates a React and TypeScript interface with twelve
-interaction modules, an opening hook, a build-and-break export trap, a cold-read
-capstone, a field guide, optional source backmatter, static security headers,
-and local-only settings controls. The overview opens with a live "one word
-only" routing puzzle and one full embedded commute puzzle. The walk paginates
+interaction modules, an opening hook, an answer-set builder/export trap, a
+cold-read capstone, a field guide, optional source backmatter, static security
+headers, and local-only settings controls. The overview opens with a plausible
+one-word commute-response intake hook and one full embedded commute puzzle. The
+walk paginates
 twelve answer-choice traps, each with a role, a task, immediate feedback, a
 visible consequence ledger or trace, and a small reveal. The build route lets
 visitors assemble choices and then inspect the tidy export those choices would
@@ -20,7 +21,7 @@ source material out of the primary play path.
 
 ## Sources And Attribution
 
-Examples use a delight-first teaching posture. Most on-screen cases, people,
+Puzzles use a delight-first teaching posture. Most on-screen cases, people,
 routes, feedback lines, and consequences are authored teaching material built
 to make the interaction satisfying and inspectable. Public U.S. Census Bureau
 materials remain as optional anchors and backmatter, not as the main reason to
@@ -76,7 +77,7 @@ See [docs/deployment.md](docs/deployment.md) and
 npm test
 ```
 
-The Playwright suite verifies that every walk example renders an interactive
+The Playwright suite verifies that every walk puzzle renders an interactive
 surface, no route falls back to exposition, no freeform survey input or runtime
 automation exists, reduced-motion and forced-colors modes remain readable, and desktop /
 mobile routes avoid horizontal overflow.
@@ -89,7 +90,7 @@ mobile routes avoid horizontal overflow.
 - Puzzle cases are authored teaching situations unless explicitly marked as
   source material. Public reports remain optional context for the original
   answer-choice problem.
-- The commute build-and-break topic is anchored to ACS commute materials, but
+- The commute answer-set builder topic is anchored to ACS commute materials, but
   its named situations are authored teaching situations. Its official
   longest-distance rule is the only source-supported build rule; the other
   commute rules are authored teaching instructions. The sandwich topic and all
@@ -106,8 +107,8 @@ interaction, motion, and visual feedback when those make the lab meaningfully
 better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
-Current measured build after the second-wave puzzle split: initial JavaScript
-`86.80 KB gzip`, CSS `16.38 KB gzip`. All interaction is client-side; no
+Current measured build after the chronological copy-alignment pass: initial
+JavaScript `87.04 KB gzip`, CSS `16.39 KB gzip`. All interaction is client-side; no
 third-party runtime requests are expected.
 
 ## Privacy Budget
@@ -121,10 +122,10 @@ to:
 - Current persistence is limited to opt-in, on-device settings data
   (`localStorage`). The Settings surface supports JSON export/import/clear and
   shows the exact stored keys and values for transparency. When Remember is on,
-  the names of examples opened in walk mode are stored locally so the knowledge
+  the names of puzzles opened in walk mode are stored locally so the knowledge
   map can resume across visits; when Remember is off, walk progress is
-  in-memory only and is lost on reload. The walk examples, the puzzles, and the
-  build-and-break route do not persist per-choice or per-rule interaction state.
+  in-memory only and is lost on reload. The walk puzzles and the answer-set
+  builder do not persist per-choice or per-rule interaction state.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
   chooses outside this site when reviewing their own survey material.
@@ -135,7 +136,7 @@ The application source code is licensed under the **MIT License**; see
 [LICENSE](LICENSE).
 
 Editorial content (exhibit text, answer frames, authored interaction surfaces,
-build-and-break situation wording, build rules, export-autopsy copy, scenario
+answer-set builder situation wording, build rules, export-autopsy copy, scenario
 wording, wording-feature questions, quick-practice cases, method notes,
 glossary entries, claim-boundary language, and colophon prose) is licensed under
 **Creative Commons Attribution 4.0 International (CC BY 4.0)**; see

@@ -15,7 +15,8 @@ authored teaching content.
 - Puzzle people, trips, devices, households, weeks, routes, and feedback.
 - Visual ledgers, consequence copy, repair candidates, threshold choices, and
   boundary paths.
-- Build-and-break situations and teaching rules except where a rule is
+- The opening one-word commute hook and its storage/rejection/rule feedback.
+- Answer-set builder situations and teaching rules except where a rule is
   explicitly labeled source-supported.
 - Capstone scene framing and most plain-language reveal copy.
 

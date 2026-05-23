@@ -14,7 +14,7 @@ immediate consequence, and then recognize the missing rule.
 ## Interaction Posture
 
 The design priority is delight and transfer, not citation ceremony. Each walk
-example has an interactive module with:
+puzzle has an interactive module with:
 
 - a role for the visitor, such as route mapper, form, scanner, rule finder, or
   counting recipe;
@@ -24,6 +24,13 @@ example has an interactive module with:
   it lost;
 - a reveal that names the pattern only after the visitor has touched the
   problem.
+
+The opening hook is the smallest version of the app's problem, not a detached
+word game: a survey asks, "In one word, what was your usual way to get to work
+last week?", then four honest commute answers arrive. The visitor decides
+whether to store, reject, or demand a rule for each answer before the app
+expands into full answer choices, yes/no paths, catch-alls, device boundaries,
+and numeric fields.
 
 The twelve walk puzzles are:
 
@@ -50,8 +57,9 @@ The twelve walk puzzles are:
 11. **Natural disasters:** set whether Yes means any reason or the main reason.
 12. **Weeks worked:** count the same year under different private recipes.
 
-Build-and-break, the field guide, the cold-read capstone, and the exit artifact
-remain part of the same interaction arc: respondent, form, analyst, reviewer.
+The answer-set builder, the field guide, the cold-read capstone, and the exit
+artifact remain part of the same interaction arc: respondent, form, analyst,
+reviewer.
 
 ## Novelty Over Uniformity
 
