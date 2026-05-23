@@ -23,7 +23,7 @@ type CollisionCase = {
 const choices: Array<{ id: CollisionChoice; label: string; lane: string }> = [
   {
     id: "stored",
-    label: "Store in taxi / ride-hailing",
+    label: "Put in taxi / ride-hailing",
     lane: "Exported option absorbs it"
   },
   { id: "outside", label: "Route elsewhere", lane: "Escapes the option" },
@@ -106,9 +106,9 @@ export function RideHailingModeCollision({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="You are the mode mapper"
+      role="Your role: mode mapper"
       title="One commute option. Four trips collide inside it."
-      lede="Route the trips the way a form would store them. The small win is watching one tidy exported option absorb several different transportation stories."
+      lede="Route each trip into or out of the answer choice. The small win is watching one tidy exported option absorb several different transportation stories."
       className="puzzle--mode-collision"
       progress={<PuzzleProgress completed={completed} total={cases.length} />}
     >
@@ -179,7 +179,7 @@ export function RideHailingModeCollision({
         <PuzzleReveal
           specimen={specimen}
           eyebrow="Mode collision"
-          title="The exported option did not store a definition."
+          title="The exported option did not carry a definition."
         >
           <p>
             The label can catch app rides and taxis, but it also invites nearby

@@ -43,7 +43,7 @@ const shown: Altitude | undefined =
           <span aria-hidden="true">/</span>
           <span>{specimen.patternLabel}</span>
           <span aria-hidden="true">/</span>
-          <span className="puzzle-role">You are the coder</span>
+          <span className="puzzle-role">Your role: industry coder</span>
         </p>
         <h2 className="puzzle-title" id={titleId} tabIndex={-1}>
           One answer. Four defensible codes. Pick one.

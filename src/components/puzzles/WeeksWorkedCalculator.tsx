@@ -83,7 +83,7 @@ export function WeeksWorkedCalculator({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="You are the counting recipe"
+      role="Your role: counting-rule reviewer"
       title="One year. Three exact-looking totals."
       lede="The field asks for a number, but the number depends on a private recipe. Pick the recipe and watch the same work history export a different total."
       className="puzzle--weeks-calculator"

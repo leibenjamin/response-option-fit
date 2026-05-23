@@ -10,7 +10,7 @@ import type { WorkbenchSpecimen } from "../../types/workbench";
 import { VerbatimQuote } from "../workbench/VerbatimQuote";
 
 /* "Stop the leak" — bespoke puzzle for Example 05 (owner-advertising, sequence
-   overlap). The visitor plays the form recording one respondent across two
+   overlap). The visitor acts as a sequence reviewer across two
    adjacent questions whose categories overlap; a single listing double-counts
    or drops, and then the visitor tries fixes and discovers reordering does
    nothing while scoping/merging closes the leak. Shares the puzzle frame;
@@ -40,7 +40,7 @@ export function StopTheLeak({
           <span aria-hidden="true">/</span>
           <span>{specimen.patternLabel}</span>
           <span aria-hidden="true">/</span>
-          <span className="puzzle-role">You are the form</span>
+          <span className="puzzle-role">Your role: sequence reviewer</span>
         </p>
         <h2 className="puzzle-title" id={titleId} tabIndex={-1}>
           Two questions in a row. One answer leaks across both.

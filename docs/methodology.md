@@ -3,7 +3,7 @@
 Response Option Fit Lab is now an interactive teaching lab first. It treats a
 survey answer choice as a route: a respondent has a real situation, the form
 offers a set of places to put it, and the exported column remembers only the
-place the form managed to store.
+answer place and downstream code, not the private judgment that got it there.
 
 The public page still uses the literal title "When answer choices don't give
 the respondent's answer a clear place to go." The implementation, however, is
@@ -16,8 +16,8 @@ immediate consequence, and then recognize the missing rule.
 The design priority is delight and transfer, not citation ceremony. Each walk
 puzzle has an interactive module with:
 
-- a role for the visitor, such as route mapper, form, scanner, rule finder, or
-  counting recipe;
+- a role for the visitor, such as mode mapper, form operator, sequence reviewer,
+  rule finder, or counting-rule reviewer;
 - a small task with visible choices and no freeform input;
 - immediate feedback after each move;
 - a ledger, trace, or before/after state that shows what the data kept and what
@@ -28,9 +28,37 @@ puzzle has an interactive module with:
 The opening hook is the smallest version of the app's problem, not a detached
 word game: a survey asks, "In one word, what was your usual way to get to work
 last week?", then four honest commute answers arrive. The visitor decides
-whether to store, reject, or demand a rule for each answer before the app
-expands into full answer choices, yes/no paths, catch-alls, device boundaries,
-and numeric fields.
+whether to accept, reject, or demand a rule for each submitted answer before the
+app expands into full answer choices, yes/no paths, catch-alls, device
+boundaries, and numeric fields. In that hook, "Accept it" means the reviewer
+decides the form can accept the submitted answer under the visible instruction.
+It does not mean the survey respondent is answering, and it does not introduce
+a database/storage term of art.
+
+## Voice And Terminology
+
+This pass separates five voices that earlier copy sometimes blurred:
+
+- **App user:** the visitor solving a puzzle. Button labels should name the
+  visitor's immediate move: accept, reject, route, choose, open, test, set, add,
+  or count.
+- **Survey respondent:** the person in the authored or sourced situation. Their
+  voice appears in quotes, scenes, and "the respondent writes/chooses/says"
+  copy.
+- **Survey/form:** the instrument voice: field, answer choice, instruction,
+  follow-up, route, and question wording.
+- **Analyst/export:** the downstream data view. Use recorded, coded, exported,
+  grouped, or counted when describing what the data file or analyst sees.
+- **Narrator:** the app's explanatory voice. It names the missing rule only
+  after the visitor has seen the consequence.
+
+`Storage rule` is intentionally rejected as primary app language. It is not a
+familiar survey-methods term for likely users, and it sounds more like product
+or database infrastructure than survey response design. `Record it` was also
+rejected as a universal button because it can mean form operation, analyst
+coding, archival capture, or respondent answer entry depending on the context.
+Use `recorded` only when the visitor is explicitly operating a form or when the
+copy is describing a downstream data record.
 
 The twelve walk puzzles are:
 

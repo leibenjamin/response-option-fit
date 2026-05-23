@@ -92,7 +92,7 @@ export function TvDeviceBoundary({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="You are drawing the device boundary"
+      role="Your role: boundary reviewer"
       title="Is Apple TV a TV?"
       lede="The respondent may know every device in the room. The missing piece is which boundary the answer choice is using: built-in smart TV, any device that plays through a TV, or a mistaken mental image."
       className="puzzle--tv-boundary"

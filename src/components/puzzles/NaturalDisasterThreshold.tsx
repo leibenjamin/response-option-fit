@@ -89,7 +89,7 @@ export function NaturalDisasterThreshold({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="You are setting the Yes threshold"
+      role="Your role: threshold setter"
       title="How strong does a reason need to be?"
       lede="A yes/no reason series can quietly teach respondents that Yes means main reason. Set the threshold and watch secondary motives appear or vanish."
       className="puzzle--reason-threshold"

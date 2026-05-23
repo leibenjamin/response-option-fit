@@ -38,7 +38,7 @@ export function FlattenTheWeek({
           <span aria-hidden="true">/</span>
           <span>{specimen.patternLabel}</span>
           <span aria-hidden="true">/</span>
-          <span className="puzzle-role">You are the respondent</span>
+          <span className="puzzle-role">Your role: respondent</span>
         </p>
         <h2 className="puzzle-title" id={titleId} tabIndex={-1}>
           Your weeks don’t match. The form wants one number.
@@ -111,7 +111,7 @@ export function FlattenTheWeek({
             swing is gone.
           </h3>
           <p>
-            The form stores one value and drops the range — your weeks ran{" "}
+            The form records one value and drops the range — your weeks ran{" "}
             {flattenRange.min} to {flattenRange.max} hours. {specimen.methodNote?.whyHere}
           </p>
           <p className="puzzle-reveal-takeaway">
