@@ -96,7 +96,7 @@ export function SumpPumpGate({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="You are opening the denominator"
+      role="Your role: denominator checker"
       title="Open the gate before you read Yes or No."
       lede="The answer No looks tidy only after you know who was eligible for the question. First decide whether the pump-failure premise applies."
       className="puzzle--sump-gate"

@@ -396,7 +396,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           "longest-distance": {
             recordAs: "train",
             copy:
-              "The longest-distance rule records Dana by the train leg. The drive is still real; it just stops being the stored commute method.",
+              "The longest-distance rule records Dana by the train leg. The drive is still real; it just stops being the exported commute method.",
             missingCopy:
               "The longest-distance rule points to rail, but your answer set did not include it. The rule exposes the missing option instead of quietly recording the drive."
           }
@@ -493,7 +493,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           "longest-distance": {
             recordAs: "bus",
             copy:
-              "The longest-distance rule records Priya by the bus leg. The bicycle leg remains part of the story, not the stored method.",
+              "The longest-distance rule records Priya by the bus leg. The bicycle leg remains part of the story, not the exported method.",
             missingCopy:
               "The longest-distance rule points to Bus, but your answer set did not include it. The bike leg cannot carry the whole record by itself."
           }
@@ -851,7 +851,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
     reveal: {
       lead: "The silly taxonomy broke for the same serious reason.",
       body:
-        "Categories feel obvious when they live in your head. The moment a form has to store one answer, the private rule has to become public or the export starts laundering the argument.",
+        "Categories feel obvious when they live in your head. The moment a form has to record one answer, the private rule has to become public or the export starts laundering the argument.",
       bridgeHref: "#field-guide",
       bridgeLabel: "Take the same check to a real survey draft"
     }

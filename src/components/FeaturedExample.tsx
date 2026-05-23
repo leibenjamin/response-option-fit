@@ -26,8 +26,8 @@ export function FeaturedExample() {
         </h2>
         <p className="featured-example-lede">
           The hook used the smallest version of the problem: a truthful answer
-          met a storage rule that did not say enough. The first full puzzle uses
-          an answer choice instead of a one-word field:{" "}
+          met an answer instruction that did not say enough. The first full
+          puzzle uses an answer choice instead of a one-word field:{" "}
           <code className="featured-example-specimen">
             Taxi or ride-hailing services
           </code>

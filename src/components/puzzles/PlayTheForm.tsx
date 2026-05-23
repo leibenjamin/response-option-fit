@@ -9,7 +9,7 @@ import {
 import type { WorkbenchSpecimen } from "../../types/workbench";
 
 /* "Play the form" — the first bespoke per-example puzzle (Example 03,
-   refrigerated medicine, false premise). The visitor IS the form: they record
+   refrigerated medicine, false premise). The visitor acts as the form operator:
    three respondents with the real Yes / No / No-refrigerated-medicine buttons,
    watch a household with no refrigerated medicine get recorded as "had
    medicine, none spoiled," then add the follow-up the testers recommended and
@@ -46,7 +46,7 @@ export function PlayTheForm({
           <span aria-hidden="true">/</span>
           <span>{specimen.patternLabel}</span>
           <span aria-hidden="true">/</span>
-          <span className="puzzle-role">You are the form</span>
+          <span className="puzzle-role">Your role: form operator</span>
         </p>
         <h2 className="puzzle-title" id={titleId} tabIndex={-1}>
           Record three households. Watch one fall through.

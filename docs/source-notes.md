@@ -15,7 +15,7 @@ authored teaching content.
 - Puzzle people, trips, devices, households, weeks, routes, and feedback.
 - Visual ledgers, consequence copy, repair candidates, threshold choices, and
   boundary paths.
-- The opening one-word commute hook and its storage/rejection/rule feedback.
+- The opening one-word commute hook and its acceptance/rejection/rule feedback.
 - Answer-set builder situations and teaching rules except where a rule is
   explicitly labeled source-supported.
 - Capstone scene framing and most plain-language reveal copy.
@@ -82,6 +82,14 @@ PDF URLs, and short quoted respondent material where used. The source list is:
 - Source rigor should not crowd out the interaction. If a future change has to
   choose between a better puzzle and more citation ceremony, prefer the better
   puzzle while keeping the claim boundary honest.
+- Do not present `storage rule` as survey-methods vocabulary. Public methods
+  language more commonly talks about response options, response categories,
+  write-in responses, coding, processing rules, and categories. The app can use
+  plain-language `answer rule` or `acceptance rule` when introducing a puzzle.
+- Do not use `Record it` as a universal replacement for `Store it`. It is valid
+  where the visitor is explicitly acting as a form operator, or where the copy
+  describes a downstream record, but it still conflates voices if used as a
+  generic app-user action.
 - Old effort, size, or quota assumptions should not be used to reject a more
   satisfying mechanic. Measure the cost, then decide whether the interaction is
   worth it.

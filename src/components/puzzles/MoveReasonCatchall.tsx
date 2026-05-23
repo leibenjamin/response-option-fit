@@ -56,7 +56,7 @@ export function MoveReasonCatchall({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="You are opening the catch-all"
+      role="Your role: catch-all reviewer"
       title="“Other housing reason” is not a reason."
       lede="A catch-all can be useful for routing, but it is a poor final answer. Open the broad categories, then turn on write-in recoding and watch the hidden reasons reappear."
       className="puzzle--move-reasons"

@@ -28,6 +28,9 @@ materials remain as optional anchors and backmatter, not as the main reason to
 use the app. The active slate no longer includes the retired identity examples
 from the earlier ONS-backed draft. The app does not reproduce agency logos,
 screenshots, or PDF imagery, and it does not validate alternate wording.
+Primary copy avoids invented methods jargon such as `storage rule`; the app
+uses plain answer-rule language in the puzzle flow and reserves recorded,
+coded, or exported wording for form-operation or downstream data contexts.
 
 The app code is MIT licensed. Short source wording excerpts and report
 references remain attributable to their respective public sources; no
@@ -107,8 +110,8 @@ interaction, motion, and visual feedback when those make the lab meaningfully
 better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
-Current measured build after the chronological copy-alignment pass: initial
-JavaScript `87.04 KB gzip`, CSS `16.39 KB gzip`. All interaction is client-side; no
+Current measured build after the POV terminology pass: initial
+JavaScript `87.07 KB gzip`, CSS `16.39 KB gzip`. All interaction is client-side; no
 third-party runtime requests are expected.
 
 ## Privacy Budget

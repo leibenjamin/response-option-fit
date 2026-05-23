@@ -620,7 +620,7 @@ summary:focus-visible {
   border-color: var(--accent);
   color: var(--accent-2);
 }
-.featured-hook-route--store.is-chosen {
+.featured-hook-route--accept.is-chosen {
   background: var(--accent-paper);
   border-color: var(--accent);
   color: var(--ink);

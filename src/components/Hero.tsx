@@ -43,7 +43,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
         </h1>
         <p className="hero-subtitle">
           People can answer truthfully and still not have a clear place to put
-          the answer. Start with one tiny storage rule, then follow twelve
+          the answer. Start with one tiny answer rule, then follow twelve
           puzzles where the data bends before analysis even begins.
         </p>
         <p className="hero-audience" data-testid="hero-audience">

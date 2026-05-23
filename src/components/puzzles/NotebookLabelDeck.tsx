@@ -63,7 +63,7 @@ export function NotebookLabelDeck({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="You are testing the label"
+      role="Your role: label tester"
       title="Flip the device cards. Watch “notebook” widen."
       lede="The trap is not that respondents lack devices. It is that one familiar word points to several nearby device families before the Yes/No answer is even chosen."
       className="puzzle--label-deck"

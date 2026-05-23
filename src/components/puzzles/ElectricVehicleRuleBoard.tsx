@@ -106,7 +106,7 @@ export function ElectricVehicleRuleBoard({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="You are the rule finder"
+      role="Your role: rule finder"
       title="Pick the feature that decides the vehicle."
       lede="The household knows the car. The form failed to say which feature should control the edge case: plug, battery, marketing name, or hybrid identity."
       className="puzzle--ev-rule"
