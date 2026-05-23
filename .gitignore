@@ -11,14 +11,12 @@ test-results/
 playwright-report/
 reports/
 coverage/
+tests/verify-hub*.mjs
 .env
 .env.*
 !.env.example
 .DS_Store
 Thumbs.db
-
-/tests/
-/playwright.config.ts
 
 # Local viewport/screenshot captures. Put public app images under public/ or src/.
 /*.png
