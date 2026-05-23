@@ -10,13 +10,13 @@ type Props = {
 
 /* The 12-dot subway strip across the top of the walk-mode ribbon.
    Layered with the right-rail Pattern Catalog map (K4) and the inline
-   "Example N of 12" counter (K6); together they give three levels of
+   "Puzzle N of 12" counter (K6); together they give three levels of
    wayfinding density: glance, taxonomy, and verbal. */
 export function SubwayStrip({ currentSpecimenId, visited }: Props) {
   return (
     <nav
       className="subway"
-      aria-label="Worked examples"
+      aria-label="Puzzle path"
       data-testid="subway-strip"
     >
       <ol className="subway-list">
@@ -37,8 +37,8 @@ export function SubwayStrip({ currentSpecimenId, visited }: Props) {
               <a
                 className={className}
                 href={routeToHash({ kind: "walk", slot: specimen.id })}
-                aria-label={`Example ${specimen.number} of 12: ${specimen.title}. Pattern: ${specimen.patternLabel}.${
-                  isCurrent ? " Current example." : isVisited ? " Visited." : ""
+                aria-label={`Puzzle ${specimen.number} of 12: ${specimen.title}. Pattern: ${specimen.patternLabel}.${
+                  isCurrent ? " Current puzzle." : isVisited ? " Visited." : ""
                 }`}
                 aria-current={isCurrent ? "step" : undefined}
                 style={style}

@@ -73,7 +73,7 @@ export function RecapInterstitial({
             : "Two-thirds of the way through."}
         </h2>
         <p className="recap-lede">
-          You've worked through <strong>{threshold}</strong> of 12 examples
+          You've worked through <strong>{threshold}</strong> of 12 puzzles
           and seen <strong>{covered.length}</strong> of 6 patterns:{" "}
           <em>
             {covered.map((p) => patternMeta[p].label.toLowerCase()).join(", ")}
@@ -137,7 +137,7 @@ export function RecapInterstitial({
           onClick={onContinue}
         >
           <span>
-            Continue with example{" "}
+            Continue with puzzle{" "}
             {workbenchSpecimens.find((s) => s.id === currentSpecimenId)
               ?.number ?? ""}
           </span>

@@ -37,7 +37,7 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
         />
       </details>
 
-      <nav className="walk-rail-nav" aria-label="Walk through examples">
+      <nav className="walk-rail-nav" aria-label="Walk through puzzles">
         <a
           className="walk-rail-nav-btn walk-rail-nav-btn--prev"
           href={
@@ -69,7 +69,7 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
           data-testid="walk-next"
         >
           <span className="walk-rail-nav-body">
-            <span className="walk-rail-nav-key">Next</span>
+            <span className="walk-rail-nav-key">Next puzzle</span>
             <span className="walk-rail-nav-label">
               {next ? `${next.number} · ${next.railLabel}` : "Wrap up"}
             </span>
@@ -96,7 +96,7 @@ export function WalkRail({ specimen, visited, prev, next }: Props) {
             href={routeToHash({ kind: "reference" })}
             data-testid="walk-rail-reference"
           >
-            Sources &amp; methodology →
+            Open the reference shelf →
           </a>
         </p>
         <p className="walk-rail-foot-row">

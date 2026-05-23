@@ -280,7 +280,7 @@ export function SettingsDrawer({ open, onClose }: Props) {
                 Remember local settings on this device
               </span>
               <span className="settings-toggle-sub">
-                Stores this settings choice and the names of examples you've
+                Stores this settings choice and the names of puzzles you've
                 opened in walk mode, so the compact knowledge-map drawer
                 fills in across visits. Removed when you turn this off or
                 clear stored data.

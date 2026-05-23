@@ -107,7 +107,7 @@ Task:
 7. Give two respondent scenarios and show where each would land.
 8. Name the evidence needed before adoption of any later rewrite.
 
-Keep the analysis source-bounded. If context is missing, say what is missing instead of guessing.`;
+Keep the analysis bounded by the information provided. If context is missing, say what is missing instead of guessing.`;
 
 const coverageExclusivityAuditPrompt = `Audit the answer options for my own survey question. Focus on coverage, overlap, and respondent fit before suggesting edits.
 

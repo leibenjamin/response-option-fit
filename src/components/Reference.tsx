@@ -22,11 +22,11 @@ export function Reference() {
           id="reference-title"
           tabIndex={-1}
         >
-          Reference material
+          Reference shelf
         </h1>
         <p className="reference-route-lede">
-          Four compact shelves behind the worked examples: pattern vocabulary,
-          method note, claim boundary, and source provenance.
+          Four compact shelves behind the puzzles: pattern vocabulary, method
+          note, claim boundary, and source provenance.
         </p>
         <nav className="reference-quick-index" aria-label="Reference sections">
           <a href="#glossary-title">Pattern glossary</a>

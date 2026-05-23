@@ -62,7 +62,7 @@ function Hub({
   return (
     <div className="lab" data-testid="hub">
       <a href="#featured-example" className="skip-link" data-testid="skip-link">
-        Skip to worked example
+        Skip to first puzzle
       </a>
       <SettingsButton onClick={onSettingsOpen} />
       {/* Hub shell: a grid whose right column is a sticky knowledge-map
@@ -103,15 +103,15 @@ function Hub({
         </p>
         <p className="foot-line foot-line--quiet hub-foot-links">
           <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
-            Field guide
+            Check your own survey draft
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "build" })}>
-            Build-and-break
+            Build an answer set
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
-            Reference shelf
+            Open the reference shelf
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -127,7 +127,7 @@ function ReferenceRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
   return (
     <div className="lab lab--reference">
       <a href="#reference" className="skip-link" data-testid="skip-link">
-        Skip to reference material
+        Skip to reference shelf
       </a>
       <SettingsButton onClick={onSettingsOpen} />
       <Reference />
@@ -138,11 +138,11 @@ function ReferenceRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
-            Field guide
+            Check your own survey draft
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "build" })}>
-            Build-and-break
+            Build an answer set
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -187,11 +187,11 @@ function FieldGuideRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
-            Reference shelf
+            Open the reference shelf
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "build" })}>
-            Build-and-break
+            Build an answer set
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -207,7 +207,7 @@ function BuildRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
   return (
     <div className="lab lab--build">
       <a href="#build-and-break" className="skip-link" data-testid="skip-link">
-        Skip to build-and-break
+        Skip to answer-set builder
       </a>
       <SettingsButton onClick={onSettingsOpen} />
       <Suspense
@@ -222,7 +222,7 @@ function BuildRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
               id="build-and-break-title"
               tabIndex={-1}
             >
-              Loading build-and-break
+              Loading answer-set builder
             </h1>
           </main>
         }
@@ -236,15 +236,15 @@ function BuildRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "walk", slot: "ride-hailing" })}>
-            Worked examples
+            Walk all twelve puzzles
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
-            Field guide
+            Check your own survey draft
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
-            Reference shelf
+            Open the reference shelf
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -288,15 +288,15 @@ function WalkRoute({
             </a>
             <span aria-hidden="true">·</span>
             <a className="foot-link" href={routeToHash({ kind: "reference" })}>
-              Reference shelf
+              Open the reference shelf
             </a>
             <span aria-hidden="true">·</span>
             <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
-              Field guide
+              Check your own survey draft
             </a>
             <span aria-hidden="true">·</span>
             <a className="foot-link" href={routeToHash({ kind: "build" })}>
-              Build-and-break
+              Build an answer set
             </a>
             <span aria-hidden="true">·</span>
             <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -311,7 +311,7 @@ function WalkRoute({
   return (
     <div className="lab lab--walk">
       <a href="#main-exhibit" className="skip-link" data-testid="skip-link">
-        Skip to worked example
+        Skip to puzzle
       </a>
       {/* In normal walk mode the settings gear lives inside the sticky ribbon
          (see WalkRibbon); only fall back to the page-level button when an
@@ -329,15 +329,15 @@ function WalkRoute({
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
-            Reference shelf
+            Open the reference shelf
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
-            Field guide
+            Check your own survey draft
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "build" })}>
-            Build-and-break
+            Build an answer set
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -354,9 +354,9 @@ function routeAnnouncement(route: Route): string {
     case "hub":
       return "Loaded overview.";
     case "reference":
-      return "Loaded reference material.";
+      return "Loaded reference shelf.";
     case "build":
-      return "Loaded build-and-break.";
+      return "Loaded answer-set builder.";
     case "fieldGuide":
       return "Loaded field guide.";
     case "colophon":
@@ -365,7 +365,7 @@ function routeAnnouncement(route: Route): string {
       if (route.slot === "done") return "Loaded walk summary.";
       const specimen = workbenchSpecimens.find((s) => s.id === route.slot);
       if (!specimen) return "Loaded overview.";
-      return `Loaded example ${specimen.number} of 12: ${specimen.title}.`;
+      return `Loaded puzzle ${specimen.number} of 12: ${specimen.title}.`;
     }
   }
 }
@@ -375,9 +375,9 @@ function pageTitle(route: Route): string {
     case "hub":
       return "Response Option Fit Lab";
     case "reference":
-      return "Reference — Response Option Fit Lab";
+      return "Reference shelf — Response Option Fit Lab";
     case "build":
-      return "Build-and-break — Response Option Fit Lab";
+      return "Build an answer set — Response Option Fit Lab";
     case "fieldGuide":
       return "Field guide — Response Option Fit Lab";
     case "colophon":
@@ -388,7 +388,7 @@ function pageTitle(route: Route): string {
       }
       const specimen = workbenchSpecimens.find((s) => s.id === route.slot);
       if (!specimen) return "Response Option Fit Lab";
-      return `Example ${specimen.number} — Response Option Fit Lab`;
+      return `Puzzle ${specimen.number} — Response Option Fit Lab`;
     }
   }
 }

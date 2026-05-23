@@ -50,7 +50,7 @@ export function FieldGuide() {
   );
   const activeGuide = patternApplicationGuides[activePattern];
   const activeMeta = patternMeta[activePattern];
-  const activeExamples = specimensByPattern[activePattern];
+  const activePuzzles = specimensByPattern[activePattern];
 
   return (
     <main
@@ -66,9 +66,9 @@ export function FieldGuide() {
         </h1>
         <p className="field-guide-lede">
           A reviewer console for choosing a risk, running a compact
-          checklist, and copying source-bounded prompts you can take into
-          your own draft. It is not a validator, score, or replacement
-          for cognitive testing.
+          checklist, and copying boundary-aware prompts you can take into your
+          own draft. It is not a validator, score, or replacement for cognitive
+          testing.
         </p>
       </header>
 
@@ -124,9 +124,9 @@ export function FieldGuide() {
           </ol>
           <p className="pattern-checklist-examples">
             <span className="pattern-checklist-examples-label">
-              Worked examples:
+              Related puzzles:
             </span>
-            {activeExamples.map((specimen, index) => (
+            {activePuzzles.map((specimen, index) => (
               <span key={specimen.id}>
                 {index > 0 ? ", " : " "}
                 <a
@@ -173,7 +173,7 @@ export function FieldGuide() {
               slot: workbenchSpecimens[0]?.id ?? ""
             })}
           >
-            Example 01's tested wording
+            Puzzle 01's tested wording
           </a>{" "}
           ("Taxi or ride-hailing services").
         </p>
@@ -244,7 +244,7 @@ export function FieldGuide() {
           <p>
             The guide combines survey-question guidance, federal pretesting
             standards, and learning-science constraints: make a prediction,
-            compare examples, revisit confusable categories, and keep validation
+            compare puzzle cases, revisit confusable categories, and keep validation
             claims smaller than the evidence.
           </p>
         </header>

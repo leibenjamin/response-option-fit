@@ -43,13 +43,13 @@ export function CompletionScreen({ visited }: Props) {
           {allVisited
             ? "You've solved all twelve."
             : isEmpty
-            ? "Twelve examples are waiting."
+            ? "Twelve puzzles are waiting."
             : "End of the walk."}
         </h1>
         <p className="completion-lede">
           {allVisited ? (
             <>
-              You've worked through every example — twelve answer-choice traps,
+              You've worked through every puzzle — twelve answer-choice traps,
               now rebuilt as twelve interactive puzzles. The next read is the
               field guide, where the moves turn into reusable checks and
               prompts for your own survey drafts.
@@ -64,7 +64,7 @@ export function CompletionScreen({ visited }: Props) {
           ) : (
             <>
               You've reached the wrap-up. You worked through{" "}
-              <strong>{visitedCount}</strong> of 12 examples this session.
+              <strong>{visitedCount}</strong> of 12 puzzles this session.
               The full set is always one click away in the map drawer below,
               and the field guide turns the patterns into portable
               checks for your own survey drafts.
@@ -127,7 +127,7 @@ export function CompletionScreen({ visited }: Props) {
 
       <details className="completion-map">
         <summary className="completion-map-title" id="completion-map-title">
-          Pattern map and examples
+          Pattern map and puzzle list
         </summary>
         <PatternCatalog
           variant="full"

@@ -42,9 +42,9 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
           When answer choices don't give the respondent's answer a clear place to go.
         </h1>
         <p className="hero-subtitle">
-          A form's rule can look obvious until a real value tries to land
-          in it. Make a few choices, watch the data bend, and find the
-          missing rule.
+          People can answer truthfully and still not have a clear place to put
+          the answer. Start with one tiny storage rule, then follow twelve
+          puzzles where the data bends before analysis even begins.
         </p>
         <p className="hero-audience" data-testid="hero-audience">
           For survey writers, reviewers, analysts, and anyone who would
@@ -52,7 +52,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
         </p>
 
         {/* CTA hierarchy depends on whether the visitor has walked before.
-           First-time visitors get a strong "Try the first example" as
+           First-time visitors get a strong "Try the first puzzle" as
            primary; returning visitors get "Resume walk" as primary and the
            first-time entry points demoted to text links. Mobile keeps the
            two main CTA-shaped buttons stacked but the secondary text links
@@ -70,7 +70,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
               >
                 <span className="cta-button-stacked-body">
                   <span className="cta-button-stacked-primary">
-                    Resume walk · example {resumeSpecimen.number}
+                    Resume walk · puzzle {resumeSpecimen.number}
                   </span>
                   <span className="cta-button-stacked-secondary">
                     {resumeSpecimen.patternLabel} · {resumeSpecimen.railLabel}
@@ -100,7 +100,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                   href="#featured-example"
                   data-testid="hero-cta-featured"
                 >
-                  Try the first example
+                  Try the first puzzle
                 </a>
                 <span aria-hidden="true"> · </span>
                 <a
@@ -108,7 +108,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                   href={routeToHash({ kind: "build" })}
                   data-testid="hero-cta-build"
                 >
-                  Build your own answer set
+                  Build an answer set
                 </a>
                 <span aria-hidden="true"> · </span>
                 <a
@@ -116,7 +116,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                   href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
                   data-testid="hero-cta-walk"
                 >
-                  Play all twelve
+                  Walk all twelve puzzles
                 </a>
               </p>
             </>
@@ -127,7 +127,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                 href="#featured-example"
                 data-testid="hero-cta-featured"
               >
-                <span>Try the first example</span>
+                <span>Try the first puzzle</span>
                 <span aria-hidden="true" className="cta-button-arrow">
                   ↓
                 </span>
@@ -146,13 +146,13 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                 className="hero-cta-quiet"
                 data-testid="hero-cta-quiet-links"
               >
-                Or jump to the puzzle walk:{" "}
+                Or jump to the full path:{" "}
                 <a
                   className="hero-cta-text-link"
                   href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
                   data-testid="hero-cta-walk"
                 >
-                  Play all twelve
+                  Walk all twelve puzzles
                 </a>
                 <span aria-hidden="true"> · </span>
                 <a
@@ -160,7 +160,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                   href={routeToHash({ kind: "build" })}
                   data-testid="hero-cta-build"
                 >
-                  Build your own answer set
+                  Build an answer set
                 </a>
               </p>
             </>

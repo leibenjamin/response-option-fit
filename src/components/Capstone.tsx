@@ -102,7 +102,7 @@ function CapstoneCard({ item }: { item: CapstoneResolved }) {
                 href={item.walkHref}
                 data-testid={`capstone-link-${item.id}`}
               >
-                See the full example →
+                See the full puzzle →
               </a>
               <span className="capstone-reveal-source">{item.sourceLabel}</span>
             </p>

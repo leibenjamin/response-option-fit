@@ -135,73 +135,73 @@ const methodNotesById: Partial<
 > = {
   "ride-hailing": {
     whyHere:
-      "This example shows label ambiguity because app-based ride, taxi, and passenger-sharing meanings can all come from the same answer-choice words.",
+      "This puzzle shows label ambiguity because app-based ride, taxi, and passenger-sharing meanings can all come from the same answer-choice words.",
     whatOmitted:
       "It leaves out the broader list of commute options and any claim about downstream travel estimates."
   },
   "business-industry": {
     whyHere:
-      "This example shows the broad bucket pattern because workplace type, industry, product line, and work activity can all look acceptable in one answer space.",
+      "This puzzle shows the broad bucket pattern because workplace type, industry, product line, and work activity can all look acceptable in one answer space.",
     whatOmitted:
       "It leaves out occupation coding questions and the rest of the Current Population Survey flow around the item."
   },
   "refrigerated-medicine": {
     whyHere:
-      "This example shows a false premise because \"No\" can hide both no spoilage and no refrigerated medicine.",
+      "This puzzle shows a false premise because \"No\" can hide both no spoilage and no refrigerated medicine.",
     whatOmitted:
       "It leaves out the rest of the outage section in the same survey and does not estimate how common either answer meaning is."
   },
   "electric-vehicle-type": {
     whyHere:
-      "This example shows category boundary blur because everyday electric-vehicle labels and technical classes do not line up cleanly.",
+      "This puzzle shows category boundary blur because everyday electric-vehicle labels and technical classes do not line up cleanly.",
     whatOmitted:
       "It leaves out a validated EV category rewrite and any claim about which vehicle categories should replace the tested wording."
   },
   "owner-advertising": {
     whyHere:
-      "This example shows sequence overlap because the earlier internet-listing question changes how later 'other advertising' is read.",
+      "This puzzle shows sequence overlap because the earlier internet-listing question changes how later 'other advertising' is read.",
     whatOmitted:
       "It leaves out the full housing-search section and does not model which advertising channel actually caused a sale."
   },
   "usual-hours": {
     whyHere:
-      "This example shows forced precision because changing weekly schedules are compressed into one usual-hours number.",
+      "This puzzle shows forced precision because changing weekly schedules are compressed into one usual-hours number.",
     whatOmitted:
       "It leaves out validation of alternate time windows and does not claim that any one window is the correct replacement."
   },
   "notebook-computer": {
     whyHere:
-      "This example shows label ambiguity because \"notebook\" sends some people toward non-laptop device meanings before they answer \"Yes\" or \"No\".",
+      "This puzzle shows label ambiguity because \"notebook\" sends some people toward non-laptop device meanings before they answer \"Yes\" or \"No\".",
     whatOmitted:
       "It leaves out the broader list of devices in the same Internet Use Survey and any claim about generation-level device adoption rates."
   },
   "move-reason-catchall": {
     whyHere:
-      "This example shows the broad bucket pattern because a generic other reason can hide a concrete moving reason unless the form collects and uses write-in detail.",
+      "This puzzle shows the broad bucket pattern because a generic other reason can hide a concrete moving reason unless the form collects and uses write-in detail.",
     whatOmitted:
       "It leaves out the full CPS ASEC edit and implementation history and does not claim the write-in expansion changed every reason-for-move estimate."
   },
   "sump-pump": {
     whyHere:
-      "This example shows a false premise because \"No\" can absorb no equipment, no pump failure, and no flooding inside one yes/no question.",
+      "This puzzle shows a false premise because \"No\" can absorb no equipment, no pump failure, and no flooding inside one yes/no question.",
     whatOmitted:
       "It leaves out the rest of the outage section in the same survey and does not estimate how common no-pump households are."
   },
   "tv-connected-devices": {
     whyHere:
-      "This example shows category boundary blur because smart TVs, streaming boxes, game consoles, and connected laptops can all play through a TV while belonging to different everyday device categories.",
+      "This puzzle shows category boundary blur because smart TVs, streaming boxes, game consoles, and connected laptops can all play through a TV while belonging to different everyday device categories.",
     whatOmitted:
       "It leaves out a validated replacement taxonomy and does not claim which connected-device list should ship in future Internet Use Survey rounds."
   },
   "avoid-natural-disasters": {
     whyHere:
-      "This example shows sequence overlap because a yes/no reasons series can make \"Yes\" feel like the main reason even when the survey wants any influence.",
+      "This puzzle shows sequence overlap because a yes/no reasons series can make \"Yes\" feel like the main reason even when the survey wants any influence.",
     whatOmitted:
       "It leaves out the rest of the AHS moving-reasons module and does not model how often secondary motives drive moves."
   },
   "acs-weeks-worked": {
     whyHere:
-      "This example shows forced precision because irregular work histories are compressed into one exact-looking week count.",
+      "This puzzle shows forced precision because irregular work histories are compressed into one exact-looking week count.",
     whatOmitted:
       "It leaves out validation of any specific replacement window and does not claim the ACS partial-week cue solved the problem."
   }
@@ -212,7 +212,7 @@ const methodNotesById: Partial<
    layer: a model can paraphrase a finding, but it can't hand you a real
    person's confused sentence. Surfaced as a quiet pulled quote in the reveal,
    with light attribution (survey + year) — realness as delight, not a citation
-   parade. Examples without a vivid, on-point respondent sentence get none. */
+   parade. Puzzles without a vivid, on-point respondent sentence get none. */
 const verbatimById: Partial<
   Record<string, NonNullable<WorkbenchSpecimen["verbatim"]>>
 > = {
@@ -288,7 +288,7 @@ const authoredWorkbenchSpecimens: Array<
       prompt: "Using this list, LAST WEEK, how did you USUALLY get to work?",
       context: [
         "The respondent chooses one main commute mode from a transportation list.",
-        "The worked example isolates the response option that was probed for ride-hailing comprehension."
+        "This puzzle isolates the response option that was probed for ride-hailing comprehension."
       ],
       targetKind: "response_option",
       targetLabel: "Highlighted answer choice",
@@ -308,7 +308,7 @@ const authoredWorkbenchSpecimens: Array<
         { id: "other", text: "Other Method" }
       ],
       methodNote:
-        "The source also discusses working-from-home placement. This example narrows the task to the ride-hailing label."
+        "The source also discusses working-from-home placement. This puzzle narrows the task to the ride-hailing label."
     },
     source: sourceReceipt(
       censusAgency,
@@ -348,7 +348,7 @@ const authoredWorkbenchSpecimens: Array<
         }
       ],
       methodNote:
-        "The source's Round 2 examples clarified answer level; this worked example focuses on the field's broad response task."
+        "The source's Round 2 examples clarified answer level; this puzzle focuses on the field's broad response task."
     },
     source: sourceReceipt(
       censusAgency,
@@ -413,7 +413,7 @@ const authoredWorkbenchSpecimens: Array<
       prompt: "Are any of the following types of electric vehicles kept at home for use by members of this household?",
       context: [
         "Version 1 asked first about a plug-in electric vehicle.",
-        "The worked example isolates the second response item, which was meant to capture other electric vehicles such as hybrids."
+        "This puzzle isolates the second response item, which was meant to capture other electric vehicles such as hybrids."
       ],
       targetKind: "response_option",
       targetLabel: "Highlighted answer choice",
@@ -423,7 +423,7 @@ const authoredWorkbenchSpecimens: Array<
         { id: "another-ev", text: "Another type of electric vehicle?", isTarget: true }
       ],
       methodNote:
-        "The later version named plug-in electric vehicle and hybrid electric vehicle directly. This example evaluates the earlier broader label."
+        "The later version named plug-in electric vehicle and hybrid electric vehicle directly. This puzzle evaluates the earlier broader label."
     },
     source: sourceReceipt(
       censusAgency,
@@ -568,7 +568,7 @@ const authoredWorkbenchSpecimens: Array<
       prompt: "What was the main reason this person moved?",
       context: [
         "The item asks movers to choose one main reason from family, job, housing, and other categories.",
-        "The worked example isolates generic other-reason categories that can hide concrete write-in reasons unless the edit path captures them."
+        "This puzzle isolates generic other-reason categories that can hide concrete write-in reasons unless the edit path captures them."
       ],
       targetKind: "response_option",
       targetLabel: "Highlighted catch-all choices",
@@ -649,7 +649,7 @@ const authoredWorkbenchSpecimens: Array<
         "Do you or does anyone in this household use a smart TV, game or video system, or another device that connects to the Internet and plays through a TV?",
       context: [
         "The item asks about Internet-capable television devices in a household.",
-        "The worked example isolates the boundary between a smart TV, an external streaming box, a game console, and other devices that play through a TV."
+        "This puzzle isolates the boundary between a smart TV, an external streaming box, a game console, and other devices that play through a TV."
       ],
       targetKind: "response_option",
       targetLabel: "Highlighted device category",
@@ -738,7 +738,7 @@ const authoredWorkbenchSpecimens: Array<
         { id: "weeks", text: "Weeks worked: [number]", isTarget: true }
       ],
       methodNote:
-        "This example is about the burden and counting method behind an exact-looking number, not about whether annual work-duration data are useful."
+        "This puzzle is about the burden and counting method behind an exact-looking number, not about whether annual work-duration data are useful."
     },
     source: sourceReceipt(
       censusAgency,
