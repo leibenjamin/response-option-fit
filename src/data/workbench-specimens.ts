@@ -95,19 +95,18 @@ const ahs2025Url =
 const ntia2021Title =
   "Cognitive Pretesting of the National Telecommunications and Information Administration's 2021 Internet Use Survey";
 const ntia2021Url = "https://www2.census.gov/adrm/CBSM/rsm2022-08.pdf";
-const onsKashmiriTitle = "Kashmiri Research Project Final Report";
-const onsKashmiriUrl =
-  "https://www.ons.gov.uk/file?uri=%2Fcensus%2F2011census%2Fhowourcensusworks%2Fhowweplannedthe2011census%2Fquestionnairedevelopment%2Ffinalisingthe2011questionnaire%2Fkashmiri-research-project-2011-final-report_tcm77-183996.pdf";
-const onsEthnicGroupTitle =
-  "Final Recommended Questions for the 2011 Census in England and Wales: Ethnic Group";
-const onsEthnicGroupUrl =
-  "https://www.ons.gov.uk/file?uri=%2Fcensus%2F2011census%2Fhowourcensusworks%2Fhowweplannedthe2011census%2Fquestionnairedevelopment%2Ffinalisingthe2011questionnaire%2Ffinal-recommended-questions-2011-ethnic-group_tcm77-183998.pdf";
+const cpsMoveReasonsTitle = "ASEC User Note: Revised: Reason for Move Write-In Expansion";
+const cpsMoveReasonsUrl =
+  "https://www.census.gov/programs-surveys/cps/technical-documentation/user-notes/geographic-mobility-user-notes/2019-03.html";
+const ntia2023Title =
+  "Cognitive Pretesting of the National Telecommunications and Information Administration 2023 Internet Use Survey";
+const ntia2023Url =
+  "https://www2.census.gov/library/working-papers/2024/adrm/cbsm/rsm2024-10.pdf";
 const acs2016Title =
   "Cognitive Testing of the 2016 American Community Survey Content Test Items: Briefing Report for Round 1 Interviews";
 const acs2016Url =
   "https://www.census.gov/content/dam/Census/library/working-papers/2016/acs/2016_Westat_02.pdf";
 const censusAgency = "U.S. Census Bureau";
-const onsAgency = "Office for National Statistics";
 const retrievalDate = "2026-05-01";
 
 function sourceReceipt(
@@ -176,11 +175,11 @@ const methodNotesById: Partial<
     whatOmitted:
       "It leaves out the broader list of devices in the same Internet Use Survey and any claim about generation-level device adoption rates."
   },
-  "ons-kashmiri": {
+  "move-reason-catchall": {
     whyHere:
-      "This example shows the broad bucket pattern because a specific subgroup identity can be routed through a broader Asian/Asian British category or a write-in option.",
+      "This example shows the broad bucket pattern because a generic other reason can hide a concrete moving reason unless the form collects and uses write-in detail.",
     whatOmitted:
-      "It leaves out the comparability and parallel-subgroup tradeoffs the ONS report weighed when recommending against the tick-box, which the colophon and Reveal cards summarize separately."
+      "It leaves out the full CPS ASEC edit and implementation history and does not claim the write-in expansion changed every reason-for-move estimate."
   },
   "sump-pump": {
     whyHere:
@@ -188,11 +187,11 @@ const methodNotesById: Partial<
     whatOmitted:
       "It leaves out the rest of the outage section in the same survey and does not estimate how common no-pump households are."
   },
-  "ons-ethnic-group-heading": {
+  "tv-connected-devices": {
     whyHere:
-      "This example shows category boundary blur because a section heading mixes colour and geographic cues, so several headings can look partly right.",
+      "This example shows category boundary blur because smart TVs, streaming boxes, game consoles, and connected laptops can all play through a TV while belonging to different everyday device categories.",
     whatOmitted:
-      "It leaves out the full 2011 ethnic-group recommendation set and any claim about which heading order should generalize beyond England and Wales."
+      "It leaves out a validated replacement taxonomy and does not claim which connected-device list should ship in future Internet Use Survey rounds."
   },
   "avoid-natural-disasters": {
     whyHere:
@@ -213,8 +212,7 @@ const methodNotesById: Partial<
    layer: a model can paraphrase a finding, but it can't hand you a real
    person's confused sentence. Surfaced as a quiet pulled quote in the reveal,
    with light attribution (survey + year) — realness as delight, not a citation
-   parade. Examples without a vivid, on-point respondent sentence get none, and
-   identity examples never do (sensitive-example rule). */
+   parade. Examples without a vivid, on-point respondent sentence get none. */
 const verbatimById: Partial<
   Record<string, NonNullable<WorkbenchSpecimen["verbatim"]>>
 > = {
@@ -246,6 +244,11 @@ const verbatimById: Partial<
     quote:
       "Like a Chromebook. Very small thin and light. Not a tablet, but not a laptop either.",
     attribution: "NTIA Internet Use Survey pretest, 2022"
+  },
+  // NTIA 2023 Internet Use Survey pretest, RSM2024-10, p.17
+  "tv-connected-devices": {
+    quote: "We do have an Apple TV box but not a smart TV. Does that answer your question?",
+    attribution: "NTIA Internet Use Survey pretest, 2024"
   },
   // ACS Content Test R1/2 (Wilson 01), p.114
   "electric-vehicle-type": {
@@ -551,42 +554,44 @@ const authoredWorkbenchSpecimens: Array<
     ),
   },
   {
-    id: "ons-kashmiri",
+    id: "move-reason-catchall",
     number: "08",
-    railLabel: "Kashmiri",
-    fieldGuideLinkLabel: "Kashmiri write-in vs tick-box",
+    railLabel: "Move reasons",
+    fieldGuideLinkLabel: "Reason-for-move catch-alls",
     pattern: "broad_bucket",
     patternLabel: "Broad bucket",
     canonicalSubtitle: canonicalSubtitleByPattern.broad_bucket,
     canonicalCitations: canonicalCitationByPattern.broad_bucket,
-    title: "When a write-in option doesn't replace a visible answer choice",
+    title: "When \"Other housing reason\" hides the actual reason",
     answerFrame: {
-      eyebrow: "ONS ethnic-group answer architecture",
-      prompt: "What is your ethnic group?",
+      eyebrow: "CPS ASEC reason-for-move item",
+      prompt: "What was the main reason this person moved?",
       context: [
-        "The comparison concerns whether Kashmiri identity is available as a visible tick-box or only through a broader category and write-in option.",
-        "The worked example evaluates the form architecture for reporting a specific subgroup, not the legitimacy of any identity."
+        "The item asks movers to choose one main reason from family, job, housing, and other categories.",
+        "The worked example isolates generic other-reason categories that can hide concrete write-in reasons unless the edit path captures them."
       ],
       targetKind: "response_option",
-      targetLabel: "Highlighted answer choice",
-      targetText: "Visible Kashmiri tick-box or explicit write-in option",
+      targetLabel: "Highlighted catch-all choices",
+      targetText: "Other family / other job-related / other housing reason",
       responseOptions: [
-        { id: "heading", text: "Asian / Asian British heading" },
-        { id: "broad", text: "Indian or Pakistani broad tick-boxes" },
-        { id: "kashmiri", text: "Kashmiri tick-box", isTarget: true },
-        { id: "write-in", text: "Any other Asian background, write in", isTarget: true }
+        { id: "family", text: "Change in marital status or family reason" },
+        { id: "job", text: "New job or job transfer" },
+        { id: "housing", text: "Wanted new or better housing" },
+        { id: "other-family", text: "Other family reason", isTarget: true },
+        { id: "other-job", text: "Other job-related reason", isTarget: true },
+        { id: "other-housing", text: "Other housing reason", isTarget: true }
       ],
       methodNote:
-        "The source found higher Kashmiri identification with a tick-box, while also weighing comparability and parallel-subgroup tradeoffs."
+        "Census expanded reason-for-move write-ins and recoding so generic other categories could recover more specific moving reasons."
     },
     source: sourceReceipt(
-      onsAgency,
-      "ONS Kashmiri",
-      onsKashmiriTitle,
-      "cognitive_testing",
-      "2009",
-      "sections 5.1, 6.1, and 6.2, pp. 13, 16-17, 33-34",
-      onsKashmiriUrl
+      censusAgency,
+      "CPS ASEC User Note",
+      cpsMoveReasonsTitle,
+      "recommendation_doc",
+      "2019",
+      "revised March 18, 2019 user note",
+      cpsMoveReasonsUrl
     ),
   },
   {
@@ -629,44 +634,46 @@ const authoredWorkbenchSpecimens: Array<
     ),
   },
   {
-    id: "ons-ethnic-group-heading",
+    id: "tv-connected-devices",
     number: "10",
-    railLabel: "Heading",
-    fieldGuideLinkLabel: "Ethnic-group section heading",
+    railLabel: "TV devices",
+    fieldGuideLinkLabel: "Smart-TV boundary rule",
     pattern: "category_boundary_blur",
     patternLabel: "Category boundary blur",
     canonicalSubtitle: canonicalSubtitleByPattern.category_boundary_blur,
     canonicalCitations: canonicalCitationByPattern.category_boundary_blur,
-    title: "When a heading scrambles the category boundary",
+    title: "When Apple TV may or may not be a TV",
     answerFrame: {
-      eyebrow: "ONS ethnic-group heading test",
-      prompt: "Choose the section and tick-box that best describes your ethnic group.",
+      eyebrow: "NTIA Internet Use Survey TV-connected device item",
+      prompt:
+        "Do you or does anyone in this household use a smart TV, game or video system, or another device that connects to the Internet and plays through a TV?",
       context: [
-        "The issue is the section heading that respondents scan before choosing a more specific box.",
-        "The tested heading placed African and Caribbean before Black.",
-        "This is a navigation boundary: respondents scan headings before they reach the box."
+        "The item asks about Internet-capable television devices in a household.",
+        "The worked example isolates the boundary between a smart TV, an external streaming box, a game console, and other devices that play through a TV."
       ],
-      targetKind: "heading",
-      targetLabel: "Highlighted section heading",
-      targetText: "African/Caribbean/Black/Black British",
+      targetKind: "response_option",
+      targetLabel: "Highlighted device category",
+      targetText: "Smart TV / TV-connected device",
       responseOptions: [
-        { id: "white", text: "White" },
-        { id: "mixed", text: "Mixed / multiple ethnic groups" },
-        { id: "asian", text: "Asian / Asian British" },
-        { id: "black-heading", text: "African/Caribbean/Black/Black British", isTarget: true },
-        { id: "other", text: "Other ethnic group" }
+        { id: "smart-tv", text: "Smart TV", isTarget: true },
+        { id: "game-system", text: "Game or video system", isTarget: true },
+        {
+          id: "another-device",
+          text: "Another device that connects to the Internet and plays through a TV",
+          isTarget: true
+        }
       ],
       methodNote:
-        "The ONS recommendation reordered the heading to put Black first; this example focuses on navigation through section cues."
+        "The source documents confusion around whether devices such as Apple TV boxes and touch-screen interpretations belonged in the TV-connected-device item."
     },
     source: sourceReceipt(
-      onsAgency,
-      "ONS Ethnic Group",
-      onsEthnicGroupTitle,
-      "recommendation_doc",
-      "2009",
-      "section 6.4.3, pp. 36-37",
-      onsEthnicGroupUrl
+      censusAgency,
+      "RSM2024-10",
+      ntia2023Title,
+      "cognitive_testing",
+      "2024",
+      "section 3.2, pp. 16-18",
+      ntia2023Url
     ),
   },
   {
@@ -752,4 +759,3 @@ export const workbenchSpecimens: WorkbenchSpecimen[] = authoredWorkbenchSpecimen
     verbatim: verbatimById[specimen.id]
   })
 );
-

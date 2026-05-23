@@ -27,11 +27,16 @@ export function ZoomToAltitude({
   const [active, setActive] = useState<string | null>(null);
   const [committed, setCommitted] = useState<string | null>(null);
   const source = specimen.source;
-  const shown: Altitude | undefined =
+const shown: Altitude | undefined =
     zoomAltitudes.find((a) => a.id === (active ?? committed)) ?? undefined;
+  const committedAltitude = zoomAltitudes.find((a) => a.id === committed);
 
   return (
-    <section className="puzzle puzzle--zoom" data-testid={`puzzle-zoom-${specimen.id}`}>
+    <section
+      className="puzzle puzzle--zoom"
+      data-testid={`puzzle-zoom-${specimen.id}`}
+      data-interactive="true"
+    >
       <header className="puzzle-hero">
         <p className="puzzle-eyebrow">
           <span>Example {specimen.number}</span>
@@ -106,6 +111,37 @@ export function ZoomToAltitude({
         </div>
       </div>
 
+      {committedAltitude && (
+        <section className="zoom-ledger" aria-label="Mixed-level coding ledger">
+          <div className="zoom-ledger-head">
+            <p>Mixed-level ledger</p>
+            <span>Your row is now a column value, not a rule.</span>
+          </div>
+          <ol>
+            <li className="is-yours">
+              <span>&ldquo;I work at a hospital.&rdquo;</span>
+              <strong>{committedAltitude.code}</strong>
+              <em>{committedAltitude.label}</em>
+            </li>
+            <li>
+              <span>&ldquo;I file insurance claims at a clinic.&rdquo;</span>
+              <strong>Clinic</strong>
+              <em>Workplace</em>
+            </li>
+            <li>
+              <span>&ldquo;I make surgical supplies.&rdquo;</span>
+              <strong>Medical equipment manufacturing</strong>
+              <em>Industry</em>
+            </li>
+            <li>
+              <span>&ldquo;I do payroll for a county health office.&rdquo;</span>
+              <strong>Government services</strong>
+              <em>Sector</em>
+            </li>
+          </ol>
+        </section>
+      )}
+
       {committed && (
         <section
           className="puzzle-reveal"
@@ -116,7 +152,7 @@ export function ZoomToAltitude({
           <h3 id={`puzzle-reveal-${specimen.id}`}>
             You filed it as{" "}
             <span className="zoom-your-code">
-              {zoomAltitudes.find((a) => a.id === committed)?.code}
+              {committedAltitude?.code}
             </span>
             . The next coder won&rsquo;t.
           </h3>
@@ -142,21 +178,20 @@ export function ZoomToAltitude({
         </section>
       )}
 
-      <footer className="puzzle-source" data-testid={`puzzle-source-${specimen.id}`}>
-        <p className="src-chip">
-          <span>{source.agency}</span>
-          <span>{source.documentCode}</span>
-          <span>{source.year}</span>
-        </p>
+      <details
+        className="puzzle-source puzzle-source--optional"
+        data-testid={`puzzle-source-${specimen.id}`}
+      >
+        <summary>Optional real-world anchor</summary>
         <p className="puzzle-source-claim">
-          The worker&rsquo;s answer and the altitude codes are authored teaching
-          content. The field and its broad-bucket problem are real, from{" "}
+          This puzzle is authored for the interaction. It borrows the broad
+          business/industry answer-space problem from{" "}
           <a href={source.directUrl} target="_blank" rel="noreferrer">
             {source.documentCode}, {source.sectionOrPage}
           </a>
           .
         </p>
-      </footer>
+      </details>
     </section>
   );
 }

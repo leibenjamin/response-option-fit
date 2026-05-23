@@ -1,10 +1,8 @@
-/* Type shapes for the worked-example walk. The 2026-05-21 engine-retirement
-   wave removed the twelve "experience engine" types (one interaction primitive
-   reskinned twelve times); walk examples now render either a bespoke puzzle
-   (see src/components/puzzles/) or the lightweight ExampleExposition from this
-   same specimen data. What remains here is the minimum the current code path
-   needs: the failure pattern, the source receipt, the survey instrument
-   (answerFrame), and the specimen itself.
+/* Type shapes for the worked-example walk. The 2026-05-23 delight-first wave
+   made every specimen render through an interactive puzzle. What remains here
+   is the shared specimen data those puzzles and reference surfaces still need:
+   the failure pattern, optional source receipt, survey instrument frame, and
+   specimen identity.
 
    The shape stays here, rather than next to each consumer, so the data
    author can lock the contract in one place. */

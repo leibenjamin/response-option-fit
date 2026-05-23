@@ -35,7 +35,11 @@ export function PlayTheForm({
     setRecorded((prev) => ({ ...prev, [vignetteId]: choice }));
 
   return (
-    <section className="puzzle puzzle--play-form" data-testid={`puzzle-play-form-${specimen.id}`}>
+    <section
+      className="puzzle puzzle--play-form"
+      data-testid={`puzzle-play-form-${specimen.id}`}
+      data-interactive="true"
+    >
       <header className="puzzle-hero">
         <p className="puzzle-eyebrow">
           <span>Example {specimen.number}</span>
@@ -154,6 +158,8 @@ export function PlayTheForm({
           Now, after any &ldquo;No,&rdquo; the form asks whether the household
           keeps refrigerated medicine at all. Re-record Sam with &ldquo;No&rdquo;
           and watch the follow-up catch what the single question couldn&rsquo;t.
+          Keep that gate in mind: the sump-pump puzzle later uses the same move
+          on equipment instead of medicine.
         </p>
       )}
 
@@ -170,26 +176,26 @@ export function PlayTheForm({
           <p>{specimen.answerFrame.methodNote}</p>
           <p className="puzzle-reveal-takeaway">
             A clean yes/no column can hide the people the question never applied
-            to. Before you trust a &ldquo;No,&rdquo; ask what else it could mean.
+            to. Before you trust a &ldquo;No,&rdquo; ask what else it could mean:
+            no event, no exposed item, or no eligibility for the question.
           </p>
         </section>
       )}
 
-      <footer className="puzzle-source" data-testid={`puzzle-source-${specimen.id}`}>
-        <p className="src-chip">
-          <span>{source.agency}</span>
-          <span>{source.documentCode}</span>
-          <span>{source.year}</span>
-        </p>
+      <details
+        className="puzzle-source puzzle-source--optional"
+        data-testid={`puzzle-source-${specimen.id}`}
+      >
+        <summary>Optional real-world anchor</summary>
         <p className="puzzle-source-claim">
-          The three people are authored teaching cases. The question, the answer
-          choices, and the finding are real, from{" "}
+          The three people are authored teaching cases. The yes/no denominator
+          problem is adapted from{" "}
           <a href={source.directUrl} target="_blank" rel="noreferrer">
             {source.documentCode}, {source.sectionOrPage}
           </a>
           .
         </p>
-      </footer>
+      </details>
     </section>
   );
 }

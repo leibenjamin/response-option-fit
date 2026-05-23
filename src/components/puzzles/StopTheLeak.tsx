@@ -29,7 +29,11 @@ export function StopTheLeak({
   const fix = leakFixes.find((f) => f.id === fixId) ?? null;
 
   return (
-    <section className="puzzle puzzle--leak" data-testid={`puzzle-leak-${specimen.id}`}>
+    <section
+      className="puzzle puzzle--leak"
+      data-testid={`puzzle-leak-${specimen.id}`}
+      data-interactive="true"
+    >
       <header className="puzzle-hero">
         <p className="puzzle-eyebrow">
           <span>Example {specimen.number}</span>
@@ -84,13 +88,39 @@ export function StopTheLeak({
           ))}
         </div>
         {answer && (
-          <div
-            className="puzzle-outcome is-gap"
-            aria-live="polite"
-            data-testid={`leak-outcome-${specimen.id}`}
-          >
-            <p className="puzzle-outcome-verdict">{leakOutcomes[answer]}</p>
-          </div>
+          <>
+            <div
+              className="puzzle-outcome is-gap"
+              aria-live="polite"
+              data-testid={`leak-outcome-${specimen.id}`}
+            >
+              <p className="puzzle-outcome-verdict">{leakOutcomes[answer]}</p>
+            </div>
+            <div className="leak-trace" data-testid={`leak-trace-${specimen.id}`}>
+              <div className="leak-trace-column is-source">
+                <span>Q1 internet site</span>
+                <strong>Zillow listing</strong>
+                <em>recorded here</em>
+              </div>
+              <div
+                className={`leak-trace-bridge ${
+                  answer === "yes" ? "is-duplicate" : "is-dropped"
+                }`}
+                aria-hidden="true"
+              />
+              <div className="leak-trace-column is-target">
+                <span>Q2 other owner advertising</span>
+                <strong>Same listing</strong>
+                <em>
+                  {fix?.closes
+                    ? "scoped out by the fix"
+                    : answer === "yes"
+                      ? "double-counted"
+                      : "dropped"}
+                </em>
+              </div>
+            </div>
+          </>
         )}
       </div>
 
@@ -151,22 +181,20 @@ export function StopTheLeak({
         </section>
       )}
 
-      <footer className="puzzle-source" data-testid={`puzzle-source-${specimen.id}`}>
-        <p className="src-chip">
-          <span>{source.agency}</span>
-          <span>{source.documentCode}</span>
-          <span>{source.year}</span>
-        </p>
+      <details
+        className="puzzle-source puzzle-source--optional"
+        data-testid={`puzzle-source-${specimen.id}`}
+      >
+        <summary>Optional real-world anchor</summary>
         <p className="puzzle-source-claim">
-          Dani and the candidate fixes are authored teaching content (the fixes
-          are design options, not validated wording). The two questions and the
-          sequence-overlap finding are real, from{" "}
+          Dani and the candidate fixes are authored teaching content. The
+          adjacent-question overlap is adapted from{" "}
           <a href={source.directUrl} target="_blank" rel="noreferrer">
             {source.documentCode}, {source.sectionOrPage}
           </a>
           .
         </p>
-      </footer>
+      </details>
     </section>
   );
 }

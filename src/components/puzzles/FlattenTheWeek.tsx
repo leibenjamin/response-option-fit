@@ -27,7 +27,11 @@ export function FlattenTheWeek({
   const max = Math.max(...flattenWeeks);
 
   return (
-    <section className="puzzle puzzle--flatten" data-testid={`puzzle-flatten-${specimen.id}`}>
+    <section
+      className="puzzle puzzle--flatten"
+      data-testid={`puzzle-flatten-${specimen.id}`}
+      data-interactive="true"
+    >
       <header className="puzzle-hero">
         <p className="puzzle-eyebrow">
           <span>Example {specimen.number}</span>
@@ -60,6 +64,19 @@ export function FlattenTheWeek({
           </div>
         ))}
       </div>
+
+      <aside className="flatten-ghost" aria-label="Steady-worker comparison">
+        <div>
+          <p className="flatten-ghost-label">Steady coworker ghost</p>
+          <p className="flatten-ghost-bars" aria-hidden="true">
+            <span /> <span /> <span /> <span />
+          </p>
+        </div>
+        <p>
+          This coworker works the same number every week. Once you choose one
+          number, the form can make your volatile month look just as steady.
+        </p>
+      </aside>
 
       <div className="puzzle-instrument">
         <p className="puzzle-instrument-label">The field asks:</p>
@@ -107,21 +124,20 @@ export function FlattenTheWeek({
         </section>
       )}
 
-      <footer className="puzzle-source" data-testid={`puzzle-source-${specimen.id}`}>
-        <p className="src-chip">
-          <span>{source.agency}</span>
-          <span>{source.documentCode}</span>
-          <span>{source.year}</span>
-        </p>
+      <details
+        className="puzzle-source puzzle-source--optional"
+        data-testid={`puzzle-source-${specimen.id}`}
+      >
+        <summary>Optional real-world anchor</summary>
         <p className="puzzle-source-claim">
-          Your four weeks and the answer options are authored teaching content.
-          The field and its forced-precision problem are real, from{" "}
+          The weeks and answer options are authored teaching content. The
+          one-number usual-hours problem is adapted from{" "}
           <a href={source.directUrl} target="_blank" rel="noreferrer">
             {source.documentCode}, {source.sectionOrPage}
           </a>
           .
         </p>
-      </footer>
+      </details>
     </section>
   );
 }
