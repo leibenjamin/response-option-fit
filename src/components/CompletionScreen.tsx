@@ -41,7 +41,7 @@ export function CompletionScreen({ visited }: Props) {
           tabIndex={-1}
         >
           {allVisited
-            ? "You've finished all twelve."
+            ? "You've solved all twelve."
             : isEmpty
             ? "Twelve examples are waiting."
             : "End of the walk."}
@@ -49,17 +49,17 @@ export function CompletionScreen({ visited }: Props) {
         <p className="completion-lede">
           {allVisited ? (
             <>
-              You've worked through every example — twelve real survey items,
-              each one breaking in its own quiet way. The next read is the
-              field guide, where the patterns turn into reusable checks and
+              You've worked through every example — twelve answer-choice traps,
+              now rebuilt as twelve interactive puzzles. The next read is the
+              field guide, where the moves turn into reusable checks and
               prompts for your own survey drafts.
             </>
           ) : isEmpty ? (
             <>
               You haven't started the walk yet. The exhibit threads twelve
-              worked examples through six recurring answer-choice problems,
-              one example at a time, with a compact map drawer that fills in as
-              you go. The first example is one click away.
+              interactive puzzles through six recurring answer-choice
+              problems, one puzzle at a time, with a compact map drawer that
+              fills in as you go. The first puzzle is one click away.
             </>
           ) : (
             <>

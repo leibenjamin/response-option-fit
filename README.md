@@ -1,46 +1,32 @@
 # Response Option Fit Lab
 
-Response Option Fit Lab is the project name for a static editorial exhibit about
-survey answer choices that do not match what people know. The public page now
-leads with the literal title "When answer choices don't give the respondent's
-answer a clear place to go" and uses twelve worked examples from public
-questionnaire-testing materials and synthetic teaching cases to show six
-recurring answer-choice problems.
+Response Option Fit Lab is a static interactive problem-solving lab about survey
+answer choices that do not give a respondent's answer a clear route. The public
+page leads with the title "When answer choices don't give the respondent's
+answer a clear place to go" and now treats the twelve examples as authored
+interactive puzzles, not as a source-first article or citation exhibit.
 
-The project demonstrates a React and TypeScript interface with twelve worked
-examples (each shown as the real survey instrument with a one-line finding, a
-few promoted to bespoke interactive puzzles), an interactive hook, a
-build-and-break route, a cold-read capstone, source anchors, surrounding
-question context, source appendix, claim boundary, static security headers,
-and local-only settings controls. The page
-is organized as five primary hash-routed views — an overview that opens with a live
-field-value routing specimen in the hero (a "one word only" intake rule
-against four real-shaped values), names the failure taxonomy in a sticky
-knowledge-map rail along the right side, and carries one fully-working
-embedded example on a U.S. Census commute item, with the full six-pattern
-map one click away as an overlay; a walk-through that
-paginates the remaining examples with a compact map drawer and recap
-interstitials, then a cold-read capstone where four real instruments are
-shown with no pattern label and the visitor taps where they think the answer
-choices break before seeing what cognitive testing actually caught, and a
-closing exit artifact that names the four-role arc and the one habit to keep;
-a build-and-break route where visitors assemble answer choices, see the tidy
-frequency table that selection would export, then open the cells to find clean
-and forced records sharing one count and people the column never placed at all —
-before adding a classification rule to test whether an instruction repairs it;
-a field guide with a
-reviewer console, reusable tests, and static prompts for visitors reviewing
-their own surveys; and a reference shelf for the glossary, method note, claim
-boundary, and source appendix. A colophon route carries production notes.
+The project demonstrates a React and TypeScript interface with twelve
+interaction modules, an opening hook, a build-and-break export trap, a cold-read
+capstone, a field guide, optional source backmatter, static security headers,
+and local-only settings controls. The overview opens with a live "one word
+only" routing puzzle and one full embedded commute puzzle. The walk paginates
+twelve answer-choice traps, each with a role, a task, immediate feedback, a
+visible consequence ledger or trace, and a small reveal. The build route lets
+visitors assemble choices and then inspect the tidy export those choices would
+leave behind. The field guide turns the interaction moves into reusable checks
+and prompts. The reference shelf keeps glossary, method, claim-boundary, and
+source material out of the primary play path.
 
 ## Sources And Attribution
 
-Examples use a hybrid posture. Synthetic teaching cases may open an example when
-that improves clarity, and public U.S. Census Bureau or Office for National
-Statistics materials provide the evidence anchors. The app uses short wording
-excerpts and public report references for editorial study. It does not
-reproduce agency logos, screenshots, or PDF imagery, and it does not validate
-alternate wording.
+Examples use a delight-first teaching posture. Most on-screen cases, people,
+routes, feedback lines, and consequences are authored teaching material built
+to make the interaction satisfying and inspectable. Public U.S. Census Bureau
+materials remain as optional anchors and backmatter, not as the main reason to
+use the app. The active slate no longer includes the retired identity examples
+from the earlier ONS-backed draft. The app does not reproduce agency logos,
+screenshots, or PDF imagery, and it does not validate alternate wording.
 
 The app code is MIT licensed. Short source wording excerpts and report
 references remain attributable to their respective public sources; no
@@ -84,16 +70,25 @@ for serving the app under `/response-option-fit/`.
 See [docs/deployment.md](docs/deployment.md) and
 [docs/security.md](docs/security.md) for deployment and hardening details.
 
+## Test
+
+```bash
+npm test
+```
+
+The Playwright suite verifies that every walk example renders an interactive
+surface, no route falls back to exposition, no freeform survey input or runtime
+automation exists, reduced-motion and forced-colors modes remain readable, and desktop /
+mobile routes avoid horizontal overflow.
+
 ## Limitations
 
-- This is an editorial exhibit, not a survey analyzer or measurement tool.
-- It includes twelve worked examples and does not claim to generalize across all
+- This is an interactive teaching lab, not a survey analyzer or measurement tool.
+- It includes twelve authored puzzles and does not claim to generalize across all
   survey instruments, modes, or populations.
-- Summaries are neutral paraphrases; the cited reports remain authoritative.
-- Each worked example renders either a lightweight exposition (the real
-  instrument + a one-line finding + an opt-in reveal) or, for a few, a bespoke
-  interactive puzzle. Build-and-break and the capstone are separate teaching
-  mechanics, not additional worked examples.
+- Puzzle cases are authored teaching situations unless explicitly marked as
+  source material. Public reports remain optional context for the original
+  answer-choice problem.
 - The commute build-and-break topic is anchored to ACS commute materials, but
   its named situations are authored teaching situations. Its official
   longest-distance rule is the only source-supported build rule; the other
@@ -103,23 +98,17 @@ See [docs/deployment.md](docs/deployment.md) and
   authority for reported quotes, findings, and recommendations.
 - Repair directions are conceptual and are not validated replacement wording.
 
-## Performance Budget
+## Performance Posture
 
-Release budget for the public exhibit. These targets are spacious guardrails
-against accidental bloat, not editorial compression rules: a useful release can
-exceed them when the added weight is explicit, measured, and worth the tradeoff.
+Performance is measured so accidental bloat is visible, but old byte ceilings
+are not product constraints. The app should spend bytes on distinctive
+interaction, motion, and visual feedback when those make the lab meaningfully
+better. Route-splitting and pruning are tools, not reasons to flatten the
+experience back into dry text.
 
-- LCP under 1.8 s on a Slow-4G profile.
-- Initial JavaScript under 200 KB gzipped.
-- Lazy route chunks under 75 KB gzipped each.
-- Total CSS under 90 KB gzipped.
-- All interaction is client-side; no third-party runtime requests. Lazy route
-  chunks may load from the same origin when the visitor opens a route such as
-  the build-and-break route or field guide.
-- Any budget overage should be called out in release notes with current build
-  numbers and the reason the added weight is justified. Useful teaching content
-  should be measured and route-split where appropriate, not trimmed merely to
-  satisfy an arbitrary old byte ceiling.
+Current measured build after the second-wave puzzle split: initial JavaScript
+`86.80 KB gzip`, CSS `16.38 KB gzip`. All interaction is client-side; no
+third-party runtime requests are expected.
 
 ## Privacy Budget
 
@@ -154,7 +143,7 @@ glossary entries, claim-boundary language, and colophon prose) is licensed under
 
 Quoted source material (short tested-wording excerpts, respondent and
 interviewer quotations, section and page references, and report titles
-cited from U.S. Census Bureau and UK Office for National Statistics
-publications) remains under its original terms — public-domain U.S.
-Government works for Census materials, and the Open Government Licence
-v3.0 for ONS materials.
+cited from U.S. Census Bureau publications) remains under its original terms:
+public-domain U.S. Government works for Census materials. Older local research
+notes may still mention retired ONS examples; those are not part of the active
+app slate.

@@ -220,9 +220,13 @@ export function BuildAndBreakRoute() {
             <p>{topic.framing}</p>
           </div>
           {topic.sourceNote && (
-            <p className="build-source-note" data-testid={`build-source-${topic.id}`}>
-              {topic.sourceNote}
-            </p>
+            <details
+              className="build-source-note"
+              data-testid={`build-source-${topic.id}`}
+            >
+              <summary>Optional source note</summary>
+              <p>{topic.sourceNote}</p>
+            </details>
           )}
         </section>
 

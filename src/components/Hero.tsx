@@ -31,10 +31,10 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
       <div className="hero-main">
         <p className="hero-eyebrow eyebrow">
           <span className="hero-eyebrow-mark" aria-hidden="true" />
-          Editorial exhibit
+          Interactive problem lab
           <span className="hero-eyebrow-sep" aria-hidden="true">/</span>
           <span className="hero-eyebrow-kind">
-            U.S. Census + UK ONS questionnaire-testing review
+            authored response-option puzzles
           </span>
         </p>
         <p className="hero-kicker">Response Option Fit Lab</p>
@@ -43,12 +43,12 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
         </h1>
         <p className="hero-subtitle">
           A form's rule can look obvious until a real value tries to land
-          in it. Place the four values and watch the recorded data lose
-          the route.
+          in it. Make a few choices, watch the data bend, and find the
+          missing rule.
         </p>
         <p className="hero-audience" data-testid="hero-audience">
-          For survey writers, reviewers, analysts, and anyone who has
-          watched a clean form turn into messy data.
+          For survey writers, reviewers, analysts, and anyone who would
+          rather solve the failure than read another article about it.
         </p>
 
         {/* CTA hierarchy depends on whether the visitor has walked before.
@@ -94,7 +94,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                 className="hero-cta-quiet"
                 data-testid="hero-cta-quiet-links"
               >
-                Or restart from the top:{" "}
+                Or restart the puzzle path:{" "}
                 <a
                   className="hero-cta-text-link"
                   href="#featured-example"
@@ -116,7 +116,7 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                   href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
                   data-testid="hero-cta-walk"
                 >
-                  Walk through all twelve
+                  Play all twelve
                 </a>
               </p>
             </>
@@ -146,13 +146,13 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
                 className="hero-cta-quiet"
                 data-testid="hero-cta-quiet-links"
               >
-                Or jump to the paginated walk:{" "}
+                Or jump to the puzzle walk:{" "}
                 <a
                   className="hero-cta-text-link"
                   href={routeToHash({ kind: "walk", slot: firstSpecimenId })}
                   data-testid="hero-cta-walk"
                 >
-                  Walk through all twelve
+                  Play all twelve
                 </a>
                 <span aria-hidden="true"> · </span>
                 <a
@@ -177,28 +177,28 @@ export function Hero({ resumeSpecimenId = null }: Props = {}) {
             <li className="hero-scope-item">
               <p className="hero-scope-stat">
                 <span className="hero-scope-val">12</span>
-                <span className="hero-scope-unit"> worked examples</span>
+                <span className="hero-scope-unit"> interactive puzzles</span>
               </p>
-              <p className="hero-scope-note">each tied to a public report</p>
+              <p className="hero-scope-note">small decisions with visible consequences</p>
             </li>
             <li className="hero-scope-item">
               <p className="hero-scope-stat">
                 <span className="hero-scope-val">6</span>
-                <span className="hero-scope-unit"> response-option failure patterns</span>
+                <span className="hero-scope-unit"> answer-choice traps</span>
               </p>
-              <p className="hero-scope-note">named, defined, and contrasted</p>
+              <p className="hero-scope-note">learned by solving, not reading</p>
             </li>
             <li className="hero-scope-item">
               <p className="hero-scope-stat">
                 <span className="hero-scope-val">12</span>
-                <span className="hero-scope-unit"> public source receipts</span>
+                <span className="hero-scope-unit"> optional anchors</span>
               </p>
-              <p className="hero-scope-note">Census Bureau and ONS, with PDF links</p>
+              <p className="hero-scope-note">kept out of the way until wanted</p>
             </li>
           </ul>
           <p className="hero-scope-trust" data-testid="scope-trust">
-            No surveys graded. No in-page automation. No analytics, no third-party
-            requests. Editorial study only.
+            No scores, no in-page automation, no analytics, no third-party requests.
+            Authored teaching interactions.
           </p>
       </div>
 

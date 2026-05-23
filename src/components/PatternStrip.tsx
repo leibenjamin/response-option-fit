@@ -20,7 +20,7 @@ export function PatternStrip({ onOpenMap }: Props) {
       <header className="pattern-strip-head">
         <p className="pattern-strip-eyebrow">The six recurring problems</p>
         <h2 className="pattern-strip-title" id="pattern-strip-title">
-          Every worked example is one of these six.
+          Every puzzle bends the data in one of these six ways.
         </h2>
       </header>
       <ol className="pattern-strip-grid">
@@ -58,7 +58,7 @@ export function PatternStrip({ onOpenMap }: Props) {
       </ol>
       <p className="pattern-strip-foot">
         Tap any pattern to open the full six-pattern map. Each shows up in
-        two of the twelve worked examples.
+        two of the twelve puzzles.
       </p>
     </section>
   );
