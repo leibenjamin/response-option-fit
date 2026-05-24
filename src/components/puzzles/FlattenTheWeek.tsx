@@ -9,7 +9,7 @@ import {
 import type { WorkbenchSpecimen } from "../../types/workbench";
 import { VerbatimQuote } from "../workbench/VerbatimQuote";
 
-/* "Flatten the week" — bespoke puzzle for Example 06 (usual-hours, forced
+/* "Flatten the week" puzzle for Example 06 (usual-hours, forced
    precision). The visitor is the respondent: their weeks vary 31–52, the field
    wants one number, and every defensible choice erases the variation and makes
    them indistinguishable from a steady worker. Shares the puzzle frame; the

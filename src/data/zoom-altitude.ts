@@ -1,4 +1,4 @@
-/* Data for the "Zoom to the right altitude" bespoke puzzle (Example 02,
+/* Data for the "Zoom to the right altitude" puzzle (Example 02,
    business/industry, broad bucket). The CPS field asks "What kind of business
    or industry is this?" as one open text box. The visitor plays the industry
    coder: one worker's answer can be coded at several "altitudes" — the specific

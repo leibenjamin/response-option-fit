@@ -5,11 +5,9 @@ type Props = {
   onOpenMap?: () => void;
 };
 
-/* The six-pattern taxonomy preview. Lives in the hub's sticky right rail
-   (the "knowledge map") so it runs alongside the hero and the featured
-   example without pushing either down the page. Each tile shows the
-   pattern number, label, and canonical subtitle, and opens the full
-   six-pattern modal. See docs/design-passes/2026-05-20-knowledge-rail.md. */
+/* The six-pattern taxonomy preview. Lives in the hub's sticky right rail so it
+   runs alongside the hero and the featured example without pushing either down
+   the page. Each tile opens the full six-pattern modal. */
 export function PatternStrip({ onOpenMap }: Props) {
   return (
     <section

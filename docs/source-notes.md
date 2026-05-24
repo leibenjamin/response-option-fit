@@ -2,10 +2,10 @@
 
 ## Source Posture
 
-Response Option Fit Lab is not a source-first exhibit. The primary experience
-is authored interaction: small puzzles, visible traces, feedback, and transfer
-practice. Public sources are retained as optional anchors for the underlying
-answer-choice problems and for any short quoted material.
+Response Option Fit Lab is an authored interaction: small puzzles, visible
+traces, feedback, and transfer practice. Public sources are retained as
+optional anchors for the underlying answer-choice problems and for any short
+quoted material.
 
 Unless a line is explicitly presented as a quote or source finding, treat it as
 authored teaching content.
@@ -20,8 +20,8 @@ authored teaching content.
   explicitly labeled source-supported.
 - Capstone scene framing and most plain-language reveal copy.
 
-Authored material is allowed to be vivid, playful, and interaction-optimized.
-It should not be described as observed respondent behavior or validated wording.
+Authored material should be interaction-optimized. It should not be described as
+observed respondent behavior or validated wording.
 
 ## What Comes From Public Sources
 
@@ -79,9 +79,8 @@ PDF URLs, and short quoted respondent material where used. The source list is:
 - Repair directions are design ideas, not validated replacement wording.
 - Export-autopsy counts are counts of authored situations on the page, not
   frequencies or estimates.
-- Source rigor should not crowd out the interaction. If a future change has to
-  choose between a better puzzle and more citation ceremony, prefer the better
-  puzzle while keeping the claim boundary honest.
+- Source context should not crowd out the interaction. Keep the claim boundary
+  honest while preserving the puzzle's usability.
 - Do not present `storage rule` as survey-methods vocabulary. Public methods
   language more commonly talks about response options, response categories,
   write-in responses, coding, processing rules, and categories. The app can use
@@ -90,9 +89,5 @@ PDF URLs, and short quoted respondent material where used. The source list is:
   where the visitor is explicitly acting as a form operator, or where the copy
   describes a downstream record, but it still conflates voices if used as a
   generic app-user action.
-- Old effort, size, or quota assumptions should not be used to reject a more
-  satisfying mechanic. Measure the cost, then decide whether the interaction is
-  worth it.
-- The retired Kashmiri and ethnic-heading ONS examples are no longer part of
-  the active app. Historical local notes may still mention them, but the
-  reference shelf should track the active twelve above.
+- Old effort, size, or quota assumptions should not be used to reject a useful
+  mechanic. Measure the cost, then decide whether the interaction is worth it.

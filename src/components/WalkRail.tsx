@@ -10,13 +10,9 @@ type Props = {
   next: WorkbenchSpecimen | null;
 };
 
-/* Compact walk-mode aside. The knowledge map is now open by default so a
-   walk visitor can always see where they are in the six-pattern x twelve-
-   example space without having to click an extra disclosure. The second
-   engine wave collapsed this behind <details> for attention-cost reasons;
-   the 2026-05-20 audit found the cost was too high — visitors lost their
-   walk position. The disclosure stays so visitors can collapse on a small
-   screen if they prefer. */
+/* Compact walk-mode aside. The knowledge map is open by default so a visitor
+   can always see where they are in the six-pattern x twelve-puzzle sequence.
+   The disclosure stays so visitors can collapse it on a small screen. */
 export function WalkRail({ specimen, visited, prev, next }: Props) {
   return (
     <aside

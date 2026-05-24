@@ -3,31 +3,29 @@
 Response Option Fit Lab is a static interactive problem-solving lab about survey
 answer choices that do not give a respondent's answer a clear route. The public
 page leads with the title "When answer choices don't give the respondent's
-answer a clear place to go" and now treats the twelve puzzles as authored
-interactive puzzles, not as a source-first article or citation exhibit.
+answer a clear place to go" and presents twelve authored interactive puzzles
+with optional public-source context.
 
 The project demonstrates a React and TypeScript interface with twelve
 interaction modules, an opening hook, an answer-set builder/export trap, a
 cold-read capstone, a field guide, optional source backmatter, static security
 headers, and local-only settings controls. The overview opens with a plausible
 one-word commute-response intake hook and one full embedded commute puzzle. The
-walk paginates
-twelve answer-choice traps, each with a role, a task, immediate feedback, a
-visible consequence ledger or trace, and a small reveal. The build route lets
-visitors assemble choices and then inspect the tidy export those choices would
-leave behind. The field guide turns the interaction moves into reusable checks
-and prompts. The reference shelf keeps glossary, method, claim-boundary, and
-source material out of the primary play path.
+walk paginates twelve answer-choice traps, each with a role, a task, immediate
+feedback, a visible consequence ledger or trace, and a small reveal. The build
+route lets visitors assemble choices and then inspect the tidy export those
+choices would leave behind. The field guide turns the interaction moves into
+reusable checks and prompts. The reference shelf keeps glossary, method,
+claim-boundary, and source material out of the primary play path.
 
 ## Sources And Attribution
 
-Puzzles use a delight-first teaching posture. Most on-screen cases, people,
+Puzzles use an interaction-first teaching posture. Most on-screen cases, people,
 routes, feedback lines, and consequences are authored teaching material built
-to make the interaction satisfying and inspectable. Public U.S. Census Bureau
-materials remain as optional anchors and backmatter, not as the main reason to
-use the app. The active slate no longer includes the retired identity examples
-from the earlier ONS-backed draft. The app does not reproduce agency logos,
-screenshots, or PDF imagery, and it does not validate alternate wording.
+to make the interaction inspectable. Public U.S. Census Bureau materials remain
+as optional anchors and backmatter, not as claims that every on-screen scenario
+is a source finding. The app does not reproduce agency logos, screenshots, or
+PDF imagery, and it does not validate alternate wording.
 Primary copy avoids invented methods jargon such as `storage rule`; the app
 uses plain answer-rule language in the puzzle flow and reserves recorded,
 coded, or exported wording for form-operation or downstream data contexts.
@@ -110,9 +108,9 @@ interaction, motion, and visual feedback when those make the lab meaningfully
 better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
-Current measured build after the POV terminology pass: initial
-JavaScript `87.07 KB gzip`, CSS `16.39 KB gzip`. All interaction is client-side; no
-third-party runtime requests are expected.
+Current measured production build: initial JavaScript `87.07 KB gzip`, CSS
+`16.39 KB gzip`. All interaction is client-side; no third-party runtime
+requests are expected.
 
 ## Privacy Budget
 
@@ -148,6 +146,4 @@ glossary entries, claim-boundary language, and colophon prose) is licensed under
 Quoted source material (short tested-wording excerpts, respondent and
 interviewer quotations, section and page references, and report titles
 cited from U.S. Census Bureau publications) remains under its original terms:
-public-domain U.S. Government works for Census materials. Older local research
-notes may still mention retired ONS examples; those are not part of the active
-app slate.
+public-domain U.S. Government works for Census materials.

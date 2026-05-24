@@ -8,19 +8,10 @@ type Props = {
   resumeSpecimenId?: string | null;
 };
 
-/* The hub Hero. A two-up identity column + live FeaturedHook so a cold
-   visitor can touch the work above the fold. The identity column carries
-   the eyebrow, project kicker, title, subtitle, audience caption, CTAs,
-   and the scope/trust receipt; the hook sits beside it in a wider column
-   (wide enough that its route buttons no longer wrap, which keeps the
-   hook — and therefore the hero — short).
-
-   The six-pattern taxonomy is NOT in the hero anymore: it lives in the
-   hub's sticky knowledge-map rail (see PatternStrip + App.tsx), so it
-   runs alongside the hero and featured example without pushing the
-   featured example down. See docs/design-passes/2026-05-20-knowledge-rail.md.
-   The resumeSpecimenId prop continues to flip the CTA hierarchy for
-   returning visitors. */
+/* The hub Hero pairs the project identity column with the live FeaturedHook so
+   a cold visitor can touch the work above the fold. The six-pattern taxonomy
+   lives in the hub's sticky knowledge-map rail, and resumeSpecimenId flips the
+   CTA hierarchy for returning visitors. */
 export function Hero({ resumeSpecimenId = null }: Props = {}) {
   const firstSpecimenId = workbenchSpecimens[0]?.id ?? "";
   const resumeSpecimen = resumeSpecimenId

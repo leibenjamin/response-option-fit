@@ -8,15 +8,14 @@ import {
 } from "../../data/play-the-form";
 import type { WorkbenchSpecimen } from "../../types/workbench";
 
-/* "Play the form" — the first bespoke per-example puzzle (Example 03,
+/* "Play the form" puzzle for Example 03,
    refrigerated medicine, false premise). The visitor acts as the form operator:
    three respondents with the real Yes / No / No-refrigerated-medicine buttons,
    watch a household with no refrigerated medicine get recorded as "had
    medicine, none spoiled," then add the follow-up the testers recommended and
    re-record honestly. Productive failure → repair, self-implicating, all taps,
    non-judgemental (the FORM fails, never the visitor). Reveal uses only the
-   hand-verified specimen fields. Mounted via the per-specimen override in
-   Workbench, replacing the generic engine for this specimen only. */
+   hand-verified specimen fields. */
 export function PlayTheForm({
   specimen,
   titleId

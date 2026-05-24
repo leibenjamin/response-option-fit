@@ -1,4 +1,4 @@
-/* Data for the "Flatten the week" bespoke puzzle (Example 06, usual-hours,
+/* Data for the "Flatten the week" puzzle (Example 06, usual-hours,
    forced precision). The visitor is the RESPONDENT this time: their real weeks
    vary, but the field wants one "usual hours" number, so they are forced to
    compress — and whichever number they pick, the variation that defines the job
