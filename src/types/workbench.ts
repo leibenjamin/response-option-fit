@@ -1,11 +1,6 @@
-/* Type shapes for the worked-example walk. The 2026-05-23 delight-first wave
-   made every specimen render through an interactive puzzle. What remains here
-   is the shared specimen data those puzzles and reference surfaces still need:
-   the failure pattern, optional source receipt, survey instrument frame, and
-   specimen identity.
-
-   The shape stays here, rather than next to each consumer, so the data
-   author can lock the contract in one place. */
+/* Shared specimen data for the walk puzzles and reference surfaces: failure
+   pattern, optional source receipt, survey instrument frame, and specimen
+   identity. */
 
 export type FailurePattern =
   | "label_ambiguity"
@@ -40,17 +35,13 @@ export type MethodNote = {
   whatOmitted: string;
 };
 
-/* A real respondent's own words from the cited cognitive-testing report —
-   verbatim, hand-/machine-verified against the source PDF. This is the
-   un-replicable content: an LLM can paraphrase a finding, but it can't hand you
-   a real person's confused sentence. Surfaced as a quiet pulled quote, not a
-   citation parade. Attribution stays light (survey + year), not a page parade. */
+/* A real respondent's own words from the cited cognitive-testing report. */
 export type Verbatim = {
   quote: string;
   attribution: string;
 };
 
-/* The survey instrument shown inside the engine. Holds the tested
+/* The survey instrument shown inside the puzzle. Holds the tested
    wording, the surrounding question, and the highlighted answer
    choice. */
 export type AnswerFrameTargetKind =
@@ -79,7 +70,7 @@ export type AnswerFrame = {
   methodNote?: string;
 };
 
-/* The worked example as exposed to the renderer. */
+/* The puzzle specimen as exposed to the renderer. */
 export type WorkbenchSpecimen = {
   /* Identity */
   id: string;
@@ -89,7 +80,7 @@ export type WorkbenchSpecimen = {
   railLabel: string;
   /* Slightly longer editorial label used in field-guide pattern checklists.
      Optimized for visitors who land on `#field-guide` without context
-     and need a self-explanatory cross-link to the worked example.
+     and need a self-explanatory cross-link to the puzzle.
      Optional: components fall back to `railLabel` when missing. */
   fieldGuideLinkLabel?: string;
   pattern: FailurePattern;
@@ -97,10 +88,10 @@ export type WorkbenchSpecimen = {
   canonicalSubtitle: string;
   canonicalCitations: [CanonicalCitation, ...CanonicalCitation[]];
 
-  /* The "When …" claim title rendered above the engine. */
+  /* The "When ..." claim title rendered above the puzzle. */
   title: string;
 
-  /* The survey instrument rendered inside the engine: surrounding
+  /* The survey instrument rendered inside the puzzle: surrounding
      question, highlighted target answer, and response options. */
   answerFrame: AnswerFrame;
 

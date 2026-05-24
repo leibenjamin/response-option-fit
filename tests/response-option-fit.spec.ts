@@ -126,10 +126,6 @@ test.describe("Response Option Fit Lab - interaction contract", () => {
     expect(workbenchSpecimens.map((item) => item.id)).toEqual(
       interactionScenarios.map((item) => item.id)
     );
-    expect(workbenchSpecimens.map((item) => item.id)).not.toContain("ons-kashmiri");
-    expect(workbenchSpecimens.map((item) => item.id)).not.toContain(
-      "ons-ethnic-group-heading"
-    );
     for (const specimen of workbenchSpecimens) {
       expect(
         interactivePuzzleBySpecimenId[specimen.id],
@@ -200,14 +196,19 @@ test.describe("Response Option Fit Lab - desktop", () => {
     }
 
     await expect(page.locator(".featured-hook-reveal-inner")).toHaveCount(0);
-    await page.getByTestId("featured-hook-route-bus-store").click();
-    await expect(page.getByTestId("featured-hook-ledger")).toContainText(/1\s*Stored/);
+    await expect(hook).toContainText("Accept it");
+    await expect(hook).toContainText("Reject it");
+    await expect(hook).toContainText("Needs a rule");
+    await page.getByTestId("featured-hook-route-bus-accept").click();
+    await expect(page.getByTestId("featured-hook-ledger")).toContainText(/1\s*Accepted/);
+    await expect(page.getByTestId("featured-hook-ledger")).toContainText("Rejected");
+    await expect(page.getByTestId("featured-hook-ledger")).toContainText("Needs rule");
     await page.getByTestId("featured-hook-route-ride-hailing-rule").click();
     await page.getByTestId("featured-hook-route-car-pool-reject").click();
-    await expect(page.getByTestId("featured-hook-ledger")).toContainText("Not placed");
+    await expect(page.getByTestId("featured-hook-ledger")).toContainText("Not decided");
     await expect(page.locator(".featured-hook-reveal-inner")).toHaveCount(0);
     await expect(page.getByTestId("featured-hook-ledger")).toContainText(
-      "Place all four responses"
+      "Decide all four responses"
     );
     await page.getByTestId("featured-hook-route-bike-share-rule").click();
     await expect(page.getByTestId("featured-hook-reveal")).toContainText(
@@ -218,7 +219,12 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("main journey copy uses the current puzzle-first CTA labels", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    await expect(page.locator("body")).not.toContainText("sourced example");
+    const hub = page.getByTestId("hub");
+    await expect(hub).not.toContainText("sourced example");
+    await expect(hub).not.toContainText("storage rule");
+    await expect(hub).not.toContainText("Store it");
+    await expect(hub).not.toContainText("Stored");
+    await expect(hub).not.toContainText("You are the form");
     await expect(page.getByTestId("hero-cta-row")).toContainText("Try the first puzzle");
     await expect(page.getByTestId("hero-cta-row")).toContainText(
       "Check your own survey draft"
@@ -262,7 +268,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
     }
   });
 
-  test("kept bespoke mechanics expose their second-wave additions", async ({ page }) => {
+  test("selected puzzles expose current interaction details", async ({ page }) => {
     await page.goto(`${BASE_URL}/#walk/business-industry`);
     await page.getByTestId("zoom-stop-business-industry-industry").click();
     await expect(page.locator(".zoom-ledger")).toContainText("Mixed-level ledger");
@@ -298,7 +304,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
     );
   });
 
-  test("replacement examples render the new active slate and retire old identity routes", async ({ page }) => {
+  test("active slate examples render and unknown walk routes return to the hub", async ({ page }) => {
     await page.goto(`${BASE_URL}/#walk/move-reason-catchall`);
     await expect(page.locator("#move-reason-catchall-workbench-title")).toContainText(
       "Other housing reason"
@@ -315,13 +321,9 @@ test.describe("Response Option Fit Lab - desktop", () => {
       "Apple TV"
     );
 
-    await page.goto(`${BASE_URL}/#walk/ons-kashmiri`);
+    await page.goto(`${BASE_URL}/#walk/not-a-current-specimen`);
     await expect(page.getByTestId("hub")).toBeVisible();
-    await expect(page.getByText(/Kashmiri/i)).toHaveCount(0);
-
-    await page.goto(`${BASE_URL}/#walk/ons-ethnic-group-heading`);
-    await expect(page.getByTestId("hub")).toBeVisible();
-    await expect(page.getByText(/ethnic-group/i)).toHaveCount(0);
+    await expect(page.getByTestId("workbench-not-a-current-specimen")).toHaveCount(0);
   });
 
   test("replacement source anchors stay in optional source surfaces until opened", async ({ page }) => {
@@ -356,11 +358,12 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("no freeform input, third-party runtime requests, or desktop overflow", async ({ page }) => {
     const offsite: string[] = [];
+    const allowedHost = new URL(BASE_URL).host;
     page.on("request", (request) => {
       const raw = request.url();
       if (raw.startsWith("blob:") || raw.startsWith("data:")) return;
       const url = new URL(raw);
-      if (url.host && url.host !== "localhost:4173" && url.host !== "127.0.0.1:4173") {
+      if (url.host && url.host !== allowedHost) {
         offsite.push(raw);
       }
     });

@@ -236,9 +236,8 @@ summary:focus-visible {
    spanning both the hero row and the featured-example row. The rail
    carries the six-pattern taxonomy alongside the content instead of in
    the vertical flow, so it never pushes the featured example down. On
-   tablet/phone the grid collapses to one column ordered hero →
-   knowledge map → featured example. See
-   docs/design-passes/2026-05-20-knowledge-rail.md. */
+   tablet/phone the grid collapses to one column ordered hero, knowledge
+   map, then featured example. */
 
 
 .hub-shell {
@@ -414,11 +413,7 @@ summary:focus-visible {
   max-width: 64ch;
 }/* ===================== FEATURED HOOK =====================
    The live-specimen interactive that sits in the hero's right column on
-   desktop (and full-width on mobile). Replaces the older corner
-   "hero-mini-puzzle" and the below-hero "opening question" cold-open,
-   collapsing both into one richer demonstration that lands above the
-   fold. See FeaturedHook.tsx and
-   docs/design-passes/2026-05-19-opening-hook-overhaul.md. */
+   desktop and full-width on mobile. */
 
 .featured-hook {
   grid-column: 2;
@@ -3807,11 +3802,10 @@ summary:focus-visible {
   font-family: var(--font-serif);
   font-style: italic;
   color: var(--ink-soft);
-}/* ===================== BESPOKE PUZZLES ===================== */
+}/* ===================== ROUTE PUZZLES ===================== */
 /* Puzzles share the frame (.puzzle-hero / .puzzle-reveal / .puzzle-source)
    but each owns its mechanic classes (.puzzle-* for Play-the-form, .zoom-* for
-   Zoom-to-altitude, etc.). Shared frame, bespoke core — the opposite of the
-   retired one-engine-reskinned-twelve-times. */
+   Zoom-to-altitude, etc.). */
 
 .puzzle {
   display: flex;
@@ -4069,7 +4063,7 @@ summary:focus-visible {
   color: var(--accent-2);
 }
 
-/* Shared delight-first route puzzle frame for the authored interaction set. */
+/* Shared route puzzle frame for the authored interaction set. */
 .route-lab-progress {
   align-self: flex-start;
   display: inline-flex;
@@ -4367,7 +4361,7 @@ summary:focus-visible {
   min-height: 3.2em;
 }
 
-/* Second-wave per-example puzzle mechanics. */
+/* Per-puzzle mechanics. */
 .puzzle-progress {
   align-self: flex-start;
   display: inline-flex;

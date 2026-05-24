@@ -9,7 +9,7 @@ import {
 import type { WorkbenchSpecimen } from "../../types/workbench";
 import { VerbatimQuote } from "../workbench/VerbatimQuote";
 
-/* "Stop the leak" — bespoke puzzle for Example 05 (owner-advertising, sequence
+/* "Stop the leak" puzzle for Example 05 (owner-advertising, sequence
    overlap). The visitor acts as a sequence reviewer across two
    adjacent questions whose categories overlap; a single listing double-counts
    or drops, and then the visitor tries fixes and discovers reordering does

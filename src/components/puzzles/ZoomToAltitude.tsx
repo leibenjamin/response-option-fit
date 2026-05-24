@@ -8,13 +8,12 @@ import {
 import type { WorkbenchSpecimen } from "../../types/workbench";
 import { VerbatimQuote } from "../workbench/VerbatimQuote";
 
-/* "Zoom to the right altitude" — bespoke puzzle for Example 02 (business /
+/* "Zoom to the right altitude" puzzle for Example 02 (business /
    industry, broad bucket). The visitor codes one worker's answer to the open
    industry field, sliding through the altitudes a coder could pick. Every
    altitude is defensible, so committing to one surfaces the failure: the field
    never said which level it wants, so the column mixes employers, workplaces,
-   industries, and sectors and can't be compared. Shares the puzzle frame
-   (hero / source / reveal) with the other bespoke puzzles; the altitude
+   industries, and sectors and can't be compared. The altitude
    stepper is its own mechanic. Tap/keyboard only, non-judgemental, reveal uses
    only the hand-verified specimen finding. */
 export function ZoomToAltitude({

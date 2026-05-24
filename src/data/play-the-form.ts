@@ -1,4 +1,4 @@
-/* Data for the "Play the form" bespoke puzzle (Example 03, refrigerated
+/* Data for the "Play the form" puzzle (Example 03, refrigerated
    medicine, false premise). The visitor plays the form and records three
    respondents using the real Yes / No / No-refrigerated-medicine buttons.
 

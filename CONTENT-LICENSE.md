@@ -29,9 +29,6 @@ are reproduced from public materials whose terms remain authoritative:
 - **U.S. Census Bureau** working papers and cognitive-testing reports are
   works of the U.S. Government and are in the public domain in the
   United States.
-- **UK Office for National Statistics** materials are published under
-  the **Open Government Licence v3.0**
-  (<https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/>).
 
 The CC BY 4.0 license applied to this exhibit's editorial layer does not
 override or restrict the terms under which the original source materials

@@ -1,4 +1,4 @@
-/* Data for the "Stop the leak" bespoke puzzle (Example 05, owner-advertising,
+/* Data for the "Stop the leak" puzzle (Example 05, owner-advertising,
    sequence overlap). The AHS housing-search series asks, one after another,
    how someone found their home. One real listing can match two adjacent
    questions, so the visitor (playing the form) watches a single Zillow listing

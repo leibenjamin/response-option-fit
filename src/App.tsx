@@ -66,11 +66,9 @@ function Hub({
       </a>
       <SettingsButton onClick={onSettingsOpen} />
       {/* Hub shell: a grid whose right column is a sticky knowledge-map
-         rail spanning both the hero row and the featured-example row, so
-         the six-pattern taxonomy runs alongside the hub instead of
-         pushing the featured example down. On tablet/phone the grid
-         collapses to one column ordered hero → knowledge map → featured
-         example. See docs/design-passes/2026-05-20-knowledge-rail.md. */}
+         rail spanning both the hero row and the featured-example row.
+         On tablet/phone the grid collapses to one column ordered hero,
+         knowledge map, then featured example. */}
       <div className="hub-shell">
         <Hero resumeSpecimenId={lastVisited} />
         <aside

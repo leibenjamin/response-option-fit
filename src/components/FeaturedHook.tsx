@@ -87,39 +87,19 @@ function tally(placements: Placements) {
   return { accepted, rejected, needsRule, decided };
 }
 
-/* The hub's interactive hook. Sits inside the hero so it's the first
-   thing a cold visitor can touch above the fold. Replaces, in order:
-   - the earlier corner HeroMiniPuzzle (rideshare, three trips, single
-     text reveal),
-   - the standalone below-hero OpeningQuestion cold-open
-     ("How often do you cook dinner at home?"), and
-   - the first FeaturedHook iteration, which routed four trip cases
-     into Yes/No against an ACS commute item.
+/* The hub's interactive hook. Sits inside the hero so it is the first thing a
+   cold visitor can touch above the fold.
 
-   The current mechanic: a tiny commute-survey intake contract ("one word
-   only") that looks obvious until truthful commute answers try to land in it.
-   The visitor decides four responses — `bus`, `ride-hailing`, `car pool`, and
-   `bike share` — with Accept it / Reject it / Needs a rule. "Accept it" is the
-   app user's reviewer decision: can this submitted answer pass under the
-   visible instruction? It is not the respondent's act and not a database
-   storage term. A running ledger shows the review decisions, and the reveal
-   bridges from this small one-word field into the twelve richer
-   response-option puzzles.
+   The mechanic is a tiny commute-survey intake contract ("one word only") that
+   looks obvious until truthful commute answers try to land in it. The visitor
+   decides four responses with Accept it / Reject it / Needs a rule. "Accept it"
+   is the app user's reviewer decision: can this submitted answer pass under
+   the visible instruction? It is not the respondent's act and not a database
+   storage term.
 
-   Two design constraints worth preserving across future waves:
-
-   1. The visitor is never told they were wrong. All three routes carry
-      respectful notes. The reveal does not score the visitor's reading
-      against any "correct" reading — the whole point is that the rule
-      was never stated.
-   2. The case values read as specimens of intake data, not grammar
-      examples. Monospace styling and short editorial descriptors hold
-      that posture; if a future wave changes the topic, keep the
-      "field value, status label, or interface object" framing so the
-      hook does not slip back into cute semantics. See
-      docs/design-passes/2026-05-20-hook-topic-v2-chatgpt-research.md
-      for the full brainstorm and the constraint ChatGPT-5.5 added on
-      the third refinement turn. */
+   Preserve two design constraints: the visitor is never told they were wrong,
+   and the case values should read as specimens of intake data rather than as
+   grammar examples. */
 export function FeaturedHook() {
   const [placements, setPlacements] = useState<Placements>({});
   const revealRef = useRef<HTMLDivElement | null>(null);

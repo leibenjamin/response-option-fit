@@ -207,12 +207,9 @@ const methodNotesById: Partial<
   }
 };
 
-/* Real respondents' verbatim words, read off the cited PDFs (page noted) and
-   confirmed character-for-character before shipping. This is the un-replicable
-   layer: a model can paraphrase a finding, but it can't hand you a real
-   person's confused sentence. Surfaced as a quiet pulled quote in the reveal,
-   with light attribution (survey + year) — realness as delight, not a citation
-   parade. Puzzles without a vivid, on-point respondent sentence get none. */
+/* Real respondents' verbatim words, read off the cited PDFs and confirmed
+   before shipping. Puzzles without a vivid, on-point respondent sentence get
+   none. */
 const verbatimById: Partial<
   Record<string, NonNullable<WorkbenchSpecimen["verbatim"]>>
 > = {

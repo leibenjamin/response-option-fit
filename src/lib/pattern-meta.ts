@@ -7,10 +7,8 @@
    file only names them so the components stay token-stable.
 
    `expandedBody` is the longer plain-language description the full-
-   variant catalog cards render under the canonical subtitle. It used to
-   live on every specimen as `prerequisiteVocab`; the 2026-05-20 legacy-
-   cleanup wave hoisted it here so the pattern card has one source of
-   truth instead of pulling from an arbitrary specimen. */
+   variant catalog cards render under the canonical subtitle. Keeping it
+   here gives the pattern card one source of truth. */
 
 import type { FailurePattern } from "../types/workbench";
 

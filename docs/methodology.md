@@ -7,14 +7,14 @@ answer place and downstream code, not the private judgment that got it there.
 
 The public page still uses the literal title "When answer choices don't give
 the respondent's answer a clear place to go." The implementation, however, is
-not organized as a source-first review. It is organized as twelve authored
-problem-solving puzzles that let the visitor make a small decision, see an
-immediate consequence, and then recognize the missing rule.
+organized as twelve authored problem-solving puzzles that let the visitor make
+a small decision, see an immediate consequence, and then recognize the missing
+rule.
 
 ## Interaction Posture
 
-The design priority is delight and transfer, not citation ceremony. Each walk
-puzzle has an interactive module with:
+The design priority is interaction and transfer. Each walk puzzle has an
+interactive module with:
 
 - a role for the visitor, such as mode mapper, form operator, sequence reviewer,
   rule finder, or counting-rule reviewer;
@@ -37,7 +37,7 @@ a database/storage term of art.
 
 ## Voice And Terminology
 
-This pass separates five voices that earlier copy sometimes blurred:
+The app separates five voices:
 
 - **App user:** the visitor solving a puzzle. Button labels should name the
   visitor's immediate move: accept, reject, route, choose, open, test, set, add,
@@ -89,25 +89,24 @@ The answer-set builder, the field guide, the cold-read capstone, and the exit
 artifact remain part of the same interaction arc: respondent, form, analyst,
 reviewer.
 
-## Novelty Over Uniformity
+## Interaction Variety
 
-The walk should not feel like twelve reskinned cards. Reusing primitives is fine
+The walk should not feel like twelve repeated cards. Reusing primitives is fine
 when it keeps the implementation maintainable, but the user's job should vary:
 map a route, find a rule, sort a label, trace a signal, open a gate, draw a
 device boundary, set a threshold, or expose a counting recipe. Future work should
-prefer a new satisfying mechanic over a smaller or more citation-heavy surface
-when those goals conflict.
+prefer a distinct mechanic over a smaller but less useful surface when those
+goals conflict.
 
 Performance, page length, and test count are things to observe. They are not
 reasons to collapse the lab back into article-like exposition.
 
 ## Source Posture
 
-Sources are optional anchors, not the product's moat. Public Census Bureau
-materials still inform the active answer-choice problems and remain available
-in the reference shelf or optional details, but most cases, people, routes,
-feedback, and visual consequences are authored teaching material. The earlier
-Kashmiri and ethnic-heading examples are retired from the active slate.
+Sources are optional anchors. Public Census Bureau materials inform the active
+answer-choice problems and remain available in the reference shelf or optional
+details, but most cases, people, routes, feedback, and visual consequences are
+authored teaching material.
 
 The app should not imply that authored puzzle feedback is a source finding, a
 validated replacement wording, or an official agency answer key. When a real
