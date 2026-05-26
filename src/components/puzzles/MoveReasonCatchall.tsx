@@ -56,7 +56,6 @@ export function MoveReasonCatchall({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="Your role: catch-all reviewer"
       title="“Other housing reason” is not a reason."
       lede="A catch-all can be useful for routing, but it is a poor final answer. Open the broad categories, then turn on write-in recoding and watch the hidden reasons reappear."
       className="puzzle--move-reasons"
@@ -141,13 +140,18 @@ export function MoveReasonCatchall({
           title="The broad bucket was a staging area, not the final data."
         >
           <p>
-            “Other housing” can hide a concrete reason like wanted cheaper
-            housing. Without the write-in and recoding path, the analyst sees a
-            generic category where the respondent had a specific answer.
+            With write-in recoding off, the export leaves a concrete reason
+            inside “Other housing.” Turn the recoding path on, and the same
+            response reappears as a usable reason instead of a leftover bucket.
           </p>
           <p className="puzzle-reveal-takeaway">
             Broad buckets need a downstream plan: collect the detail, recode it,
-            or admit that the detail will not survive.
+            or state that the detail will not survive.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            If &ldquo;Other&rdquo; will stay a final category, make sure that loss
+            of detail is acceptable before the survey ships.
           </p>
         </PuzzleReveal>
       )}

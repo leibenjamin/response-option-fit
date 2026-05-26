@@ -83,7 +83,6 @@ export function WeeksWorkedCalculator({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="Your role: counting-rule reviewer"
       title="One year. Three exact-looking totals."
       lede="The field asks for a number, but the number depends on a private recipe. Pick the recipe and watch the same work history export a different total."
       className="puzzle--weeks-calculator"
@@ -123,6 +122,18 @@ export function WeeksWorkedCalculator({
                 <li className="week-segment" key={segment.id}>
                   <span className="week-segment-label">{segment.label}</span>
                   <span className="week-segment-raw">{segment.weeks} possible</span>
+                  <span className="week-segment-bar" aria-hidden="true">
+                    <span
+                      className="week-segment-bar-fill"
+                      style={{
+                        width: `${
+                          counted != null
+                            ? Math.round((counted / segment.weeks) * 100)
+                            : 0
+                        }%`
+                      }}
+                    />
+                  </span>
                   <span
                     className={`week-segment-count ${
                       counted != null && counted > 0 ? "is-counted" : ""
@@ -150,8 +161,13 @@ export function WeeksWorkedCalculator({
             history.
           </p>
           <p className="puzzle-reveal-takeaway">
-            Forced precision is not just guessing. It is the absence of a shared
-            counting recipe behind the field.
+            Check which weeks the field told people to include before treating the
+            result as exact.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            If the survey asks for an exact number but never gives the counting
+            rule, respondents will supply their own recipe.
           </p>
           {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </PuzzleReveal>

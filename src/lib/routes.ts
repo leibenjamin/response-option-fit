@@ -9,6 +9,10 @@
                  specimen, or "done" for the completion screen
      build     - standalone build-and-break mechanic: visitors assemble
                  answer choices, then computed situations drop through them
+     lab       - preview of the survey-question goal-lab model: visitors
+                 design one answer scale, a fixed authored cast answers
+                 deterministically, and a task ladder runs honest → edge →
+                 hostile → flip (see SatisfactionLab)
      reference - Glossary + Method note + Claim boundary + Source appendix
      fieldGuide - reviewer console, reusable tests, and static prompt pack
      colophon  - production notes (already exists)
@@ -22,6 +26,7 @@ export type Route =
   | { kind: "hub" }
   | { kind: "walk"; slot: WalkSpecimenSlot }
   | { kind: "build" }
+  | { kind: "lab" }
   | { kind: "reference" }
   | { kind: "fieldGuide" }
   | { kind: "colophon" };
@@ -39,6 +44,9 @@ export function parseHash(hash: string, knownSpecimenIds: readonly string[]): Ro
   }
   if (normalized === "build") {
     return { kind: "build" };
+  }
+  if (normalized === "lab") {
+    return { kind: "lab" };
   }
   if (normalized === "field-guide" || normalized.startsWith("field-guide-")) {
     return { kind: "fieldGuide" };
@@ -65,6 +73,8 @@ export function routeToHash(route: Route): string {
       return `#walk/${route.slot}`;
     case "build":
       return "#build";
+    case "lab":
+      return "#lab";
     case "reference":
       return "#reference";
     case "fieldGuide":

@@ -106,7 +106,6 @@ export function RideHailingModeCollision({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="Your role: mode mapper"
       title="One commute option. Four trips collide inside it."
       lede="Route each trip into or out of the answer choice. The small win is watching one tidy exported option absorb several different transportation stories."
       className="puzzle--mode-collision"
@@ -187,8 +186,13 @@ export function RideHailingModeCollision({
             option selected, not the route logic you used.
           </p>
           <p className="puzzle-reveal-takeaway">
-            The reviewer move is to state whether the construct is paid service,
-            vehicle mode, platform use, or something else before the list ships.
+            State what the option is meant to capture: paid service, vehicle mode,
+            platform use, or something else before the list ships.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            If one answer choice can mean several everyday situations, your chart
+            may compare people who were never answering the same question.
           </p>
           {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </PuzzleReveal>

@@ -8,6 +8,7 @@ import {
 } from "../../data/flatten-the-week";
 import type { WorkbenchSpecimen } from "../../types/workbench";
 import { VerbatimQuote } from "../workbench/VerbatimQuote";
+import { PuzzleEyebrow } from "./PuzzleFrame";
 
 /* "Flatten the week" puzzle for Example 06 (usual-hours, forced
    precision). The visitor is the respondent: their weeks vary 31–52, the field
@@ -33,13 +34,7 @@ export function FlattenTheWeek({
       data-interactive="true"
     >
       <header className="puzzle-hero">
-        <p className="puzzle-eyebrow">
-          <span>Puzzle {specimen.number}</span>
-          <span aria-hidden="true">/</span>
-          <span>{specimen.patternLabel}</span>
-          <span aria-hidden="true">/</span>
-          <span className="puzzle-role">Your role: respondent</span>
-        </p>
+        <PuzzleEyebrow specimen={specimen} />
         <h2 className="puzzle-title" id={titleId} tabIndex={-1}>
           Your weeks don’t match. The form wants one number.
         </h2>
@@ -50,19 +45,31 @@ export function FlattenTheWeek({
         </p>
       </header>
 
-      <div className="flatten-weeks" aria-label="Your last four weeks of hours">
-        {flattenWeeks.map((hours, index) => (
-          <div className="flatten-week" key={index}>
-            <span className="flatten-week-label" aria-hidden="true">
-              wk {index + 1}
-            </span>
-            <span
-              className="flatten-week-bar"
-              style={{ height: `${Math.round((hours / max) * 100)}%` }}
-            />
-            <span className="flatten-week-value">{hours}h</span>
-          </div>
-        ))}
+      {/* Once the visitor picks one number, every bar glides to that one
+         height — the "flatten" is shown, not just told. The per-week value
+         labels keep their real numbers, so the contrast (equal bars, unequal
+         weeks) is what the eye lands on. Collapse is reduced-motion-safe: the
+         global reduced-motion rule zeroes the transition to an instant flatten. */}
+      <div
+        className={`flatten-weeks ${picked ? "is-flattened" : ""}`}
+        aria-label="Your last four weeks of hours"
+      >
+        {flattenWeeks.map((hours, index) => {
+          const naturalPct = Math.round((hours / max) * 100);
+          const flatPct = picked ? Math.round((picked.value / max) * 100) : null;
+          return (
+            <div className="flatten-week" key={index}>
+              <span className="flatten-week-label" aria-hidden="true">
+                wk {index + 1}
+              </span>
+              <span
+                className={`flatten-week-bar ${picked ? "is-flattened" : ""}`}
+                style={{ height: `${flatPct ?? naturalPct}%` }}
+              />
+              <span className="flatten-week-value">{hours}h</span>
+            </div>
+          );
+        })}
       </div>
 
       <aside className="flatten-ghost" aria-label="Steady-worker comparison">
@@ -112,13 +119,19 @@ export function FlattenTheWeek({
           </h3>
           <p>
             The form records one value and drops the range — your weeks ran{" "}
-            {flattenRange.min} to {flattenRange.max} hours. {specimen.methodNote?.whyHere}
+            {flattenRange.min} to {flattenRange.max} hours, compressed into one
+            usual-hours number.
           </p>
           <p className="puzzle-reveal-takeaway">
             And a coworker who works {picked.value}h every single week recorded
             the same {picked.value}h. In the data you two are now identical — the
             variation that defines your job never made it in. Whichever number you
             picked, the truth didn’t fit one box.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            If you ask for one number when people&rsquo;s lives vary week to week,
+            the clean column may erase the very difference you needed to understand.
           </p>
           {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </section>

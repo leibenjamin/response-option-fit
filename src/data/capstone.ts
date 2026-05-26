@@ -58,10 +58,10 @@ const CAPSTONE_CASES: CapstoneCase[] = [
     id: "cap-ev-type",
     specimenId: "electric-vehicle-type",
     scene:
-      "After a question about plug-in electric vehicles, a follow-up tries to catch the rest.",
+      "After a question about plug-in electric vehicles, a follow-up tries to cover the remaining vehicle types.",
     culpritOptionId: "another-ev",
     caught:
-      "“Another type of electric vehicle” had to hold hybrids, mild hybrids, and plug-ins at once. Everyday labels and technical classes don't line up, so identical cars landed in different boxes. The later version named plug-in and hybrid directly."
+      "“Another type of electric vehicle” had to cover hybrids, mild hybrids, and plug-ins at once. Everyday labels and technical classes do not match, so identical cars were recorded in different boxes. The later version named plug-in and hybrid directly."
   },
   {
     id: "cap-sump-pump",
@@ -70,7 +70,7 @@ const CAPSTONE_CASES: CapstoneCase[] = [
       "A post-disaster housing module asks whether a power outage caused basement flooding.",
     culpritOptionId: "no",
     caught:
-      "“No” quietly merges no flooding, no pump failure, and no pump at all. Testers proposed a follow-up after No because the single answer couldn't separate those states — so “Something's missing” is a fair read too."
+      "“No” merges no flooding, no pump failure, and no pump at all. Testers proposed a follow-up after No because the single answer could not separate those states — so “Something's missing” is a fair read too."
   },
   {
     id: "cap-owner-advertising",
@@ -79,7 +79,7 @@ const CAPSTONE_CASES: CapstoneCase[] = [
       "A housing-search series asks, one by one, how someone found their home.",
     culpritOptionId: "owner",
     caught:
-      "Right after the internet-site question, “some other advertising by the owner” read as the same listing to many respondents. The earlier answer leaked into this one; the two items overlap."
+      "Right after the internet-site question, “some other advertising by the owner” read as the same listing to many respondents. The earlier answer carried into this one; the two items overlap."
   }
 ];
 

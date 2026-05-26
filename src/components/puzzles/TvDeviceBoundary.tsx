@@ -92,7 +92,6 @@ export function TvDeviceBoundary({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="Your role: boundary reviewer"
       title="Is Apple TV a TV?"
       lede="The respondent may know every device in the room. The missing piece is which boundary the answer choice is using: built-in smart TV, any device that plays through a TV, or a mistaken mental image."
       className="puzzle--tv-boundary"
@@ -151,6 +150,11 @@ export function TvDeviceBoundary({
           <p className="puzzle-reveal-takeaway">
             The useful answer choice names the function that controls the edge:
             connected device that plays through a TV.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            If your answer choice does not say which feature matters, people may
+            answer about different versions of the same thing.
           </p>
           {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </PuzzleReveal>

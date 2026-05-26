@@ -63,7 +63,6 @@ export function NotebookLabelDeck({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="Your role: label tester"
       title="Flip the device cards. Watch “notebook” widen."
       lede="The trap is not that respondents lack devices. It is that one familiar word points to several nearby device families before the Yes/No answer is even chosen."
       className="puzzle--label-deck"
@@ -115,13 +114,17 @@ export function NotebookLabelDeck({
           title="The word was not a harmless synonym."
         >
           <p>
-            “Laptop” points to the center. “Notebook” starts collecting
-            Chromebook, tablet-like, lower-function, and literal meanings. The
-            answer can go wrong before a respondent ever reaches Yes or No.
+            “Laptop” points to a tighter center. “Notebook computer” sends some
+            respondents to nearby device families before they reach Yes or No.
           </p>
           <p className="puzzle-reveal-takeaway">
-            The repair move is not more ceremony. It is to remove the drifting
-            label or define the device features that count.
+            The repair move is to replace the drifting label or define the device
+            features that count.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            A familiar word can feel clear to the team and still sort real
+            people&rsquo;s answers in unexpected ways.
           </p>
           {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </PuzzleReveal>

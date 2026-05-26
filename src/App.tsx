@@ -25,6 +25,11 @@ const BuildAndBreakRoute = lazy(() =>
     default: module.BuildAndBreakRoute
   }))
 );
+const SatisfactionLab = lazy(() =>
+  import("./components/SatisfactionLab").then((module) => ({
+    default: module.SatisfactionLab
+  }))
+);
 
 function currentRoute(): Route {
   if (typeof window === "undefined") return { kind: "hub" };
@@ -62,7 +67,7 @@ function Hub({
   return (
     <div className="lab" data-testid="hub">
       <a href="#featured-example" className="skip-link" data-testid="skip-link">
-        Skip to first puzzle
+        Skip to the puzzle
       </a>
       <SettingsButton onClick={onSettingsOpen} />
       {/* Hub shell: a grid whose right column is a sticky knowledge-map
@@ -98,6 +103,11 @@ function Hub({
         </p>
         <p className="foot-line foot-line--quiet">
           Built for editorial study of response-option fit.
+        </p>
+        <p className="foot-line foot-line--quiet">
+          <a className="foot-link foot-link--preview" href={routeToHash({ kind: "lab" })}>
+            Preview a new survey-lab format in progress →
+          </a>
         </p>
         <p className="foot-line foot-line--quiet hub-foot-links">
           <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
@@ -254,6 +264,59 @@ function BuildRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
   );
 }
 
+function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
+  return (
+    <div className="lab lab--survey-lab">
+      <a href="#survey-lab" className="skip-link" data-testid="skip-link">
+        Skip to the survey lab
+      </a>
+      <SettingsButton onClick={onSettingsOpen} />
+      <Suspense
+        fallback={
+          <main
+            id="survey-lab"
+            className="lab-route"
+            aria-labelledby="survey-lab-title"
+          >
+            <h1
+              className="lab-route-title"
+              id="survey-lab-title"
+              tabIndex={-1}
+            >
+              Loading survey lab
+            </h1>
+          </main>
+        }
+      >
+        <SatisfactionLab />
+      </Suspense>
+      <footer className="foot">
+        <p className="foot-line foot-line--quiet">
+          Preview of a new format in progress. The twelve puzzles remain the main
+          walk for now.
+        </p>
+        <p className="foot-line foot-line--quiet hub-foot-links">
+          <a className="foot-link" href={routeToHash({ kind: "hub" })}>
+            ← Back to overview
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "build" })}>
+            Build an answer set
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "walk", slot: "ride-hailing" })}>
+            Walk all twelve puzzles
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
+            Colophon
+          </a>
+        </p>
+      </footer>
+    </div>
+  );
+}
+
 function WalkRoute({
   slot,
   controller,
@@ -355,6 +418,8 @@ function routeAnnouncement(route: Route): string {
       return "Loaded reference shelf.";
     case "build":
       return "Loaded answer-set builder.";
+    case "lab":
+      return "Loaded survey lab.";
     case "fieldGuide":
       return "Loaded field guide.";
     case "colophon":
@@ -376,6 +441,8 @@ function pageTitle(route: Route): string {
       return "Reference shelf — Response Option Fit Lab";
     case "build":
       return "Build an answer set — Response Option Fit Lab";
+    case "lab":
+      return "Survey lab (preview) — Response Option Fit Lab";
     case "fieldGuide":
       return "Field guide — Response Option Fit Lab";
     case "colophon":
@@ -399,6 +466,8 @@ function focusHeadingId(route: Route): string {
       return "reference-title";
     case "build":
       return "build-and-break-title";
+    case "lab":
+      return "survey-lab-title";
     case "fieldGuide":
       return "field-guide-title";
     case "colophon":
@@ -476,6 +545,8 @@ function AppShell() {
         <ReferenceRoute onSettingsOpen={openSettings} />
       ) : route.kind === "build" ? (
         <BuildRoute onSettingsOpen={openSettings} />
+      ) : route.kind === "lab" ? (
+        <LabRoute onSettingsOpen={openSettings} />
       ) : route.kind === "fieldGuide" ? (
         <FieldGuideRoute onSettingsOpen={openSettings} />
       ) : route.kind === "walk" ? (

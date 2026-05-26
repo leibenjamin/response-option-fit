@@ -7,6 +7,7 @@ import {
 } from "../../data/zoom-altitude";
 import type { WorkbenchSpecimen } from "../../types/workbench";
 import { VerbatimQuote } from "../workbench/VerbatimQuote";
+import { PuzzleEyebrow } from "./PuzzleFrame";
 
 /* "Zoom to the right altitude" puzzle for Example 02 (business /
    industry, broad bucket). The visitor codes one worker's answer to the open
@@ -37,13 +38,7 @@ const shown: Altitude | undefined =
       data-interactive="true"
     >
       <header className="puzzle-hero">
-        <p className="puzzle-eyebrow">
-          <span>Puzzle {specimen.number}</span>
-          <span aria-hidden="true">/</span>
-          <span>{specimen.patternLabel}</span>
-          <span aria-hidden="true">/</span>
-          <span className="puzzle-role">Your role: industry coder</span>
-        </p>
+        <PuzzleEyebrow specimen={specimen} />
         <h2 className="puzzle-title" id={titleId} tabIndex={-1}>
           One answer. Four defensible codes. Pick one.
         </h2>
@@ -155,7 +150,10 @@ const shown: Altitude | undefined =
             </span>
             . The next coder won&rsquo;t.
           </h3>
-          <p>{specimen.methodNote?.whyHere}</p>
+          <p>
+            Another coder can file the same five words at a different level, and
+            both exports will look equally orderly.
+          </p>
           <ul className="zoom-spread">
             {zoomAltitudes.map((altitude) => (
               <li
@@ -172,6 +170,11 @@ const shown: Altitude | undefined =
             different column depending on who codes it. A count of
             &ldquo;hospitals&rdquo; can&rsquo;t be compared with a count of
             &ldquo;health care&rdquo; — the open box quietly mixed the levels.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            If you collect open answers, tell coders how specific to be before
+            totals are made.
           </p>
           {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </section>

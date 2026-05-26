@@ -1335,7 +1335,11 @@ summary:focus-visible {
   gap: var(--s-1);
 }
 .foot-line { margin: 0; }
-.foot-line--quiet { color: var(--ink-mute); }/* ===================== WORKBENCH FLOW ===================== */
+.foot-line--quiet { color: var(--ink-mute); }
+.foot-link--preview {
+  color: var(--accent);
+  border-bottom-color: var(--accent-soft);
+}/* ===================== WORKBENCH FLOW ===================== */
 
 
 .pattern-catalog,
@@ -1378,6 +1382,7 @@ summary:focus-visible {
 .workbench-title[tabindex="-1"]:focus,
 .completion-title[tabindex="-1"]:focus,
 .build-route-title[tabindex="-1"]:focus,
+.lab-route-title[tabindex="-1"]:focus,
 .field-guide-title[tabindex="-1"]:focus,
 .reference-route-title[tabindex="-1"]:focus,
 .colophon-title[tabindex="-1"]:focus {
@@ -3802,6 +3807,553 @@ summary:focus-visible {
   font-family: var(--font-serif);
   font-style: italic;
   color: var(--ink-soft);
+}/* ===================== SURVEY LAB (preview) =====================
+   The first survey-question goal-lab: a two-column workbench (design the
+   scale on the left, watch the authored cast + task ladder on the right),
+   then a full-width "flip" reveal that mounts once the hostile task lands.
+   Shares the build-route's paper-card / serif-heading / mono-eyebrow
+   language. See src/components/SatisfactionLab.tsx. */
+
+.lab--survey-lab {
+  padding-top: var(--s-7);
+}
+
+.lab-route {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  margin-bottom: var(--s-9);
+}
+
+.lab-route-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  max-width: 82ch;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: var(--s-5);
+}
+
+.lab-route-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.lab-route-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.04;
+  margin: 0;
+  color: var(--ink);
+  max-width: 22ch;
+}
+
+.lab-route-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 66ch;
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.lab-builder,
+.lab-readout {
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  position: relative;
+}
+
+.lab-builder::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--s-6);
+  right: var(--s-6);
+  height: 3px;
+  background: var(--accent);
+  pointer-events: none;
+}
+
+.lab-question {
+  border-left: 3px solid var(--accent);
+  padding-left: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.lab-question-key,
+.lab-control-key,
+.lab-autopsy-key {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.lab-question-stem {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+}
+
+.lab-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-segmented {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+
+.lab-seg {
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  color: var(--ink-2);
+  padding: var(--s-3);
+  font-size: 13.5px;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+}
+
+.lab-seg:hover,
+.lab-seg:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.lab-seg.is-on {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--ink);
+}
+
+.lab-scale {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-scale > li {
+  min-width: 0;
+}
+
+.lab-point {
+  width: 100%;
+  border: 1px dashed var(--line);
+  background: var(--paper);
+  color: var(--ink-mute);
+  padding: var(--s-3) var(--s-4);
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-size: 15px;
+}
+
+.lab-point-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  flex: none;
+}
+
+.lab-point:hover,
+.lab-point:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.lab-point.is-on {
+  border-style: solid;
+  border-color: var(--ink-mute);
+  background: var(--paper-card);
+  color: var(--ink);
+}
+
+.lab-point--pos.is-on {
+  --lab-dot: var(--route-r);
+}
+.lab-point--mid.is-on {
+  --lab-dot: var(--ink-mute);
+}
+.lab-point--neg.is-on {
+  --lab-dot: var(--accent);
+}
+
+.lab-point.is-on .lab-point-dot {
+  background: var(--lab-dot, currentColor);
+  border-color: var(--lab-dot, currentColor);
+}
+
+.lab-reset {
+  align-self: flex-start;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--s-2) var(--s-3);
+  cursor: pointer;
+}
+
+.lab-reset:hover,
+.lab-reset:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.lab-autopsy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-tally {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.lab-tally-num {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 1;
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.lab-tally-unit {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--ink-2);
+}
+
+.lab-tally-truth {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.lab-cast {
+  list-style: none;
+  margin: var(--s-1) 0 0;
+  padding: var(--s-4) 0 0;
+  border-top: 1px solid var(--line-faint);
+  display: flex;
+  flex-direction: column;
+}
+
+.lab-cast-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.85fr);
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--line-faint);
+}
+
+.lab-cast-row:last-child {
+  border-bottom: 0;
+}
+
+.lab-cast-who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lab-cast-who strong {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.lab-cast-feeling {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.3;
+}
+
+.lab-cast-arrow {
+  color: var(--ink-mute);
+}
+
+.lab-cast-landing {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.lab-cast-row.is-sat .lab-cast-landing {
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.lab-tasks {
+  border-top: 1px solid var(--line);
+  padding-top: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.lab-task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-task {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid transparent;
+  color: var(--ink-mute);
+}
+
+.lab-task-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  flex: none;
+}
+
+.lab-task-title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+}
+
+.lab-task.is-active {
+  color: var(--ink);
+  border-color: var(--accent-soft);
+  background: var(--accent-paper);
+}
+
+.lab-task.is-active .lab-task-mark {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.lab-task.is-done {
+  color: var(--ink-soft);
+}
+
+.lab-task.is-done .lab-task-mark {
+  background: var(--route-r);
+  border-color: var(--route-r);
+  color: var(--paper-card);
+}
+
+.lab-task.is-done .lab-task-title {
+  text-decoration: line-through;
+  text-decoration-color: var(--line);
+}
+
+.lab-task-pass {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  border-left: 3px solid var(--route-r);
+  padding-left: var(--s-3);
+}
+
+.lab-task-active {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-task-brief {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.lab-task-brief-key {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--s-1);
+}
+
+.lab-task-hint {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.lab-flip {
+  border: 1px solid var(--accent);
+  background: var(--accent-paper);
+  padding: var(--s-6) var(--s-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-width: 82ch;
+}
+
+.lab-flip-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin: 0;
+}
+
+.lab-flip h2 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(24px, 2.5vw, 34px);
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.lab-flip p {
+  margin: 0;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+.lab-tells {
+  margin: 0;
+  padding-left: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  color: var(--ink-2);
+}
+
+.lab-tells li {
+  line-height: 1.5;
+}
+
+.lab-flip p.lab-flip-eve {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--accent-2);
+}
+
+.lab-flip-takeaway {
+  font-weight: 600;
+}
+
+.lab-flip-sowhat {
+  border-top: 1px solid var(--accent-soft);
+  padding-top: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+.lab-flip-sowhat-key {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin-bottom: var(--s-1);
+}
+
+/* Cast rows + task rows stagger in once on mount (reduced-motion zeroes it). */
+.lab-cast > li,
+.lab-task-list > li {
+  animation: mo-pop var(--mo-2) var(--mo-ease) both;
+}
+.lab-cast > li:nth-child(2),
+.lab-task-list > li:nth-child(2) {
+  animation-delay: 55ms;
+}
+.lab-cast > li:nth-child(3),
+.lab-task-list > li:nth-child(3) {
+  animation-delay: 110ms;
+}
+.lab-cast > li:nth-child(4) {
+  animation-delay: 165ms;
+}
+.lab-cast > li:nth-child(5) {
+  animation-delay: 220ms;
+}
+
+@media (max-width: 880px) {
+  .lab-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .lab-builder,
+  .lab-readout {
+    padding: var(--s-5) var(--s-4);
+  }
+  .lab-flip {
+    padding: var(--s-5) var(--s-4);
+  }
+  .lab-cast-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .lab-cast-arrow {
+    display: none;
+  }
 }/* ===================== ROUTE PUZZLES ===================== */
 /* Puzzles share the frame (.puzzle-hero / .puzzle-reveal / .puzzle-source)
    but each owns its mechanic classes (.puzzle-* for Play-the-form, .zoom-* for
@@ -3831,7 +4383,18 @@ summary:focus-visible {
   color: var(--ink-soft);
 }
 .puzzle-role {
-  color: var(--accent);
+  color: var(--ink-soft);
+}
+/* The macro seat (Respondent / Form / Analyst / Reviewer) is the salient,
+   accumulating part of the role line — accent-tinted to the puzzle's pattern and
+   weighted so the four-sides cycle is felt as the walk moves. The verb stays
+   quiet so the seat reads first. */
+.puzzle-seat {
+  color: var(--workbench-accent, var(--accent));
+  font-weight: 700;
+}
+.puzzle-role-verb {
+  color: var(--ink-soft);
 }
 .puzzle-title {
   margin: 0;
@@ -4024,6 +4587,79 @@ summary:focus-visible {
   font-family: var(--font-serif);
   font-style: italic;
   color: var(--ink) !important;
+}
+/* The newcomer on-ramp: one plain "so what for a survey you build" line per
+   reveal. Quiet and labeled so an expert can skip it and a first-timer who just
+   met the concept still gets why a professional cares. */
+.puzzle-reveal-sowhat {
+  margin: 0;
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--line-soft);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2) !important;
+}
+.puzzle-reveal-sowhat-key {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 3px;
+}
+/* A committed action should visibly *land* rather than blink in: a brief spring
+   settle on the two "aha" surfaces (the per-record outcome and the reveal), plus
+   a one-shot accent wash that sweeps behind the reveal once. Refined from the
+   2026-05-24 motion spec. Fires once on mount; the global reduced-motion rule
+   zeroes the durations, leaving the final state (wash ends invisible). */
+@keyframes puzzle-land {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  68% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.003);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes puzzle-land-wash {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.72);
+  }
+  28% {
+    opacity: 0.32;
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1.04);
+  }
+}
+.puzzle-outcome,
+.puzzle-reveal {
+  position: relative;
+  isolation: isolate;
+  animation: puzzle-land var(--mo-3) var(--mo-spring) both;
+}
+.puzzle-outcome::before,
+.puzzle-reveal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transform-origin: left center;
+  opacity: 0;
+  background: linear-gradient(90deg, var(--accent-paper), transparent 68%);
+  animation: puzzle-land-wash var(--mo-4) var(--mo-ease) both;
+}
+.puzzle-outcome.is-honest::before {
+  background: linear-gradient(90deg, var(--paper-card), transparent 68%);
 }
 .puzzle-source {
   display: flex;
@@ -4547,6 +5183,66 @@ summary:focus-visible {
   display: grid;
   gap: var(--s-4);
 }
+/* Disaster puzzle: the threshold is a draggable cutoff, not a button row. Native
+   range input keeps keyboard + screen-reader + forced-colors behavior for free. */
+.threshold-slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  padding: var(--s-3) var(--s-4);
+}
+.threshold-slider-label {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.threshold-range {
+  width: 100%;
+  height: 28px;
+  cursor: pointer;
+  accent-color: var(--workbench-accent, var(--accent));
+}
+.threshold-stops {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0 2px;
+  list-style: none;
+}
+.threshold-stops > li {
+  flex: 1 1 0;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.threshold-stops > li:nth-child(2) {
+  text-align: center;
+}
+.threshold-stops > li:nth-child(3) {
+  text-align: right;
+}
+.threshold-stop.is-current {
+  color: var(--workbench-accent, var(--accent));
+  font-weight: 700;
+}
+.threshold-readout {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.reason-result.is-yes {
+  color: var(--workbench-accent, var(--accent));
+}
+.reason-result.is-no {
+  color: var(--ink-soft);
+}
 .rule-button,
 .threshold-button,
 .recipe-button,
@@ -4635,6 +5331,27 @@ summary:focus-visible {
 .reason-result.is-active {
   color: var(--ink);
 }
+/* EV "truth-table" (F treatment 1): one vehicle per row, facts fixed on the left,
+   the rule-driven verdict on the right — so "the rule moved, the facts didn't"
+   reads spatially. Overrides the shared 2-up card grid for this puzzle only;
+   the TV board keeps the card grid, and weeks uses the ledger — so the three
+   boards now read as three distinct layouts. */
+.vehicle-grid {
+  grid-template-columns: 1fr;
+}
+.vehicle-card {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--s-3);
+  align-items: center;
+}
+.vehicle-card .vehicle-result {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  border-left: 2px solid var(--workbench-accent, var(--accent));
+  padding-left: var(--s-3);
+}
 .label-card-button,
 .move-open,
 .move-recode-button {
@@ -4689,7 +5406,7 @@ summary:focus-visible {
 }
 .week-segment {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(48px, 1fr) 3.5ch;
   gap: var(--s-2);
   align-items: center;
   padding: var(--s-2) var(--s-3);
@@ -4700,6 +5417,24 @@ summary:focus-visible {
 }
 .week-segment-raw {
   margin: 0;
+}
+/* Ledger-tape bar: the counted portion of each segment fills as the recipe
+   changes, so "partial counting" is visible (F treatment 3). Reduced-motion
+   zeroes the width transition via the global rule. */
+.week-segment-bar {
+  position: relative;
+  height: 0.7em;
+  min-width: 40px;
+  background: var(--accent-paper);
+  border: 1px solid var(--line-soft);
+  overflow: hidden;
+}
+.week-segment-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: var(--workbench-accent, var(--accent));
+  transition: width 460ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .week-segment-count {
   font-family: var(--font-mono);
@@ -5079,6 +5814,12 @@ summary:focus-visible {
   max-width: 56px;
   background: var(--workbench-accent, var(--accent));
   opacity: 0.55;
+  /* The "flatten" payoff: bars glide to one height when a number is picked.
+     Reduced-motion zeroes this to an instant flatten (see the global rule). */
+  transition: height 460ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 320ms ease;
+}
+.flatten-week-bar.is-flattened {
+  opacity: 0.92;
 }
 .flatten-week-value {
   order: 2;
@@ -5852,6 +6593,16 @@ summary:focus-visible {
   .label-deck {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* On phones the EV truth-table row stacks: facts above, verdict below. */
+  .vehicle-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vehicle-card .vehicle-result {
+    border-left: none;
+    border-top: 2px solid var(--workbench-accent, var(--accent));
+    padding-left: 0;
+    padding-top: var(--s-2);
+  }
   .puzzle--sort .route-lab-cases,
   .puzzle--recipe .route-lab-cases,
   .puzzle--threshold .route-lab-choice-row {
@@ -6478,6 +7229,16 @@ summary:focus-visible {
 .route-lab-feedback,
 .route-lab-ledger,
 .route-lab-lane,
+.lab-builder,
+.lab-readout,
+.lab-question,
+.lab-seg,
+.lab-point,
+.lab-reset,
+.lab-cast-row,
+.lab-task,
+.lab-task-mark,
+.lab-flip,
 .src-fold,
 .src-chip span {
     color: CanvasText;
@@ -6490,6 +7251,10 @@ summary:focus-visible {
 .build-topic-tab.is-active,
 .build-option.is-selected,
 .build-rule-chip.is-selected,
+.lab-seg.is-on,
+.lab-point.is-on,
+.lab-task.is-active,
+.lab-task.is-done .lab-task-mark,
 .build-fate--split,
 .build-fate--forced,
 .build-fate--lost,
@@ -6559,3 +7324,305 @@ summary:focus-visible {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }}
+
+/* ============================================================
+   Motion system (2026-05-24)
+   Lively, modern-app-grade motion: screens settle in, controls respond to
+   touch/hover, consequences animate. Brief and sleek; nothing loops or
+   autoplays. The prefers-reduced-motion rule above zeroes every duration, so
+   reduced-motion users get instant final states. No gamification chrome.
+   ============================================================ */
+:root {
+  --mo-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --mo-spring: cubic-bezier(0.34, 1.32, 0.64, 1);
+  --mo-1: 140ms;
+  --mo-2: 220ms;
+  --mo-3: 340ms;
+  --mo-4: 460ms;
+}
+
+@keyframes mo-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mo-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mo-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Screen / region entrances — each route or puzzle settles in on mount. These
+   remount on navigation (the walk Workbench is keyed by specimen id), so every
+   screen change gets a fresh entrance. */
+.puzzle,
+.build-route,
+.lab-route,
+.lab-flip,
+.field-guide,
+.reference-route,
+.completion,
+.colophon,
+.hero,
+.featured-example,
+.pattern-strip,
+.recap {
+  animation: mo-fade-up var(--mo-3) var(--mo-ease) both;
+}
+/* The hub's regions lead in slightly offset for a composed entrance. */
+.pattern-strip {
+  animation-delay: 40ms;
+}
+.featured-example {
+  animation-delay: 80ms;
+}
+
+/* Control micro-interactions: lift on hover, depress on press. The transition
+   re-declares the common color transitions so nothing each control already had
+   is lost; disabled controls do not move. */
+.cta-button,
+.puzzle-button,
+.rule-button,
+.threshold-button,
+.recipe-button,
+.zoom-stop,
+.leak-fix,
+.flatten-option,
+.build-option,
+.build-rule-chip,
+.build-topic-tab,
+.lab-seg,
+.lab-point,
+.lab-reset,
+.featured-hook-route,
+.capstone-option,
+.capstone-meta,
+.move-open,
+.move-recode-button,
+.label-card-button {
+  transition:
+    transform var(--mo-1) var(--mo-ease),
+    box-shadow var(--mo-1) var(--mo-ease),
+    background-color var(--mo-1) var(--mo-ease),
+    border-color var(--mo-1) var(--mo-ease),
+    color var(--mo-1) var(--mo-ease);
+}
+.cta-button:hover:not(:disabled),
+.puzzle-button:hover:not(:disabled),
+.rule-button:hover:not(:disabled),
+.threshold-button:hover:not(:disabled),
+.recipe-button:hover:not(:disabled),
+.zoom-stop:hover:not(:disabled),
+.leak-fix:hover:not(:disabled),
+.flatten-option:hover:not(:disabled),
+.build-option:hover:not(:disabled),
+.build-rule-chip:hover:not(:disabled),
+.build-topic-tab:hover:not(:disabled),
+.lab-seg:hover:not(:disabled),
+.lab-point:hover:not(:disabled),
+.lab-reset:hover:not(:disabled),
+.featured-hook-route:hover:not(:disabled),
+.capstone-option:hover:not(:disabled),
+.capstone-meta:hover:not(:disabled),
+.move-open:hover:not(:disabled),
+.move-recode-button:hover:not(:disabled),
+.label-card-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+.cta-button:active:not(:disabled),
+.puzzle-button:active:not(:disabled),
+.rule-button:active:not(:disabled),
+.threshold-button:active:not(:disabled),
+.recipe-button:active:not(:disabled),
+.zoom-stop:active:not(:disabled),
+.leak-fix:active:not(:disabled),
+.flatten-option:active:not(:disabled),
+.build-option:active:not(:disabled),
+.build-rule-chip:active:not(:disabled),
+.build-topic-tab:active:not(:disabled),
+.lab-seg:active:not(:disabled),
+.lab-point:active:not(:disabled),
+.lab-reset:active:not(:disabled),
+.featured-hook-route:active:not(:disabled),
+.capstone-option:active:not(:disabled),
+.capstone-meta:active:not(:disabled),
+.move-open:active:not(:disabled),
+.move-recode-button:active:not(:disabled),
+.label-card-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.975);
+}
+
+/* Build & break export: rows file in, then the loss trays drop in after — so
+   "fewer placed than answered" reads as a moment, not a static stat. */
+.build-export-row {
+  animation: mo-pop var(--mo-2) var(--mo-ease) both;
+}
+.build-export-row:nth-child(1) {
+  animation-delay: 40ms;
+}
+.build-export-row:nth-child(2) {
+  animation-delay: 100ms;
+}
+.build-export-row:nth-child(3) {
+  animation-delay: 160ms;
+}
+.build-export-row:nth-child(4) {
+  animation-delay: 220ms;
+}
+.build-export-row:nth-child(5) {
+  animation-delay: 280ms;
+}
+.build-export-row:nth-child(6) {
+  animation-delay: 340ms;
+}
+.build-tray {
+  animation: mo-fade-up var(--mo-3) var(--mo-ease) both;
+  animation-delay: 360ms;
+}
+
+/* Card cascades: the list items in the puzzle / hub grids stagger in when their
+   screen mounts, the way a well-made app reveals a list. Layered under the
+   screen entrance; reduced-motion zeroes the delays and durations. */
+.collision-cases > li,
+.gate-households > li,
+.label-deck > li,
+.vehicle-grid > li,
+.tv-device-grid > li,
+.reason-strength-list > li,
+.move-buckets > li,
+.week-segments > li,
+.featured-hook-cases > li,
+.pattern-strip-grid > li,
+.capstone-list > li,
+.featured-example-next > li {
+  animation: mo-pop var(--mo-2) var(--mo-ease) both;
+}
+:is(
+  .collision-cases,
+  .gate-households,
+  .label-deck,
+  .vehicle-grid,
+  .tv-device-grid,
+  .reason-strength-list,
+  .move-buckets,
+  .week-segments,
+  .featured-hook-cases,
+  .pattern-strip-grid,
+  .capstone-list,
+  .featured-example-next
+) > li:nth-child(2) {
+  animation-delay: 55ms;
+}
+:is(
+  .collision-cases,
+  .gate-households,
+  .label-deck,
+  .vehicle-grid,
+  .tv-device-grid,
+  .reason-strength-list,
+  .move-buckets,
+  .week-segments,
+  .featured-hook-cases,
+  .pattern-strip-grid,
+  .capstone-list,
+  .featured-example-next
+) > li:nth-child(3) {
+  animation-delay: 110ms;
+}
+:is(
+  .collision-cases,
+  .gate-households,
+  .label-deck,
+  .vehicle-grid,
+  .tv-device-grid,
+  .reason-strength-list,
+  .move-buckets,
+  .week-segments,
+  .featured-hook-cases,
+  .pattern-strip-grid,
+  .capstone-list,
+  .featured-example-next
+) > li:nth-child(4) {
+  animation-delay: 165ms;
+}
+:is(
+  .collision-cases,
+  .gate-households,
+  .label-deck,
+  .vehicle-grid,
+  .tv-device-grid,
+  .reason-strength-list,
+  .move-buckets,
+  .week-segments,
+  .featured-hook-cases,
+  .pattern-strip-grid,
+  .capstone-list,
+  .featured-example-next
+) > li:nth-child(5) {
+  animation-delay: 220ms;
+}
+:is(
+  .collision-cases,
+  .gate-households,
+  .label-deck,
+  .vehicle-grid,
+  .tv-device-grid,
+  .reason-strength-list,
+  .move-buckets,
+  .week-segments,
+  .featured-hook-cases,
+  .pattern-strip-grid,
+  .capstone-list,
+  .featured-example-next
+) > li:nth-child(6) {
+  animation-delay: 275ms;
+}
+
+/* Count-up on meaningful "consequence" numbers (the build export tally and the
+   clean-cell stat). The RAF helper in src/lib/motion.tsx drives the value; CSS
+   only reserves width and adds the final settle. Reduced-motion: the helper sets
+   the final number immediately and the global rule zeroes the settle. */
+@keyframes mo-count-settle {
+  from {
+    opacity: 0.86;
+    transform: translateY(2px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.motion-count {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  min-width: var(--motion-count-width, 0ch);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.motion-count-value {
+  display: inline-block;
+  min-width: var(--motion-count-width, 0ch);
+  text-align: right;
+}
+.motion-count[data-motion-state="settled"] .motion-count-value {
+  animation: mo-count-settle var(--mo-1) var(--mo-spring) both;
+}
