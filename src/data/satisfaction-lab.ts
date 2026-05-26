@@ -1,10 +1,22 @@
-/* Data + pure deterministic engine for the prototype "satisfaction scale" lab —
-   the first survey-question goal-lab (see docs/design-passes/2026-05-25-strategic-
-   redirect-survey-labs.md). AUTHORED teaching scenario (fictional product +
-   fictional cast); no source needed. The cast is a fixed set of named respondents
-   with stated true feelings — NOT a distribution. Every "where does X land"
-   below is a single deterministic, defensible judgment, and the only counts shown
-   are counts over these 5 named people, never a population prevalence. */
+/* Engine for the scale-builder exercise on the #lab page — Exercise 1 of the
+   SQLBolt-style multi-exercise practice lab (see project_survey_lab_redirect
+   in memory; see docs/design-passes/2026-05-25-strategic-redirect-survey-labs.md).
+
+   AUDIENCE + SCENARIO RULE — the LAB ITSELF must be clever/satisfying/non-
+   facile for an analyst-level user (the lab's variety + depth do that
+   job across multiple exercises). The scenario INSIDE this single exercise
+   is a vehicle for the lesson, intentionally concrete and non-loaded: a
+   coffee-shop visit feedback survey. NOT "Brightwater" (the original
+   too-generic placeholder) and NOT "you're the manager designing your own
+   360" (the second wrong direction). See
+   [[feedback-lab-scenarios-for-analyst-user]] in memory for the two
+   corrections that landed here.
+
+   The cast (Ada/Ben/Cleo/Dev/Eve) is a fixed set of named fictional
+   visitors to a coffee shop with stated true feelings — NOT a distribution.
+   Every "where does X land" below is a single deterministic, defensible
+   judgment, and the only counts shown are counts over these 5 named people,
+   never a population prevalence. */
 
 export type ScalePoint = {
   id: string;
@@ -28,28 +40,28 @@ export const scaleBank: ScalePoint[] = [
 
 export const ALL_POINT_IDS = scaleBank.map((p) => p.id);
 
-export type Customer = {
+export type Respondent = {
   id: string;
   name: string;
-  /* The respondent's true feeling, in their own words. */
+  /* The respondent's true feeling about the visit, in their own words. */
   feeling: string;
   /* Their true feeling on the same -2..+2 axis. This never changes — only the
      options and the question wording do. */
   truth: number;
 };
 
-export const cast: Customer[] = [
-  { id: "ada", name: "Ada", feeling: "loved it — already told three friends", truth: 2 },
-  { id: "ben", name: "Ben", feeling: "happy overall, a couple of small gripes", truth: 1 },
-  { id: "cleo", name: "Cleo", feeling: "honestly mixed — some good, some bad", truth: 0 },
-  { id: "dev", name: "Dev", feeling: "let down; it underdelivered", truth: -1 },
-  { id: "eve", name: "Eve", feeling: "furious — it failed when she needed it most", truth: -2 }
+export const cast: Respondent[] = [
+  { id: "ada", name: "Ada", feeling: "loved it — perfect latte, already told three friends", truth: 2 },
+  { id: "ben", name: "Ben", feeling: "good coffee, friendly staff — a little slow today", truth: 1 },
+  { id: "cleo", name: "Cleo", feeling: "drink was fine; the music was too loud", truth: 0 },
+  { id: "dev", name: "Dev", feeling: "wrong order; manager fixed it but it was awkward", truth: -1 },
+  { id: "eve", name: "Eve", feeling: "espresso machine broke mid-order; she left without coffee", truth: -2 }
 ];
 
 export type Stem = "plain" | "leading";
 export const stemText: Record<Stem, string> = {
-  plain: "How was your experience with Brightwater?",
-  leading: "How great was your experience with Brightwater?"
+  plain: "How was your visit to Roast & Brew?",
+  leading: "How great was your visit to Roast & Brew?"
 };
 
 export type Order = "positive-first" | "negative-first";
@@ -76,11 +88,11 @@ export function orderedPoints(design: Design): ScalePoint[] {
    feeling — nudged one notch toward positive if the stem is leading ("how
    great…"). Ties break toward whichever option they read FIRST (primacy), so the
    order toggle matters. Deterministic; returns null only if no options exist. */
-export function landingFor(customer: Customer, design: Design): ScalePoint | null {
+export function landingFor(respondent: Respondent, design: Design): ScalePoint | null {
   const points = orderedPoints(design);
   if (points.length === 0) return null;
   const nudge = design.stem === "leading" ? 1 : 0;
-  const eff = Math.max(-2, Math.min(2, customer.truth + nudge));
+  const eff = Math.max(-2, Math.min(2, respondent.truth + nudge));
   let best = points[0];
   let bestDist = Math.abs(points[0].value - eff);
   for (const p of points) {
@@ -93,9 +105,9 @@ export function landingFor(customer: Customer, design: Design): ScalePoint | nul
   return best;
 }
 
-/* The mildly-biased scale the lab opens on — a plausibly "shipped" version that
-   already over-reads as satisfied, so the visitor sees the lie before fixing it.
-   (Leading stem + no strong-negative options.) */
+/* The mildly-biased scale the exercise opens on — a plausibly "shipped" version
+   that already over-reads as satisfied, so the visitor sees the lie before
+   fixing it. (Leading stem + no strong-negative options.) */
 export const shippedDesign: Design = {
   selected: ["vsat", "sat", "ssat", "neutral", "sdis"],
   stem: "leading",
@@ -129,8 +141,8 @@ export function everyoneFits(design: Design): boolean {
 }
 
 /* The respondent with no fitting option, for honest-task feedback (or null). */
-export function worstMisfit(design: Design): Customer | null {
-  let worst: Customer | null = null;
+export function worstMisfit(design: Design): Respondent | null {
+  let worst: Respondent | null = null;
   let worstGap = 0.5 + 1e-9;
   for (const c of cast) {
     const p = landingFor(c, design);
@@ -143,8 +155,8 @@ export function worstMisfit(design: Design): Customer | null {
   return worst;
 }
 
-/* The biasing moves present in a design — used for the hostile-task "flip" so the
-   reveal names exactly what the visitor just did. */
+/* The biasing moves present in a design — used for the hostile-task "flip" so
+   the reveal names exactly what the visitor just did. */
 export type BiasTell = { id: string; present: boolean; tell: string };
 export function biasTells(design: Design): BiasTell[] {
   const has = (id: string) => design.selected.includes(id);
@@ -181,10 +193,10 @@ export function biasTells(design: Design): BiasTell[] {
   ];
 }
 
-/* The SQLBolt-style task ladder. Tasks are checked live and complete in order
-   (sticky): an honest fix, a midpoint edge case, then the hostile goal whose
-   completion triggers the "flip" reveal. Each could NOT be replaced by a
-   sentence of prose — the visitor has to actually build the scale that does it. */
+/* The three sub-tasks within the scale-builder exercise (Exercise 1 on the
+   #lab page). Tasks are checked live and complete in order (sticky): an
+   honest fix, a midpoint edge case, then the hostile goal whose completion
+   triggers the "flip" reveal. */
 export type LabTask = {
   id: string;
   title: string;
@@ -199,10 +211,10 @@ export const tasks: LabTask[] = [
     id: "honest",
     title: "Make it honest",
     brief:
-      "Redesign the scale so every customer — even furious Eve — has an option that truly fits, and the question doesn't lead.",
+      "Redesign the scale so every visitor — even Eve, who left without coffee — has an option that truly fits, and the question doesn't lead.",
     pass: everyoneFits,
     passText:
-      "Balanced and complete, with a plain stem. Notice the “read as satisfied” count just fell to the truth — honest design looks worse for the vendor, and that is the point.",
+      "Balanced and complete, with a plain stem. Notice the “satisfied” count just fell to the truth — honest design looks worse for the shop, and that is the point.",
     hint: (design) => {
       if (design.stem === "leading") {
         return "The stem is leading (“how great…?”) — it tilts every answer upward before a single option is read. Try the plain wording.";
@@ -227,7 +239,7 @@ export const tasks: LabTask[] = [
   },
   {
     id: "hostile",
-    title: "Now play the vendor",
+    title: "Now play the shop",
     brief:
       "You want the report to say customers are happy. Get at least 4 of your 5 to read as “satisfied” — without removing anyone or changing how they feel.",
     pass: (design) => satisfiedCount(design) >= 4,
@@ -236,4 +248,3 @@ export const tasks: LabTask[] = [
       `You're at ${satisfiedCount(design)} of 5. You can't change how they feel — only the options and how you ask. What makes complaining hard?`
   }
 ];
-
