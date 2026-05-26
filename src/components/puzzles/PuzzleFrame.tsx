@@ -33,6 +33,10 @@ type PuzzleFrameProps = {
   className: string;
   progress?: ReactNode;
   children: ReactNode;
+  /* Accepted but unused: lets puzzle files from the curated public branch
+     (which pass a plain role string) compile against this persona-wave frame,
+     whose eyebrow derives Seat + verb internally from puzzleRole(specimen.id). */
+  role?: string;
 };
 
 export function PuzzleFrame({
