@@ -8,6 +8,7 @@ import {
 } from "../../data/stop-the-leak";
 import type { WorkbenchSpecimen } from "../../types/workbench";
 import { VerbatimQuote } from "../workbench/VerbatimQuote";
+import { PuzzleEyebrow } from "./PuzzleFrame";
 
 /* "Stop the leak" puzzle for Example 05 (owner-advertising, sequence
    overlap). The visitor acts as a sequence reviewer across two
@@ -35,13 +36,7 @@ export function StopTheLeak({
       data-interactive="true"
     >
       <header className="puzzle-hero">
-        <p className="puzzle-eyebrow">
-          <span>Puzzle {specimen.number}</span>
-          <span aria-hidden="true">/</span>
-          <span>{specimen.patternLabel}</span>
-          <span aria-hidden="true">/</span>
-          <span className="puzzle-role">Your role: sequence reviewer</span>
-        </p>
+        <PuzzleEyebrow specimen={specimen} />
         <h2 className="puzzle-title" id={titleId} tabIndex={-1}>
           Two questions in a row. One answer leaks across both.
         </h2>
@@ -127,8 +122,8 @@ export function StopTheLeak({
       {answer && (
         <section className="leak-fixes" data-testid={`leak-fixes-${specimen.id}`}>
           <p className="leak-fixes-lead">
-            Neither answer is right, because the bug isn&rsquo;t Dani&rsquo;s — it
-            is the two questions overlapping. Try a fix and watch the leak.
+            Neither button can fix this, because the bug isn&rsquo;t Dani&rsquo;s —
+            it is the two questions overlapping. Try a fix and watch the leak.
           </p>
           <div className="puzzle-buttons" role="group" aria-label="Try a fix">
             {leakFixes.map((candidate) => (
@@ -171,11 +166,19 @@ export function StopTheLeak({
           <h3 id={`puzzle-reveal-${specimen.id}`}>
             The fix is scope, not order.
           </h3>
-          <p>{specimen.methodNote?.whyHere}</p>
+          <p>
+            You recorded one owner-posted Zillow listing, and the sequence let it
+            count once as an internet listing and again where &ldquo;other
+            advertising&rdquo; still sounded relevant.
+          </p>
           <p className="puzzle-reveal-takeaway">
-            {specimen.answerFrame.methodNote} Adjacent questions about
-            overlapping channels double-count unless one of them is scoped to say
-            what it does <em>not</em> include.
+            Scope one adjacent question to say what it does <em>not</em> include,
+            so one listing cannot satisfy both items.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            When two nearby questions can claim the same event, your data may
+            count one experience twice.
           </p>
           {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </section>

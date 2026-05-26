@@ -96,7 +96,6 @@ export function SumpPumpGate({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="Your role: denominator checker"
       title="Open the gate before you read Yes or No."
       lede="The answer No looks tidy only after you know who was eligible for the question. First decide whether the pump-failure premise applies."
       className="puzzle--sump-gate"
@@ -170,17 +169,23 @@ export function SumpPumpGate({
       {allComplete && (
         <PuzzleReveal
           specimen={specimen}
-          eyebrow="Denominator unlocked"
+          eyebrow="Eligibility checked"
           title="“No” split into three different states."
         >
           <p>
-            No flooding, no pump failure, and no pump are not the same answer.
-            A gate or follow-up keeps the absent-equipment household from
-            impersonating an in-scope No.
+            After your premise check, “No” split into three records: no flooding,
+            no pump failure, and no pump. A gate or follow-up keeps the no-pump
+            household from being counted with households where the pump-failure
+            question truly applied.
           </p>
           <p className="puzzle-reveal-takeaway">
-            False-premise puzzles get easier once you ask who actually belongs
-            in the yes/no question.
+            First decide who actually belongs in the yes/no question; then the No
+            column can mean one thing.
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            Before asking yes or no, make sure the person actually has the thing
+            or situation your question assumes.
           </p>
         </PuzzleReveal>
       )}

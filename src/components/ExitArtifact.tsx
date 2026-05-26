@@ -94,7 +94,11 @@ export function ExitArtifact({
           <span aria-hidden="true" className="cta-button-arrow">→</span>
         </a>
         <p className="exit-artifact-secondary">
-          or open the{" "}
+          or{" "}
+          <a href={routeToHash({ kind: "build" })} data-testid="exit-link-build">
+            build an answer set
+          </a>{" "}
+          (the analyst&rsquo;s seat), open the{" "}
           <a href={routeToHash({ kind: "reference" })} data-testid="exit-link-reference">
             reference shelf
           </a>

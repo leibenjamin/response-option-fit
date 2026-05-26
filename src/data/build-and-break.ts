@@ -444,7 +444,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             copy:
               "The residual-last rule lets Other method work here because the parent ride is outside the named worker-carpool and hired-ride modes.",
             missingCopy:
-              "The residual-last rule needs an honest residual for Lin. Carpool and ride-hailing no longer get to impersonate the parent ride."
+              "The residual-last rule needs a valid residual for Lin. Carpool and ride-hailing cannot stand in for the parent ride."
           }
         }
       },
@@ -452,12 +452,12 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
         id: "marco",
         who: "Marco drives for a delivery app; the car is where the work happens.",
         reading:
-          "He is not traveling to a workplace so much as working by moving through the city.",
+          "He is not traveling to a workplace; he is working while moving through the city.",
         fitsClean: [],
         fitsForced: ["car-alone", "taxi", "other"],
         fateCopy: {
           forced:
-            "The form records a commute mode for someone whose edge case is whether there was a commute at all.",
+            "The form records a commute mode for someone whose real issue is whether there was a commute at all.",
           lost:
             "No commute answer fits because the question assumes a trip to work."
         },
@@ -465,7 +465,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           "usual-week": {
             forceFate: "lost",
             copy:
-              "The reference-week rule cannot summarize Marco as traveling to work; the case is an eligibility problem wearing a commute-mode costume."
+              "The reference-week rule cannot summarize Marco as traveling to work; the case is an eligibility problem being forced into a commute-mode category."
           },
           "residual-last": {
             forceFate: "lost",
@@ -576,7 +576,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
       {
         id: "not",
         label: "Not a sandwich",
-        blurb: "A deliberate escape hatch for rejected edge cases."
+        blurb: "A deliberate answer for cases the taxonomy rejects."
       },
       {
         id: "other",
@@ -617,7 +617,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
         sourcePosture: "teaching",
         sourceLabel: "Authored teaching rule",
         sourceNote:
-          "A deliberately unserious rule with a serious purpose: the category has to say which feature wins."
+          "A deliberately playful rule with a serious purpose: the category has to say which feature controls the classification."
       }
     ],
     situations: [
@@ -625,7 +625,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
         id: "club",
         who: "A three-slice club with turkey, bacon, lettuce, and tomato.",
         reading:
-          "It is almost aggressively sandwich-shaped, even with the extra layer.",
+          "It is strongly sandwich-shaped, even with the extra layer.",
         fitsClean: ["sandwich"],
         fitsForced: ["other"],
         fateCopy: {
@@ -648,7 +648,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           context: {
             recordAs: "sandwich",
             copy:
-              "The context rule keeps the lunch object in Sandwich. Civilization survives one card."
+              "The context rule keeps the lunch item in Sandwich. The easy control case stays easy."
           }
         }
       },
@@ -665,7 +665,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           forced:
             "Other avoids the argument by hiding the category decision.",
           lost:
-            "The hot dog has no official home, which will not end the argument outside the form."
+            "The hot dog has no official category, which will not resolve the disagreement outside the form."
         },
         ruleOutcomes: {
           hierarchy: {
@@ -685,7 +685,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           context: {
             recordAs: "hotdog",
             copy:
-              "The context rule keeps the cookout category separate. This is the polite version of the internet argument.",
+              "The context rule keeps the cookout category separate. It resolves the familiar hot-dog debate by stating the rule.",
             missingCopy:
               "The context rule wants the Hot dog category; without it, the form has to admit the exception is missing."
           }
@@ -702,9 +702,9 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           split:
             "The burrito can be a wrap and a broad sandwich if the form never says what bread-like means.",
           forced:
-            "Other keeps peace by throwing away the distinction the menu was supposed to make.",
+            "Other avoids the conflict by removing the distinction the menu was supposed to make.",
           lost:
-            "The burrito falls through because the taxonomy forgot its own borderlands."
+            "The burrito is left unclassified because the taxonomy did not define its boundary cases."
         },
         ruleOutcomes: {
           hierarchy: {
@@ -717,14 +717,14 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           structure: {
             recordAs: "wrap",
             copy:
-              "The structure rule sees a flexible wrapper doing the work and records Wrap / burrito.",
+              "The structure rule uses the flexible wrapper as decisive and records Wrap / burrito.",
             missingCopy:
               "The structure rule needs Wrap / burrito; Sandwich alone is too coarse for this rule."
           },
           context: {
             recordAs: "wrap",
             copy:
-              "The context rule keeps the burrito in the wrap lane rather than turning lunch into a bread seminar.",
+              "The context rule keeps the burrito in Wrap / burrito rather than making bread type decide every lunch case.",
             missingCopy:
               "The context rule points to Wrap / burrito, which your answer set did not offer."
           }
@@ -763,9 +763,9 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           context: {
             recordAs: "dessert",
             copy:
-              "The context rule records the frozen dessert as Dessert sandwich. Nobody is putting mustard on this.",
+              "The context rule records the frozen dessert as Dessert sandwich. Dessert context decides this case.",
             missingCopy:
-              "The context rule needs Dessert sandwich; without it, the dessert becomes a taxonomy spill."
+              "The context rule needs Dessert sandwich; without it, the dessert exposes a gap in the taxonomy."
           }
         }
       },
@@ -782,7 +782,7 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
           forced:
             "Other preserves the count and loses the structural question.",
           lost:
-            "The missing top slice makes the whole answer list go quiet."
+            "The missing top slice leaves the answer list with no valid category."
         },
         ruleOutcomes: {
           hierarchy: {
@@ -797,12 +797,12 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
             copy:
               "The structure rule treats the missing top slice as decisive and records Open-faced.",
             missingCopy:
-              "The structure rule needs Open-faced; Sandwich alone forgot the top-slice rule."
+              "The structure rule needs Open-faced; Sandwich alone does not preserve the top-slice rule."
           },
           context: {
             recordAs: "open-faced",
             copy:
-              "The context rule keeps the melt in Open-faced. The roof matters.",
+              "The context rule keeps the melt in Open-faced. The missing top slice matters.",
             missingCopy:
               "The context rule points to Open-faced, which your answer set did not offer."
           }
@@ -812,46 +812,46 @@ export const buildTopics: [BuildTopic, BuildTopic] = [
         id: "pop-tart",
         who: "A Pop-Tart with filling sealed inside pastry.",
         reading:
-          "It is filling inside a starch shell, but almost no one wants it in the lunch taxonomy.",
+          "It is filling inside a starch shell, but it does not belong in the lunch taxonomy most people intend.",
         fitsClean: ["pastry", "not"],
         fitsForced: ["sandwich", "dessert", "other"],
         fateCopy: {
           split:
             "Pastry and Not a sandwich both work, but they answer different questions: what it is versus what it is not.",
           forced:
-            "The form can cram the Pop-Tart into a nearby sweet or sandwich-ish bucket, and the result looks cleaner than the decision was.",
+            "The form can force the Pop-Tart into a nearby sweet or sandwich-like bucket, and the result looks cleaner than the decision was.",
           lost:
-            "The pastry has no home because the form only prepared for the argument it expected."
+            "The pastry has no category because the form only prepared for the boundary argument it expected."
         },
         ruleOutcomes: {
           hierarchy: {
             recordAs: "pastry",
             copy:
-              "The hierarchy rule records Pastry before the negative label. It is what it is before it is what it is not.",
+              "The hierarchy rule records Pastry before the negative label. The positive category comes before the rejection category.",
             missingCopy:
-              "The hierarchy rule points to Pastry, but your answer set did not include the category that makes the joke stop."
+              "The hierarchy rule points to Pastry, but your answer set did not include the category that resolves this boundary case."
           },
           structure: {
             recordAs: "not",
             copy:
               "The structure rule treats the sealed pastry shell as outside sandwich architecture and records Not a sandwich.",
             missingCopy:
-              "The structure rule points to Not a sandwich, but your answer set did not include the escape hatch."
+              "The structure rule points to Not a sandwich, but your answer set did not include the rejection category."
           },
           context: {
             recordAs: "pastry",
             copy:
-              "The context rule records Pastry. Breakfast toaster rectangles do not become lunch just because they have a filling.",
+              "The context rule records Pastry. A filled toaster pastry does not become a lunch category just because it has a filling.",
             missingCopy:
-              "The context rule needs Pastry; otherwise the toaster rectangle starts freelancing."
+              "The context rule needs Pastry; otherwise the filled pastry gets forced into a category it was not meant to use."
           }
         }
       }
     ],
     reveal: {
-      lead: "The silly taxonomy broke for the same serious reason.",
+      lead: "The playful taxonomy broke for the same serious reason.",
       body:
-        "Categories feel obvious when they live in your head. The moment a form has to record one answer, the private rule has to become public or the export starts laundering the argument.",
+        "Categories feel obvious when they stay private. The moment a form has to record one answer, the private rule has to become public or the export turns the unresolved argument into clean-looking data.",
       bridgeHref: "#field-guide",
       bridgeLabel: "Take the same check to a real survey draft"
     }

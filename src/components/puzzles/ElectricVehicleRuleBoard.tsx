@@ -106,7 +106,6 @@ export function ElectricVehicleRuleBoard({
     <PuzzleFrame
       specimen={specimen}
       titleId={titleId}
-      role="Your role: rule finder"
       title="Pick the feature that decides the vehicle."
       lede="The household knows the car. The form failed to say which feature should control the edge case: plug, battery, marketing name, or hybrid identity."
       className="puzzle--ev-rule"
@@ -135,13 +134,15 @@ export function ElectricVehicleRuleBoard({
         <ol className="vehicle-grid" aria-label="Vehicle cards">
           {vehicles.map((vehicle) => (
             <li className="vehicle-card" key={vehicle.id}>
-              <p className="vehicle-label">{vehicle.label}</p>
-              <p className="vehicle-description">{vehicle.description}</p>
-              <ul className="vehicle-features">
-                {vehicle.features.map((feature) => (
-                  <li key={feature}>{feature}</li>
-                ))}
-              </ul>
+              <div className="vehicle-left">
+                <p className="vehicle-label">{vehicle.label}</p>
+                <p className="vehicle-description">{vehicle.description}</p>
+                <ul className="vehicle-features">
+                  {vehicle.features.map((feature) => (
+                    <li key={feature}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
               <p
                 className={`vehicle-result ${rule ? "is-active" : ""}`}
                 data-testid={`ev-result-${specimen.id}-${vehicle.id}`}
@@ -161,13 +162,17 @@ export function ElectricVehicleRuleBoard({
         >
           <p>
             Under <strong>{activeRule.label.toLowerCase()}</strong>, the same
-            vehicle cards move to different bins. That is the category-boundary
-            failure: people can know the facts and still lack the rule that
-            decides the answer.
+            vehicle cards move to different bins. The respondent can know the
+            facts and still not know which feature the form meant to use.
           </p>
           <p className="puzzle-reveal-takeaway">
             A cleaner form names the controlling feature instead of asking
             respondents to infer it from “another type.”
+          </p>
+          <p className="puzzle-reveal-sowhat">
+            <span className="puzzle-reveal-sowhat-key">For a survey you build</span>
+            If the edge case depends on a hidden rule, knowledgeable respondents
+            can still choose different answers.
           </p>
           {specimen.verbatim && <VerbatimQuote verbatim={specimen.verbatim} />}
         </PuzzleReveal>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatedNumber } from "../lib/motion";
 import {
   buildTopics,
   evaluateTopic,
@@ -361,7 +362,10 @@ export function BuildAndBreakRoute() {
                   <p className="build-export-total">
                     <span>Rows the export can file</span>
                     <strong data-testid={`build-export-placed-${topic.id}`}>
-                      {exportTable.placedCount}
+                      <AnimatedNumber
+                        value={exportTable.placedCount}
+                        ariaLabel={`${exportTable.placedCount}`}
+                      />
                     </strong>
                   </p>
                 </div>
@@ -554,7 +558,13 @@ export function BuildAndBreakRoute() {
                   className="build-reveal-stat"
                   data-testid={`build-reveal-stat-${topic.id}`}
                 >
-                  <strong>{result.counts.clean}</strong> of{" "}
+                  <strong>
+                    <AnimatedNumber
+                      value={result.counts.clean}
+                      ariaLabel={`${result.counts.clean}`}
+                    />
+                  </strong>{" "}
+                  of{" "}
                   {topic.situations.length} people got a clean, honest cell
                   {result.counts.clean === topic.situations.length
                     ? "."
