@@ -4316,9 +4316,14 @@ summary:focus-visible {
 
 /* Cast rows + task rows stagger in once on mount (reduced-motion zeroes it). */
 .lab-cast > li,
-.lab-task-list > li {
+.lab-task-list > li,
+.lab-exercises > li {
   animation: mo-pop var(--mo-2) var(--mo-ease) both;
 }
+.lab-exercises > li:nth-child(2) { animation-delay: 60ms; }
+.lab-exercises > li:nth-child(3) { animation-delay: 120ms; }
+.lab-exercises > li:nth-child(4) { animation-delay: 180ms; }
+.lab-exercises > li:nth-child(5) { animation-delay: 240ms; }
 .lab-cast > li:nth-child(2),
 .lab-task-list > li:nth-child(2) {
   animation-delay: 55ms;
@@ -4353,6 +4358,680 @@ summary:focus-visible {
   }
   .lab-cast-arrow {
     display: none;
+  }
+}/* ===================== SURVEY LAB — multi-exercise wrapper + shared exercise frame ===================== */
+
+.lab-exercises {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  counter-reset: lab-ex;
+}
+
+.lab-exercises > li {
+  list-style: none;
+  margin: 0;
+}
+
+.lab-exercise {
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  padding: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  position: relative;
+}
+
+.lab-exercise-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  border-bottom: 1px solid var(--line-faint);
+  padding-bottom: var(--s-3);
+}
+
+.lab-exercise-num {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.lab-exercise-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.18;
+  color: var(--ink);
+  margin: 0;
+}
+
+.lab-exercise-issue {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.lab-exercise-setup {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 72ch;
+}
+
+.lab-exercise-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+.lab-action-button {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--paper-card);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--s-3) var(--s-5);
+  cursor: pointer;
+}
+
+.lab-action-button:hover:not(:disabled),
+.lab-action-button:focus-visible:not(:disabled) {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+}
+
+.lab-action-button:disabled {
+  background: var(--paper-2);
+  color: var(--ink-mute);
+  border-color: var(--line);
+  cursor: default;
+}
+
+.lab-action-button--ghost {
+  background: var(--paper);
+  color: var(--accent);
+}
+
+.lab-action-button--ghost:hover:not(:disabled),
+.lab-action-button--ghost:focus-visible:not(:disabled) {
+  background: var(--accent-paper);
+  color: var(--accent-2);
+}
+
+.lab-exercise-pass {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  border-left: 3px solid var(--route-r);
+  padding: var(--s-2) var(--s-3);
+  background: rgba(93, 110, 68, 0.06);
+}
+
+.lab-exercise-error {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--accent-2);
+  border-left: 3px solid var(--accent);
+  padding: var(--s-2) var(--s-3);
+  background: var(--accent-paper);
+}
+
+.lab-exercise-error p {
+  margin: var(--s-1) 0;
+}
+.lab-exercise-error p:first-child { margin-top: 0; }
+.lab-exercise-error p:last-child { margin-bottom: 0; }
+
+/* ─── Exercise 2 — Double-barreled detector ─── */
+
+.lab-bundled-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+
+.lab-bundled-list > li {
+  min-width: 0;
+}
+
+.lab-bundled-item {
+  width: 100%;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  color: var(--ink-2);
+  padding: var(--s-3) var(--s-4);
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: start;
+  text-align: left;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.lab-bundled-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  flex: none;
+}
+
+.lab-bundled-text {
+  min-width: 0;
+}
+
+.lab-bundled-ideas {
+  grid-column: 2 / -1;
+  display: block;
+  margin-top: var(--s-1);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.lab-bundled-item:hover:not(:disabled),
+.lab-bundled-item:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.lab-bundled-item.is-flagged {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--ink);
+}
+
+.lab-bundled-item.is-correct {
+  border-color: var(--route-r);
+  background: rgba(93, 110, 68, 0.1);
+  color: var(--ink);
+}
+
+.lab-bundled-item.is-correct .lab-bundled-mark {
+  background: var(--route-r);
+  border-color: var(--route-r);
+  color: var(--paper-card);
+}
+
+.lab-bundled-item.is-false-positive {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--accent-2);
+}
+
+.lab-bundled-item.is-false-positive .lab-bundled-mark {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper-card);
+}
+
+.lab-bundled-item.is-missed {
+  border-style: dashed;
+  border-color: var(--accent);
+  color: var(--ink-2);
+}
+
+/* ─── Exercise 3 — MECE bucket fixer ─── */
+
+.lab-bucket-question {
+  border-left: 3px solid var(--accent);
+  padding-left: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-bucket-question-key {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  color: var(--ink);
+  margin: 0;
+}
+
+.lab-bucket-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.lab-bucket-chip {
+  display: inline-block;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: var(--s-2) var(--s-4);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+
+.lab-bucket-conflicts {
+  list-style: none;
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper-2);
+  border-left: 3px solid var(--accent-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-bucket-conflict {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.lab-bucket-conflict strong {
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 15px;
+}
+
+.lab-bucket-conflict-q {
+  font-style: italic;
+  color: var(--accent-2);
+}
+
+.lab-bucket-fix-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-bucket-fix,
+.lab-hear-fix {
+  width: 100%;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  color: var(--ink-2);
+  padding: var(--s-3) var(--s-4);
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: center;
+  text-align: left;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.lab-bucket-fix:hover:not(:disabled),
+.lab-bucket-fix:focus-visible:not(:disabled),
+.lab-hear-fix:hover:not(:disabled),
+.lab-hear-fix:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.lab-bucket-fix-mark,
+.lab-hear-fix-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.lab-bucket-fix.is-picked,
+.lab-hear-fix.is-picked {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--ink);
+}
+
+.lab-bucket-fix.is-correct,
+.lab-hear-fix.is-correct {
+  border-color: var(--route-r);
+  background: rgba(93, 110, 68, 0.1);
+}
+
+.lab-bucket-fix.is-correct .lab-bucket-fix-mark,
+.lab-hear-fix.is-correct .lab-hear-fix-mark {
+  background: var(--route-r);
+  border-color: var(--route-r);
+  color: var(--paper-card);
+}
+
+.lab-bucket-fix.is-wrong,
+.lab-hear-fix.is-wrong {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+}
+
+.lab-bucket-fix.is-wrong .lab-bucket-fix-mark,
+.lab-hear-fix.is-wrong .lab-hear-fix-mark {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper-card);
+}
+
+.lab-hear-fix.is-partial {
+  border-color: var(--route-w);
+  background: rgba(69, 87, 116, 0.08);
+}
+
+.lab-hear-fix.is-partial .lab-hear-fix-mark {
+  background: var(--route-w);
+  border-color: var(--route-w);
+  color: var(--paper-card);
+}
+
+/* ─── Exercise 4 — Missing-option finder ─── */
+
+.lab-hear-shown {
+  border-left: 3px solid var(--accent);
+  padding-left: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-hear-shown-key {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  color: var(--ink);
+  margin: 0;
+}
+
+.lab-hear-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.lab-hear-option {
+  display: inline-block;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: var(--s-2) var(--s-3);
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.lab-hear-cast {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.lab-hear-cast-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.7fr);
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--line-faint);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.lab-hear-cast-row:last-child {
+  border-bottom: 0;
+}
+
+.lab-hear-cast-who strong {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.lab-hear-cast-story {
+  color: var(--ink-soft);
+}
+
+.lab-hear-cast-arrow {
+  color: var(--ink-mute);
+}
+
+.lab-hear-cast-landing {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.lab-hear-cast-row.is-stuck .lab-hear-cast-landing {
+  color: var(--accent-2);
+  font-weight: 600;
+  font-style: italic;
+}
+
+.lab-hear-prompt {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.lab-hear-fix-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+/* ─── Exercise 5 — Spot the bias ─── */
+
+.lab-spot-headline {
+  margin: 0;
+  padding: var(--s-4) var(--s-5);
+  background: var(--paper);
+  border-left: 3px solid var(--accent);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.lab-spot-design {
+  border: 1px dashed var(--line);
+  background: var(--paper-2);
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-spot-design-key {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.lab-spot-design-stem {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 16.5px;
+  color: var(--ink);
+}
+
+.lab-spot-design-options {
+  margin: 0;
+  padding-left: var(--s-5);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--ink-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.lab-spot-design-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin: 0;
+}
+
+.lab-spot-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-spot-row {
+  width: 100%;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  color: var(--ink-2);
+  padding: var(--s-3) var(--s-4);
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: start;
+  text-align: left;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.lab-spot-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.lab-spot-label {
+  min-width: 0;
+}
+
+.lab-spot-note {
+  grid-column: 2 / -1;
+  display: block;
+  margin-top: var(--s-1);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.lab-spot-row:hover:not(:disabled),
+.lab-spot-row:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+
+.lab-spot-row.is-checked {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--ink);
+}
+
+.lab-spot-row.is-correct {
+  border-color: var(--route-r);
+  background: rgba(93, 110, 68, 0.1);
+  color: var(--ink);
+}
+.lab-spot-row.is-correct .lab-spot-mark {
+  color: var(--route-r);
+}
+
+.lab-spot-row.is-false-positive {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--accent-2);
+}
+.lab-spot-row.is-false-positive .lab-spot-mark {
+  color: var(--accent);
+}
+
+.lab-spot-row.is-missed {
+  border-style: dashed;
+  border-color: var(--accent);
+}
+.lab-spot-row.is-missed .lab-spot-mark {
+  color: var(--accent);
+}
+
+/* ─── Lab page footer ─── */
+
+.lab-route-foot {
+  border-top: 1px solid var(--line);
+  margin-top: var(--s-6);
+  padding-top: var(--s-5);
+}
+
+.lab-route-foot-line {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 72ch;
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 720px) {
+  .lab-bundled-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .lab-exercise {
+    padding: var(--s-5) var(--s-4);
+  }
+  .lab-hear-cast-row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: flex-start;
+  }
+  .lab-hear-cast-arrow {
+    display: none;
+  }
+  .lab-hear-cast-landing {
+    text-align: left;
+    padding-top: var(--s-1);
   }
 }/* ===================== ROUTE PUZZLES ===================== */
 /* Puzzles share the frame (.puzzle-hero / .puzzle-reveal / .puzzle-source)
@@ -7239,6 +7918,19 @@ summary:focus-visible {
 .lab-task,
 .lab-task-mark,
 .lab-flip,
+.lab-exercise,
+.lab-action-button,
+.lab-bundled-item,
+.lab-bucket-chip,
+.lab-bucket-conflicts,
+.lab-bucket-fix,
+.lab-hear-shown,
+.lab-hear-option,
+.lab-hear-cast-row,
+.lab-hear-fix,
+.lab-spot-headline,
+.lab-spot-design,
+.lab-spot-row,
 .src-fold,
 .src-chip span {
     color: CanvasText;
@@ -7255,6 +7947,15 @@ summary:focus-visible {
 .lab-point.is-on,
 .lab-task.is-active,
 .lab-task.is-done .lab-task-mark,
+.lab-bundled-item.is-flagged,
+.lab-bundled-item.is-correct,
+.lab-bucket-fix.is-picked,
+.lab-bucket-fix.is-correct,
+.lab-hear-fix.is-picked,
+.lab-hear-fix.is-correct,
+.lab-spot-row.is-checked,
+.lab-spot-row.is-correct,
+.lab-action-button:not(:disabled),
 .build-fate--split,
 .build-fate--forced,
 .build-fate--lost,
@@ -7412,6 +8113,11 @@ summary:focus-visible {
 .lab-seg,
 .lab-point,
 .lab-reset,
+.lab-action-button,
+.lab-bundled-item,
+.lab-bucket-fix,
+.lab-hear-fix,
+.lab-spot-row,
 .featured-hook-route,
 .capstone-option,
 .capstone-meta,
@@ -7439,6 +8145,11 @@ summary:focus-visible {
 .lab-seg:hover:not(:disabled),
 .lab-point:hover:not(:disabled),
 .lab-reset:hover:not(:disabled),
+.lab-action-button:hover:not(:disabled),
+.lab-bundled-item:hover:not(:disabled),
+.lab-bucket-fix:hover:not(:disabled),
+.lab-hear-fix:hover:not(:disabled),
+.lab-spot-row:hover:not(:disabled),
 .featured-hook-route:hover:not(:disabled),
 .capstone-option:hover:not(:disabled),
 .capstone-meta:hover:not(:disabled),
@@ -7461,6 +8172,11 @@ summary:focus-visible {
 .lab-seg:active:not(:disabled),
 .lab-point:active:not(:disabled),
 .lab-reset:active:not(:disabled),
+.lab-action-button:active:not(:disabled),
+.lab-bundled-item:active:not(:disabled),
+.lab-bucket-fix:active:not(:disabled),
+.lab-hear-fix:active:not(:disabled),
+.lab-spot-row:active:not(:disabled),
 .featured-hook-route:active:not(:disabled),
 .capstone-option:active:not(:disabled),
 .capstone-meta:active:not(:disabled),
