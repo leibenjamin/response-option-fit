@@ -32,7 +32,7 @@ const SatisfactionLab = lazy(() =>
 );
 
 function currentRoute(): Route {
-  if (typeof window === "undefined") return { kind: "hub" };
+  if (typeof window === "undefined") return { kind: "lab" };
   return parseHash(window.location.hash, knownSpecimenIds);
 }
 
@@ -102,14 +102,13 @@ function Hub({
           analyzer.
         </p>
         <p className="foot-line foot-line--quiet">
-          Built for editorial study of response-option fit.
-        </p>
-        <p className="foot-line foot-line--quiet">
-          <a className="foot-link foot-link--preview" href={routeToHash({ kind: "lab" })}>
-            Preview a new survey-lab format in progress →
-          </a>
+          Archived overview. The current home is the response-options lab.
         </p>
         <p className="foot-line foot-line--quiet hub-foot-links">
+          <a className="foot-link" href={routeToHash({ kind: "lab" })}>
+            ← Back to the lab
+          </a>
+          <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
             Check your own survey draft
           </a>
@@ -141,8 +140,8 @@ function ReferenceRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
       <Reference />
       <footer className="foot">
         <p className="foot-line foot-line--quiet hub-foot-links">
-          <a className="foot-link" href={routeToHash({ kind: "hub" })}>
-            ← Back to overview
+          <a className="foot-link" href={routeToHash({ kind: "lab" })}>
+            ← Back to the lab
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
@@ -190,8 +189,8 @@ function FieldGuideRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
       </Suspense>
       <footer className="foot">
         <p className="foot-line foot-line--quiet hub-foot-links">
-          <a className="foot-link" href={routeToHash({ kind: "hub" })}>
-            ← Back to overview
+          <a className="foot-link" href={routeToHash({ kind: "lab" })}>
+            ← Back to the lab
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
@@ -239,8 +238,8 @@ function BuildRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
       </Suspense>
       <footer className="foot">
         <p className="foot-line foot-line--quiet hub-foot-links">
-          <a className="foot-link" href={routeToHash({ kind: "hub" })}>
-            ← Back to overview
+          <a className="foot-link" href={routeToHash({ kind: "lab" })}>
+            ← Back to the lab
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "walk", slot: "ride-hailing" })}>
@@ -291,21 +290,31 @@ function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
         <SatisfactionLab />
       </Suspense>
       <footer className="foot">
+        <p className="foot-line">
+          Static exhibit. No backend, no runtime AI, no network upload, no
+          survey analyzer.
+        </p>
         <p className="foot-line foot-line--quiet">
-          Preview of a new format in progress. The twelve puzzles remain the main
-          walk for now.
+          Built for editorial study of response-option fit.
         </p>
         <p className="foot-line foot-line--quiet hub-foot-links">
-          <a className="foot-link" href={routeToHash({ kind: "hub" })}>
-            ← Back to overview
-          </a>
-          <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "build" })}>
             Build an answer set
           </a>
           <span aria-hidden="true">·</span>
-          <a className="foot-link" href={routeToHash({ kind: "walk", slot: "ride-hailing" })}>
+          <a
+            className="foot-link"
+            href={routeToHash({ kind: "walk", slot: "ride-hailing" })}
+          >
             Walk all twelve puzzles
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "fieldGuide" })}>
+            Check your own survey draft
+          </a>
+          <span aria-hidden="true">·</span>
+          <a className="foot-link" href={routeToHash({ kind: "reference" })}>
+            Open the reference shelf
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
@@ -344,8 +353,8 @@ function WalkRoute({
         <CompletionScreen visited={new Set(controller.state.visited)} />
         <footer className="foot">
           <p className="foot-line foot-line--quiet hub-foot-links">
-            <a className="foot-link" href={routeToHash({ kind: "hub" })}>
-              ← Back to overview
+            <a className="foot-link" href={routeToHash({ kind: "lab" })}>
+              ← Back to the lab
             </a>
             <span aria-hidden="true">·</span>
             <a className="foot-link" href={routeToHash({ kind: "reference" })}>
@@ -385,8 +394,8 @@ function WalkRoute({
       />
       <footer className="foot">
         <p className="foot-line foot-line--quiet hub-foot-links">
-          <a className="foot-link" href={routeToHash({ kind: "hub" })}>
-            ← Back to overview
+          <a className="foot-link" href={routeToHash({ kind: "lab" })}>
+            ← Back to the lab
           </a>
           <span aria-hidden="true">·</span>
           <a className="foot-link" href={routeToHash({ kind: "reference" })}>
@@ -412,14 +421,14 @@ function WalkRoute({
 
 function routeAnnouncement(route: Route): string {
   switch (route.kind) {
+    case "lab":
+      return "Loaded the response-options lab.";
     case "hub":
-      return "Loaded overview.";
+      return "Loaded the archived overview.";
     case "reference":
       return "Loaded reference shelf.";
     case "build":
       return "Loaded answer-set builder.";
-    case "lab":
-      return "Loaded survey lab.";
     case "fieldGuide":
       return "Loaded field guide.";
     case "colophon":
@@ -427,7 +436,7 @@ function routeAnnouncement(route: Route): string {
     case "walk": {
       if (route.slot === "done") return "Loaded walk summary.";
       const specimen = workbenchSpecimens.find((s) => s.id === route.slot);
-      if (!specimen) return "Loaded overview.";
+      if (!specimen) return "Loaded the response-options lab.";
       return `Loaded puzzle ${specimen.number} of 12: ${specimen.title}.`;
     }
   }
@@ -435,14 +444,14 @@ function routeAnnouncement(route: Route): string {
 
 function pageTitle(route: Route): string {
   switch (route.kind) {
-    case "hub":
+    case "lab":
       return "Response Option Fit Lab";
+    case "hub":
+      return "Archived overview — Response Option Fit Lab";
     case "reference":
       return "Reference shelf — Response Option Fit Lab";
     case "build":
       return "Build an answer set — Response Option Fit Lab";
-    case "lab":
-      return "Survey lab (preview) — Response Option Fit Lab";
     case "fieldGuide":
       return "Field guide — Response Option Fit Lab";
     case "colophon":
