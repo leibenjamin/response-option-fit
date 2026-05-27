@@ -169,8 +169,32 @@ test.describe("Response Option Fit Lab - desktop", () => {
     testInfo.skip(testInfo.project.name !== "desktop", "desktop only");
   });
 
-  test("hub frames the app as interactive and embeds an interactive first puzzle", async ({ page }) => {
+  test("the lab home (/) loads the SQLBolt-style five-exercise practice page", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    await expect(page.locator("#survey-lab-title")).toContainText(
+      "Five ways a survey quietly lies"
+    );
+    /* Five exercise cards present. */
+    await expect(page.locator(".lab-exercise")).toHaveCount(5);
+    /* Each named with its primary verb. */
+    const verbs = await page.locator(".lab-exercise-verb").allInnerTexts();
+    expect(verbs.length).toBe(5);
+    /* The closing knowledge map carries the four SLOT/RULER/PUSH/BOUNDARY
+       branches with the marker legend. */
+    await expect(page.getByTestId("lab-km")).toBeVisible();
+    await expect(page.locator(".lab-km-branch")).toHaveCount(4);
+    await expect(page.locator(".lab-km-legend")).toBeVisible();
+  });
+
+  test("the lab's #lab and / hashes are equivalent", async ({ page }) => {
+    await page.goto(`${BASE_URL}/#lab`);
+    await expect(page.locator("#survey-lab-title")).toContainText(
+      "Five ways a survey quietly lies"
+    );
+  });
+
+  test("archived hub (now at #hub) frames the app as interactive and embeds an interactive first puzzle", async ({ page }) => {
+    await page.goto(`${BASE_URL}/#hub`);
     await expect(page.getByTestId("hero")).toContainText("Interactive problem lab");
     await expect(page.getByTestId("scope-receipt")).toContainText("interactive puzzles");
     await expect(page.getByTestId("featured-example")).toContainText("One puzzle");
@@ -178,8 +202,8 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("exposition-ride-hailing")).toHaveCount(0);
   });
 
-  test("opening hook is a plausible survey intake, not a detached word puzzle", async ({ page }) => {
-    await page.goto(`${BASE_URL}/`);
+  test("archived hub's opening hook is a plausible survey intake, not a detached word puzzle", async ({ page }) => {
+    await page.goto(`${BASE_URL}/#hub`);
     const hook = page.getByTestId("featured-hook");
     await expect(hook).not.toContainText("A field says “one word only.” Would this count?");
     await expect(hook).toContainText("A survey asks for one word. Four honest answers arrive.");
@@ -217,8 +241,8 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.locator(".featured-hook-reveal-inner")).toBeInViewport();
   });
 
-  test("main journey copy uses the current puzzle-first CTA labels", async ({ page }) => {
-    await page.goto(`${BASE_URL}/`);
+  test("archived hub main journey copy uses the current puzzle-first CTA labels", async ({ page }) => {
+    await page.goto(`${BASE_URL}/#hub`);
     const hub = page.getByTestId("hub");
     await expect(hub).not.toContainText("sourced example");
     await expect(hub).not.toContainText("storage rule");
@@ -322,7 +346,8 @@ test.describe("Response Option Fit Lab - desktop", () => {
     );
 
     await page.goto(`${BASE_URL}/#walk/not-a-current-specimen`);
-    await expect(page.getByTestId("hub")).toBeVisible();
+    /* Unknown walk specimens now fall back to the lab home (not the archived hub). */
+    await expect(page.locator("#survey-lab-title")).toBeVisible();
     await expect(page.getByTestId("workbench-not-a-current-specimen")).toHaveCount(0);
   });
 
@@ -412,7 +437,7 @@ test.describe("Response Option Fit Lab - mobile", () => {
       "/#build"
     ]) {
       await page.goto(`${BASE_URL}${route}`);
-      await expect(page.locator('[data-interactive="true"], [data-testid="build-and-break-route"]').first()).toBeVisible();
+      await expect(page.locator('[data-interactive="true"], [data-testid="build-and-break-route"], #survey-lab').first()).toBeVisible();
       const overflow = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,
         clientWidth: document.documentElement.clientWidth
