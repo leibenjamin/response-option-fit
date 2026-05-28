@@ -105,11 +105,15 @@ export function landingFor(respondent: Respondent, design: Design): ScalePoint |
   return best;
 }
 
-/* The mildly-biased scale the exercise opens on — a plausibly "shipped" version
-   that already over-reads as satisfied, so the visitor sees the lie before
-   fixing it. (Leading stem + no strong-negative options.) */
+/* The scale the exercise opens on — a bare two-point forced choice with a
+   leading stem. It over-reads as satisfied (4 of 5) before the visitor
+   touches anything, so the lie is visible on arrival and Task 1 is about
+   BUILDING a real scale rather than trimming one. (Trace: leading stem
+   nudges everyone +1; the only options are Satisfied/Dissatisfied, so Dev
+   at −1 ties and primacy sends him to Satisfied, and only furious Eve
+   stays Dissatisfied.) */
 export const shippedDesign: Design = {
-  selected: ["vsat", "sat", "ssat", "neutral", "sdis"],
+  selected: ["sat", "dis"],
   stem: "leading",
   order: "positive-first"
 };
@@ -227,15 +231,40 @@ export const tasks: LabTask[] = [
   },
   {
     id: "cleo",
-    title: "Round Cleo up",
+    title: "Round the fence-sitter up",
     brief:
-      "Cleo is genuinely on the fence. Make her read as “satisfied” — without changing how she feels.",
+      "Cleo is genuinely on the fence — the music was too loud, the drink was fine. Make her read as “satisfied” without changing how she feels.",
     pass: (design) =>
       isSatisfied(landingFor(cast.find((c) => c.id === "cleo")!, design)),
     passText:
-      "Cleo never said she was satisfied. You took away her honest middle (or tilted the question), and a forced choice rounded her up. That is how dropping “Neutral” quietly inflates the positive side.",
+      "Cleo never said she was satisfied. You took away her honest middle (or tilted the question), and a forced choice rounded her up. That is how dropping a true neutral quietly inflates the positive side.",
     hint: () =>
       "Right now Cleo can land on a true middle option. What if the scale didn't offer one — or the stem nudged everyone up?"
+  },
+  {
+    id: "order",
+    title: "Flip her back with nothing but order",
+    brief:
+      "Leave Cleo with no true middle, then change ONE thing — switch the option order to negative-first — and push her over to the dissatisfied side.",
+    pass: (design) => {
+      const p = landingFor(cast.find((c) => c.id === "cleo")!, design);
+      return p != null && p.value < 0;
+    },
+    passText:
+      "Same coffee, same feeling — you moved her from “satisfied” to “dissatisfied” with nothing but the order of the list. When two options are equally close, people drift to the one they read first: the primacy effect. Read aloud on the phone it reverses — the last option heard wins (recency). Order is part of the response design, not a cosmetic detail.",
+    hint: (design) => {
+      const cleo = cast.find((c) => c.id === "cleo")!;
+      if (design.selected.includes("neutral")) {
+        return "While a true Neutral is offered, Cleo just sits on it and order can't move her. Remove the neutral first, then flip to negative-first.";
+      }
+      if (design.order === "positive-first") {
+        return "With no middle, Cleo is equidistant between the two nearest options. Flip the order to negative-first and watch which one she lands on.";
+      }
+      const p = landingFor(cleo, design);
+      return p != null && p.value < 0
+        ? "There she goes."
+        : "She needs to be equidistant between a positive and a negative option, with negative-first order. Trim back toward a balanced scale with no neutral.";
+    }
   },
   {
     id: "hostile",

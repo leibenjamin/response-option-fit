@@ -19,48 +19,46 @@ import {
   ageRespondents,
   bucketsContainingAge,
   bucketTasks,
+  channelAllClean,
   channelBank,
   channelLandingFor,
   channelLedger,
-  channelPassed,
   channelRespondents,
   channelTallies,
-  cardIsPassed,
+  channelTasks,
   coverageGlyph,
   coverageLabel,
   credentialingFacts,
   doubleBarreledItems,
   exerciseReceipts,
-  findingBucketHint,
-  findingBucketLabel,
-  findingCards,
   responseOptionKnowledgeMap,
-  responseOptionSubtypeLabel,
+  reviewDiagnosisAsk,
+  reviewDiagnosisLabel,
+  reviewElements,
   startingAgeBuckets,
   startingChannels,
+  termGlossary,
+  termStatusLabel,
   tourangeauProcess,
   tripleSplitOptions,
   type AgeBucket,
-  type CardAnswer,
+  type ChannelLandingState,
   type CoverageStatus,
   type ExerciseReceipt,
-  type FindingBucket,
   type KnowledgeBranch,
   type LedgerLevel,
-  type ResponseOptionSubtype
+  type ReviewDiagnosis
 } from "../data/lab-exercises";
 
 /* The `#lab` page — SQLBolt-style multi-exercise practice on response-
    option-design issues, plus a closing 4-branch knowledge map (SLOT /
-   RULER / PUSH / BOUNDARY-AND-PROOF) per output-L's recommendation. Each
-   exercise uses a distinct primary verb (predict/repair/route/tinker/
-   sort) so the lab doesn't feel like the same puzzle reskinned. Wrong
-   moves are designed cul-de-sacs — branch-specific, recoverable, and
-   teach something prose alone wouldn't (output-M's pedagogy). After each
-   exercise passes, a micro-receipt names which branch(es) of the closing
-   map the exercise practiced. The closing map carries explicit coverage
-   markers (✓ practiced · ◇ planned · ◌ didactic · ⊘ out of scope) and an
-   optional credentialing panel + Tourangeau expert lens. */
+   RULER / PUSH / BOUNDARY) per output-L. Each exercise uses a distinct
+   primary verb (tinker / repair / sort / review) so the lab doesn't feel
+   like the same puzzle reskinned; wrong moves are designed cul-de-sacs,
+   recoverable and informative (output-M). A prominent task band sits at
+   the top of each task-driven exercise (so the visitor's eye meets the
+   task before the workspace), and a micro-receipt names which map branch
+   each pass exercised. */
 
 export function SatisfactionLab() {
   return (
@@ -72,9 +70,10 @@ export function SatisfactionLab() {
         </h1>
         <p className="lab-route-lede">
           Each exercise below is one real failure mode in how survey answer
-          choices are written. Tinker, predict, repair, sort. Wrong moves are
-          part of the practice — they show what would have shipped. The
-          closing card maps what you covered (and what's still out there).
+          choices are written. Tinker with the controls, watch a fixed cast of
+          people flow through, and read the consequence. Wrong moves are part
+          of the practice — they show what would have shipped. The closing
+          card maps what you covered (and what&rsquo;s still out there).
         </p>
       </header>
 
@@ -92,7 +91,7 @@ export function SatisfactionLab() {
           <ChannelTinkerExercise />
         </li>
         <li>
-          <ColdReviewExercise />
+          <ShipReviewExercise />
         </li>
       </ol>
 
@@ -102,10 +101,76 @@ export function SatisfactionLab() {
 }
 
 /* ───────────────────────────────────────────────────────────────────────
-   Exercise 1 — Scale builder + hostile flip  (primary verb: TINKER)
-   The existing engine. After the hostile task lands, the flip section
-   appears and a post-receipt below it names which branches were
-   practiced (RULER + PUSH).
+   Shared: a prominent task band (hoisted to the top of task-driven
+   exercises so the task is the first thing the eye lands on, not a
+   footnote in the corner).
+   ─────────────────────────────────────────────────────────────────────── */
+
+type LadderActive = {
+  index: number;
+  total: number;
+  title: string;
+  brief: string;
+  hint: string;
+};
+
+function TaskBand({
+  items,
+  active,
+  passText,
+  allDoneText,
+  testidPrefix
+}: {
+  items: { id: string; title: string; done: boolean; active: boolean }[];
+  active: LadderActive | null;
+  passText: string | null;
+  allDoneText: string | null;
+  testidPrefix: string;
+}) {
+  return (
+    <div className="lab-taskband">
+      <p className="lab-taskband-key">Your tasks — work them top to bottom</p>
+      <ol className="lab-task-list">
+        {items.map((t, i) => (
+          <li
+            key={t.id}
+            className={`lab-task ${t.done ? "is-done" : ""} ${t.active ? "is-active" : ""}`}
+            data-testid={`${testidPrefix}-${t.id}`}
+          >
+            <span className="lab-task-mark" aria-hidden="true">
+              {t.done ? "✓" : i + 1}
+            </span>
+            <span className="lab-task-title">{t.title}</span>
+          </li>
+        ))}
+      </ol>
+
+      {passText && (
+        <p className="lab-task-pass" aria-live="polite">
+          <span aria-hidden="true">✓ </span>
+          {passText}
+        </p>
+      )}
+
+      {active ? (
+        <div className="lab-task-active" aria-live="polite">
+          <p className="lab-task-brief">
+            <span className="lab-task-brief-key">
+              Task {active.index} of {active.total}: {active.title}
+            </span>
+            {active.brief}
+          </p>
+          <p className="lab-task-hint">{active.hint}</p>
+        </div>
+      ) : allDoneText ? (
+        <p className="lab-task-pass">{allDoneText}</p>
+      ) : null}
+    </div>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Exercise 1 — Scale builder + hostile flip  (verb: TINKER)
    ─────────────────────────────────────────────────────────────────────── */
 
 function ScaleBuilderExercise() {
@@ -151,17 +216,45 @@ function ScaleBuilderExercise() {
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew, a coffee shop, runs a post-visit feedback survey.
-        You're designing the answer scale for one question. Five visitors
-        answer — and their true feelings never change. Only your options and
-        wording do. Work the three tasks and watch the &ldquo;satisfied&rdquo;
-        number move.
+        You design the answer scale for one question. Five visitors answer —
+        and their true feelings never change. Only your options and wording
+        do. The scale ships today as a bare Satisfied / Dissatisfied choice
+        with a leading stem, and it already reads <strong>4 of 5 satisfied</strong>{" "}
+        when only two truly are.
       </p>
+
+      <TaskBand
+        testidPrefix="lab-task"
+        items={tasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: tasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(design)
+              }
+            : null
+        }
+        passText={
+          lastDoneTask && lastDoneTask.id !== "hostile"
+            ? lastDoneTask.passText
+            : null
+        }
+        allDoneText={null}
+      />
 
       <div className="lab-grid">
         <section className="lab-builder" aria-label="Design the answer scale">
           <div className="lab-question">
             <p className="lab-question-key">The survey asks</p>
-            <p className="lab-question-stem">{stemText[design.stem]}</p>
+            <p className="lab-question-stem lab-selectable">{stemText[design.stem]}</p>
           </div>
 
           <div className="lab-control">
@@ -204,7 +297,7 @@ function ScaleBuilderExercise() {
 
           <div className="lab-control">
             <p className="lab-control-key">
-              The answer options — tap to add or remove
+              The available answer options — tap to add or remove
             </p>
             <ol className="lab-scale" aria-label="The scale">
               {displayBank.map((p) => {
@@ -237,7 +330,7 @@ function ScaleBuilderExercise() {
           </button>
         </section>
 
-        <section className="lab-readout" aria-label="Results and tasks">
+        <section className="lab-readout" aria-label="Results">
           <div className="lab-autopsy">
             <p className="lab-autopsy-key">Field it to your five visitors</p>
             <p className="lab-tally" aria-live="polite">
@@ -265,7 +358,9 @@ function ScaleBuilderExercise() {
                   >
                     <span className="lab-cast-who">
                       <strong>{c.name}</strong>
-                      <span className="lab-cast-feeling">{c.feeling}</span>
+                      <span className="lab-cast-feeling lab-selectable">
+                        {c.feeling}
+                      </span>
                     </span>
                     <span className="lab-cast-arrow" aria-hidden="true">→</span>
                     <span className="lab-cast-landing">
@@ -276,48 +371,6 @@ function ScaleBuilderExercise() {
               })}
             </ul>
           </div>
-
-          <div className="lab-tasks">
-            <ol className="lab-task-list">
-              {tasks.map((t, i) => {
-                const done = completed.includes(t.id);
-                const active = t.id === activeTask?.id;
-                return (
-                  <li
-                    key={t.id}
-                    className={`lab-task ${done ? "is-done" : ""} ${active ? "is-active" : ""}`}
-                    data-testid={`lab-task-${t.id}`}
-                  >
-                    <span className="lab-task-mark" aria-hidden="true">
-                      {done ? "✓" : i + 1}
-                    </span>
-                    <span className="lab-task-title">{t.title}</span>
-                  </li>
-                );
-              })}
-            </ol>
-
-            {lastDoneTask && lastDoneTask.id !== "hostile" && (
-              <p className="lab-task-pass" aria-live="polite">
-                <span aria-hidden="true">✓ </span>
-                {lastDoneTask.passText}
-              </p>
-            )}
-
-            {activeTask ? (
-              <div className="lab-task-active" aria-live="polite">
-                <p className="lab-task-brief">
-                  <span className="lab-task-brief-key">
-                    Task {activeIndex + 1} of {tasks.length}: {activeTask.title}
-                  </span>
-                  {activeTask.brief}
-                </p>
-                <p className="lab-task-hint">{activeTask.hint(design)}</p>
-              </div>
-            ) : (
-              !hostileDone && <p className="lab-task-active">All tasks complete.</p>
-            )}
-          </div>
         </section>
       </div>
 
@@ -325,13 +378,13 @@ function ScaleBuilderExercise() {
         <section className="lab-flip" aria-labelledby="lab-flip-title">
           <p className="lab-flip-eyebrow">The flip</p>
           <h3 id="lab-flip-title">Look at what you just did.</h3>
-          <p>
+          <p className="lab-selectable">
             You didn&rsquo;t change a single visitor&rsquo;s feeling — you
             changed the options and the wording, and the report now reads{" "}
             <strong>{satCount} of 5 satisfied</strong>. Every move you made
             is a tell you can now read in someone else&rsquo;s survey:
           </p>
-          <ul className="lab-tells">
+          <ul className="lab-tells lab-selectable">
             {biasTells(design)
               .filter((t) => t.present)
               .map((t) => (
@@ -339,18 +392,18 @@ function ScaleBuilderExercise() {
               ))}
           </ul>
           {eveLanding && isSatisfied(eveLanding) ? (
-            <p className="lab-flip-eve">
+            <p className="lab-flip-eve lab-selectable">
               Eve left without coffee — and your data files her as &ldquo;
               {eveLanding.label}.&rdquo;
             </p>
           ) : eveLanding ? (
-            <p className="lab-flip-eve">
+            <p className="lab-flip-eve lab-selectable">
               Even now, Eve (who left without coffee) reads as &ldquo;
               {eveLanding.label}&rdquo; — soften the scale one notch more
               and watch her vanish into the positive side.
             </p>
           ) : null}
-          <p className="lab-flip-takeaway">
+          <p className="lab-flip-takeaway lab-selectable">
             Next time you&rsquo;re handed a &ldquo;92% satisfied,&rdquo; ask
             to see the stem, the scale, and the order before you believe it.
           </p>
@@ -363,8 +416,7 @@ function ScaleBuilderExercise() {
 }
 
 /* ───────────────────────────────────────────────────────────────────────
-   Exercise 2 — Double-barreled detector + repair selection
-   (primary verb: REPAIR; pedagogy: variation theory + cul-de-sacs)
+   Exercise 2 — Double-barreled flag + repair  (verb: REPAIR)
    ─────────────────────────────────────────────────────────────────────── */
 
 function DoubleBarreledExercise() {
@@ -393,9 +445,7 @@ function DoubleBarreledExercise() {
   const hasError = revealed && !(allBundledFlagged && noFalsePositives);
 
   const missedBundled = bundledIds.filter((id) => !flagged.has(id));
-  const falseFlags = Array.from(flagged).filter(
-    (id) => !bundledIds.includes(id)
-  );
+  const falseFlags = Array.from(flagged).filter((id) => !bundledIds.includes(id));
 
   const splitPicked = splitPick
     ? tripleSplitOptions.find((s) => s.id === splitPick) ?? null
@@ -415,31 +465,33 @@ function DoubleBarreledExercise() {
     <ExerciseFrame
       num={2}
       title="Flag the bundled items; then fix the worst one."
-      issue="Double-barreled · triple-barreled · the “and”-decoy trap"
+      issue="Double-barreled · triple-barreled · why “and” isn't the test"
       modifier="double-barreled"
       verb="repair"
     >
       <p className="lab-exercise-setup">
-        A draft of the coffee-shop survey came back for review. Some items
-        bundle two ideas into one answer slot. Two contain the word &ldquo;and&rdquo;
-        but actually ask one thing — flag those by mistake and you'll see why
-        &ldquo;and&rdquo; isn't the test. One item is triple-barreled.
-        Flag the items you'd reject, then check.
+        A draft of the coffee-shop survey came back for review. Flag every item
+        that bundles two (or more) separable judgments into one answer slot.
+        Careful: two bundled items use no &ldquo;and&rdquo; at all, and two
+        items that <em>do</em> say &ldquo;and&rdquo; aren&rsquo;t bundled —
+        the test is whether a visitor could feel oppositely about two parts,
+        not the word. Flag, then check.
       </p>
 
       <ul className="lab-bundled-list" aria-label="Draft survey items">
         {doubleBarreledItems.map((item, i) => {
           const isFlagged = flagged.has(item.id);
-          const verdict =
-            !revealed
-              ? null
-              : item.kind === "bundled-2" || item.kind === "bundled-3"
-                ? isFlagged
-                  ? "correct"
-                  : "missed"
-                : isFlagged
-                  ? "false-positive"
-                  : "correct";
+          const shouldFlag =
+            item.kind === "bundled-2" || item.kind === "bundled-3";
+          const verdict = !revealed
+            ? null
+            : shouldFlag
+              ? isFlagged
+                ? "correct"
+                : "missed"
+              : isFlagged
+                ? "false-positive"
+                : "correct";
           return (
             <li key={item.id}>
               <button
@@ -457,9 +509,9 @@ function DoubleBarreledExercise() {
                 </span>
                 <span className="lab-bundled-mark" aria-hidden="true">
                   {verdict === "correct"
-                    ? item.kind === "clean" || item.kind === "decoy"
-                      ? "·"
-                      : "✓"
+                    ? shouldFlag
+                      ? "✓"
+                      : "·"
                     : verdict === "missed"
                       ? "·"
                       : verdict === "false-positive"
@@ -469,8 +521,13 @@ function DoubleBarreledExercise() {
                           : ""}
                 </span>
                 <span className="lab-bundled-body">
-                  <span className="lab-bundled-text">{item.text}</span>
-                  {revealed && item.note && (
+                  <span className="lab-bundled-text lab-selectable">
+                    {item.text}
+                    {item.noAnd && !revealed && (
+                      <span className="lab-bundled-tag"> · no “and”</span>
+                    )}
+                  </span>
+                  {revealed && (
                     <span className="lab-bundled-note">{item.note}</span>
                   )}
                 </span>
@@ -510,30 +567,32 @@ function DoubleBarreledExercise() {
         >
           {missedBundled.length > 0 && (
             <p>
-              <strong>Still missed:</strong>{" "}
-              {missedBundled.length} bundled item
-              {missedBundled.length === 1 ? "" : "s"} unflagged. Look for
-              items asking about two judgments at once.
+              <strong>Still missed:</strong> {missedBundled.length} bundled
+              item{missedBundled.length === 1 ? "" : "s"} unflagged. Two of the
+              bundled ones have no &ldquo;and&rdquo; — look for a comma or a
+              verb-plus-adverb that smuggles in a second judgment.
             </p>
           )}
           {falseFlags.length > 0 && (
             <p>
-              <strong>False flag:</strong>{" "}
-              {falseFlags.length} item{falseFlags.length === 1 ? "" : "s"}{" "}
-              flagged that aren't bundled. Re-read each one — “and” inside a
-              named entity isn't bundling.
+              <strong>False flag:</strong> {falseFlags.length} item
+              {falseFlags.length === 1 ? "" : "s"} flagged that aren&rsquo;t
+              bundled. An &ldquo;and&rdquo; inside a program&rsquo;s name, or in
+              who you&rsquo;d recommend us to, isn&rsquo;t two measurements.
             </p>
           )}
         </div>
       )}
 
       {flagPassed && (
-        <p className="lab-exercise-pass" data-testid="lab-bundled-pass">
-          ✓ Five flagged: four ordinary bundles and one triple-barreled. The
-          two &ldquo;and&rdquo;-decoys (rewards-and-loyalty, news-and-
-          promotions) are named programs the respondent rates as a single
-          thing — “and” inside a noun phrase isn't a bundle, no matter what
-          it looks like at a glance.
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-bundled-pass">
+          ✓ Six flagged: five two-part bundles — two of them with no
+          &ldquo;and&rdquo; at all (the comma in &ldquo;hot, fresh&rdquo; and
+          the verb-plus-adverb in &ldquo;fix… quickly&rdquo;) — and one triple.
+          The two you left alone do say &ldquo;and,&rdquo; but it sits in a
+          program&rsquo;s name and in the people you&rsquo;d recommend us to,
+          not in two things being rated. The word is never the test; two
+          separable judgments is.
         </p>
       )}
 
@@ -541,8 +600,8 @@ function DoubleBarreledExercise() {
         <section className="lab-repair" aria-labelledby="lab-repair-title">
           <header className="lab-repair-head">
             <p className="lab-repair-key">Sub-task 2 · Repair the triple-barreled</p>
-            <h3 id="lab-repair-title" className="lab-repair-title">
-              &ldquo;Was your server friendly, attentive, and quick?&rdquo;
+            <h3 id="lab-repair-title" className="lab-repair-title lab-selectable">
+              &ldquo;Was your barista friendly, attentive, and quick?&rdquo;
             </h3>
             <p className="lab-repair-brief">
               Three signals bundled into one rating slot. Pick the repair
@@ -582,7 +641,7 @@ function DoubleBarreledExercise() {
                           ? "↯"
                           : ""}
                   </span>
-                  <span className="lab-repair-label">{s.label}</span>
+                  <span className="lab-repair-label lab-selectable">{s.label}</span>
                 </button>
               );
             })}
@@ -590,7 +649,7 @@ function DoubleBarreledExercise() {
 
           {splitPicked && (
             <div
-              className={`lab-repair-ledger lab-repair-ledger--${splitPicked.verdict}`}
+              className={`lab-repair-ledger lab-repair-ledger--${splitPicked.verdict} lab-selectable`}
               aria-live="polite"
               data-testid="lab-repair-ledger"
             >
@@ -617,8 +676,7 @@ function DoubleBarreledExercise() {
 }
 
 /* ───────────────────────────────────────────────────────────────────────
-   Exercise 3 — MECE bucket tinker  (primary verb: TINKER + ROUTE)
-   Editable bucket boundaries; live respondent landings; 3 gated tasks.
+   Exercise 3 — MECE bucket tinker  (verb: TINKER)
    ─────────────────────────────────────────────────────────────────────── */
 
 function BucketTinkerExercise() {
@@ -636,6 +694,7 @@ function BucketTinkerExercise() {
   }, [buckets]);
 
   const activeTask = bucketTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask ? bucketTasks.indexOf(activeTask) : bucketTasks.length;
   const lastDoneId = completed[completed.length - 1];
   const lastDoneTask = lastDoneId
     ? bucketTasks.find((t) => t.id === lastDoneId) ?? null
@@ -647,7 +706,6 @@ function BucketTinkerExercise() {
   const removeBucket = (id: string) =>
     setBuckets((bs) => bs.filter((b) => b.id !== id));
   const addBucket = () => {
-    /* Append a new bucket; default range fills a sensible gap. */
     setBuckets((bs) => {
       const id = `b${Date.now()}`;
       const lastEnd = bs.reduce(
@@ -659,25 +717,52 @@ function BucketTinkerExercise() {
       return [...bs, { id, start, end }];
     });
   };
-  const reset = () =>
-    setBuckets(startingAgeBuckets.map((b) => ({ ...b })));
+  const reset = () => setBuckets(startingAgeBuckets.map((b) => ({ ...b })));
 
   return (
     <ExerciseFrame
       num={3}
       title="Edit the age buckets until everyone fits."
-      issue="Mutually-exclusive boundaries · coverage of the whole range"
+      issue="Mutually-exclusive boundaries · covering the whole range"
       modifier="bucket"
       verb="tinker"
     >
       <p className="lab-exercise-setup">
-        A workshop registration form asks for age in buckets. The starter
-        set has overlapping boundaries, no under-18 coverage, and lumps
-        everyone over 45 together. Edit the buckets &mdash; change the
-        endpoints, add or remove buckets &mdash; until every respondent
-        lands in exactly one. (Try a wrong fix; the dashboard tells you
-        who's stuck.)
+        A workshop registration form asks for age in buckets. The starter set
+        has overlapping boundaries, no under-18 coverage, and lumps everyone
+        over 45 together. Edit the endpoints, add or remove buckets, and watch
+        the dashboard tell you who&rsquo;s stuck in two buckets, who&rsquo;s in
+        none, and who&rsquo;s lumped. A wrong move is informative — try one.
       </p>
+
+      <TaskBand
+        testidPrefix="lab-bucket-task"
+        items={bucketTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: bucketTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(buckets)
+              }
+            : null
+        }
+        passText={
+          lastDoneTask && !allDone ? lastDoneTask.passText : null
+        }
+        allDoneText={
+          allDone
+            ? "✓ All three done. The buckets now cover the whole range, every age lands in exactly one, and the 45-and-up lump is split."
+            : null
+        }
+      />
 
       <div className="lab-bucket-grid">
         <section className="lab-bucket-editor" aria-label="Edit the buckets">
@@ -762,9 +847,9 @@ function BucketTinkerExercise() {
             </button>
           </div>
           <p className="lab-bucket-editor-hint">
-            Leave “End” blank for an open-ended bucket (“45+”). The starter
-            set's overlaps live where two buckets share a number — fix those
-            first.
+            Leave &ldquo;End&rdquo; blank for an open-ended bucket
+            (&ldquo;65+&rdquo;). The starter set&rsquo;s overlaps live where two
+            buckets share a number — fix those first.
           </p>
         </section>
 
@@ -812,70 +897,45 @@ function BucketTinkerExercise() {
         </section>
       </div>
 
-      <div className="lab-tasks">
-        <ol className="lab-task-list">
-          {bucketTasks.map((t, i) => {
-            const done = completed.includes(t.id);
-            const active = t.id === activeTask?.id;
-            return (
-              <li
-                key={t.id}
-                className={`lab-task ${done ? "is-done" : ""} ${active ? "is-active" : ""}`}
-                data-testid={`lab-bucket-task-${t.id}`}
-              >
-                <span className="lab-task-mark" aria-hidden="true">
-                  {done ? "✓" : i + 1}
-                </span>
-                <span className="lab-task-title">{t.title}</span>
-              </li>
-            );
-          })}
-        </ol>
-
-        {lastDoneTask && (
-          <p className="lab-task-pass" aria-live="polite">
-            <span aria-hidden="true">✓ </span>
-            {lastDoneTask.passText}
-          </p>
-        )}
-
-        {activeTask ? (
-          <div className="lab-task-active" aria-live="polite">
-            <p className="lab-task-brief">
-              <span className="lab-task-brief-key">
-                Task {bucketTasks.indexOf(activeTask) + 1} of{" "}
-                {bucketTasks.length}: {activeTask.title}
-              </span>
-              {activeTask.brief}
-            </p>
-            <p className="lab-task-hint">{activeTask.hint(buckets)}</p>
-          </div>
-        ) : (
-          allDone && (
-            <p className="lab-task-pass">
-              ✓ All three sub-tasks complete. The bucket set now MECE-covers
-              the full range, with a dedicated older bucket.
-            </p>
-          )
-        )}
-      </div>
-
       <PostReceipt exerciseId="E3" visible={allDone} />
     </ExerciseFrame>
   );
 }
 
 /* ───────────────────────────────────────────────────────────────────────
-   Exercise 4 — Pilot-iterate option-set tinker with consequence ledger
-   (primary verb: TINKER; pedagogy: costly affordances + quality readout)
+   Exercise 4 — Pilot-iterate option set with consequence ledger (verb: TINKER)
    ─────────────────────────────────────────────────────────────────────── */
+
+const channelStateText: Record<ChannelLandingState, string> = {
+  clean: "on their true channel",
+  lumped: "lumped into “Online”",
+  other: "wrote it into “Other”",
+  satisficed: "mis-filed here",
+  abandoned: "left it blank"
+};
 
 function ChannelTinkerExercise() {
   const [offered, setOffered] = useState<string[]>([...startingChannels]);
+  const [completed, setCompleted] = useState<string[]>([]);
+
+  useEffect(() => {
+    setCompleted((prev) => {
+      const active = channelTasks.find((t) => !prev.includes(t.id));
+      if (active && active.pass(offered)) return [...prev, active.id];
+      return prev;
+    });
+  }, [offered]);
 
   const tallies = channelTallies(offered);
   const ledger = channelLedger(offered);
-  const passed = channelPassed(offered);
+  const allClean = channelAllClean(offered);
+  const activeTask = channelTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask ? channelTasks.indexOf(activeTask) : channelTasks.length;
+  const lastDoneId = completed[completed.length - 1];
+  const lastDoneTask = lastDoneId
+    ? channelTasks.find((t) => t.id === lastDoneId) ?? null
+    : null;
+  const allDone = completed.length === channelTasks.length;
 
   const toggle = (id: string) =>
     setOffered((prev) =>
@@ -883,26 +943,57 @@ function ChannelTinkerExercise() {
     );
   const reset = () => setOffered([...startingChannels]);
 
+  /* Compact tally chips: Clean always, plus any nonzero problem states. */
+  const problemChips: { key: string; n: number; label: string; cls: string }[] = [
+    { key: "satisficed", n: tallies.satisficed, label: "Mis-filed", cls: "is-satisficed" },
+    { key: "abandoned", n: tallies.abandoned, label: "Left blank", cls: "is-abandoned" },
+    { key: "lumped", n: tallies.lumped, label: "Lumped", cls: "is-lumped" },
+    { key: "other", n: tallies.other, label: "In “Other”", cls: "is-other" }
+  ].filter((c) => c.n > 0);
+
   return (
     <ExerciseFrame
       num={4}
-      title="Iterate the option set until every visitor lands honestly."
-      issue="Incomplete option sets · the “Other” tradeoff · satisficing"
+      title="Build the option set the whole audience can answer honestly."
+      issue="Incomplete option sets · the “Other” trap · satisficing · broad buckets"
       modifier="channel"
       verb="tinker"
     >
       <p className="lab-exercise-setup">
-        A coffee-shop onboarding form asks &ldquo;How did you hear about us?&rdquo;
-        Toggle options on or off from the shelf. The ledger shows the four
-        consequences of every move &mdash; coverage, exclusivity, analyst
-        detail, and respondent burden. Try the obvious shortcut first
-        (&ldquo;just add Other&rdquo;) and see why it isn&rsquo;t the
-        complete answer.
+        Roast &amp; Brew&rsquo;s onboarding form asks &ldquo;How did you hear
+        about us?&rdquo; Toggle options on and off; seven real visitors flow
+        through and the ledger shows the four consequences of every move.
+        Each visitor picks their true channel when it&rsquo;s offered —
+        otherwise they mis-file onto the closest option, shrug into
+        &ldquo;Other,&rdquo; or give up, exactly as the note on their row says.
       </p>
+
+      <TaskBand
+        testidPrefix="lab-channel-task"
+        items={channelTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: channelTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(offered)
+              }
+            : null
+        }
+        passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
+        allDoneText={null}
+      />
 
       <div className="lab-channel-grid">
         <section className="lab-channel-shelf" aria-label="Toggle options">
-          <p className="lab-channel-shelf-key">The option shelf</p>
+          <p className="lab-channel-shelf-key">The option shelf — tap to offer or remove</p>
           <ul className="lab-channel-shelf-list">
             {channelBank.map((c) => {
               const on = offered.includes(c.id);
@@ -918,7 +1009,9 @@ function ChannelTinkerExercise() {
                     <span className="lab-channel-chip-mark" aria-hidden="true">
                       {on ? "✓" : "+"}
                     </span>
-                    <span className="lab-channel-chip-label">{c.label}</span>
+                    <span className="lab-channel-chip-label lab-selectable">
+                      {c.label}
+                    </span>
                   </button>
                 </li>
               );
@@ -935,38 +1028,21 @@ function ChannelTinkerExercise() {
         </section>
 
         <section className="lab-channel-readout" aria-label="Live readout">
-          <div className="lab-channel-question">
-            <p className="lab-channel-question-key">The form, as offered</p>
-            <p className="lab-channel-question-stem">
-              How did you hear about us?
-            </p>
-            <ul className="lab-channel-shown">
-              {offered.length === 0 && (
-                <li className="lab-channel-shown-empty">(no options)</li>
-              )}
-              {offered.map((id) => {
-                const c = channelBank.find((x) => x.id === id);
-                return c ? <li key={id}>{c.label}</li> : null;
-              })}
-            </ul>
-          </div>
-
           <div className="lab-channel-tallies" aria-live="polite">
             <p className="lab-channel-tally-line">
               <span className="lab-channel-tally is-clean">
                 <strong>{tallies.clean}</strong> Clean
               </span>
-              <span className="lab-channel-tally is-other">
-                <strong>{tallies.other}</strong> Other
-              </span>
-              <span className="lab-channel-tally is-satisficed">
-                <strong>{tallies.satisficed}</strong> Satisficed (wrong)
-              </span>
+              {problemChips.map((c) => (
+                <span key={c.key} className={`lab-channel-tally ${c.cls}`}>
+                  <strong>{c.n}</strong> {c.label}
+                </span>
+              ))}
             </p>
             <p className="lab-channel-tally-note">
-              Pass = every respondent lands Clean. &ldquo;Other&rdquo;
-              captures but doesn&rsquo;t preserve analyst detail; satisficed
-              respondents quietly attribute themselves to a wrong channel.
+              Only &ldquo;Clean&rdquo; preserves the true channel. Lumped,
+              Other, and mis-filed all lose it; &ldquo;left blank&rdquo;
+              vanishes from the data entirely.
             </p>
           </div>
 
@@ -974,8 +1050,10 @@ function ChannelTinkerExercise() {
             {channelRespondents.map((r) => {
               const landing = channelLandingFor(r, offered);
               const pickedLabel =
-                channelBank.find((c) => c.id === landing.pickedId)?.label ??
-                "—";
+                landing.pickedId === ""
+                  ? "— left blank —"
+                  : channelBank.find((c) => c.id === landing.pickedId)?.label ??
+                    "—";
               return (
                 <li
                   key={r.id}
@@ -984,21 +1062,24 @@ function ChannelTinkerExercise() {
                 >
                   <span className="lab-channel-cast-who">
                     <strong>{r.name}</strong>
-                    <span className="lab-channel-cast-story"> {r.story}</span>
+                    <span className="lab-channel-cast-story lab-selectable">
+                      {" "}
+                      {r.story}
+                    </span>
                   </span>
                   <span className="lab-channel-cast-arrow" aria-hidden="true">
                     →
                   </span>
                   <span className="lab-channel-cast-landing">
-                    {pickedLabel}
+                    <span className="lab-channel-cast-pick">{pickedLabel}</span>
                     <span className="lab-channel-cast-state">
-                      {" "}
-                      {landing.state === "clean"
-                        ? "(clean)"
-                        : landing.state === "other"
-                          ? "(via Other)"
-                          : "(satisficed — wrong)"}
+                      {channelStateText[landing.state]}
                     </span>
+                    {landing.state !== "clean" && (
+                      <span className="lab-channel-cast-why lab-selectable">
+                        {r.satisficeNote}
+                      </span>
+                    )}
                   </span>
                 </li>
               );
@@ -1008,39 +1089,50 @@ function ChannelTinkerExercise() {
           <div className="lab-channel-ledger" aria-label="Consequence ledger">
             <LedgerMeter
               label="Coverage"
-              hint="Everyone has a place to answer (Clean or Other)."
+              hint="Did everyone answer at all? Visitors who give up hurt this."
               level={ledger.coverage}
             />
             <LedgerMeter
-              label="Exclusivity"
-              hint="Options are distinct; no broad lumps."
-              level={ledger.exclusivity}
-            />
-            <LedgerMeter
               label="Analyst detail"
-              hint="The export preserves the channel — Other and satisficed lose it."
+              hint="How many answers keep the TRUE channel. Only Clean counts."
               level={ledger.analystDetail}
             />
             <LedgerMeter
+              label="Exclusivity"
+              hint="Are the options non-overlapping? A broad “Online” bucket kills it."
+              level={ledger.exclusivity}
+            />
+            <LedgerMeter
               label="Respondent burden"
-              hint="Reading load. Long lists + write-ins cost respondent attention."
+              hint="How long the list is to read. More options costs attention."
               level={ledger.respondentBurden}
             />
           </div>
+          <p className="lab-channel-ledger-note">
+            A teaching readout, not a validated survey-quality score.
+          </p>
         </section>
       </div>
 
-      {passed && (
-        <p className="lab-exercise-pass" data-testid="lab-channel-pass">
-          ✓ All seven respondents land Clean. The professional move you just
-          worked through: don&rsquo;t reach for &ldquo;Other&rdquo; first.
-          Pilot the question with real respondents, watch what the
-          low-effort ones satisfice onto, and PROMOTE those common
-          write-ins into specific options before the form ships.
+      {allClean && !allDone && (
+        <p className="lab-exercise-pass" aria-live="polite">
+          ✓ Everyone&rsquo;s on their true channel. Now the leaner half of the
+          job — see the task above.
         </p>
       )}
 
-      <PostReceipt exerciseId="E4" visible={passed} />
+      {allDone && (
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-channel-pass">
+          ✓ Lean and all-clean. The two things you proved: &ldquo;Other&rdquo;
+          can&rsquo;t rescue low-effort visitors (they mis-file or vanish before
+          they&rsquo;ll type), and a broad &ldquo;Online&rdquo; bucket buys
+          coverage by destroying the detail you were trying to collect. The
+          professional move is to pilot, watch where people mis-file, and
+          promote those into real options.
+        </p>
+      )}
+
+      <PostReceipt exerciseId="E4" visible={allDone} />
     </ExerciseFrame>
   );
 }
@@ -1067,234 +1159,158 @@ function LedgerMeter({
 }
 
 /* ───────────────────────────────────────────────────────────────────────
-   Exercise 5 — Cold review queue (interleaved synthesis)
-   (primary verb: SORT; pedagogy: interleaving + retrieval + discrimination)
+   Exercise 5 — Review the draft before it ships  (verb: REVIEW)
    ─────────────────────────────────────────────────────────────────────── */
 
-function ColdReviewExercise() {
-  const [answers, setAnswers] = useState<Record<string, CardAnswer>>(() => {
-    const init: Record<string, CardAnswer> = {};
-    for (const c of findingCards) {
-      init[c.id] = { bucket: null, subtypes: new Set() };
+const reviewDiagnoses: ReviewDiagnosis[] = [
+  "slot",
+  "ruler",
+  "push",
+  "boundary",
+  "fine"
+];
+
+function ShipReviewExercise() {
+  const [answers, setAnswers] = useState<Record<string, ReviewDiagnosis | null>>(
+    () => {
+      const init: Record<string, ReviewDiagnosis | null> = {};
+      for (const el of reviewElements) init[el.id] = null;
+      return init;
     }
-    return init;
-  });
+  );
   const [revealed, setRevealed] = useState(false);
 
-  const setBucket = (cardId: string, bucket: FindingBucket) =>
-    setAnswers((prev) => ({
-      ...prev,
-      [cardId]: { ...prev[cardId], bucket }
-    }));
-  const toggleSubtype = (cardId: string, subtype: ResponseOptionSubtype) =>
-    setAnswers((prev) => {
-      const next = new Set(prev[cardId].subtypes);
-      if (next.has(subtype)) next.delete(subtype);
-      else next.add(subtype);
-      return { ...prev, [cardId]: { ...prev[cardId], subtypes: next } };
-    });
-
-  const allBucketed = findingCards.every(
-    (c) => answers[c.id].bucket !== null
-  );
-
-  const perCardPassed: Record<string, boolean> = {};
-  for (const c of findingCards) {
-    perCardPassed[c.id] = cardIsPassed(c, answers[c.id]);
-  }
-  const allPassed = findingCards.every((c) => perCardPassed[c.id]);
+  const allDiagnosed = reviewElements.every((el) => answers[el.id] !== null);
+  const perPassed: Record<string, boolean> = {};
+  for (const el of reviewElements) perPassed[el.id] = answers[el.id] === el.correct;
+  const allPassed = reviewElements.every((el) => perPassed[el.id]);
   const exercisePassed = revealed && allPassed;
   const hasError = revealed && !allPassed;
 
-  const buckets: FindingBucket[] = [
-    "responseOption",
-    "sampling",
-    "sampleSize",
-    "notEnoughInfo"
-  ];
+  const setDiagnosis = (id: string, d: ReviewDiagnosis) =>
+    setAnswers((prev) => ({ ...prev, [id]: d }));
 
   return (
     <ExerciseFrame
       num={5}
-      title="Sort the review queue; not every misleading number is a response-option problem."
-      issue="Synthesis · retrieval · discriminating response-option from sampling / sample-size / methodology"
-      modifier="cold-review"
-      verb="sort"
+      title="Review the draft before it ships."
+      issue="Putting the four lenses on a real survey · knowing where to stop"
+      modifier="ship-review"
+      verb="review"
     >
       <p className="lab-exercise-setup">
-        Six finding cards. For each one, decide what KIND of problem (if
-        any) it has, and for the response-option cards, which specific
-        failures. Some have no response-option problem at all &mdash; the
-        trick is knowing what you&rsquo;re looking at.
+        Roast &amp; Brew is about to email an &ldquo;improved&rdquo; feedback
+        survey, and you&rsquo;re the last reviewer. Read the actual draft and
+        diagnose each part with one of four inspection lenses — or wave it
+        through if it&rsquo;s fine. You&rsquo;ve met every one of these traps in
+        Exercises 1–4; here they are loose in the wild, plus one part
+        that&rsquo;s a real problem but not an answer-choice one.
       </p>
 
-      <ul className="lab-queue" aria-label="Finding cards">
-        {findingCards.map((card) => {
-          const ans = answers[card.id];
-          const bucketCorrect = ans.bucket === card.correctBucket;
-          const cardPass = perCardPassed[card.id];
-          const cardVerdictClass = revealed
-            ? cardPass
+      <ul className="lab-review-lenses" aria-label="The four lenses">
+        {(["slot", "ruler", "push", "boundary"] as const).map((d) => (
+          <li key={d} className={`lab-review-lens lab-review-lens--${d}`}>
+            <span className="lab-review-lens-name">{reviewDiagnosisLabel[d]}</span>
+            <span className="lab-review-lens-ask lab-selectable">
+              {reviewDiagnosisAsk[d]}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <ol className="lab-review-draft" aria-label="The draft survey">
+        {reviewElements.map((el) => {
+          const picked = answers[el.id];
+          const pass = perPassed[el.id];
+          const cardClass = !revealed
+            ? ""
+            : pass
               ? "is-correct"
-              : "is-wrong"
-            : "";
+              : "is-wrong";
           return (
             <li
-              key={card.id}
-              className={`lab-queue-card ${cardVerdictClass}`}
-              data-testid={`lab-queue-card-${card.id}`}
+              key={el.id}
+              className={`lab-review-item lab-review-item--${el.kind} ${cardClass}`}
+              data-testid={`lab-review-${el.id}`}
             >
-              <header className="lab-queue-card-head">
-                <p className="lab-queue-headline">{card.headline}</p>
-                {card.stem && (
-                  <p className="lab-queue-stem">
-                    <strong>Q:</strong> {card.stem}
-                  </p>
-                )}
-                {card.options && card.options.length > 0 && (
-                  <ol className="lab-queue-options">
-                    {card.options.map((o, i) => (
-                      <li key={i}>{o}</li>
-                    ))}
-                  </ol>
-                )}
-                {card.methodologyNotes && card.methodologyNotes.length > 0 && (
-                  <ul className="lab-queue-meta">
-                    {card.methodologyNotes.map((m, i) => (
-                      <li key={i}>{m}</li>
-                    ))}
-                  </ul>
-                )}
-              </header>
-
-              <div className="lab-queue-bucket-row">
-                <p className="lab-queue-prompt">Sort this finding:</p>
-                <div
-                  className="lab-queue-bucket-options"
-                  role="radiogroup"
-                  aria-label={`Bucket for ${card.headline}`}
-                >
-                  {buckets.map((b) => {
-                    const picked = ans.bucket === b;
-                    return (
-                      <button
-                        key={b}
-                        type="button"
-                        role="radio"
-                        aria-checked={picked}
-                        className={`lab-queue-bucket-button ${picked ? "is-picked" : ""}`}
-                        data-testid={`lab-queue-bucket-${card.id}-${b}`}
-                        onClick={() => {
-                          if (!exercisePassed) setBucket(card.id, b);
-                        }}
-                        disabled={exercisePassed}
-                      >
-                        {findingBucketLabel[b]}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {ans.bucket === "responseOption" && card.correctBucket === "responseOption" && (
-                <div className="lab-queue-subtypes">
-                  <p className="lab-queue-subtypes-key">
-                    Which response-option failures are present?
-                  </p>
-                  <ul className="lab-queue-subtypes-list">
-                    {(
-                      Object.keys(responseOptionSubtypeLabel) as ResponseOptionSubtype[]
-                    ).map((s) => {
-                      const on = ans.subtypes.has(s);
-                      return (
-                        <li key={s}>
-                          <button
-                            type="button"
-                            className={`lab-queue-subtype ${on ? "is-on" : ""}`}
-                            aria-pressed={on}
-                            data-testid={`lab-queue-subtype-${card.id}-${s}`}
-                            onClick={() => {
-                              if (!exercisePassed) toggleSubtype(card.id, s);
-                            }}
-                            disabled={exercisePassed}
-                          >
-                            <span aria-hidden="true">{on ? "☑" : "☐"}</span>{" "}
-                            {responseOptionSubtypeLabel[s]}
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
+              <p className="lab-review-item-label">{el.label}</p>
+              <p className="lab-review-item-text lab-selectable">{el.text}</p>
+              {el.options && (
+                <ol className="lab-review-item-options lab-selectable">
+                  {el.options.map((o, i) => (
+                    <li key={i}>{o}</li>
+                  ))}
+                </ol>
               )}
 
+              <div
+                className="lab-review-diagnose"
+                role="radiogroup"
+                aria-label={`Diagnose ${el.label}`}
+              >
+                {reviewDiagnoses.map((d) => {
+                  const isPicked = picked === d;
+                  return (
+                    <button
+                      key={d}
+                      type="button"
+                      role="radio"
+                      aria-checked={isPicked}
+                      className={`lab-review-choice lab-review-choice--${d} ${isPicked ? "is-picked" : ""}`}
+                      data-testid={`lab-review-choice-${el.id}-${d}`}
+                      onClick={() => {
+                        if (!exercisePassed) setDiagnosis(el.id, d);
+                      }}
+                      disabled={exercisePassed}
+                    >
+                      {reviewDiagnosisLabel[d]}
+                    </button>
+                  );
+                })}
+              </div>
+
               {revealed && (
-                <div
-                  className={`lab-queue-feedback is-${cardPass ? "correct" : "wrong"}`}
+                <p
+                  className={`lab-review-feedback is-${pass ? "correct" : "wrong"} lab-selectable`}
                   aria-live="polite"
-                  data-testid={`lab-queue-feedback-${card.id}`}
+                  data-testid={`lab-review-feedback-${el.id}`}
                 >
-                  <p>
-                    <strong>
-                      {cardPass
-                        ? "✓ "
-                        : bucketCorrect
-                          ? "≈ "
-                          : "✗ "}
-                      {findingBucketLabel[card.correctBucket]}.
-                    </strong>{" "}
-                    {card.bucketNote}
-                  </p>
-                  {card.correctBucket === "responseOption" &&
-                    card.subtypes && (
-                      <p className="lab-queue-feedback-subtypes">
-                        Failures present:{" "}
-                        {card.subtypes
-                          .map((s) => responseOptionSubtypeLabel[s])
-                          .join(" · ")}
-                      </p>
-                    )}
-                </div>
+                  {pass ? (
+                    el.whenRight
+                  ) : (
+                    <>
+                      <strong>Not quite.</strong> {el.hint}
+                    </>
+                  )}
+                </p>
               )}
             </li>
           );
         })}
-      </ul>
-
-      <div className="lab-queue-bucket-hints">
-        <p className="lab-queue-bucket-hints-key">Bucket reminders</p>
-        <ul>
-          {buckets.map((b) => (
-            <li key={b}>
-              <strong>{findingBucketLabel[b]}:</strong>{" "}
-              {findingBucketHint[b]}
-            </li>
-          ))}
-        </ul>
-      </div>
+      </ol>
 
       <div className="lab-exercise-actions">
         <button
           type="button"
           className="lab-action-button"
-          data-testid="lab-queue-check"
+          data-testid="lab-review-check"
           onClick={() => setRevealed(true)}
-          disabled={!allBucketed || exercisePassed}
+          disabled={!allDiagnosed || exercisePassed}
         >
           {exercisePassed
-            ? "All sorted"
-            : allBucketed
-              ? "Check my sort"
-              : "Bucket every card first"}
+            ? "Review signed off"
+            : allDiagnosed
+              ? "Submit the review"
+              : "Diagnose every part first"}
         </button>
         {revealed && !exercisePassed && (
           <button
             type="button"
             className="lab-action-button lab-action-button--ghost"
-            data-testid="lab-queue-try-again"
+            data-testid="lab-review-try-again"
             onClick={() => setRevealed(false)}
           >
-            Try again
+            Take another pass
           </button>
         )}
       </div>
@@ -1303,21 +1319,22 @@ function ColdReviewExercise() {
         <p
           className="lab-exercise-error"
           aria-live="polite"
-          data-testid="lab-queue-error"
+          data-testid="lab-review-error"
         >
-          One or more cards are mis-sorted (or have the wrong subtype set).
-          Read the per-card feedback above each ✗ for the specific
-          diagnosis, then re-sort.
+          Some calls are off — read the note under each one marked wrong, then
+          take another pass. (Remember the clean question that should just
+          ship, and that the send-list problem isn&rsquo;t about answer
+          choices at all.)
         </p>
       )}
 
       {exercisePassed && (
-        <p className="lab-exercise-pass" data-testid="lab-queue-pass">
-          ✓ All six sorted. The discriminator you just practiced is the
-          single most important professional move on this page: not every
-          misleading headline is a response-option problem. Knowing whether
-          a number is bad because of HOW it was asked, WHO was asked, or
-          HOW MANY were asked tells you which fix to push for.
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-review-pass">
+          ✓ Signed off. You put all four lenses on a real draft, left the clean
+          question alone, and caught that the send-list problem — real as it is
+          — lives outside what fixing answer choices can do. That last call is
+          the whole point of the closing map below: know which inspection
+          you&rsquo;re running, and where it stops.
         </p>
       )}
 
@@ -1327,7 +1344,7 @@ function ColdReviewExercise() {
 }
 
 /* ───────────────────────────────────────────────────────────────────────
-   Shared components
+   Shared frame + receipt
    ─────────────────────────────────────────────────────────────────────── */
 
 function ExerciseFrame({
@@ -1354,7 +1371,7 @@ function ExerciseFrame({
         <p className="lab-exercise-num">
           Exercise {num} <span className="lab-exercise-verb">· {verb}</span>
         </p>
-        <h2 className="lab-exercise-title" id={`lab-exercise-${num}-title`}>
+        <h2 className="lab-exercise-title lab-selectable" id={`lab-exercise-${num}-title`}>
           {title}
         </h2>
         <p className="lab-exercise-issue">{issue}</p>
@@ -1388,12 +1405,14 @@ function PostReceipt({
             >
               {branchLabel(m.branchId)}
             </span>{" "}
-            <span className="lab-receipt-concepts">{m.concepts.join(" · ")}</span>
+            <span className="lab-receipt-concepts lab-selectable">
+              {m.concepts.join(" · ")}
+            </span>
           </li>
         ))}
       </ul>
       {receipt.caveat && (
-        <p className="lab-receipt-caveat">
+        <p className="lab-receipt-caveat lab-selectable">
           <strong>Professional caveat:</strong> {receipt.caveat}
         </p>
       )}
@@ -1419,24 +1438,29 @@ function branchLabel(id: KnowledgeBranch["id"]): string {
    ─────────────────────────────────────────────────────────────────────── */
 
 function KnowledgeMap() {
+  const [openTerms, setOpenTerms] = useState(false);
   const [openCredentialing, setOpenCredentialing] = useState(false);
   const [openTourangeau, setOpenTourangeau] = useState(false);
 
   return (
-    <section
-      className="lab-km"
-      aria-labelledby="lab-km-title"
-      data-testid="lab-km"
-    >
+    <section className="lab-km" aria-labelledby="lab-km-title" data-testid="lab-km">
       <header className="lab-km-head">
         <p className="lab-km-eyebrow">Closing map</p>
-        <h2 id="lab-km-title" className="lab-km-title">
+        <h2 id="lab-km-title" className="lab-km-title lab-selectable">
           You can now inspect a response option four ways.
         </h2>
-        <p className="lab-km-lede">
-          Does every real answer have a SLOT? Does the scale work as a
-          RULER? Does the format PUSH the answer? And what would this
-          inspection NOT prove?
+        <p className="lab-km-lede lab-selectable">
+          Does every real answer have a SLOT? Does the scale work as a RULER?
+          Does the format PUSH the answer? And what would this inspection NOT
+          prove (BOUNDARY)?
+        </p>
+        <p className="lab-km-shorthand-note lab-selectable">
+          SLOT / RULER / PUSH / BOUNDARY are <strong>this lab&rsquo;s own
+          shorthand</strong> for organizing what you practiced — not standard
+          survey-methodology terms. The concepts inside them
+          (double-barreled, primacy, satisficing…) are the real ones; lead
+          with those, and see &ldquo;Which of these are real terms of
+          art?&rdquo; below.
         </p>
         <CoverageLegend />
       </header>
@@ -1449,19 +1473,44 @@ function KnowledgeMap() {
 
       <details
         className="lab-km-panel"
-        open={openCredentialing}
-        onToggle={(e) => setOpenCredentialing((e.target as HTMLDetailsElement).open)}
+        open={openTerms}
+        onToggle={(e) => setOpenTerms((e.target as HTMLDetailsElement).open)}
       >
         <summary>
-          Things you can now say without bluffing (
-          {credentialingFacts.length} expandable lines)
+          Which of these are real terms of art? ({termGlossary.length} terms)
+        </summary>
+        <ul className="lab-km-terms">
+          {termGlossary.map((t) => (
+            <li key={t.term} className={`lab-km-term lab-km-term--${t.status}`}>
+              <p className="lab-km-term-head">
+                <span className="lab-km-term-name lab-selectable">{t.term}</span>
+                <span className={`lab-km-term-badge lab-km-term-badge--${t.status}`}>
+                  {termStatusLabel[t.status]}
+                </span>
+              </p>
+              <p className="lab-km-term-note lab-selectable">{t.note}</p>
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      <details
+        className="lab-km-panel"
+        open={openCredentialing}
+        onToggle={(e) =>
+          setOpenCredentialing((e.target as HTMLDetailsElement).open)
+        }
+      >
+        <summary>
+          Things you can now say without bluffing ({credentialingFacts.length}{" "}
+          lines)
         </summary>
         <ol className="lab-km-facts">
           {credentialingFacts.map((f) => (
             <li key={f.id} className="lab-km-fact">
-              <p className="lab-km-fact-text">{f.text}</p>
+              <p className="lab-km-fact-text lab-selectable">{f.text}</p>
               {f.sourceCue && (
-                <p className="lab-km-fact-source">{f.sourceCue}</p>
+                <p className="lab-km-fact-source lab-selectable">{f.sourceCue}</p>
               )}
             </li>
           ))}
@@ -1474,13 +1523,17 @@ function KnowledgeMap() {
         onToggle={(e) => setOpenTourangeau((e.target as HTMLDetailsElement).open)}
       >
         <summary>Expert lens · the Tourangeau response process</summary>
-        <p className="lab-km-tourangeau-source">{tourangeauProcess.source}</p>
-        <p className="lab-km-tourangeau-blurb">{tourangeauProcess.blurb}</p>
+        <p className="lab-km-tourangeau-source lab-selectable">
+          {tourangeauProcess.source}
+        </p>
+        <p className="lab-km-tourangeau-blurb lab-selectable">
+          {tourangeauProcess.blurb}
+        </p>
         <ol className="lab-km-tourangeau-steps">
           {tourangeauProcess.steps.map((s) => (
             <li key={s.id} className="lab-km-tourangeau-step">
               <p className="lab-km-tourangeau-step-label">{s.label}</p>
-              <ul className="lab-km-tourangeau-step-examples">
+              <ul className="lab-km-tourangeau-step-examples lab-selectable">
                 {s.examples.map((e) => (
                   <li key={e}>{e}</li>
                 ))}
@@ -1490,10 +1543,9 @@ function KnowledgeMap() {
         </ol>
       </details>
 
-      <p className="lab-km-close">
+      <p className="lab-km-close lab-selectable">
         A professional knows which inspection pass they&rsquo;re running.
-        Response-option fit is one of them &mdash; not the whole survey
-        machine.
+        Response-option fit is one of them — not the whole survey machine.
       </p>
     </section>
   );
@@ -1533,11 +1585,11 @@ function KnowledgeBranchCard({ branch }: { branch: KnowledgeBranch }) {
         <p className="lab-km-branch-eyebrow">{branch.label.toUpperCase()}</p>
         <h3
           id={`lab-km-branch-${branch.id}-title`}
-          className="lab-km-branch-question"
+          className="lab-km-branch-question lab-selectable"
         >
           {branch.question}
         </h3>
-        <p className="lab-km-branch-memory">{branch.memorySentence}</p>
+        <p className="lab-km-branch-memory lab-selectable">{branch.memorySentence}</p>
       </header>
       <ul className="lab-km-branch-nodes">
         {branch.nodes.map((n) => (
@@ -1556,7 +1608,7 @@ function KnowledgeBranchCard({ branch }: { branch: KnowledgeBranch }) {
                 </span>
                 <span className="lab-km-node-label">{n.label}</span>
               </summary>
-              <div className="lab-km-node-body">
+              <div className="lab-km-node-body lab-selectable">
                 <p>
                   <strong>Ask:</strong> {n.ask}
                 </p>
@@ -1568,8 +1620,7 @@ function KnowledgeBranchCard({ branch }: { branch: KnowledgeBranch }) {
                   {n.exerciseIds.length > 0 &&
                     !n.exerciseIds.every((id) => id === "none") && (
                       <>
-                        {" "}
-                        ·{" "}
+                        {" "}·{" "}
                         {n.exerciseIds
                           .filter((id) => id !== "none")
                           .map((id) => (id === "future" ? "future" : id))

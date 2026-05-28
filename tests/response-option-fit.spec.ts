@@ -193,6 +193,72 @@ test.describe("Response Option Fit Lab - desktop", () => {
     );
   });
 
+  test("E1 scale builder runs honest → round-up → order-flip → hostile and reveals the flip", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* Ships as a 2-point leading scale reading 4 of 5. */
+    await expect(page.locator(".lab-tally").first()).toContainText("4 of 5");
+    /* Make it honest: plain stem + a balanced 5-point scale. */
+    await page.getByTestId("lab-stem-plain").click();
+    await page.getByTestId("lab-point-vsat").click();
+    await page.getByTestId("lab-point-neutral").click();
+    await page.getByTestId("lab-point-vdis").click();
+    /* Round the fence-sitter up: drop the neutral. */
+    await page.getByTestId("lab-point-neutral").click();
+    /* Flip her back with nothing but order. */
+    await page.getByTestId("lab-order-negative-first").click();
+    await expect(page.locator('[data-testid="lab-task-order"].is-done')).toHaveCount(1);
+    /* Now play the shop: leading + drop strong negatives + add a soft positive. */
+    await page.getByTestId("lab-stem-leading").click();
+    await page.getByTestId("lab-point-dis").click();
+    await page.getByTestId("lab-point-vdis").click();
+    await page.getByTestId("lab-point-ssat").click();
+    await expect(page.locator(".lab-flip")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E1")).toBeVisible();
+  });
+
+  test("E4 channel set: 'Other' alone can't rescue low-effort visitors; the trim task needs the broad/Other padding gone", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    const clean = page.locator(".lab-channel-tally.is-clean strong");
+    await expect(clean).toHaveText("3");
+    /* Adding only "Other" does NOT raise the clean count — the missing-channel
+       visitors are low-effort and won't write one in. */
+    await page.getByTestId("lab-channel-other").click();
+    await expect(clean).toHaveText("3");
+    /* Add the four missing specific channels → everyone lands clean. */
+    for (const id of ["wordofmouth", "podcast", "walkby", "event"]) {
+      await page.getByTestId(`lab-channel-${id}`).click();
+    }
+    await expect(clean).toHaveText("7");
+    /* Task 2 (trim) is still pending while the unused "Other" pads the list. */
+    await expect(page.getByTestId("lab-channel-pass")).toHaveCount(0);
+    /* Drop the padding → both tasks complete. */
+    await page.getByTestId("lab-channel-other").click();
+    await expect(page.getByTestId("lab-channel-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E4")).toBeVisible();
+    /* Cleo (an acquaintance referral) lands on a true word-of-mouth option. */
+    await expect(page.getByTestId("lab-channel-landing-cleo")).toContainText(
+      "Someone else mentioned us"
+    );
+  });
+
+  test("E5 ship-review passes only when each draft part gets the right lens", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    const calls: [string, string][] = [
+      ["q-delightful", "push"],
+      ["q-barista", "slot"],
+      ["q-often", "ruler"],
+      ["q-age", "slot"],
+      ["q-visits", "fine"],
+      ["footnote-sample", "boundary"]
+    ];
+    for (const [el, d] of calls) {
+      await page.getByTestId(`lab-review-choice-${el}-${d}`).click();
+    }
+    await page.getByTestId("lab-review-check").click();
+    await expect(page.getByTestId("lab-review-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E5")).toBeVisible();
+  });
+
   test("archived hub (now at #hub) frames the app as interactive and embeds an interactive first puzzle", async ({ page }) => {
     await page.goto(`${BASE_URL}/#hub`);
     await expect(page.getByTestId("hero")).toContainText("Interactive problem lab");
