@@ -5894,6 +5894,335 @@ summary:focus-visible {
   padding-top: var(--s-4);
 }
 
+/* ─── Selectable reading text ─── */
+/* Reading-heavy text (survey items, feedback, map prose, facts) is
+   selectable so visitors can copy a term or an item; pure control glyphs
+   stay non-selectable. */
+.lab-selectable {
+  -webkit-user-select: text;
+  user-select: text;
+  cursor: text;
+}
+
+/* ─── Hoisted task band (top of E1 / E3 / E4) ─── */
+
+.lab-taskband {
+  border: 1px solid var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  background: var(--accent-paper);
+  padding: var(--s-4) var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.lab-taskband-key {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
+.lab-taskband .lab-task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.lab-taskband .lab-task.is-active {
+  background: var(--paper-card);
+  border-color: var(--accent);
+}
+
+.lab-taskband .lab-task-active {
+  background: var(--paper-card);
+  border: 1px solid var(--accent-soft);
+  padding: var(--s-3) var(--s-4);
+}
+
+.lab-taskband .lab-task-pass {
+  background: rgba(93, 110, 68, 0.1);
+}
+
+/* ─── E2: the "no and" hint tag ─── */
+.lab-bundled-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+
+/* ─── E4: new landing states + tally chips + satisfice note ─── */
+.lab-channel-tally.is-abandoned strong { color: var(--ink); }
+.lab-channel-tally.is-lumped strong { color: var(--route-w); }
+
+.lab-channel-cast-row.is-lumped .lab-channel-cast-pick,
+.lab-channel-cast-row.is-other .lab-channel-cast-pick {
+  color: var(--route-w);
+}
+.lab-channel-cast-row.is-satisficed .lab-channel-cast-pick {
+  color: var(--accent-2);
+  font-weight: 600;
+}
+.lab-channel-cast-row.is-abandoned .lab-channel-cast-pick {
+  color: var(--ink-mute);
+  font-style: italic;
+}
+.lab-channel-cast-row.is-clean .lab-channel-cast-pick {
+  color: var(--route-r);
+  font-weight: 600;
+}
+
+.lab-channel-cast-pick {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.lab-channel-cast-state {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+}
+.lab-channel-cast-why {
+  display: block;
+  margin-top: var(--s-1);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.lab-channel-ledger-note {
+  margin: var(--s-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+}
+
+/* ─── E5: review the draft (lenses + draft items + diagnosis) ─── */
+
+.lab-review-lenses {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+.lab-review-lens {
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--ink-mute);
+  background: var(--paper);
+  padding: var(--s-2) var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.lab-review-lens--slot { border-left-color: var(--accent); }
+.lab-review-lens--ruler { border-left-color: var(--route-w); }
+.lab-review-lens--push { border-left-color: var(--accent-2); }
+.lab-review-lens--boundary { border-left-color: var(--ink-soft); }
+.lab-review-lens-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.lab-review-lens-ask {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.lab-review-draft {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  counter-reset: none;
+}
+.lab-review-item {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: var(--s-4) var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.lab-review-item--footnote {
+  border-style: dashed;
+  background: var(--paper-2);
+}
+.lab-review-item.is-correct {
+  border-color: var(--route-r);
+  background: rgba(93, 110, 68, 0.05);
+}
+.lab-review-item.is-wrong {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+}
+.lab-review-item-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lab-review-item-text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.lab-review-item--footnote .lab-review-item-text {
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-2);
+}
+.lab-review-item-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.lab-review-item-options li {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  padding: 2px var(--s-3);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.lab-review-diagnose {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
+}
+.lab-review-choice {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: var(--s-2) var(--s-3);
+  cursor: pointer;
+  transition:
+    transform var(--mo-1) var(--mo-ease),
+    background-color var(--mo-1) var(--mo-ease),
+    border-color var(--mo-1) var(--mo-ease),
+    color var(--mo-1) var(--mo-ease);
+}
+.lab-review-choice:hover:not(:disabled),
+.lab-review-choice:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+.lab-review-choice.is-picked {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper-card);
+}
+.lab-review-feedback {
+  margin: 0;
+  border-left: 3px solid var(--line);
+  padding: var(--s-2) var(--s-3);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.lab-review-feedback.is-correct {
+  border-left-color: var(--route-r);
+  background: rgba(93, 110, 68, 0.08);
+}
+.lab-review-feedback.is-wrong {
+  border-left-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--accent-2);
+}
+
+/* ─── Closing map: SLOT/RULER/PUSH shorthand note + terms glossary ─── */
+
+.lab-km-shorthand-note {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  border: 1px dashed var(--line);
+  background: var(--paper);
+  padding: var(--s-3) var(--s-4);
+  max-width: 78ch;
+}
+
+.lab-km-terms {
+  list-style: none;
+  margin: var(--s-3) 0 0;
+  padding: var(--s-3) 0 0;
+  border-top: 1px solid var(--line-faint);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.lab-km-term-head {
+  margin: 0 0 2px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+.lab-km-term-name {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.lab-km-term-badge {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 1px var(--s-2);
+  border: 1px solid currentColor;
+  border-radius: 2px;
+}
+.lab-km-term-badge--established { color: var(--route-r); }
+.lab-km-term-badge--borrowed { color: var(--route-w); }
+.lab-km-term-badge--lab { color: var(--accent-2); }
+.lab-km-term-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+@media (forced-colors: active) {
+  .lab-review-choice,
+  .lab-review-item,
+  .lab-review-lens,
+  .lab-km-term-badge {
+    border: 1px solid CanvasText;
+  }
+  .lab-review-choice.is-picked {
+    background: Highlight;
+    color: HighlightText;
+  }
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 880px) {
@@ -5910,8 +6239,7 @@ summary:focus-visible {
   .lab-km-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .lab-queue-bucket-options,
-  .lab-queue-subtypes-list {
+  .lab-review-lenses {
     grid-template-columns: minmax(0, 1fr);
   }
 }

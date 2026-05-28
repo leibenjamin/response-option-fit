@@ -50,36 +50,44 @@ export type ExerciseReceipt = {
 
 /* ─── Exercise 2 — Double-barreled flag + repair-selection ────────────────
    Sub-task 1 (flag): the visitor reads a draft coffee-shop survey and
-   flags items that bundle ideas. The list is ordered pedagogically
-   (warmups → subtler → triple-barreled → "and"-decoys → clean). The
-   decoys ("rewards-and-loyalty program", "news-and-promotions emails")
-   contain "and" inside a single named entity — flagging them is the
-   pedagogically valuable wrong move (variation theory: bundling is about
-   TWO distinct measurements, not the word "and"). Triple-barreled item
-   is included to make "split into 2" not always the right shape.
+   flags items that bundle two (or three) separable judgments into one
+   answer slot. The set is built to defeat the "just look for the word
+   'and'" heuristic:
+     - Two of the bundled items use NO "and" at all (a comma, or a
+       verb + adverb), so the reader has to test for two *separable
+       judgments*, not a conjunction.
+     - One item is triple-barreled.
+     - Two decoys DO contain "and" but are NOT bundled: one because the
+       "and" sits inside a named product ("rewards-and-loyalty program"),
+       one because the "and" sits in the question's OBJECT ("recommend us
+       to friends and family") rather than in two measured attributes.
+   Flagging a decoy is the pedagogically valuable wrong move (variation
+   theory: the test is "could a respondent feel oppositely about the two
+   parts?", never the presence of "and"). Items are interleaved so the
+   flaggable ones aren't simply the first few.
 
    Sub-task 2 (repair): once Sub-task 1 passes, the triple-barreled item
    surfaces a repair-selection beat with three candidate splits — one
    clean (three separate questions), one "partial" (only two ideas
    captured), one "false simplification" (collapse to a vague single
    item). The consequences of each repair are shown explicitly. (This is
-   M's "designed cul-de-sacs" pattern.) */
+   output-M's "designed cul-de-sacs" pattern.) */
 
 export type DoubleBarreledItem = {
   id: string;
   text: string;
-  /* "clean" = single idea, no decoy. "bundled-2" = standard two-way bundle.
-     "bundled-3" = triple-barreled. "decoy" = contains "and" but is one
-     idea (a named entity / single workflow / single product). */
+  /* "clean" = single idea. "bundled-2" = two separable judgments in one
+     slot. "bundled-3" = triple-barreled. "decoy" = contains "and" but is
+     NOT bundled (named entity, or "and" in the object, not two measured
+     attributes). */
   kind: "clean" | "bundled-2" | "bundled-3" | "decoy";
-  /* For bundled-2 / bundled-3, the named ideas — shown in reveal. */
+  /* For bundled-2 / bundled-3, the named separable parts — shown on Check. */
   ideas?: string[];
-  /* For decoy, the name of the single entity — shown to explain why it's
-     not bundled. */
-  entity?: string;
-  /* The per-item feedback line shown on Check. If absent, a default is
-     composed from `kind` + `ideas` / `entity`. */
-  note?: string;
+  /* True for bundled items that contain NO "and" — used to spotlight that
+     the word isn't the test. */
+  noAnd?: boolean;
+  /* The per-item feedback line shown on Check. */
+  note: string;
 };
 
 export const doubleBarreledItems: DoubleBarreledItem[] = [
@@ -87,68 +95,69 @@ export const doubleBarreledItems: DoubleBarreledItem[] = [
     id: "tables",
     text: "How clean were the tables today?",
     kind: "clean",
-    note: "Clean. One idea, one question."
+    note: "Clean. One thing measured (cleanliness), one answer."
   },
   {
     id: "barista-friendly",
     text: "Was your barista friendly and helpful?",
     kind: "bundled-2",
     ideas: ["friendly", "helpful"],
-    note: "Bundled (friendly + helpful). A respondent whose barista was friendly but unhelpful has nowhere honest to land."
+    note: "Bundled — friendly and helpful are separable. A barista can be warm but useless, or brisk but a real help; that respondent has nowhere honest to land."
   },
   {
-    id: "return",
-    text: "How likely are you to return for another visit?",
-    kind: "clean",
-    note: "Clean. “Return for another visit” is one act."
-  },
-  {
-    id: "rewards-program",
-    text: "How would you rate our rewards-and-loyalty program?",
+    id: "recommend-ff",
+    text: "Would you recommend us to friends and family?",
     kind: "decoy",
-    entity: "the rewards-and-loyalty program (one program)",
-    note: "Not bundled. “Rewards-and-loyalty” is the program's name — a single product the respondent rates as one thing. Bundling is about two distinct measurements being asked in one slot, not about the word “and.”"
+    note: "Not bundled — even though it says “and.” The thing being measured is one: your likelihood to recommend. “Friends and family” is just the set phrase for who you'd tell, not two separate ratings. The word “and” isn't the test."
+  },
+  {
+    id: "hot-fresh",
+    text: "Did you get a hot, fresh drink?",
+    kind: "bundled-2",
+    ideas: ["hot", "fresh"],
+    noAnd: true,
+    note: "Bundled — and notice there's no “and.” Hot and fresh are separable: a drink can arrive hot but made from stale grounds, or freshly pulled but gone lukewarm. The comma hides the same two-judgments problem."
   },
   {
     id: "coffee-quality",
     text: "Rate our coffee's quality and selection.",
     kind: "bundled-2",
     ideas: ["quality", "selection"],
-    note: "Bundled (quality + selection). Excellent coffee that's only offered as drip would force a respondent who values selection to compromise the rating either way."
+    note: "Bundled — quality and selection move independently. Superb espresso with only two beans on offer forces a trade-off in a single score."
   },
   {
-    id: "news-emails",
-    text: "Were our news-and-promotions emails helpful to you?",
-    kind: "decoy",
-    entity: "the news-and-promotions email (one weekly email)",
-    note: "Not bundled. The shop sends one weekly email called “news and promotions”; the respondent rates the email as a single product."
-  },
-  {
-    id: "server-triple",
-    text: "Was your server friendly, attentive, and quick?",
+    id: "barista-triple",
+    text: "Was your barista friendly, attentive, and quick?",
     kind: "bundled-3",
     ideas: ["friendly", "attentive", "quick"],
-    note: "Triple-barreled (friendly + attentive + quick). A respondent whose server was warm and attentive but slow can't land honestly. Sub-task 2 will look at how to repair it."
+    note: "Triple-barreled — three separable traits in one slot. A barista who was warm and attentive but slow can't answer. Sub-task 2 looks at how to repair it."
   },
   {
-    id: "coffee-and-pastry",
-    text: "Rate our coffee and our pastry case.",
+    id: "rewards-program",
+    text: "How would you rate our rewards-and-loyalty program?",
+    kind: "decoy",
+    note: "Not bundled. “Rewards-and-loyalty” is the program's name — one product the respondent rates as a single thing. (This is the easy decoy: when the “and” lives inside a named entity, it's not measuring two things.)"
+  },
+  {
+    id: "fix-quickly",
+    text: "Did the barista fix your order quickly?",
     kind: "bundled-2",
-    ideas: ["coffee", "pastry case"],
-    note: "Bundled (coffee + pastry case). Two products, one rating slot. A great coffee and a stale pastry land identically to a mediocre coffee and a perfect pastry."
+    ideas: ["fixed it", "did it quickly"],
+    noAnd: true,
+    note: "Bundled — no “and” again. It asks two things at once: was it fixed, and was that quick? Someone whose order was fixed but slowly (or fast but still wrong) can't answer yes or no honestly."
   },
   {
     id: "atmosphere",
     text: "Is our atmosphere comfortable and quiet?",
     kind: "bundled-2",
     ideas: ["comfortable", "quiet"],
-    note: "Bundled (comfortable + quiet). A coffee-shop atmosphere can be cozy AND loud, or quiet AND cold — these are two different judgments."
+    note: "Bundled — comfortable and quiet are different judgments. A café can be cozy but loud, or silent but cramped."
   },
   {
     id: "wait",
     text: "How long did you wait in line?",
     kind: "clean",
-    note: "Clean. Single quantity asked."
+    note: "Clean. One quantity asked."
   }
 ];
 
@@ -172,7 +181,7 @@ export const tripleSplitOptions: DoubleBarreledSplit[] = [
   {
     id: "three",
     label:
-      "Ask three: “Was your server friendly?” + “…attentive?” + “…quick?”",
+      "Ask three: “Was your barista friendly?” + “…attentive?” + “…quick?”",
     verdict: "right",
     whatHappened: "Three separate ratings, three honest signals.",
     whyItMatters:
@@ -184,7 +193,7 @@ export const tripleSplitOptions: DoubleBarreledSplit[] = [
   },
   {
     id: "drop-friendly",
-    label: "Ask two: “Was your server attentive and quick?”",
+    label: "Ask two: “Was your barista attentive and quick?”",
     verdict: "partial",
     whatHappened:
       "Reduced from three traits to two, but the new item is still bundled — and you silently dropped “friendly” entirely.",
@@ -293,11 +302,16 @@ const everyoneExactlyOnce = (bs: AgeBucket[]) =>
   allBucketsValid(bs) &&
   ageRespondents.every((r) => bucketsContainingAge(r.age, bs).length === 1);
 const hasOlderSplit = (bs: AgeBucket[]) => {
-  /* The 65+ split is satisfied when the bucket containing Dev (65)
-     starts at or after age 60 — i.e., there's a dedicated older bucket,
-     not a generic 45+ lump. */
-  const devBucket = bucketsContainingAge(65, bs)[0];
-  return devBucket != null && devBucket.start >= 60;
+  /* The 45-and-up lump is "split" once Sam (45) and Pat (78) no longer
+     share a bucket — i.e., the old 45→100 span has at least one internal
+     boundary. This accepts EVERY reasonable split (45–54/55+, 45–59/60+,
+     45–64/65+, three-way, …) rather than hard-coding a cutoff; the earlier
+     `start >= 60` check wrongly rejected a 45–54 / 55+ split even though
+     the task copy called it defensible. Both ages are in exactly one
+     bucket here because this is gated behind everyoneExactlyOnce. */
+  const sam = bucketsContainingAge(45, bs)[0];
+  const pat = bucketsContainingAge(78, bs)[0];
+  return sam != null && pat != null && sam.id !== pat.id;
 };
 
 export const bucketTasks: BucketTask[] = [
@@ -339,16 +353,18 @@ export const bucketTasks: BucketTask[] = [
   },
   {
     id: "split-high",
-    title: "Split the 45+ bucket.",
+    title: "Split the 45-and-up group in two",
     brief:
-      "Dev (65) and Pat (78) are both lumped in with everyone over 45 — twenty years of life experience averaged together. Add a separate older bucket. (Where you put the split is a judgment call: ≥65 is common; ≥60 or ≥55 are defensible too.)",
+      "Sam (45), Dev (65), and Pat (78) are all lumped together — three life stages averaged into one bucket. Put a boundary inside the 45-and-up range so a 45-year-old and a 78-year-old no longer share a bucket. (Where exactly is a judgment call: a 65+ split is common; 55+ or 60+ are defensible too.)",
     pass: (bs) => everyoneExactlyOnce(bs) && hasOlderSplit(bs),
     passText:
-      "✓ Dev and Pat now have their own bucket. Splits are a judgment call — the lesson is that one bucket spanning 45–100 was too coarse to support claims about life-stage differences.",
+      "✓ The 45-and-up lump is split — Sam and Pat now sit in different buckets. It's a judgment call where the line goes; the lesson is that one bucket spanning 45 to 100 was too coarse to support any claim about life-stage differences.",
     hint: (bs) => {
       if (!everyoneExactlyOnce(bs))
         return "First make sure everyone still fits in exactly one bucket.";
-      return "Edit the high bucket to end at, say, 64, then add a new bucket starting at 65. Or pick a different split.";
+      if (!hasOlderSplit(bs))
+        return "Add a new bucket (e.g., 65+) and pull the previous bucket's end down to meet it — any split that separates the 45-year-old from the 78-year-old counts.";
+      return "Done — Sam and Pat are in different buckets now.";
     }
   }
 ];
@@ -376,20 +392,27 @@ export type Channel = {
   kind: "specific" | "catch-all" | "broad";
 };
 
-/* Full option bank. The visitor toggles items on/off. */
+/* Full option bank. The visitor toggles items on/off. "friend" and
+   "wordofmouth" are deliberately split: "friend or family" is narrow
+   (intimates), and the lab's key case (Cleo, below) heard about the shop
+   from an acquaintance — a channel "friend or family" silently excludes.
+   "online_broad" is the over-wide bucket that lumps the three digital
+   channels (social / search / podcast). */
 export const channelBank: Channel[] = [
   { id: "social", label: "Social media", kind: "specific" },
   { id: "search", label: "Search engine", kind: "specific" },
-  { id: "friend", label: "Friend or family", kind: "specific" },
-  { id: "print", label: "Print ad", kind: "specific" },
-  { id: "other", label: "Other (please specify)", kind: "catch-all" },
-  { id: "walked-by", label: "Walked by your shop", kind: "specific" },
-  { id: "industry-referral", label: "Word of mouth from someone in the industry", kind: "specific" },
+  { id: "friend", label: "A friend or family member", kind: "specific" },
+  { id: "print", label: "Print ad (newspaper or magazine)", kind: "specific" },
+  { id: "wordofmouth", label: "Someone else mentioned us (coworker, acquaintance, etc.)", kind: "specific" },
   { id: "podcast", label: "Podcast or audio ad", kind: "specific" },
-  { id: "local-event", label: "Local event or fair", kind: "specific" },
-  { id: "outdoor-sign", label: "Outdoor sign or billboard", kind: "specific" },
-  { id: "online-other", label: "Online (catch-all)", kind: "broad" }
+  { id: "walkby", label: "Walked past / saw your storefront", kind: "specific" },
+  { id: "event", label: "A local event, fair, or market", kind: "specific" },
+  { id: "other", label: "Other (please specify)", kind: "catch-all" },
+  { id: "online_broad", label: "Online", kind: "broad" }
 ];
+
+/* Which specific channels the broad "Online" bucket swallows. */
+export const broadCoveredChannels = new Set(["social", "search", "podcast"]);
 
 export const startingChannels = ["social", "search", "friend", "print"];
 
@@ -398,15 +421,18 @@ export type ChannelRespondent = {
   name: string;
   /* The channel they actually came through; references a channelBank id. */
   trueChannelId: string;
-  /* "high" = will pick "Other" honestly if their channel isn't listed.
-     "low"  = avoids the extra effort of filling in Other; satisfices
-     onto their satisficeTo target instead. */
+  /* "high" = will fill in "Other (please specify)" if their channel isn't
+     listed. "low" = avoids the write-in; satisfices onto satisficeTo if
+     that's offered, otherwise gives up (abandons / leaves it blank). */
   effort: "high" | "low";
-  /* Which specific channel they satisfice onto (when their true channel
-     isn't offered AND they're low-effort, OR when neither true channel
-     nor Other are offered). */
+  /* The wrong-but-plausible listed option a low-effort respondent grabs
+     when their true channel is absent. "" = nothing plausible, so they
+     abandon. (Realism note in `satisficeNote`.) */
   satisficeTo: string;
   story: string;
+  /* Why this satisfice (or abandon) is the realistic move — shown on the
+     row when they're not clean. */
+  satisficeNote: string;
 };
 
 export const channelRespondents: ChannelRespondent[] = [
@@ -415,40 +441,36 @@ export const channelRespondents: ChannelRespondent[] = [
     name: "Ada",
     trueChannelId: "social",
     effort: "high",
-    satisficeTo: "social",
-    story: "saw a TikTok of your latte art"
+    satisficeTo: "",
+    story: "saw a TikTok of your latte art",
+    satisficeNote: "would reach for Other and type “TikTok,” or give up if there's no Other."
   },
   {
     id: "ben",
     name: "Ben",
     trueChannelId: "search",
     effort: "high",
-    satisficeTo: "search",
-    story: "googled “best coffee near me”"
-  },
-  {
-    id: "cleo",
-    name: "Cleo",
-    trueChannelId: "industry-referral",
-    effort: "low",
-    satisficeTo: "friend",
-    story: "her dentist's receptionist mentioned you"
-  },
-  {
-    id: "dev",
-    name: "Dev",
-    trueChannelId: "walked-by",
-    effort: "high",
-    satisficeTo: "print",
-    story: "walked past on her way to work for a week, finally came in"
+    satisficeTo: "",
+    story: "googled “best coffee near me”",
+    satisficeNote: "would use Other to write “Google,” or give up without it."
   },
   {
     id: "eve",
     name: "Eve",
     trueChannelId: "print",
     effort: "high",
-    satisficeTo: "print",
-    story: "saw your ad in the neighborhood magazine"
+    satisficeTo: "",
+    story: "saw your ad in the neighborhood magazine",
+    satisficeNote: "would write it into Other; no plausible listed option otherwise."
+  },
+  {
+    id: "cleo",
+    name: "Cleo",
+    trueChannelId: "wordofmouth",
+    effort: "low",
+    satisficeTo: "friend",
+    story: "her dentist's receptionist mentioned you",
+    satisficeNote: "a receptionist isn't “friend or family,” but with no general word-of-mouth option she rounds to the closest one — quietly mis-filing herself."
   },
   {
     id: "pat",
@@ -456,21 +478,43 @@ export const channelRespondents: ChannelRespondent[] = [
     trueChannelId: "podcast",
     effort: "low",
     satisficeTo: "social",
-    story: "heard a podcast host plug your beans"
+    story: "heard a podcast host plug your beans",
+    satisficeNote: "“I heard it on my phone” → she grabs Social media, the nearest digital-sounding option. Now a podcast ad reads as social-media reach."
+  },
+  {
+    id: "dev",
+    name: "Dev",
+    trueChannelId: "walkby",
+    effort: "low",
+    satisficeTo: "",
+    story: "walked past for a week, finally came in",
+    satisficeNote: "no listed option fits “I just walked by,” and she won't bother with a write-in — so she leaves it blank and vanishes from the data."
   },
   {
     id: "lin",
     name: "Lin",
-    trueChannelId: "local-event",
+    trueChannelId: "event",
     effort: "low",
-    satisficeTo: "friend",
-    story: "met you at the food fair last weekend"
+    satisficeTo: "",
+    story: "met you at the food fair last weekend",
+    satisficeNote: "“a fair” has no home here and she won't write one in — another silent drop-out."
   }
 ];
 
-export type ChannelLandingState = "clean" | "other" | "satisficed";
+/* Five landing states (vs the old three): a respondent can land on their
+   true channel (clean), be swallowed by a broad bucket (lumped — counted
+   but coarse), write into Other (other — captured, unstructured),
+   mis-file onto a wrong listed option (satisficed), or give up entirely
+   (abandoned — silently absent from the data). */
+export type ChannelLandingState =
+  | "clean"
+  | "lumped"
+  | "other"
+  | "satisficed"
+  | "abandoned";
 export type ChannelLanding = {
   state: ChannelLandingState;
+  /* The option id they picked, or "" if abandoned. */
   pickedId: string;
 };
 
@@ -478,258 +522,300 @@ export function channelLandingFor(
   r: ChannelRespondent,
   offered: string[]
 ): ChannelLanding {
+  /* 1. True channel offered → clean (always preferred). */
   if (offered.includes(r.trueChannelId)) {
     return { state: "clean", pickedId: r.trueChannelId };
   }
-  if (offered.includes("other") && r.effort === "high") {
+  /* 2. A broad bucket that genuinely covers them → lumped (one tap, fits,
+     but loses the specific channel). Preferred over Other / satisficing. */
+  if (offered.includes("online_broad") && broadCoveredChannels.has(r.trueChannelId)) {
+    return { state: "lumped", pickedId: "online_broad" };
+  }
+  /* 3. High-effort respondents will write into Other. */
+  if (r.effort === "high" && offered.includes("other")) {
     return { state: "other", pickedId: "other" };
   }
-  /* Satisfice onto the wrong specific option. If the satisfice target
-     isn't offered either, fall back to the first offered option. */
-  const target = offered.includes(r.satisficeTo)
-    ? r.satisficeTo
-    : offered[0] ?? "";
-  return { state: "satisficed", pickedId: target };
+  /* 4. Otherwise, satisfice onto a plausible wrong option if one is offered. */
+  if (r.satisficeTo !== "" && offered.includes(r.satisficeTo)) {
+    return { state: "satisficed", pickedId: r.satisficeTo };
+  }
+  /* 5. Nothing plausible → they give up. */
+  return { state: "abandoned", pickedId: "" };
 }
 
 export type ChannelTallies = {
   clean: number;
+  lumped: number;
   other: number;
   satisficed: number;
+  abandoned: number;
   total: number;
 };
 
 export function channelTallies(offered: string[]): ChannelTallies {
-  let clean = 0;
-  let other = 0;
-  let satisficed = 0;
+  const t: ChannelTallies = {
+    clean: 0,
+    lumped: 0,
+    other: 0,
+    satisficed: 0,
+    abandoned: 0,
+    total: channelRespondents.length
+  };
   for (const r of channelRespondents) {
-    const l = channelLandingFor(r, offered);
-    if (l.state === "clean") clean += 1;
-    else if (l.state === "other") other += 1;
-    else satisficed += 1;
+    t[channelLandingFor(r, offered).state] += 1;
   }
-  return { clean, other, satisficed, total: channelRespondents.length };
+  return t;
 }
 
-/* The 4-dimension ledger from M. Each is a 3-level qualitative reading:
-   "low" / "medium" / "high". Labels-not-numbers per M ("avoid false
-   precision"). */
+export function offeredHasBroad(offered: string[]): boolean {
+  return offered.some(
+    (id) => (channelBank.find((c) => c.id === id)?.kind ?? null) === "broad"
+  );
+}
+
+/* The 4-dimension ledger (output-M's "consequence ledger"). Each is a
+   3-level qualitative reading — low / medium / high — never a fake
+   numeric score. The four are genuinely independent so each task can
+   target a different one:
+     - Coverage      : did everyone answer at all? (abandoners hurt this)
+     - Analyst detail: how many answers preserve the TRUE channel? (clean only)
+     - Exclusivity   : are the options non-overlapping? (a broad bucket kills it)
+     - Respondent burden: how long is the list? */
 export type LedgerLevel = "low" | "medium" | "high";
 export type ChannelLedger = {
-  /* Coverage: does every respondent have a place to answer (Clean OR Other)? */
   coverage: LedgerLevel;
-  /* Exclusivity: are the offered options distinct? "broad" option drops this. */
   exclusivity: LedgerLevel;
-  /* Analyst detail: how much specificity does the export preserve?
-     Driven by share of Clean answers vs Other / satisficed (which hide
-     the true channel). */
   analystDetail: LedgerLevel;
-  /* Respondent burden: list length + effort tolerance. More options =
-     more reading; "Other" offered = potential write-in burden for
-     high-effort respondents. */
   respondentBurden: LedgerLevel;
 };
 
 export function channelLedger(offered: string[]): ChannelLedger {
   const t = channelTallies(offered);
-  const captured = t.clean + t.other;
-  /* Coverage: high if everyone has somewhere honest, medium if Other is
-     doing most of the lift (some satisficed), low if many satisficed. */
-  let coverage: LedgerLevel;
-  if (t.satisficed === 0) coverage = "high";
-  else if (t.satisficed <= 1) coverage = "medium";
-  else coverage = "low";
-  /* Exclusivity: drops if a broad option is offered (lumps multiple
-     specific channels). */
-  const hasBroad = offered.some(
-    (id) => (channelBank.find((c) => c.id === id)?.kind ?? null) === "broad"
-  );
-  let exclusivity: LedgerLevel = hasBroad ? "medium" : "high";
-  if (hasBroad && offered.length <= 4) exclusivity = "low";
-  /* Analyst detail: high when most respondents land Clean; drops when
-     many land on Other (free text — not specific) or satisficed (false
-     attribution). */
-  let analystDetail: LedgerLevel;
-  if (t.clean === t.total) analystDetail = "high";
-  else if (captured === t.total && t.other <= 2) analystDetail = "medium";
-  else analystDetail = "low";
-  /* Respondent burden: rises with list length, with an extra step for
-     Other (high-effort respondents have to write in). */
-  let respondentBurden: LedgerLevel;
-  if (offered.length <= 4) respondentBurden = "low";
-  else if (offered.length <= 7) respondentBurden = "medium";
-  else respondentBurden = "high";
+  const answered = t.total - t.abandoned;
+  const coverage: LedgerLevel =
+    t.abandoned === 0 ? "high" : answered >= t.total - 1 ? "medium" : "low";
+  const analystDetail: LedgerLevel =
+    t.clean === t.total ? "high" : t.clean >= 4 ? "medium" : "low";
+  const exclusivity: LedgerLevel = offeredHasBroad(offered) ? "low" : "high";
+  const respondentBurden: LedgerLevel =
+    offered.length <= 4 ? "low" : offered.length <= 8 ? "medium" : "high";
   return { coverage, exclusivity, analystDetail, respondentBurden };
 }
 
-/* Pass: everyone lands Clean. Other doesn't count — it captures, but
-   doesn't preserve analyst detail. */
-export function channelPassed(offered: string[]): boolean {
+/* Everyone lands on their TRUE channel — the all-clean state. (Lumped,
+   Other, satisficed, and abandoned all fall short.) */
+export function channelAllClean(offered: string[]): boolean {
   return channelTallies(offered).clean === channelRespondents.length;
 }
 
-/* ─── Exercise 5 — Cold review queue (interleaved synthesis) ──────────────
-   Six small "finding cards." For each card, the visitor sorts it into a
-   bucket: response-option-fit problem / sampling problem / sample-size
-   uncertainty / not enough information. After sorting, response-option-
-   fit cards reveal a sub-multi-select for WHICH response-option failure
-   (leading frame / missing strong-negative / primacy / loaded labels /
-   false premise). Pass = every card correctly bucketed AND every
-   response-option-fit card's failures correctly identified. */
-
-export type FindingBucket =
-  | "responseOption"
-  | "sampling"
-  | "sampleSize"
-  | "notEnoughInfo";
-
-export const findingBucketLabel: Record<FindingBucket, string> = {
-  responseOption: "Response-option fit",
-  sampling: "Sampling problem",
-  sampleSize: "Sample-size uncertainty",
-  notEnoughInfo: "Not enough information"
+/* The two-task ladder. Task 1 drives Coverage + Analyst detail (get
+   everyone onto their true channel; discover that "Other" can't rescue
+   low-effort people). Task 2 drives Exclusivity + Respondent burden (the
+   broad-bucket and Other padding are dead weight — ship the leanest list
+   that stays all-clean). */
+export type ChannelTask = {
+  id: "capture" | "trim";
+  title: string;
+  brief: string;
+  pass: (offered: string[]) => boolean;
+  passText: string;
+  hint: (offered: string[]) => string;
 };
 
-export const findingBucketHint: Record<FindingBucket, string> = {
-  responseOption:
-    "Something in how the answer choices were written / arranged / labeled biased the result.",
-  sampling: "The respondent pool was wrong, not the answer menu.",
-  sampleSize:
-    "The number of respondents is too small to support the headline.",
-  notEnoughInfo:
-    "The shown design looks fine; you'd need to see more to judge."
-};
-
-export type ResponseOptionSubtype =
-  | "leading"
-  | "missingStrongNeg"
-  | "primacy"
-  | "loadedLabels"
-  | "falsePremise";
-
-export const responseOptionSubtypeLabel: Record<ResponseOptionSubtype, string> = {
-  leading: "Leading stem",
-  missingStrongNeg: "Missing strong-negative",
-  primacy: "Primacy / option order",
-  loadedLabels: "Loaded category labels",
-  falsePremise: "False premise (denominator merging)"
-};
-
-export type FindingCard = {
-  id: string;
-  /* The headline / report claim. */
-  headline: string;
-  /* The underlying survey design + methodology notes. */
-  stem?: string;
-  options?: readonly string[];
-  methodologyNotes?: readonly string[];
-  /* The correct bucket. */
-  correctBucket: FindingBucket;
-  /* If correctBucket === "responseOption": the present subtypes. */
-  subtypes?: ResponseOptionSubtype[];
-  /* Bucket-level feedback shown when correctly sorted. */
-  bucketNote: string;
-};
-
-export const findingCards: FindingCard[] = [
+export const channelTasks: ChannelTask[] = [
   {
-    id: "app-launch",
-    headline: "“92% of users would recommend our new app.”",
-    stem: "How great was your experience with our new app?",
-    options: ["Loved it", "Liked it", "Was okay"],
-    methodologyNotes: ["Asked of every user who opened the app once."],
-    correctBucket: "responseOption",
-    subtypes: ["leading", "missingStrongNeg", "primacy"],
-    bucketNote:
-      "Response-option fit. Three biasing moves stack: the stem leads (“how great”), there's no place worse than “okay,” and the positives sit first."
+    id: "capture",
+    title: "Get everyone onto their real channel",
+    brief:
+      "The starter four leave Cleo and Pat mis-filed and Dev and Lin gone entirely. Add options until all seven land on their TRUE channel — watch Coverage and Analyst detail climb. (Tempted to just add “Other”? Try it — these four are all low-effort and won't write one in.)",
+    pass: channelAllClean,
+    passText:
+      "✓ All seven on their true channel. Notice what “Other” alone could NOT do: the four missing-channel visitors are low-effort, so they mis-filed or vanished rather than type a write-in. Coverage is about giving people a real place — not a catch-all they won't use.",
+    hint: (offered) => {
+      const t = channelTallies(offered);
+      if (t.abandoned > 0)
+        return `${t.abandoned} visitor(s) left it blank — no option fits them and they won't write one in. Add the specific channel(s) they came through.`;
+      if (t.satisficed > 0)
+        return `${t.satisficed} visitor(s) mis-filed onto a wrong option. Find whose true channel still isn't offered (look at Cleo and Pat) and add it.`;
+      if (t.lumped > 0)
+        return "Someone's getting swallowed by the broad “Online” bucket instead of their real channel — add their specific option.";
+      if (t.other > 0)
+        return "Someone's parked in “Other.” That captures them but loses the channel — add their specific option so it's structured.";
+      return "Almost — everyone needs their own true channel offered.";
+    }
   },
   {
-    id: "manager-rating",
-    headline: "“Manager rating: 4.2 / 5 across the company.”",
-    stem: "Overall, how would you rate your manager?",
-    options: [
-      "Truly exceptional",
-      "Great",
-      "Good",
-      "Adequate",
-      "Could improve"
-    ],
-    methodologyNotes: ["Anonymous; all employees asked; 78% response rate."],
-    correctBucket: "responseOption",
-    subtypes: ["loadedLabels", "missingStrongNeg", "primacy"],
-    bucketNote:
-      "Response-option fit. A 5-point scale that LOOKS balanced isn't — the labels are asymmetric (“Truly exceptional → Could improve”), and the worst available answer is still gentle critique."
-  },
-  {
-    id: "nps",
-    headline: "“Net Promoter Score: 78 — top-tier.”",
-    stem: "How likely are you to recommend us, on a scale of 0 to 10?",
-    options: ["0 (not at all)", "…", "10 (extremely)"],
-    methodologyNotes: [
-      "Asked only of customers who completed a purchase in the past 30 days.",
-      "Customers who churned within 30 days are not included."
-    ],
-    correctBucket: "sampling",
-    bucketNote:
-      "Sampling problem. The 0–10 NPS scale is fine; the trick is WHO was asked. Successful recent purchasers will look glowing in any survey."
-  },
-  {
-    id: "small-n",
-    headline: "“Internal dashboard CSAT: 8.4 / 10.”",
-    stem: "How satisfied are you with the dashboard, 1 to 10?",
-    options: ["1 (not at all)", "…", "10 (extremely)"],
-    methodologyNotes: ["n = 23 respondents from the analytics team."],
-    correctBucket: "sampleSize",
-    bucketNote:
-      "Sample-size uncertainty. The response options are clean; the headline is built on 23 people. That's a real number, but the gap between 7.4 and 8.4 is well inside noise."
-  },
-  {
-    id: "outage-medicine",
-    headline:
-      "“Only 12% of households lost refrigerated medicine during the outage.”",
-    stem: "Did your household lose refrigerated medicine during the power outage?",
-    options: ["Yes", "No"],
-    methodologyNotes: [
-      "Asked of every household in the post-outage survey."
-    ],
-    correctBucket: "responseOption",
-    subtypes: ["falsePremise"],
-    bucketNote:
-      "Response-option fit, but the subtle kind. The Yes/No merges three different respondent states: (a) no power outage at this address, (b) outage but no refrigerated medicine, (c) outage + medicine but nothing spoiled. The “No” you see in the export hides all three behind one denominator."
-  },
-  {
-    id: "remote-pref",
-    headline: "“87% of staff feel their work matters.”",
-    stem: "My work has meaningful impact on the organization.",
-    options: [
-      "Strongly agree",
-      "Agree",
-      "Neutral",
-      "Disagree",
-      "Strongly disagree"
-    ],
-    methodologyNotes: [],
-    correctBucket: "notEnoughInfo",
-    bucketNote:
-      "Not enough information. The scale is balanced, labeled symmetrically, and the stem is plain. To judge the 87%, you'd want to see who was asked, how the sample was drawn, and the response rate — methodology, not response-option."
+    id: "trim",
+    title: "Ship the leanest honest list",
+    brief:
+      "A teammate wants to add an “Online” catch-all and an “Other” box “to be safe.” Try them and watch Exclusivity and Respondent burden — then ship the shortest list that keeps everyone clean.",
+    pass: (offered) =>
+      channelAllClean(offered) &&
+      !offeredHasBroad(offered) &&
+      offered.length <= 8,
+    passText:
+      "✓ Lean and all-clean. The “Online” bucket lumped three distinct channels into one (Exclusivity drops, and you can't tell TikTok from a podcast afterward); “Other” just added length the low-effort visitors never used. Every option should earn its place.",
+    hint: (offered) => {
+      if (!channelAllClean(offered))
+        return "First get everyone back to clean — Task 1's state.";
+      if (offeredHasBroad(offered))
+        return "The broad “Online” bucket overlaps social / search / podcast — it tanks Exclusivity. Drop it.";
+      if (offered.length > 8)
+        return "The list is long enough to be a burden. Drop any option no real visitor needs (the “Other” box, for one — nobody used it).";
+      return "Lean and clean.";
+    }
   }
 ];
 
-/* Pass check for a single card: bucket must match AND for response-option
-   cards, the subtype set must match exactly. */
-export type CardAnswer = {
-  bucket: FindingBucket | null;
-  subtypes: Set<ResponseOptionSubtype>;
+/* ─── Exercise 5 — Review the draft before it ships (capstone) ────────────
+   Roast & Brew (the same shop from Exercises 1–4) is about to email an
+   "improved" feedback survey. The visitor is the last reviewer. They read
+   the actual draft — five questions plus the note about who it goes to —
+   and diagnose each element with one of four inspection lenses (SLOT /
+   RULER / PUSH / BOUNDARY) or mark it as already fine.
+
+   This replaces the old "six disconnected finding cards" (which read like
+   a pop quiz on unrelated topics). It is deliberately coherent: one shop,
+   one survey, problems the visitor already practiced (a leading stem from
+   E1, a double-barreled item from E2, overlapping age buckets from E3, a
+   narrow channel list from E4), plus a clean decoy (don't flag what's
+   fine) and a sampling note that is a real problem but NOT a
+   response-option one (the BOUNDARY of what this whole lab inspects). It
+   also introduces the four-lens vocabulary in use, right before the
+   closing map formalizes it. Reuse-in-a-new-context = spacing + retrieval
+   + transfer (output-M). */
+
+export type ReviewDiagnosis = "slot" | "ruler" | "push" | "boundary" | "fine";
+
+/* The lens labels + the one-line inspection question each asks. These are
+   the lab's own SLOT/RULER/PUSH/BOUNDARY framing (see the closing map),
+   shown here as the diagnosis choices so the visitor meets them in use. */
+export const reviewDiagnosisLabel: Record<ReviewDiagnosis, string> = {
+  slot: "SLOT problem",
+  ruler: "RULER problem",
+  push: "PUSH problem",
+  boundary: "Real, but not an answer-choice problem",
+  fine: "This one's fine — ship it"
 };
 
-export function cardIsPassed(card: FindingCard, ans: CardAnswer): boolean {
-  if (ans.bucket !== card.correctBucket) return false;
-  if (card.correctBucket !== "responseOption") return true;
-  const expected = new Set(card.subtypes ?? []);
-  if (ans.subtypes.size !== expected.size) return false;
-  for (const s of expected) if (!ans.subtypes.has(s)) return false;
-  return true;
+export const reviewDiagnosisAsk: Record<ReviewDiagnosis, string> = {
+  slot: "No honest place to answer (missing / overlapping / two-things-at-once).",
+  ruler: "The scale can't measure the thing (undefined units, no range, bad labels).",
+  push: "The wording or order steers the answer.",
+  boundary: "A real survey problem, but about who was asked — not the answer choices.",
+  fine: "Clean as written."
+};
+
+export type ReviewElement = {
+  id: string;
+  /* "question" renders as a survey item; "footnote" as the who-it-goes-to note. */
+  kind: "question" | "footnote";
+  /* Small label, e.g. "Question 1" / "Before you send". */
+  label: string;
+  /* The stem / footnote text. */
+  text: string;
+  /* The answer options shown (questions only). */
+  options?: readonly string[];
+  /* The correct diagnosis. */
+  correct: ReviewDiagnosis;
+  /* Explanation shown once diagnosed correctly (connects back to E1–E4). */
+  whenRight: string;
+  /* A gentle nudge shown on a wrong pick. */
+  hint: string;
+};
+
+export const reviewElements: ReviewElement[] = [
+  {
+    id: "q-delightful",
+    kind: "question",
+    label: "Question 1",
+    text: "How delightful was your visit to Roast & Brew?",
+    options: [
+      "Very satisfied",
+      "Satisfied",
+      "Neutral",
+      "Dissatisfied",
+      "Very dissatisfied"
+    ],
+    correct: "push",
+    whenRight:
+      "PUSH. The scale underneath is actually balanced — the problem is the word “delightful,” which pre-loads a positive answer before anyone reads an option. That's the leading-stem move you ran in Exercise 1. Fix: ask “How was your visit?”",
+    hint:
+      "Look at the scale vs the wording. The five points are balanced and fine. So what's tilting the answer — and which lens is about wording that steers?"
+  },
+  {
+    id: "q-barista",
+    kind: "question",
+    label: "Question 2",
+    text: "Was your barista friendly and fast?",
+    options: ["Yes", "No"],
+    correct: "slot",
+    whenRight:
+      "SLOT. Double-barreled — friendly and fast are separable. A barista who was warm but slow (or brisk but quick) leaves the respondent with no honest Yes or No. Exercise 2's trap, in the wild. Fix: split into two questions.",
+    hint:
+      "Could a visitor feel one way about part of this and the opposite about the other part? If so, where does that answer go?"
+  },
+  {
+    id: "q-often",
+    kind: "question",
+    label: "Question 3",
+    text: "How often do you visit us?",
+    options: ["Rarely", "Sometimes", "Often"],
+    correct: "ruler",
+    whenRight:
+      "RULER. “Rarely / sometimes / often” have no fixed units — your “often” may be someone else's “sometimes,” so two identical visit habits can land on different answers. The scale's tick marks aren't defined. Fix: use real frequencies (e.g., “1–3 times a month”).",
+    hint:
+      "Two people who both visit, say, twice a month — would they reliably pick the same word here? If not, what does the scale fail to pin down?"
+  },
+  {
+    id: "q-age",
+    kind: "question",
+    label: "Question 4",
+    text: "Your age?",
+    options: ["18–25", "25–40", "40+"],
+    correct: "slot",
+    whenRight:
+      "SLOT. The boundaries overlap — 25 sits in two buckets, 40 in two — and there's no bucket under 18. A 25-year-old has two right answers and picks unpredictably. Exercise 3's MECE problem. Fix: 18–24 / 25–39 / 40+ (and decide whether under-18 matters).",
+    hint:
+      "Pick an age that sits exactly on a boundary. How many buckets does it belong to? And is everyone covered?"
+  },
+  {
+    id: "q-visits",
+    kind: "question",
+    label: "Question 5",
+    text: "About how many times did you visit us last month?",
+    options: ["0", "1–3", "4–8", "9 or more"],
+    correct: "fine",
+    whenRight:
+      "Fine — ship it. Non-overlapping buckets, a real zero, an open top end, one clear thing measured over a stated period. Not every question is broken; flagging this one would only cost you credibility with the owner.",
+    hint:
+      "Check the buckets for overlap, gaps, and a stated time period. If you can't find a fault… maybe there isn't one. Restraint is part of review."
+  },
+  {
+    id: "footnote-sample",
+    kind: "footnote",
+    label: "Before you send",
+    text:
+      "This survey will be emailed only to Roast & Brew loyalty-app members who visited in the past 7 days. 34 responses are expected.",
+    correct: "boundary",
+    whenRight:
+      "Right to flag, wrong toolbox. Only recent, opted-in regulars get asked, so the results will skew rosy no matter how clean the answer choices are — and 34 responses is thin. Both are real problems, but they're about WHO is asked, not how. That's the boundary of what this lab inspects: fixing answer choices can't fix a tilted sample.",
+    hint:
+      "Nothing here is about answer choices at all. Is the problem how the questions are written — or who's being asked?"
+  }
+];
+
+export type ReviewAnswers = Record<string, ReviewDiagnosis | null>;
+
+export function reviewElementIsPassed(
+  el: ReviewElement,
+  answers: ReviewAnswers
+): boolean {
+  return answers[el.id] === el.correct;
+}
+
+export function reviewAllPassed(answers: ReviewAnswers): boolean {
+  return reviewElements.every((el) => reviewElementIsPassed(el, answers));
 }
 
 /* ─── Per-exercise micro-receipts (mapping to the 4-branch map) ──────────
@@ -759,9 +845,96 @@ export const exerciseReceipts: Record<string, ExerciseReceipt> = {
       "“Other, please specify” is a coverage patch, not an analysis category. Respondents who avoid the extra effort satisfice into a wrong specific option instead — pilot, observe satisficing, then promote common write-ins to their own options."
   },
   E5: {
-    marks: [{ branchId: "boundary", concepts: ["response-option failures vs other survey problems"] }]
+    marks: [
+      { branchId: "slot", concepts: ["spotting bundles + bad buckets in a real draft"] },
+      { branchId: "ruler", concepts: ["spotting an undefined scale"] },
+      { branchId: "push", concepts: ["spotting a leading stem"] },
+      { branchId: "boundary", concepts: ["telling an answer-choice problem from a sampling one"] }
+    ],
+    caveat:
+      "Reviewing a real draft means knowing when to STOP flagging: the clean question stays, and the sampling note is a real problem you raise elsewhere — not something cleaner answer choices can fix."
   }
 };
+
+/* ─── Terms of art vs the lab's own shorthand ────────────────────────────
+   The author's concern: a visitor shouldn't leave thinking the lab's
+   coinages (SLOT/RULER/PUSH, "the flip") are established survey vocabulary,
+   or misuse a borrowed term (MECE) with a real methodologist. This glossary
+   is rendered as an expandable panel in the closing map and as the source
+   of the small "term" markers. Classifications are conservative; Run N
+   (docs/research/2026-05-27-terms-and-evidence) is staged to verify and
+   refine them. */
+export type TermStatus = "established" | "borrowed" | "lab";
+
+export const termStatusLabel: Record<TermStatus, string> = {
+  established: "Established survey term",
+  borrowed: "Borrowed from another field",
+  lab: "This lab's own shorthand"
+};
+
+export type GlossaryTerm = {
+  term: string;
+  status: TermStatus;
+  note: string;
+};
+
+export const termGlossary: GlossaryTerm[] = [
+  {
+    term: "Double-barreled question",
+    status: "established",
+    note: "Standard survey-methodology term: one item that asks about two things at once, so a respondent who feels differently about each has no honest answer."
+  },
+  {
+    term: "Leading question",
+    status: "established",
+    note: "Standard term: wording that nudges the respondent toward a particular answer before they read the options."
+  },
+  {
+    term: "Primacy & recency effects",
+    status: "established",
+    note: "Standard response-order terms: in self-administered (read) lists the first options gain an edge; in spoken (heard) lists the last ones do. (Krosnick & Presser.)"
+  },
+  {
+    term: "Satisficing",
+    status: "established",
+    note: "Standard term (Krosnick): giving an adequate-enough answer — picking a listed option, skipping the write-in — instead of fully retrieving and judging."
+  },
+  {
+    term: "Acquiescence / yea-saying",
+    status: "established",
+    note: "Standard term: the pull toward agreeing with a statement regardless of content, which agree/disagree formats invite."
+  },
+  {
+    term: "Balanced scale · neutral midpoint · scale points",
+    status: "established",
+    note: "Ordinary, standard survey-design vocabulary for the shape of a rating scale."
+  },
+  {
+    term: "Vague quantifiers",
+    status: "established",
+    note: "Standard term for undefined frequency words (“often,” “sometimes,” “rarely”) that respondents interpret differently."
+  },
+  {
+    term: "MECE",
+    status: "borrowed",
+    note: "Borrowed from management consulting (“mutually exclusive, collectively exhaustive”). A survey methodologist would just say the categories must be mutually exclusive and exhaustive — “MECE” itself isn't survey jargon, so don't lean on the acronym with one."
+  },
+  {
+    term: "Response-option fit",
+    status: "lab",
+    note: "This lab's framing phrase for the whole topic. The field talks about “response categories” or “answer choices” and whether they're adequate; “fit” is our shorthand."
+  },
+  {
+    term: "SLOT · RULER · PUSH · BOUNDARY",
+    status: "lab",
+    note: "Our four-lens shorthand for organizing the failures — useful for remembering, but a survey methodologist won't recognize the words. The concepts inside each lens (double-barreled, primacy, etc.) are the real terms; lead with those."
+  },
+  {
+    term: "“The flip” · “hostile goal”",
+    status: "lab",
+    note: "Names for two exercise devices in this lab, not field terms."
+  }
+];
 
 /* ─── Closing knowledge map — SLOT/RULER/PUSH/BOUNDARY ───────────────────
    Per output-L's recommendation. Each branch has a small set of nodes
