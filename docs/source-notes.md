@@ -72,6 +72,43 @@ PDF URLs, and short quoted respondent material where used. The source list is:
     sections 4.7.1 and 4.7.3, pp. 100-108.
     https://www.census.gov/content/dam/Census/library/working-papers/2016/acs/2016_Westat_02.pdf
 
+## Lab Exercise Sources
+
+The nine lab exercises are author-first. Their scenarios and casts are authored
+teaching material, labeled as authored and illustrative — they demonstrate a
+mechanism, not a prevalence or an effect size. What the lab borrows from the
+literature is the *principle* each exercise teaches, surfaced in the
+per-exercise source drawers (and a closing "further reading" panel) with an
+evidence-strength label and named sources. These are cited at author / title /
+year level; unlike the Census walk reports above, they are not pinned to
+specific page numbers, and none are invented.
+
+Standard references the drawers name:
+
+- **Pew Research Center, "Writing Survey Questions"** — open vs. closed
+  questions, wording and order effects, mutual exclusivity, exhaustiveness,
+  double-barreled items, balance, mode caveats.
+- **Krosnick & Presser, "Question and Questionnaire Design" (2010)** — scales,
+  midpoints, acquiescence, satisficing, non-substantive options, scale length.
+- **Schuman & Presser, "Questions and Answers in Attitude Surveys" (1981)** —
+  wording, response order, the middle option.
+- **Saris & Gallhofer, "Design, Evaluation, and Analysis of Questionnaires"
+  (2014)** and **Revilla, Saris & Krosnick (2014)** — scale length and
+  measurement quality.
+- **van Sonderen, Sanderman & Coyne (2013)** — reverse-worded items as a
+  tradeoff, not a free careless-response detector.
+- **AAPOR, "Best Practices" and "Standard Definitions"** — survey rigor and the
+  total-survey-error vocabulary (coverage, nonresponse, measurement).
+- **Willis, "Cognitive Interviewing" (2005)** and the **CDC/NCHS Q-Bank** —
+  pretesting and question evaluation.
+- **Tourangeau, Rips & Rasinski, "The Psychology of Survey Response" (2000)** —
+  the four-step response process used as the closing expert lens.
+
+Evidence-strength labels are deliberately conservative: contested or
+magnitude-dependent claims (reverse-worded items; an optimal "5-7" scale
+length; whether "Other" mainly captures higher-effort respondents) are marked
+contested or directionally supported, never textbook consensus.
+
 ## Guardrails
 
 - No agency logos, screenshots, or PDF imagery are reproduced.

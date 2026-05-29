@@ -1,34 +1,50 @@
 # Response Option Fit Lab
 
-Response Option Fit Lab is a static interactive problem-solving lab about survey
-answer choices that do not give a respondent's answer a clear route. The public
-page leads with the title "When answer choices don't give the respondent's
-answer a clear place to go" and presents twelve authored interactive puzzles
-with optional public-source context.
+Response Option Fit Lab is a static, interactive teaching lab about how survey
+answer choices can quietly distort what a survey measures. The deployed home is
+a single SQLBolt-style practice page, titled "The quiet ways a survey lies.",
+that walks the visitor through nine hands-on exercises — each one a different
+way a response-option set can fail.
 
-The project demonstrates a React and TypeScript interface with twelve
-interaction modules, an opening hook, an answer-set builder/export trap, a
-cold-read capstone, a field guide, optional source backmatter, static security
-headers, and local-only settings controls. The overview opens with a plausible
-one-word commute-response intake hook and one full embedded commute puzzle. The
-walk paginates twelve answer-choice traps, each with a role, a task, immediate
-feedback, a visible consequence ledger or trace, and a small reveal. The build
-route lets visitors assemble choices and then inspect the tidy export those
-choices would leave behind. The field guide turns the interaction moves into
-reusable checks and prompts. The reference shelf keeps glossary, method,
-claim-boundary, and source material out of the primary play path.
+Each exercise is compact and hands-on: tinker with a control (build a rating
+scale, fix overlapping age buckets, choose an answer set, screen a false
+premise, compare question formats), watch a fixed cast of authored respondents
+flow through, and read the consequence. Wrong moves are part of the practice —
+they show what would have shipped. A solved exercise opens a source drawer with
+the real field vocabulary for what you just did, an honest evidence-strength
+label, the boundary of what not to overclaim, and named sources. A closing
+knowledge map organizes the nine exercises into four inspection passes (the
+lab's own SLOT / RULER / PUSH / BOUNDARY shorthand), marks what it did and did
+not cover, distinguishes the lab's shorthand from real terms of art, and lists
+further reading.
+
+The cast in each exercise is illustrative — a small authored set to reason
+about, not real respondents or survey statistics. The one honesty rule is that
+authored content is labeled as authored; the lab never presents invented
+numbers as empirical findings, and softens any claim past what the cited
+evidence supports.
+
+A broader exhibit remains reachable by URL hash for reference: an archived
+twelve-puzzle "walk" of Census-sourced answer-choice traps (`#walk`), the
+previous landing hub (`#hub`), a build-and-break export trap (`#build`), a
+reviewer field guide (`#field-guide`), a reference shelf (`#reference`), and a
+colophon (`#colophon`). React + TypeScript + Vite; hash routing; static
+security headers; local-only settings controls; no backend or runtime AI.
 
 ## Sources And Attribution
 
-Puzzles use an interaction-first teaching posture. Most on-screen cases, people,
-routes, feedback lines, and consequences are authored teaching material built
-to make the interaction inspectable. Public U.S. Census Bureau materials remain
-as optional anchors and backmatter, not as claims that every on-screen scenario
-is a source finding. The app does not reproduce agency logos, screenshots, or
-PDF imagery, and it does not validate alternate wording.
-Primary copy avoids invented methods jargon such as `storage rule`; the app
-uses plain answer-rule language in the puzzle flow and reserves recorded,
-coded, or exported wording for form-operation or downstream data contexts.
+The lab uses an interaction-first, author-first teaching posture. The exercise
+scenarios and their casts are authored teaching material, written to make the
+interaction inspectable; they are labeled as authored and illustrative, not as
+observed respondent behavior or population estimates. Where the lab states a
+design principle, the per-exercise source drawers name the standard
+survey-methodology references behind it (Pew Research Center, Krosnick &
+Presser, AAPOR, the CDC/NCHS Q-Bank, and others) and carry an honest
+evidence-strength label, so a "textbook consensus" claim is not dressed the
+same as a "contested" one. The archived walk additionally anchors its twelve
+puzzles to public U.S. Census Bureau cognitive-testing reports. The app does
+not reproduce agency logos, screenshots, or PDF imagery, and it does not
+validate alternate wording.
 
 The app code is MIT licensed. Short source wording excerpts and report
 references remain attributable to their respective public sources; no
@@ -78,16 +94,19 @@ See [docs/deployment.md](docs/deployment.md) and
 npm test
 ```
 
-The Playwright suite verifies that every walk puzzle renders an interactive
-surface, no route falls back to exposition, no freeform survey input or runtime
-AI exists, reduced-motion and forced-colors modes remain readable, and desktop /
-mobile routes avoid horizontal overflow.
+The Playwright suite drives each lab exercise end-to-end (including the gated
+source drawers), verifies the archived walk puzzles still render interactive
+surfaces with no exposition fallback, checks that no freeform survey input or
+runtime AI exists, and confirms reduced-motion and forced-colors modes stay
+readable with no horizontal overflow on desktop or mobile.
 
 ## Limitations
 
 - This is an interactive teaching lab, not a survey analyzer or measurement tool.
-- It includes twelve authored puzzles and does not claim to generalize across all
-  survey instruments, modes, or populations.
+- It is nine authored lab exercises (plus an archived twelve-puzzle walk) and
+  does not claim to generalize across all survey instruments, modes, or
+  populations. The per-exercise casts are illustrative, not effect-size
+  estimates.
 - Puzzle cases are authored teaching situations unless explicitly marked as
   source material. Public reports remain optional context for the original
   answer-choice problem.
@@ -108,9 +127,11 @@ interaction, motion, and visual feedback when those make the lab meaningfully
 better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
-Current measured production build: initial JavaScript `87.07 KB gzip`, CSS
-`16.39 KB gzip`. All interaction is client-side; no third-party runtime
-requests are expected.
+Current measured production build: entry JavaScript `88 KB gzip` plus the
+lab home route chunk `37 KB gzip`, CSS `24 KB gzip`. Routes are
+code-split, so the walk, build, field guide, and reference shelf load on
+demand. All interaction is client-side; no third-party runtime requests are
+expected.
 
 ## Privacy Budget
 
