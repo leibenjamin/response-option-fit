@@ -1196,6 +1196,256 @@ export const oatMilkTasks: OatMilkTask[] = [
   }
 ];
 
+/* ─── Exercise 8 (data id E8) — False premise / eligibility (SLOT) ────────
+   A Yes/No that assumes a prior state merges several different respondent
+   states into one answer, so the export looks clean while the denominator
+   is wrong. Question: "Did order-ahead save you time?" A bare Yes/No is
+   answered by people who never installed the app and people who have it but
+   never used order-ahead — they have no basis, yet they land in "No,"
+   inflating it. The fix is an eligibility funnel: screen people out before
+   the outcome. Mechanic = a two-step funnel the visitor switches on; the
+   cast flows down and drops out at gates. Distinct verb: GATE.
+
+   Two gates matter for DIFFERENT reasons: the feature gate ("have you used
+   order-ahead?") cleans the outcome (only real users answer); the app gate
+   ("do you use the app?"), placed first, also SPLITS the drop-outs into
+   "never installed" vs "has the app but never used the feature" — turning an
+   undifferentiated non-response into an informative funnel. */
+
+export type FpState = "yes" | "no" | "no-feature" | "no-app";
+
+export type FpCustomer = {
+  id: string;
+  name: string;
+  state: FpState;
+  story: string;
+};
+
+export const fpCast: FpCustomer[] = [
+  { id: "ada", name: "Ada", state: "yes", story: "uses order-ahead daily; it saves her the line" },
+  { id: "ben", name: "Ben", state: "yes", story: "orders ahead on busy mornings; loves it" },
+  { id: "cleo", name: "Cleo", state: "no", story: "tried order-ahead twice; it was actually slower" },
+  { id: "dev", name: "Dev", state: "no-feature", story: "has the app but has never used order-ahead" },
+  { id: "eve", name: "Eve", state: "no-app", story: "doesn't have the app at all" },
+  { id: "fin", name: "Fin", state: "no-app", story: "pays at the counter; never installed the app" }
+];
+
+export type FpGates = { app: boolean; feature: boolean };
+export const fpStartGates: FpGates = { app: false, feature: false };
+
+export type FpStage = "outcome" | "out-no-app" | "out-no-feature";
+export type FpLanding = {
+  stage: FpStage;
+  /* For outcome arrivals: their Yes/No answer. */
+  answer: "yes" | "no" | null;
+  /* True iff this person actually has a basis to judge order-ahead. */
+  basis: boolean;
+};
+
+export function fpLandingFor(c: FpCustomer, g: FpGates): FpLanding {
+  /* The funnel runs app-gate first, then feature-gate. */
+  if (c.state === "no-app") {
+    if (g.app) return { stage: "out-no-app", answer: null, basis: false };
+    if (g.feature) return { stage: "out-no-feature", answer: null, basis: false };
+    return { stage: "outcome", answer: "no", basis: false };
+  }
+  if (c.state === "no-feature") {
+    if (g.feature) return { stage: "out-no-feature", answer: null, basis: false };
+    return { stage: "outcome", answer: "no", basis: false };
+  }
+  /* yes / no — real users, always reach the outcome. */
+  return { stage: "outcome", answer: c.state, basis: true };
+}
+
+export type FpFunnel = {
+  outcomeYes: number;
+  outcomeNo: number;
+  outcomeTotal: number;
+  /* Outcome answerers who have no basis (the contamination). */
+  merged: number;
+  outNoApp: number;
+  outNoFeature: number;
+};
+
+export function fpFunnel(g: FpGates): FpFunnel {
+  const f: FpFunnel = {
+    outcomeYes: 0,
+    outcomeNo: 0,
+    outcomeTotal: 0,
+    merged: 0,
+    outNoApp: 0,
+    outNoFeature: 0
+  };
+  for (const c of fpCast) {
+    const l = fpLandingFor(c, g);
+    if (l.stage === "outcome") {
+      f.outcomeTotal += 1;
+      if (l.answer === "yes") f.outcomeYes += 1;
+      else f.outcomeNo += 1;
+      if (!l.basis) f.merged += 1;
+    } else if (l.stage === "out-no-app") f.outNoApp += 1;
+    else f.outNoFeature += 1;
+  }
+  return f;
+}
+
+export type FpTask = {
+  id: "clean" | "informative";
+  title: string;
+  brief: string;
+  pass: (g: FpGates) => boolean;
+  passText: string;
+  hint: (g: FpGates) => string;
+};
+
+export const fpTasks: FpTask[] = [
+  {
+    id: "clean",
+    title: "Stop counting people who never used it",
+    brief:
+      "As written, the Yes/No is answered by people who never installed the app and people who have it but never used order-ahead — they have no experience to report, yet they all land in “No.” Add the screener that lets only real order-ahead users reach the question.",
+    pass: (g) => fpFunnel(g).merged === 0,
+    passText:
+      "✓ The denominator just got honest. The bare question read “4 of 6 — 67% — say order-ahead didn't save time”; now it's “1 of 3 people who actually used it.” Same world, a completely different headline, because three of those four “No”s came from people with no basis to answer.",
+    hint: (g) =>
+      fpFunnel(g).merged > 0
+        ? `${fpFunnel(g).merged} people are still answering who never used order-ahead. Switch on the “have you used order-ahead?” screener so only real users reach the outcome.`
+        : "Only real users reach the question now — on to Task 2."
+  },
+  {
+    id: "informative",
+    title: "Make the drop-outs tell you why",
+    brief:
+      "Good — but right now everyone who didn't qualify is lumped into one “didn't use it” pile. Add the earlier “do you use the app?” step so the funnel separates people who never installed the app from people who have it but never tried the feature.",
+    pass: (g) => fpFunnel(g).merged === 0 && g.app && g.feature,
+    passText:
+      "✓ Now the drop-outs aren't one undifferentiated non-response. You can see two never installed the app and one has it but hasn't tried order-ahead — which tells you whether to fix discovery or adoption, not just guess. A screener doesn't only clean the outcome; an ordered one turns who-fell-out into data.",
+    hint: (g) =>
+      g.app && g.feature
+        ? "Both steps on — the funnel now splits the drop-outs."
+        : "Switch on the “do you use the app?” step too, so the no-app people separate from the has-app-never-used people."
+  }
+];
+
+/* ─── Exercise 9 (data id E9) — Acquiescence / yea-saying (PUSH) ───────────
+   Agree/disagree formats invite agreement regardless of content: some
+   people ("yea-sayers") tick Agree even when their real view is mixed or
+   negative, so agreement is inflated. The instinctive fix — a reverse-coded
+   check item — DETECTS the yea-sayers (they agree with both a statement and
+   its opposite) but doesn't tell you what they actually think, and it makes
+   careful respondents parse an awkward second item. The real fix is
+   item-specific wording ("How friendly was the barista?"), which removes the
+   thing there is to agree with. Mechanic = compare three designs; distinct
+   counterintuitive beat (the textbook reverse-coding move is the trap).
+   Verb: COMPARE. */
+
+export type AcqView = "friendly" | "unfriendly" | "mixed";
+export type AcqRespondent = {
+  id: string;
+  name: string;
+  trueView: AcqView;
+  yeaSayer: boolean;
+  story: string;
+};
+
+export const acqCast: AcqRespondent[] = [
+  { id: "ada", name: "Ada", trueView: "friendly", yeaSayer: false, story: "the barista was genuinely warm" },
+  { id: "ben", name: "Ben", trueView: "unfriendly", yeaSayer: false, story: "found the barista cold and rushed" },
+  { id: "cleo", name: "Cleo", trueView: "unfriendly", yeaSayer: true, story: "felt brushed off — but tends to agree with whatever a form says" },
+  { id: "dev", name: "Dev", trueView: "mixed", yeaSayer: true, story: "a so-so encounter; an easy agreer" },
+  { id: "eve", name: "Eve", trueView: "friendly", yeaSayer: true, story: "had a nice visit; also agrees easily" },
+  { id: "fin", name: "Fin", trueView: "unfriendly", yeaSayer: false, story: "plainly unimpressed with the service" }
+];
+
+export type AcqDesign = "agree" | "reverse" | "item";
+export const acqDesignLabel: Record<AcqDesign, string> = {
+  agree: "Agree / disagree",
+  reverse: "+ reverse-coded check",
+  item: "Item-specific wording"
+};
+export const acqDesignStem: Record<AcqDesign, string> = {
+  agree: "“The barista was friendly.”  Strongly agree → Strongly disagree",
+  reverse: "“The barista was friendly.” AND “The barista was unfriendly.”  (agree/disagree to each)",
+  item: "“How friendly was the barista?”  Very unfriendly → Very friendly"
+};
+export const acqDesignNote: Record<AcqDesign, string> = {
+  agree: "Agree/disagree invites agreement. The yea-sayers tick Agree no matter what they actually felt, so two people who found the barista cold (and one who was lukewarm) get recorded as agreeing the barista was friendly. Agreement is inflated before you analyze a thing.",
+  reverse: "The reverse-coded item catches the yea-sayers — they agree with “friendly” AND “unfriendly,” which is a contradiction, so you can flag them as inconsistent. But notice two things: you still don't know what they actually think, and every careful respondent had to stop and parse a second, opposite-worded item. Detection is not measurement.",
+  item: "There's nothing here to simply agree with — the respondent has to place the barista on a scale of friendliness. The acquiescence pull is gone, and every recorded answer now matches the person's real view."
+};
+
+/* Recorded answer per design. For agree/reverse the primary item is the
+   "friendly" statement. */
+export function acqRecorded(c: AcqRespondent, d: AcqDesign): string {
+  if (d === "item") {
+    return c.trueView === "friendly"
+      ? "Friendly"
+      : c.trueView === "unfriendly"
+        ? "Unfriendly"
+        : "Neutral";
+  }
+  /* agree / reverse: the "barista was friendly" item. */
+  if (c.yeaSayer) return "Agree";
+  return c.trueView === "friendly" ? "Agree" : "Disagree";
+}
+
+/* Does the recorded answer match the person's true view? */
+export function acqMatchesTrue(c: AcqRespondent, d: AcqDesign): boolean {
+  if (d === "item") return true;
+  const saysFriendly = acqRecorded(c, d) === "Agree";
+  return saysFriendly === (c.trueView === "friendly");
+}
+
+/* In the reverse design, yea-sayers agree with both items → flagged. */
+export function acqFlagged(c: AcqRespondent, d: AcqDesign): boolean {
+  return d === "reverse" && c.yeaSayer;
+}
+
+export function acqTrackTrueLevel(d: AcqDesign): LedgerLevel {
+  const matches = acqCast.filter((c) => acqMatchesTrue(c, d)).length;
+  if (matches === acqCast.length) return "high";
+  if (matches >= acqCast.length - 2) return "medium";
+  return "low";
+}
+
+export type AcqTask = {
+  id: "detect" | "measure";
+  title: string;
+  brief: string;
+  pass: (d: AcqDesign) => boolean;
+  passText: string;
+  hint: (d: AcqDesign) => string;
+};
+
+export const acqTasks: AcqTask[] = [
+  {
+    id: "detect",
+    title: "Try the textbook fix: catch the yea-sayers",
+    brief:
+      "Agreement looks high — but is it real? The standard move is a reverse-coded check: ask the same thing the opposite way and flag anyone who agrees with both. Switch to that design and see who it catches.",
+    pass: (d) => d === "reverse",
+    passText:
+      "✓ It flags the three easy-agreers — they “agreed” the barista was both friendly and unfriendly. Useful to know. But look closely: you still don't know what those three actually think, two genuinely-careful respondents had to untangle a double-worded item, and the headline agreement number on the original item didn't budge. You detected the problem; you didn't measure around it.",
+    hint: (d) =>
+      d === "reverse"
+        ? "Reverse-coded check is on — see who gets flagged."
+        : "Switch to the “+ reverse-coded check” design."
+  },
+  {
+    id: "measure",
+    title: "Now actually measure the thing",
+    brief:
+      "Drop the agree/disagree framing entirely and ask it item-specifically — “how friendly was the barista?” on a scale. With nothing to simply agree with, the acquiescence pull disappears.",
+    pass: (d) => d === "item" && acqTrackTrueLevel(d) === "high",
+    passText:
+      "✓ Every recorded answer now matches the respondent's real view, because there's no statement to nod along to — you asked them to rate, not to agree. That's the durable fix: where you can, replace agree/disagree with item-specific response options. (Reverse-coded items are a detection patch, not a substitute.)",
+    hint: (d) =>
+      d === "item"
+        ? "Answers track true views now."
+        : "Switch to the item-specific wording."
+  }
+];
+
 /* ─── Per-exercise micro-receipts (mapping to the 4-branch map) ──────────
    After each exercise passes, the lab shows a small receipt naming which
    branch(es) of the closing map the exercise exercised. The caveat field
@@ -1241,6 +1491,16 @@ export const exerciseReceipts: Record<string, ExerciseReceipt> = {
     marks: [{ branchId: "slot", concepts: ["non-substantive options (DK / NA)", "neutral ≠ don't-know ≠ not-applicable"] }],
     caveat:
       "An opt-out can IMPROVE data, not weaken it: it keeps people with no view from contaminating the average. But a true Neutral, a “Don't know,” and a “Not applicable” are three different states — don't let one option quietly stand in for another."
+  },
+  E8: {
+    marks: [{ branchId: "slot", concepts: ["false-premise items", "eligibility screening / the denominator"] }],
+    caveat:
+      "A clean-looking export can hide a wrong denominator: a Yes/No that assumes a prior state merges people who were never eligible with people giving a real answer. Screen eligibility before you ask the outcome — and an ordered funnel also tells you WHY people dropped out."
+  },
+  E9: {
+    marks: [{ branchId: "push", concepts: ["acquiescence / yea-saying", "agree-disagree vs item-specific wording"] }],
+    caveat:
+      "Agree/disagree formats invite agreement regardless of content. A reverse-coded check detects yea-sayers but doesn't measure their real view (and adds respondent burden); where you can, replace agree/disagree with item-specific response options."
   }
 };
 
@@ -1409,6 +1669,16 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
           "An opt-out can protect measurement rather than weaken it — and a true Neutral, a “Don't know,” and a “Not applicable” are three different states, not one.",
         exerciseIds: ["E7"],
         sourceCue: "Krosnick & Presser on DK / no-opinion."
+      },
+      {
+        id: "slot.falsePremise",
+        label: "False premise / eligibility",
+        status: "practiced",
+        ask:
+          "Does the question assume a prior state, so people with no basis still answer and merge into one bucket?",
+        remember:
+          "A Yes/No that presumes exposure pools the never-eligible with the real answers — a clean export over a wrong denominator. Screen eligibility first.",
+        exerciseIds: ["E8"]
       }
     ]
   },
@@ -1510,12 +1780,12 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
       {
         id: "push.acquiescence",
         label: "Acquiescence (yea-saying)",
-        status: "planned",
+        status: "practiced",
         ask:
           "Is the format inviting agreement instead of measuring the construct?",
         remember:
-          "Agree / disagree formats can pull yes-saying respondents toward agreement regardless of content — item-specific scales are often cleaner.",
-        exerciseIds: ["future"],
+          "Agree / disagree formats pull yes-saying respondents toward agreement regardless of content. Reverse-coded items detect but don't measure them; item-specific wording removes the pull.",
+        exerciseIds: ["E9"],
         sourceCue: "Krosnick & Presser."
       },
       {

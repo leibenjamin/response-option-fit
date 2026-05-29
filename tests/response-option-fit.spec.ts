@@ -174,11 +174,11 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.locator("#survey-lab-title")).toContainText(
       "The quiet ways a survey lies"
     );
-    /* Seven exercise cards present. */
-    await expect(page.locator(".lab-exercise")).toHaveCount(7);
+    /* Nine exercise cards present. */
+    await expect(page.locator(".lab-exercise")).toHaveCount(9);
     /* Each named with its primary verb. */
     const verbs = await page.locator(".lab-exercise-verb").allInnerTexts();
-    expect(verbs.length).toBe(7);
+    expect(verbs.length).toBe(9);
     /* The closing knowledge map carries the four SLOT/RULER/PUSH/BOUNDARY
        branches with the marker legend. */
     await expect(page.getByTestId("lab-km")).toBeVisible();
@@ -214,6 +214,33 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.getByTestId("lab-oat-design-both").click();
     await expect(page.getByTestId("lab-oat-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E7")).toBeVisible();
+  });
+
+  test("E8 false premise: the feature screener cleans the denominator, the app screener splits the drop-outs", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* Bare Yes/No: people who never used order-ahead are merged into the
+       answers (no basis). The feature screener clears them; the app
+       screener (added on top) makes the funnel informative. */
+    await page.getByTestId("lab-fp-gate-feature").click();
+    await expect(page.getByTestId("lab-fp-pass")).toHaveCount(0);
+    await page.getByTestId("lab-fp-gate-app").click();
+    await expect(page.getByTestId("lab-fp-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E8")).toBeVisible();
+    /* A never-installed customer is screened out, not answering. */
+    await expect(page.getByTestId("lab-fp-landing-eve")).toContainText(
+      "Screened out"
+    );
+  });
+
+  test("E9 acquiescence: reverse-coding only detects yea-sayers; item-specific wording is the real fix", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* Task 1 wants the reverse-coded check (detection); Task 2 wants the
+       item-specific wording (measurement). */
+    await page.getByTestId("lab-acq-design-reverse").click();
+    await expect(page.getByTestId("lab-acq-pass")).toHaveCount(0);
+    await page.getByTestId("lab-acq-design-item").click();
+    await expect(page.getByTestId("lab-acq-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E9")).toBeVisible();
   });
 
   test("E1 scale builder runs honest → round-up → order-flip → hostile and reveals the flip", async ({ page }) => {

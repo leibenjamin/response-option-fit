@@ -14,6 +14,15 @@ import {
   type Design
 } from "../data/satisfaction-lab";
 import {
+  acqCast,
+  acqDesignLabel,
+  acqDesignNote,
+  acqDesignStem,
+  acqFlagged,
+  acqMatchesTrue,
+  acqRecorded,
+  acqTasks,
+  acqTrackTrueLevel,
   ageEditMax,
   ageEditMin,
   ageRespondents,
@@ -31,6 +40,11 @@ import {
   credentialingFacts,
   doubleBarreledItems,
   exerciseReceipts,
+  fpCast,
+  fpFunnel,
+  fpLandingFor,
+  fpStartGates,
+  fpTasks,
   oatMilkCast,
   oatMilkConflation,
   oatMilkDesigns,
@@ -55,11 +69,13 @@ import {
   termStatusLabel,
   tourangeauProcess,
   tripleSplitOptions,
+  type AcqDesign,
   type AgeBucket,
   type ChannelLandingState,
   type CoverageStatus,
   type E7Design,
   type ExerciseReceipt,
+  type FpGates,
   type KnowledgeBranch,
   type LedgerLevel,
   type ReviewDiagnosis
@@ -91,7 +107,7 @@ export function SatisfactionLab() {
           card maps what you covered (and what&rsquo;s still out there).
         </p>
         <p className="lab-route-meta">
-          Seven hands-on exercises · ≈20 minutes · any order. The people in
+          Nine hands-on exercises · ≈25 minutes · any order. The people in
           each one are authored, illustrative cases — a fixed cast to reason
           about, not real respondents or survey statistics.
         </p>
@@ -99,25 +115,31 @@ export function SatisfactionLab() {
 
       <ol className="lab-exercises">
         <li>
-          <ScaleBuilderExercise />
+          <ScaleBuilderExercise num={1} />
         </li>
         <li>
-          <DoubleBarreledExercise />
+          <DoubleBarreledExercise num={2} />
         </li>
         <li>
-          <BucketTinkerExercise />
+          <FalsePremiseExercise num={3} />
         </li>
         <li>
-          <ChannelTinkerExercise />
+          <BucketTinkerExercise num={4} />
         </li>
         <li>
-          <ScaleLengthExercise />
+          <ChannelTinkerExercise num={5} />
         </li>
         <li>
-          <OatMilkExercise />
+          <AcquiescenceExercise num={6} />
         </li>
         <li>
-          <ShipReviewExercise />
+          <ScaleLengthExercise num={7} />
+        </li>
+        <li>
+          <OatMilkExercise num={8} />
+        </li>
+        <li>
+          <ShipReviewExercise num={9} />
         </li>
       </ol>
 
@@ -199,7 +221,7 @@ function TaskBand({
    Exercise 1 — Scale builder + hostile flip  (verb: TINKER)
    ─────────────────────────────────────────────────────────────────────── */
 
-function ScaleBuilderExercise() {
+function ScaleBuilderExercise({ num }: { num: number }) {
   const [design, setDesign] = useState<Design>(shippedDesign);
   const [completed, setCompleted] = useState<string[]>([]);
 
@@ -234,7 +256,7 @@ function ScaleBuilderExercise() {
 
   return (
     <ExerciseFrame
-      num={1}
+      num={num}
       title="Design the scale; see the lie; learn the tells."
       issue="Leading stems · missing strong-negatives · no neutral midpoint · primacy"
       modifier="scale-builder"
@@ -445,7 +467,7 @@ function ScaleBuilderExercise() {
    Exercise 2 — Double-barreled flag + repair  (verb: REPAIR)
    ─────────────────────────────────────────────────────────────────────── */
 
-function DoubleBarreledExercise() {
+function DoubleBarreledExercise({ num }: { num: number }) {
   const [flagged, setFlagged] = useState<Set<string>>(new Set());
   const [revealed, setRevealed] = useState(false);
   const [splitPick, setSplitPick] = useState<string | null>(null);
@@ -489,7 +511,7 @@ function DoubleBarreledExercise() {
 
   return (
     <ExerciseFrame
-      num={2}
+      num={num}
       title="Flag the bundled items; then fix the worst one."
       issue="Double-barreled · triple-barreled · why “and” isn't the test"
       modifier="double-barreled"
@@ -704,7 +726,7 @@ function DoubleBarreledExercise() {
    Exercise 3 — MECE bucket tinker  (verb: TINKER)
    ─────────────────────────────────────────────────────────────────────── */
 
-function BucketTinkerExercise() {
+function BucketTinkerExercise({ num }: { num: number }) {
   const [buckets, setBuckets] = useState<AgeBucket[]>(() =>
     startingAgeBuckets.map((b) => ({ ...b }))
   );
@@ -746,7 +768,7 @@ function BucketTinkerExercise() {
 
   return (
     <ExerciseFrame
-      num={3}
+      num={num}
       title="Edit the age buckets until everyone fits."
       issue="Mutually-exclusive boundaries · covering the whole range"
       modifier="bucket"
@@ -939,7 +961,7 @@ const channelStateText: Record<ChannelLandingState, string> = {
   abandoned: "left it blank"
 };
 
-function ChannelTinkerExercise() {
+function ChannelTinkerExercise({ num }: { num: number }) {
   const [offered, setOffered] = useState<string[]>([...startingChannels]);
   const [completed, setCompleted] = useState<string[]>([]);
 
@@ -978,7 +1000,7 @@ function ChannelTinkerExercise() {
 
   return (
     <ExerciseFrame
-      num={4}
+      num={num}
       title="Build the option set the whole audience can answer honestly."
       issue="Incomplete option sets · the “Other” trap · satisficing · broad buckets"
       modifier="channel"
@@ -989,8 +1011,9 @@ function ChannelTinkerExercise() {
         about us?&rdquo; Toggle options on and off; seven real visitors flow
         through and the ledger shows the four consequences of every move.
         Each visitor picks their true channel when it&rsquo;s offered —
-        otherwise they mis-file onto the closest option, shrug into
-        &ldquo;Other,&rdquo; or give up, exactly as the note on their row says.
+        otherwise they pick the closest wrong option, fall back to
+        &ldquo;Other,&rdquo; or leave it blank, exactly as the note on their
+        row says.
       </p>
 
       <TaskBand
@@ -1195,7 +1218,7 @@ const reviewDiagnoses: ReviewDiagnosis[] = [
   "fine"
 ];
 
-function ShipReviewExercise() {
+function ShipReviewExercise({ num }: { num: number }) {
   const [answers, setAnswers] = useState<Record<string, ReviewDiagnosis | null>>(
     () => {
       const init: Record<string, ReviewDiagnosis | null> = {};
@@ -1217,7 +1240,7 @@ function ShipReviewExercise() {
 
   return (
     <ExerciseFrame
-      num={7}
+      num={num}
       title="Review the draft before it ships."
       issue="Putting the four lenses on a real survey · knowing where to stop"
       modifier="ship-review"
@@ -1228,7 +1251,7 @@ function ShipReviewExercise() {
         survey, and you&rsquo;re the last reviewer. Read the actual draft and
         diagnose each part with one of four inspection lenses — or wave it
         through if it&rsquo;s fine. You&rsquo;ve met every one of these traps in
-        the earlier exercises; here they are loose in the wild, plus one part
+        the earlier exercises; here they are in one real draft, plus one part
         that&rsquo;s a real problem but not an answer-choice one.
       </p>
 
@@ -1371,7 +1394,7 @@ function ShipReviewExercise() {
    Exercise 6 — Scale length / granularity  (verb: TINKER)
    ─────────────────────────────────────────────────────────────────────── */
 
-function ScaleLengthExercise() {
+function ScaleLengthExercise({ num }: { num: number }) {
   const [points, setPoints] = useState<number>(scaleLengthStart);
   const [completed, setCompleted] = useState<string[]>([]);
 
@@ -1395,7 +1418,7 @@ function ScaleLengthExercise() {
 
   return (
     <ExerciseFrame
-      num={5}
+      num={num}
       title="Pick how many points the scale offers."
       issue="Scale length / granularity · the 5–7 rule · false precision"
       modifier="scale-length"
@@ -1525,10 +1548,10 @@ function ScaleLengthExercise() {
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-scale-pass">
           ✓ More points is not more truth. Too few crushed real differences;
-          too many (the 11-point scale) split hairs finer than people can
-          actually feel, so the same person would wobble between neighbours on
-          a different day. 5 to 7 points is the usual default — match it to the
-          distinction you genuinely need to make.
+          too many (the 11-point scale) asked for distinctions finer than
+          people can actually feel, so the same person would land on different
+          neighbouring points on a different day. 5 to 7 points is the usual
+          default — match it to the distinction you genuinely need to make.
         </p>
       )}
 
@@ -1541,7 +1564,7 @@ function ScaleLengthExercise() {
    Exercise 7 — Don't know / Not applicable / Neutral  (verb: COMPARE)
    ─────────────────────────────────────────────────────────────────────── */
 
-function OatMilkExercise() {
+function OatMilkExercise({ num }: { num: number }) {
   const [designId, setDesignId] = useState<E7Design["id"]>("none");
   const [completed, setCompleted] = useState<string[]>([]);
   const design = oatMilkDesigns.find((d) => d.id === designId)!;
@@ -1567,7 +1590,7 @@ function OatMilkExercise() {
 
   return (
     <ExerciseFrame
-      num={6}
+      num={num}
       title="Give the “no answer” somewhere honest to go."
       issue="Don't-know · not-applicable · why a neutral is none of these"
       modifier="oat-milk"
@@ -1677,6 +1700,302 @@ function OatMilkExercise() {
       )}
 
       <PostReceipt exerciseId="E7" visible={allDone} />
+    </ExerciseFrame>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Exercise 3 (data id E8) — False premise / eligibility  (verb: GATE)
+   ─────────────────────────────────────────────────────────────────────── */
+
+function FalsePremiseExercise({ num }: { num: number }) {
+  const [gates, setGates] = useState<FpGates>({ ...fpStartGates });
+  const [completed, setCompleted] = useState<string[]>([]);
+
+  useEffect(() => {
+    setCompleted((prev) => {
+      const active = fpTasks.find((t) => !prev.includes(t.id));
+      if (active && active.pass(gates)) return [...prev, active.id];
+      return prev;
+    });
+  }, [gates]);
+
+  const activeTask = fpTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask ? fpTasks.indexOf(activeTask) : fpTasks.length;
+  const lastDoneId = completed[completed.length - 1];
+  const lastDoneTask = lastDoneId
+    ? fpTasks.find((t) => t.id === lastDoneId) ?? null
+    : null;
+  const allDone = completed.length === fpTasks.length;
+  const f = fpFunnel(gates);
+
+  const toggleGate = (k: keyof FpGates) =>
+    setGates((g) => ({ ...g, [k]: !g[k] }));
+
+  return (
+    <ExerciseFrame
+      num={num}
+      title="Don't ask people who were never there."
+      issue="False-premise items · eligibility screening · the denominator"
+      modifier="false-premise"
+      verb="gate"
+    >
+      <p className="lab-exercise-setup">
+        Roast &amp; Brew asks one question about its app:{" "}
+        <strong>&ldquo;Did order-ahead save you time?&rdquo;</strong> — Yes / No.
+        Six customers answer, but only three have ever used order-ahead. Switch
+        on eligibility screeners and watch who should never have been in the
+        denominator drop out of the funnel.
+      </p>
+
+      <TaskBand
+        testidPrefix="lab-fp-task"
+        items={fpTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: fpTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(gates)
+              }
+            : null
+        }
+        passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
+        allDoneText={null}
+      />
+
+      <div className="lab-control">
+        <p className="lab-control-key">Eligibility screeners — switch on in order</p>
+        <div className="lab-fp-gates" role="group" aria-label="Screeners">
+          <button
+            type="button"
+            aria-pressed={gates.app}
+            className={`lab-fp-gate ${gates.app ? "is-on" : ""}`}
+            data-testid="lab-fp-gate-app"
+            onClick={() => toggleGate("app")}
+          >
+            <span className="lab-fp-gate-step" aria-hidden="true">1</span>
+            Ask first: &ldquo;Do you use our app?&rdquo;
+          </button>
+          <button
+            type="button"
+            aria-pressed={gates.feature}
+            className={`lab-fp-gate ${gates.feature ? "is-on" : ""}`}
+            data-testid="lab-fp-gate-feature"
+            onClick={() => toggleGate("feature")}
+          >
+            <span className="lab-fp-gate-step" aria-hidden="true">2</span>
+            Then ask: &ldquo;Have you used order-ahead?&rdquo;
+          </button>
+        </div>
+      </div>
+
+      <p className="lab-fp-headline lab-selectable" aria-live="polite">
+        Reads: <strong>{f.outcomeNo} of {f.outcomeTotal}</strong> who reached
+        the question say order-ahead didn&rsquo;t save them time
+        {f.merged > 0 ? (
+          <>
+            {" "}
+            — but <strong>{f.merged}</strong> of them never used order-ahead.
+            That&rsquo;s a contaminated denominator.
+          </>
+        ) : (
+          <> — and every one of them actually used it.</>
+        )}
+      </p>
+
+      <ul className="lab-fp-cast" aria-label="Where each customer lands">
+        {fpCast.map((c) => {
+          const l = fpLandingFor(c, gates);
+          const where =
+            l.stage === "outcome"
+              ? `Answers “${l.answer === "yes" ? "Yes" : "No"}”`
+              : l.stage === "out-no-app"
+                ? "Screened out: not an app user"
+                : "Screened out: hasn't used order-ahead";
+          const cls =
+            l.stage !== "outcome"
+              ? "is-out"
+              : l.basis
+                ? "is-basis"
+                : "is-merged";
+          return (
+            <li
+              key={c.id}
+              className={`lab-fp-row ${cls}`}
+              data-testid={`lab-fp-landing-${c.id}`}
+            >
+              <span className="lab-fp-who">
+                <strong>{c.name}</strong>
+                <span className="lab-fp-story lab-selectable"> {c.story}</span>
+              </span>
+              <span className="lab-fp-arrow" aria-hidden="true">→</span>
+              <span className="lab-fp-where">
+                {where}
+                {l.stage === "outcome" && !l.basis && (
+                  <span className="lab-fp-tag">no basis — merged in</span>
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      {allDone && (
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-fp-pass">
+          ✓ A clean-looking Yes/No can sit on a wrong denominator. Screening
+          eligibility before the outcome question keeps people who were never
+          exposed out of the average — and an ordered funnel turns &ldquo;who
+          dropped out&rdquo; into something you can act on.
+        </p>
+      )}
+
+      <PostReceipt exerciseId="E8" visible={allDone} />
+    </ExerciseFrame>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Exercise 6 (data id E9) — Acquiescence / yea-saying  (verb: COMPARE)
+   ─────────────────────────────────────────────────────────────────────── */
+
+function AcquiescenceExercise({ num }: { num: number }) {
+  const [designId, setDesignId] = useState<AcqDesign>("agree");
+  const [completed, setCompleted] = useState<string[]>([]);
+
+  useEffect(() => {
+    setCompleted((prev) => {
+      const active = acqTasks.find((t) => !prev.includes(t.id));
+      if (active && active.pass(designId)) return [...prev, active.id];
+      return prev;
+    });
+  }, [designId]);
+
+  const activeTask = acqTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask ? acqTasks.indexOf(activeTask) : acqTasks.length;
+  const lastDoneId = completed[completed.length - 1];
+  const lastDoneTask = lastDoneId
+    ? acqTasks.find((t) => t.id === lastDoneId) ?? null
+    : null;
+  const allDone = completed.length === acqTasks.length;
+  const level = acqTrackTrueLevel(designId);
+  const designs: AcqDesign[] = ["agree", "reverse", "item"];
+
+  return (
+    <ExerciseFrame
+      num={num}
+      title="When the format does the agreeing for them."
+      issue="Acquiescence / yea-saying · agree-disagree vs item-specific wording"
+      modifier="acquiescence"
+      verb="compare"
+    >
+      <p className="lab-exercise-setup">
+        Roast &amp; Brew wants to know how friendly its barista was. Six
+        customers answer; three of them are easy agreers who tend to tick
+        &ldquo;Agree&rdquo; on anything. Compare three ways to ask, and watch
+        whether the recorded answers track what people actually felt.
+      </p>
+
+      <TaskBand
+        testidPrefix="lab-acq-task"
+        items={acqTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: acqTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(designId)
+              }
+            : null
+        }
+        passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
+        allDoneText={null}
+      />
+
+      <div className="lab-control">
+        <p className="lab-control-key">How to ask it — tap to compare</p>
+        <div className="lab-acq-designs" role="group" aria-label="Question formats">
+          {designs.map((d) => (
+            <button
+              key={d}
+              type="button"
+              aria-pressed={designId === d}
+              className={`lab-acq-design ${designId === d ? "is-on" : ""}`}
+              data-testid={`lab-acq-design-${d}`}
+              onClick={() => setDesignId(d)}
+            >
+              {acqDesignLabel[d]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <p className="lab-acq-stem lab-selectable">{acqDesignStem[designId]}</p>
+      <p className="lab-acq-note lab-selectable" aria-live="polite">
+        {acqDesignNote[designId]}
+      </p>
+
+      <ul className="lab-acq-cast" aria-label="Where each respondent lands">
+        {acqCast.map((c) => {
+          const recorded = acqRecorded(c, designId);
+          const matches = acqMatchesTrue(c, designId);
+          const flagged = acqFlagged(c, designId);
+          return (
+            <li
+              key={c.id}
+              className={`lab-acq-row ${matches ? "is-match" : "is-mismatch"}`}
+              data-testid={`lab-acq-landing-${c.id}`}
+            >
+              <span className="lab-acq-who">
+                <strong>{c.name}</strong>
+                <span className="lab-acq-story lab-selectable"> {c.story}</span>
+              </span>
+              <span className="lab-acq-arrow" aria-hidden="true">→</span>
+              <span className="lab-acq-rec">
+                {recorded}
+                {flagged && <span className="lab-acq-tag">flagged inconsistent</span>}
+                {!matches && !flagged && (
+                  <span className="lab-acq-tag">doesn&rsquo;t match their view</span>
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="lab-channel-ledger" aria-label="Readout">
+        <LedgerMeter
+          label="Answers track true views"
+          hint="How many recorded answers match what the person actually felt."
+          level={level}
+        />
+      </div>
+
+      {allDone && (
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-acq-pass">
+          ✓ Where you can, swap agree/disagree for item-specific wording: with
+          nothing to nod along to, the acquiescence pull disappears and answers
+          track real views. A reverse-coded check is a detection patch — useful
+          to flag the easy agreers, but it doesn&rsquo;t measure them, and it
+          taxes everyone else.
+        </p>
+      )}
+
+      <PostReceipt exerciseId="E9" visible={allDone} />
     </ExerciseFrame>
   );
 }
