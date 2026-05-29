@@ -31,10 +31,24 @@ import {
   credentialingFacts,
   doubleBarreledItems,
   exerciseReceipts,
+  oatMilkCast,
+  oatMilkConflation,
+  oatMilkDesigns,
+  oatMilkLandingFor,
+  oatMilkPhantomOnScale,
+  oatMilkTasks,
   responseOptionKnowledgeMap,
   reviewDiagnosisAsk,
   reviewDiagnosisLabel,
   reviewElements,
+  scaleCollapsedGroups,
+  scaleLandingFor,
+  scaleLengthCast,
+  scaleLengthChoices,
+  scaleLengthStart,
+  scaleMeters,
+  scalePointLabels,
+  scaleTasks,
   startingAgeBuckets,
   startingChannels,
   termGlossary,
@@ -44,6 +58,7 @@ import {
   type AgeBucket,
   type ChannelLandingState,
   type CoverageStatus,
+  type E7Design,
   type ExerciseReceipt,
   type KnowledgeBranch,
   type LedgerLevel,
@@ -66,7 +81,7 @@ export function SatisfactionLab() {
       <header className="lab-route-head">
         <p className="lab-route-eyebrow">Response options · practice · preview</p>
         <h1 className="lab-route-title" id="survey-lab-title" tabIndex={-1}>
-          Five ways a survey quietly lies.
+          The quiet ways a survey lies.
         </h1>
         <p className="lab-route-lede">
           Each exercise below is one real failure mode in how survey answer
@@ -74,6 +89,11 @@ export function SatisfactionLab() {
           people flow through, and read the consequence. Wrong moves are part
           of the practice — they show what would have shipped. The closing
           card maps what you covered (and what&rsquo;s still out there).
+        </p>
+        <p className="lab-route-meta">
+          Seven hands-on exercises · ≈20 minutes · any order. The people in
+          each one are authored, illustrative cases — a fixed cast to reason
+          about, not real respondents or survey statistics.
         </p>
       </header>
 
@@ -89,6 +109,12 @@ export function SatisfactionLab() {
         </li>
         <li>
           <ChannelTinkerExercise />
+        </li>
+        <li>
+          <ScaleLengthExercise />
+        </li>
+        <li>
+          <OatMilkExercise />
         </li>
         <li>
           <ShipReviewExercise />
@@ -128,7 +154,7 @@ function TaskBand({
   testidPrefix: string;
 }) {
   return (
-    <div className="lab-taskband">
+    <div className="lab-taskband" aria-live="polite">
       <p className="lab-taskband-key">Your tasks — work them top to bottom</p>
       <ol className="lab-task-list">
         {items.map((t, i) => (
@@ -613,7 +639,7 @@ function DoubleBarreledExercise() {
 
           <div
             className="lab-repair-options"
-            role="radiogroup"
+            role="group"
             aria-label="Repair candidates"
           >
             {tripleSplitOptions.map((s) => {
@@ -623,8 +649,7 @@ function DoubleBarreledExercise() {
                 <button
                   key={s.id}
                   type="button"
-                  role="radio"
-                  aria-checked={picked}
+                  aria-pressed={picked}
                   className={`lab-repair-option ${picked ? "is-picked" : ""} ${verdictClass}`}
                   data-testid={`lab-repair-${s.id}`}
                   onClick={() => {
@@ -1192,7 +1217,7 @@ function ShipReviewExercise() {
 
   return (
     <ExerciseFrame
-      num={5}
+      num={7}
       title="Review the draft before it ships."
       issue="Putting the four lenses on a real survey · knowing where to stop"
       modifier="ship-review"
@@ -1203,7 +1228,7 @@ function ShipReviewExercise() {
         survey, and you&rsquo;re the last reviewer. Read the actual draft and
         diagnose each part with one of four inspection lenses — or wave it
         through if it&rsquo;s fine. You&rsquo;ve met every one of these traps in
-        Exercises 1–4; here they are loose in the wild, plus one part
+        the earlier exercises; here they are loose in the wild, plus one part
         that&rsquo;s a real problem but not an answer-choice one.
       </p>
 
@@ -1245,7 +1270,7 @@ function ShipReviewExercise() {
 
               <div
                 className="lab-review-diagnose"
-                role="radiogroup"
+                role="group"
                 aria-label={`Diagnose ${el.label}`}
               >
                 {reviewDiagnoses.map((d) => {
@@ -1254,8 +1279,7 @@ function ShipReviewExercise() {
                     <button
                       key={d}
                       type="button"
-                      role="radio"
-                      aria-checked={isPicked}
+                      aria-pressed={isPicked}
                       className={`lab-review-choice lab-review-choice--${d} ${isPicked ? "is-picked" : ""}`}
                       data-testid={`lab-review-choice-${el.id}-${d}`}
                       onClick={() => {
@@ -1339,6 +1363,320 @@ function ShipReviewExercise() {
       )}
 
       <PostReceipt exerciseId="E5" visible={exercisePassed} />
+    </ExerciseFrame>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Exercise 6 — Scale length / granularity  (verb: TINKER)
+   ─────────────────────────────────────────────────────────────────────── */
+
+function ScaleLengthExercise() {
+  const [points, setPoints] = useState<number>(scaleLengthStart);
+  const [completed, setCompleted] = useState<string[]>([]);
+
+  useEffect(() => {
+    setCompleted((prev) => {
+      const active = scaleTasks.find((t) => !prev.includes(t.id));
+      if (active && active.pass(points)) return [...prev, active.id];
+      return prev;
+    });
+  }, [points]);
+
+  const activeTask = scaleTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask ? scaleTasks.indexOf(activeTask) : scaleTasks.length;
+  const lastDoneId = completed[completed.length - 1];
+  const lastDoneTask = lastDoneId
+    ? scaleTasks.find((t) => t.id === lastDoneId) ?? null
+    : null;
+  const allDone = completed.length === scaleTasks.length;
+  const meters = scaleMeters(points);
+  const groups = scaleCollapsedGroups(points);
+
+  return (
+    <ExerciseFrame
+      num={5}
+      title="Pick how many points the scale offers."
+      issue="Scale length / granularity · the 5–7 rule · false precision"
+      modifier="scale-length"
+      verb="tinker"
+    >
+      <p className="lab-exercise-setup">
+        The same satisfaction question, six visitors with real but in-between
+        feelings (shown here on a 0–100 axis). You choose how many points the
+        answer scale offers. More points feels more precise — watch the two
+        meters and find out whether it actually is.
+      </p>
+
+      <TaskBand
+        testidPrefix="lab-scale-task"
+        items={scaleTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: scaleTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(points)
+              }
+            : null
+        }
+        passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
+        allDoneText={
+          allDone
+            ? "✓ Both meters high — the 5-to-7 range is the usual professional default."
+            : null
+        }
+      />
+
+      <div className="lab-control">
+        <p className="lab-control-key">Number of scale points</p>
+        <div
+          className="lab-segmented lab-segmented--wide"
+          role="group"
+          aria-label="Number of scale points"
+        >
+          {scaleLengthChoices.map((n) => (
+            <button
+              key={n}
+              type="button"
+              className={`lab-seg ${points === n ? "is-on" : ""}`}
+              aria-pressed={points === n}
+              data-testid={`lab-scale-points-${n}`}
+              onClick={() => setPoints(n)}
+            >
+              {n} points
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="lab-scalelen-grid">
+        <section className="lab-scalelen-scale" aria-label="The scale as offered">
+          <p className="lab-scalelen-key">The scale, as the respondent sees it</p>
+          <ol className="lab-scalelen-points lab-selectable">
+            {scalePointLabels(points).map((l, i) => (
+              <li key={i}>{l}</li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="lab-scalelen-castbox" aria-label="Where each visitor lands">
+          <p className="lab-scalelen-key">Where the six visitors land</p>
+          <ul className="lab-scalelen-rows">
+            {scaleLengthCast.map((v) => {
+              const land = scaleLandingFor(v, points);
+              return (
+                <li
+                  key={v.id}
+                  className={`lab-scalelen-row ${land.ambiguous ? "is-ambiguous" : ""}`}
+                  data-testid={`lab-scale-landing-${v.id}`}
+                >
+                  <span className="lab-scalelen-who">
+                    <strong>{v.name}</strong>
+                    <span className="lab-scalelen-feeling lab-selectable">
+                      {" "}
+                      {v.feeling} ({v.trueval})
+                    </span>
+                  </span>
+                  <span className="lab-scalelen-arrow" aria-hidden="true">→</span>
+                  <span className="lab-scalelen-pick">
+                    {land.label}
+                    {land.ambiguous && land.altLabel && (
+                      <span className="lab-scalelen-flag">
+                        could just as easily pick “{land.altLabel}”
+                      </span>
+                    )}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      </div>
+
+      {groups.length > 0 && (
+        <p className="lab-scalelen-collapse lab-selectable" aria-live="polite">
+          At {points} points,{" "}
+          {groups.map((g) => g.names.join(" & ")).join("; ")} are forced to
+          give the same answer though they feel quite differently.
+        </p>
+      )}
+
+      <div className="lab-channel-ledger" aria-label="Readouts">
+        <LedgerMeter
+          label="Distinctions kept"
+          hint="Do genuinely-different visitors avoid being forced onto the same answer?"
+          level={meters.distinctions}
+        />
+        <LedgerMeter
+          label="Each answer trustworthy"
+          hint="Are points farther apart than people can reliably tell — so no wobble between neighbours?"
+          level={meters.trustworthy}
+        />
+      </div>
+
+      {allDone && (
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-scale-pass">
+          ✓ More points is not more truth. Too few crushed real differences;
+          too many (the 11-point scale) split hairs finer than people can
+          actually feel, so the same person would wobble between neighbours on
+          a different day. 5 to 7 points is the usual default — match it to the
+          distinction you genuinely need to make.
+        </p>
+      )}
+
+      <PostReceipt exerciseId="E6" visible={allDone} />
+    </ExerciseFrame>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Exercise 7 — Don't know / Not applicable / Neutral  (verb: COMPARE)
+   ─────────────────────────────────────────────────────────────────────── */
+
+function OatMilkExercise() {
+  const [designId, setDesignId] = useState<E7Design["id"]>("none");
+  const [completed, setCompleted] = useState<string[]>([]);
+  const design = oatMilkDesigns.find((d) => d.id === designId)!;
+
+  useEffect(() => {
+    setCompleted((prev) => {
+      const active = oatMilkTasks.find((t) => !prev.includes(t.id));
+      if (active && active.pass(design)) return [...prev, active.id];
+      return prev;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [designId]);
+
+  const activeTask = oatMilkTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask ? oatMilkTasks.indexOf(activeTask) : oatMilkTasks.length;
+  const lastDoneId = completed[completed.length - 1];
+  const lastDoneTask = lastDoneId
+    ? oatMilkTasks.find((t) => t.id === lastDoneId) ?? null
+    : null;
+  const allDone = completed.length === oatMilkTasks.length;
+  const phantom = oatMilkPhantomOnScale(design);
+  const conflation = oatMilkConflation(design);
+
+  return (
+    <ExerciseFrame
+      num={6}
+      title="Give the “no answer” somewhere honest to go."
+      issue="Don't-know · not-applicable · why a neutral is none of these"
+      modifier="oat-milk"
+      verb="compare"
+    >
+      <p className="lab-exercise-setup">
+        Roast &amp; Brew asks how satisfied you are with its new oat-milk
+        drinks. Seven visitors answer — but three have no real view to give
+        (one has no opinion, two never tried it). Flip between the four
+        designs and watch where everyone lands. The lesson is in what each
+        opt-out does, and what its absence does.
+      </p>
+
+      <TaskBand
+        testidPrefix="lab-oat-task"
+        items={oatMilkTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: oatMilkTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(design)
+              }
+            : null
+        }
+        passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
+        allDoneText={null}
+      />
+
+      <div className="lab-control">
+        <p className="lab-control-key">The question design — tap to compare</p>
+        <div
+          className="lab-oat-designs"
+          role="group"
+          aria-label="Survey designs"
+        >
+          {oatMilkDesigns.map((d) => (
+            <button
+              key={d.id}
+              type="button"
+              aria-pressed={designId === d.id}
+              className={`lab-oat-design ${designId === d.id ? "is-on" : ""}`}
+              data-testid={`lab-oat-design-${d.id}`}
+              onClick={() => setDesignId(d.id)}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <p className="lab-oat-note lab-selectable" aria-live="polite">
+        {design.note}
+      </p>
+
+      <ul className="lab-oat-cast" aria-label="Where each visitor lands">
+        {oatMilkCast.map((v) => {
+          const land = oatMilkLandingFor(v, design);
+          return (
+            <li
+              key={v.id}
+              className={`lab-oat-row is-${land.quality}`}
+              data-testid={`lab-oat-landing-${v.id}`}
+            >
+              <span className="lab-oat-who">
+                <strong>{v.name}</strong>
+                <span className="lab-oat-story lab-selectable"> {v.story}</span>
+              </span>
+              <span className="lab-oat-arrow" aria-hidden="true">→</span>
+              <span className="lab-oat-pick">
+                {land.label}
+                <span className="lab-oat-tag">
+                  {land.quality === "clean"
+                    ? "honest"
+                    : land.quality === "forced"
+                      ? "forced onto Neutral"
+                      : "lumped into Don't-know"}
+                </span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <p className="lab-oat-summary lab-selectable" aria-live="polite">
+        {phantom} forced onto the satisfaction scale who shouldn&rsquo;t be
+        there · {conflation} never-tried visitor
+        {conflation === 1 ? "" : "s"} hidden inside &ldquo;Don&rsquo;t
+        know.&rdquo;
+      </p>
+
+      {allDone && (
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-oat-pass">
+          ✓ An opt-out didn&rsquo;t weaken the survey — it&rsquo;s what makes
+          the rest of the numbers trustworthy, by keeping people with no view
+          out of the average. And a true Neutral, a &ldquo;Don&rsquo;t
+          know,&rdquo; and a &ldquo;Not applicable&rdquo; are three different
+          states; don&rsquo;t let one quietly stand in for another.
+        </p>
+      )}
+
+      <PostReceipt exerciseId="E7" visible={allDone} />
     </ExerciseFrame>
   );
 }
@@ -1453,6 +1791,11 @@ function KnowledgeMap() {
           Does every real answer have a SLOT? Does the scale work as a RULER?
           Does the format PUSH the answer? And what would this inspection NOT
           prove (BOUNDARY)?
+        </p>
+        <p className="lab-km-coverage-line lab-selectable">
+          The ✓ marks are what these seven exercises gave you hands-on; the ◇
+          marks are important things still ahead, named here on purpose so the
+          map doesn&rsquo;t pretend to be the whole field.
         </p>
         <p className="lab-km-shorthand-note lab-selectable">
           SLOT / RULER / PUSH / BOUNDARY are <strong>this lab&rsquo;s own
@@ -1617,16 +1960,6 @@ function KnowledgeBranchCard({ branch }: { branch: KnowledgeBranch }) {
                 </p>
                 <p className="lab-km-node-meta">
                   <em>{coverageLabel[n.status]}</em>
-                  {n.exerciseIds.length > 0 &&
-                    !n.exerciseIds.every((id) => id === "none") && (
-                      <>
-                        {" "}·{" "}
-                        {n.exerciseIds
-                          .filter((id) => id !== "none")
-                          .map((id) => (id === "future" ? "future" : id))
-                          .join(", ")}
-                      </>
-                    )}
                 </p>
                 {n.sourceCue && (
                   <p className="lab-km-node-source">{n.sourceCue}</p>

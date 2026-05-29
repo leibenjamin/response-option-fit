@@ -818,6 +818,384 @@ export function reviewAllPassed(answers: ReviewAnswers): boolean {
   return reviewElements.every((el) => reviewElementIsPassed(el, answers));
 }
 
+/* ─── Exercise 6 — Scale length / granularity (RULER) ─────────────────────
+   The counterintuitive 5–7 rule, felt. Each of six visitors has a true
+   latent satisfaction on a 0–100 axis and a "discrimination width" — the
+   smallest gap they can reliably tell apart (W). The visitor picks the
+   number of scale points; the engine maps each true feeling to the nearest
+   point and reports two things:
+     - DISTINCTIONS KEPT: do genuinely-different visitors (>W apart) get
+       forced onto the same answer? Too few points crushes real differences.
+     - EACH ANSWER TRUSTWORTHY: are the points farther apart than W, so a
+       respondent can reliably tell adjacent points apart? Too many points
+       (gaps < W) is false precision — the same person would wobble between
+       neighbours on a different day.
+   Sweet spot ≈ 5–7. The arc: Task 1 (keep distinctions) tempts you UP — even
+   11 points satisfies it — then Task 2 (also stay trustworthy) reveals 11's
+   unreliability and pulls you back. The "crank to 11" is a costly affordance
+   (output-M): selectable, and its specific failure is shown. */
+
+export const scaleLengthChoices = [2, 3, 5, 7, 11] as const;
+export const scaleLengthStart = 3;
+/* Discrimination width: gaps narrower than this can't be reliably told
+   apart, and any two visitors closer than this aren't "genuinely
+   different." */
+export const scaleDiscriminationWidth = 12;
+
+export type ScaleLengthVisitor = {
+  id: string;
+  name: string;
+  feeling: string;
+  /* True latent satisfaction, 0 (hated it) .. 100 (adored it). */
+  trueval: number;
+};
+
+export const scaleLengthCast: ScaleLengthVisitor[] = [
+  { id: "ada", name: "Ada", feeling: "adored it", trueval: 92 },
+  { id: "ben", name: "Ben", feeling: "liked it a lot", trueval: 78 },
+  { id: "cleo", name: "Cleo", feeling: "mildly positive", trueval: 60 },
+  { id: "dev", name: "Dev", feeling: "slightly underwhelmed", trueval: 48 },
+  { id: "eve", name: "Eve", feeling: "unhappy", trueval: 30 },
+  { id: "fin", name: "Fin", feeling: "hated it", trueval: 12 }
+];
+
+export function scalePointPositions(n: number): number[] {
+  if (n <= 1) return [50];
+  return Array.from({ length: n }, (_, i) => (i * 100) / (n - 1));
+}
+
+const scaleLabelSets: Record<number, string[]> = {
+  2: ["Dissatisfied", "Satisfied"],
+  3: ["Dissatisfied", "Neutral", "Satisfied"],
+  5: [
+    "Very dissatisfied",
+    "Dissatisfied",
+    "Neutral",
+    "Satisfied",
+    "Very satisfied"
+  ],
+  7: [
+    "Very dissatisfied",
+    "Dissatisfied",
+    "Slightly dissatisfied",
+    "Neutral",
+    "Slightly satisfied",
+    "Satisfied",
+    "Very satisfied"
+  ]
+};
+
+export function scalePointLabels(n: number): string[] {
+  if (scaleLabelSets[n]) return scaleLabelSets[n];
+  /* For 11 points: a 0–10 numeric scale with only the ends anchored. */
+  return Array.from({ length: n }, (_, i) =>
+    i === 0 ? "0 (hated it)" : i === n - 1 ? `${n - 1} (adored it)` : `${i}`
+  );
+}
+
+export type ScaleLanding = {
+  index: number;
+  label: string;
+  /* True iff the second-nearest point is within W of the true feeling —
+     i.e., the respondent could plausibly have picked the neighbour. */
+  ambiguous: boolean;
+  altLabel: string | null;
+};
+
+export function scaleLandingFor(v: ScaleLengthVisitor, n: number): ScaleLanding {
+  const pts = scalePointPositions(n);
+  const labels = scalePointLabels(n);
+  const dists = pts.map((p) => Math.abs(p - v.trueval));
+  let best = 0;
+  for (let i = 1; i < pts.length; i += 1) {
+    /* Strictly nearer wins; on a tie the higher (more positive) point wins. */
+    if (dists[i] <= dists[best]) best = i;
+  }
+  /* Second-nearest. */
+  let second = -1;
+  for (let i = 0; i < pts.length; i += 1) {
+    if (i === best) continue;
+    if (second === -1 || dists[i] < dists[second]) second = i;
+  }
+  const ambiguous =
+    second !== -1 && dists[second] <= scaleDiscriminationWidth;
+  return {
+    index: best,
+    label: labels[best],
+    ambiguous,
+    altLabel: second !== -1 ? labels[second] : null
+  };
+}
+
+/* Genuinely-different visitors (>W apart) who are forced onto the same point. */
+export function scaleCollapsedPairs(n: number): number {
+  const W = scaleDiscriminationWidth;
+  let count = 0;
+  for (let i = 0; i < scaleLengthCast.length; i += 1) {
+    for (let j = i + 1; j < scaleLengthCast.length; j += 1) {
+      const a = scaleLengthCast[i];
+      const b = scaleLengthCast[j];
+      if (
+        Math.abs(a.trueval - b.trueval) > W &&
+        scaleLandingFor(a, n).index === scaleLandingFor(b, n).index
+      ) {
+        count += 1;
+      }
+    }
+  }
+  return count;
+}
+
+/* Visitors sharing a point with someone genuinely different — grouped by
+   point label, for the readout. */
+export function scaleCollapsedGroups(
+  n: number
+): { label: string; names: string[] }[] {
+  const W = scaleDiscriminationWidth;
+  const byIndex = new Map<number, ScaleLengthVisitor[]>();
+  for (const v of scaleLengthCast) {
+    const idx = scaleLandingFor(v, n).index;
+    byIndex.set(idx, [...(byIndex.get(idx) ?? []), v]);
+  }
+  const groups: { label: string; names: string[] }[] = [];
+  for (const [idx, members] of byIndex) {
+    const genuine = members.some((a) =>
+      members.some((b) => Math.abs(a.trueval - b.trueval) > W)
+    );
+    if (genuine && members.length > 1) {
+      groups.push({
+        label: scalePointLabels(n)[idx],
+        names: members.map((m) => m.name)
+      });
+    }
+  }
+  return groups;
+}
+
+export function scaleGap(n: number): number {
+  return n <= 1 ? 100 : 100 / (n - 1);
+}
+
+export type ScaleMeters = {
+  distinctions: LedgerLevel;
+  trustworthy: LedgerLevel;
+};
+
+export function scaleMeters(n: number): ScaleMeters {
+  const collapsed = scaleCollapsedPairs(n);
+  const distinctions: LedgerLevel =
+    collapsed === 0 ? "high" : collapsed <= 2 ? "medium" : "low";
+  const trustworthy: LedgerLevel =
+    scaleGap(n) >= scaleDiscriminationWidth ? "high" : "low";
+  return { distinctions, trustworthy };
+}
+
+export type ScaleTask = {
+  id: "distinct" | "sweet-spot";
+  title: string;
+  brief: string;
+  pass: (n: number) => boolean;
+  passText: string;
+  hint: (n: number) => string;
+};
+
+export const scaleTasks: ScaleTask[] = [
+  {
+    id: "distinct",
+    title: "Stop crushing real differences",
+    brief:
+      "At this few points, visitors who genuinely differ are forced to give the same answer. Add points until no two genuinely-different visitors share a response. (Yes, even 11 points satisfies this — hold that thought.)",
+    pass: (n) => scaleMeters(n).distinctions === "high",
+    passText:
+      "✓ No two genuinely-different visitors are forced to agree now. Tempted to stop at the most points possible? Task 2 is about why more isn't automatically better.",
+    hint: (n) => {
+      const g = scaleCollapsedGroups(n);
+      if (g.length === 0) return "Distinctions kept — on to Task 2.";
+      const ex = g[0];
+      return `Still collapsing: ${ex.names.join(" & ")} all land on “${ex.label}” though they feel quite differently. Add points.`;
+    }
+  },
+  {
+    id: "sweet-spot",
+    title: "Keep every answer trustworthy too",
+    brief:
+      "Now crank it to the most points and watch the second meter — when the gaps get narrower than what people can actually tell apart, the same person would wobble between neighbours on a different day. Settle on a length that keeps BOTH meters high.",
+    pass: (n) => {
+      const m = scaleMeters(n);
+      return m.distinctions === "high" && m.trustworthy === "high";
+    },
+    passText:
+      "✓ Distinctions kept AND every answer trustworthy — which is why 5 to 7 points is the usual professional default. Fewer crushes real differences; more (11+) collects digits people can't reliably supply (false precision). More options is not more truth.",
+    hint: (n) => {
+      const m = scaleMeters(n);
+      if (m.trustworthy !== "high")
+        return `At ${n} points the gaps are narrower than people can reliably distinguish — answers wobble. Back off to fewer points.`;
+      if (m.distinctions !== "high")
+        return "Don't go so far that genuinely-different visitors collapse again.";
+      return "Both meters high — that's the sweet spot.";
+    }
+  }
+];
+
+/* ─── Exercise 7 — Don't know / Not applicable / Neutral (SLOT) ────────────
+   Non-substantive options, and the expert distinction the lab most wants an
+   analyst to carry: a true neutral, a "don't know / no opinion," and a "not
+   applicable / never tried it" are THREE different states. Omitting the
+   opt-outs forces the no-view people onto the scale (usually onto Neutral),
+   so the chart calls them "raters" and the Neutral bar becomes a garbage
+   magnet. Counterintuitive payoff: adding an opt-out IMPROVES the data.
+
+   Mechanic = compare four designs (variation theory): hold the cast fixed,
+   vary only which opt-outs are offered, and watch each person route live.
+   Designs: none / +DK / +NA / +both. Two gated tasks:
+     1. Get the non-answers off the satisfaction scale (DK or both).
+     2. Keep each opt-out meaning ONE thing — a "don't know" shouldn't
+        secretly contain people who never tried it (only "both").
+   The wrong-but-instructive states are shown by flipping designs: the
+   Neutral-magnet (none), and the DK that quietly swallows never-tried
+   people (+DK only). */
+
+export type E7State = "pos" | "neg" | "neutral" | "dk" | "na";
+
+export type E7Visitor = {
+  id: string;
+  name: string;
+  state: E7State;
+  story: string;
+};
+
+export const oatMilkCast: E7Visitor[] = [
+  { id: "ada", name: "Ada", state: "pos", story: "orders the oat latte every visit" },
+  { id: "ben", name: "Ben", state: "pos", story: "switched to oat milk and loves it" },
+  { id: "cleo", name: "Cleo", state: "neg", story: "thinks your oat milk splits in the cup" },
+  { id: "dev", name: "Dev", state: "neutral", story: "tried it; honestly could take it or leave it" },
+  { id: "eve", name: "Eve", state: "dk", story: "had it once months ago — no real opinion" },
+  { id: "fin", name: "Fin", state: "na", story: "is allergic to oats; never orders it" },
+  { id: "gia", name: "Gia", state: "na", story: "didn't even know you offered oat milk" }
+];
+
+export type E7Design = {
+  id: "none" | "dk" | "na" | "both";
+  label: string;
+  hasDK: boolean;
+  hasNA: boolean;
+  /* Per-design consequence shown under the routing. */
+  note: string;
+};
+
+export const oatMilkDesigns: E7Design[] = [
+  {
+    id: "none",
+    label: "5-point scale only",
+    hasDK: false,
+    hasNA: false,
+    note: "No way out. The no-opinion visitor and both never-tried visitors get forced onto the nearest non-committal answer — Neutral. Now “Neutral” holds one genuinely neutral person and three who have no business in the average. The bar looks meaningful and isn't."
+  },
+  {
+    id: "dk",
+    label: "+ “Don't know / no opinion”",
+    hasDK: true,
+    hasNA: false,
+    note: "Better — the no-opinion visitor finally has a home, and the satisfaction scale is clean. But the two who never TRIED oat milk also grab “Don't know” (it's the closest “I can't answer”), so that bucket now secretly mixes “no opinion” with “never tried.” You can't tell them apart later."
+  },
+  {
+    id: "na",
+    label: "+ “Not applicable / haven't tried it”",
+    hasDK: false,
+    hasNA: true,
+    note: "The two never-tried visitors route cleanly to “Not applicable.” But the no-opinion visitor still has nowhere to go and falls back onto Neutral — one phantom still propping up the satisfaction bar."
+  },
+  {
+    id: "both",
+    label: "+ both opt-outs",
+    hasDK: true,
+    hasNA: true,
+    note: "Clean. Every answer means exactly what it says: three real views and one genuine Neutral on the scale, “no opinion” in Don't-know, “never tried” in Not-applicable. Now “% satisfied among people with a view” is a number you can defend."
+  }
+];
+
+export type E7Slot = "scale-pos" | "scale-neg" | "scale-neutral" | "dk" | "na";
+export type E7Landing = {
+  slot: E7Slot;
+  /* Display label for where they landed. */
+  label: string;
+  /* "clean" = lands where they belong; "forced" = pushed onto Neutral;
+     "conflated" = a never-tried person lumped into Don't-know. */
+  quality: "clean" | "forced" | "conflated";
+};
+
+export function oatMilkLandingFor(v: E7Visitor, d: E7Design): E7Landing {
+  switch (v.state) {
+    case "pos":
+      return { slot: "scale-pos", label: "Satisfied", quality: "clean" };
+    case "neg":
+      return { slot: "scale-neg", label: "Dissatisfied", quality: "clean" };
+    case "neutral":
+      return { slot: "scale-neutral", label: "Neutral", quality: "clean" };
+    case "dk":
+      return d.hasDK
+        ? { slot: "dk", label: "Don't know", quality: "clean" }
+        : { slot: "scale-neutral", label: "Neutral", quality: "forced" };
+    case "na":
+      if (d.hasNA) return { slot: "na", label: "Not applicable", quality: "clean" };
+      if (d.hasDK) return { slot: "dk", label: "Don't know", quality: "conflated" };
+      return { slot: "scale-neutral", label: "Neutral", quality: "forced" };
+  }
+}
+
+export function oatMilkPhantomOnScale(d: E7Design): number {
+  return oatMilkCast.filter(
+    (v) => oatMilkLandingFor(v, d).quality === "forced"
+  ).length;
+}
+
+export function oatMilkConflation(d: E7Design): number {
+  return oatMilkCast.filter(
+    (v) => oatMilkLandingFor(v, d).quality === "conflated"
+  ).length;
+}
+
+export type OatMilkTask = {
+  id: "off-scale" | "distinct-opt-outs";
+  title: string;
+  brief: string;
+  pass: (d: E7Design) => boolean;
+  passText: string;
+  hint: (d: E7Design) => string;
+};
+
+export const oatMilkTasks: OatMilkTask[] = [
+  {
+    id: "off-scale",
+    title: "Get the non-answers off the satisfaction scale",
+    brief:
+      "Three visitors have no view of the oat milk to give — one has no opinion, two never tried it. Right now they're forced onto Neutral, inflating it. Flip through the designs and find one where nobody is pushed onto the scale who shouldn't be there.",
+    pass: (d) => oatMilkPhantomOnScale(d) === 0,
+    passText:
+      "✓ The satisfaction scale now holds only people with a real view. Notice the headline “% satisfied” just changed — the forced answers were quietly shaping it.",
+    hint: (d) =>
+      oatMilkPhantomOnScale(d) > 0
+        ? `${oatMilkPhantomOnScale(d)} visitor(s) are still forced onto Neutral. They need a “Don't know” to escape to.`
+        : "No one's forced onto the scale now — on to Task 2."
+  },
+  {
+    id: "distinct-opt-outs",
+    title: "Keep each opt-out meaning one thing",
+    brief:
+      "Look closely at the design you picked. A “Don't know” bucket that secretly contains people who NEVER TRIED the drink isn't honest data either — “no opinion” and “never tried” are different states. Find the design where every opt-out means exactly one thing.",
+    pass: (d) => oatMilkPhantomOnScale(d) === 0 && oatMilkConflation(d) === 0,
+    passText:
+      "✓ A true Neutral (tried it, felt mid), a “Don't know” (has a basis to judge, no opinion), and a “Not applicable” (no basis at all) are three different states — and now each option holds exactly one of them. An opt-out didn't weaken the survey; it's what makes the rest of the numbers trustworthy.",
+    hint: (d) => {
+      if (oatMilkPhantomOnScale(d) > 0)
+        return "First get everyone with no view off the satisfaction scale (Task 1).";
+      if (oatMilkConflation(d) > 0)
+        return "The never-tried visitors are hiding inside “Don't know.” Give them their own “Not applicable.”";
+      return "Every opt-out means one thing now.";
+    }
+  }
+];
+
 /* ─── Per-exercise micro-receipts (mapping to the 4-branch map) ──────────
    After each exercise passes, the lab shows a small receipt naming which
    branch(es) of the closing map the exercise exercised. The caveat field
@@ -853,6 +1231,16 @@ export const exerciseReceipts: Record<string, ExerciseReceipt> = {
     ],
     caveat:
       "Reviewing a real draft means knowing when to STOP flagging: the clean question stays, and the sampling note is a real problem you raise elsewhere — not something cleaner answer choices can fix."
+  },
+  E6: {
+    marks: [{ branchId: "ruler", concepts: ["scale length / granularity", "the 5–7 rule of thumb"] }],
+    caveat:
+      "More scale points is not more truth: too few crushes real differences, too many collects digits respondents can't reliably supply. The 5–7 range is a default, not a law — match it to the distinction you actually need."
+  },
+  E7: {
+    marks: [{ branchId: "slot", concepts: ["non-substantive options (DK / NA)", "neutral ≠ don't-know ≠ not-applicable"] }],
+    caveat:
+      "An opt-out can IMPROVE data, not weaken it: it keeps people with no view from contaminating the average. But a true Neutral, a “Don't know,” and a “Not applicable” are three different states — don't let one option quietly stand in for another."
   }
 };
 
@@ -1013,13 +1401,13 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
       },
       {
         id: "slot.dkNaPna",
-        label: "DK / NA / prefer not",
-        status: "planned",
+        label: "DK / NA / not a neutral",
+        status: "practiced",
         ask:
-          "Are uncertain or ineligible respondents being forced into substantive answers?",
+          "Are uncertain or ineligible respondents being forced into substantive answers — and is a true neutral being confused with “don't know” or “not applicable”?",
         remember:
-          "An opt-out can protect measurement rather than weaken it — uncertain respondents stop contaminating the substantive distribution.",
-        exerciseIds: ["future"],
+          "An opt-out can protect measurement rather than weaken it — and a true Neutral, a “Don't know,” and a “Not applicable” are three different states, not one.",
+        exerciseIds: ["E7"],
         sourceCue: "Krosnick & Presser on DK / no-opinion."
       }
     ]
@@ -1052,12 +1440,12 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
       {
         id: "ruler.scaleLength",
         label: "Scale length",
-        status: "planned",
+        status: "practiced",
         ask:
           "Does the number of points match what respondents can actually distinguish?",
         remember:
-          "More points do not automatically mean more truth — beyond roughly 5–7 categories, reliability gains often flatten or reverse.",
-        exerciseIds: ["future"],
+          "More points do not automatically mean more truth — too few crushes real differences; beyond roughly 5–7 categories, gaps get narrower than people can reliably tell apart (false precision).",
+        exerciseIds: ["E6"],
         sourceCue: "Krosnick & Presser; Saris & Gallhofer."
       },
       {

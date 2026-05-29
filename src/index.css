@@ -3863,6 +3863,16 @@ summary:focus-visible {
   max-width: 66ch;
 }
 
+.lab-route-meta {
+  margin: var(--s-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 72ch;
+}
+
 .lab-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -6223,6 +6233,205 @@ summary:focus-visible {
   }
 }
 
+/* ─── E6: scale length / granularity ─── */
+
+.lab-segmented--wide {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.lab-scalelen-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: var(--s-5);
+  align-items: start;
+}
+.lab-scalelen-scale,
+.lab-scalelen-castbox {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: var(--s-4) var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.lab-scalelen-key {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lab-scalelen-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+.lab-scalelen-points li {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  color: var(--ink-2);
+  padding: 2px var(--s-3);
+  border-left: 2px solid var(--line);
+}
+.lab-scalelen-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lab-scalelen-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.95fr);
+  gap: var(--s-3);
+  align-items: baseline;
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--line-faint);
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.lab-scalelen-row:last-child { border-bottom: 0; }
+.lab-scalelen-who strong {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--ink);
+}
+.lab-scalelen-feeling { color: var(--ink-soft); }
+.lab-scalelen-arrow { color: var(--ink-mute); }
+.lab-scalelen-pick {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+  text-align: right;
+}
+.lab-scalelen-flag {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11.5px;
+  color: var(--accent-2);
+}
+.lab-scalelen-row.is-ambiguous .lab-scalelen-pick { color: var(--accent-2); }
+.lab-scalelen-collapse {
+  margin: 0;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-paper);
+  padding: var(--s-2) var(--s-3);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--accent-2);
+}
+
+/* ─── E7: don't-know / not-applicable / neutral ─── */
+
+.lab-oat-designs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+.lab-oat-design {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  color: var(--ink-2);
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  padding: var(--s-3) var(--s-4);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--mo-1) var(--mo-ease),
+    background-color var(--mo-1) var(--mo-ease),
+    border-color var(--mo-1) var(--mo-ease),
+    color var(--mo-1) var(--mo-ease);
+}
+.lab-oat-design:hover:not(:disabled),
+.lab-oat-design:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+.lab-oat-design.is-on {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper-card);
+}
+.lab-oat-note {
+  margin: 0;
+  border-left: 3px solid var(--accent-soft);
+  background: var(--paper-2);
+  padding: var(--s-3) var(--s-4);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.lab-oat-cast {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lab-oat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.85fr);
+  gap: var(--s-3);
+  align-items: baseline;
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--line-faint);
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.lab-oat-row:last-child { border-bottom: 0; }
+.lab-oat-who strong {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--ink);
+}
+.lab-oat-story { color: var(--ink-soft); }
+.lab-oat-arrow { color: var(--ink-mute); }
+.lab-oat-pick {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+.lab-oat-tag {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+}
+.lab-oat-row.is-clean .lab-oat-tag { color: var(--route-r); }
+.lab-oat-row.is-forced .lab-oat-pick,
+.lab-oat-row.is-forced .lab-oat-tag { color: var(--accent-2); }
+.lab-oat-row.is-conflated .lab-oat-pick,
+.lab-oat-row.is-conflated .lab-oat-tag { color: var(--route-w); }
+.lab-oat-summary {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+
+/* ─── Closing-map coverage line ─── */
+.lab-km-coverage-line {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 78ch;
+}
+
+@media (forced-colors: active) {
+  .lab-oat-design { border: 1px solid CanvasText; }
+  .lab-oat-design.is-on { background: Highlight; color: HighlightText; }
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 880px) {
@@ -6242,11 +6451,31 @@ summary:focus-visible {
   .lab-review-lenses {
     grid-template-columns: minmax(0, 1fr);
   }
+  .lab-scalelen-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lab-oat-designs {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (max-width: 520px) {
   .lab-exercise {
     padding: var(--s-5) var(--s-4);
+  }
+  .lab-segmented--wide {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .lab-scalelen-row,
+  .lab-oat-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lab-scalelen-arrow,
+  .lab-oat-arrow { display: none; }
+  .lab-scalelen-pick,
+  .lab-oat-pick {
+    text-align: left;
+    padding-top: var(--s-1);
   }
   .lab-channel-cast-row {
     grid-template-columns: minmax(0, 1fr);
