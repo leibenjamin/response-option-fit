@@ -371,18 +371,23 @@ export const bucketTasks: BucketTask[] = [
 
 /* ─── Exercise 4 — Pilot-iterate option-set tinker with ledger ────────────
    The visitor designs a "How did you hear about us?" option set against
-   7 authored respondents. Each respondent has a true channel + an effort
-   tolerance (high = will fill in "Other"; low = won't, satisfices onto
-   the closest plausible offered option). Live ledger shows the four
-   tradeoff dimensions per M's "consequence ledger" pattern: COVERAGE
-   (everyone has a place), EXCLUSIVITY (no overlaps), ANALYST DETAIL
-   (specific vs lumped), and RESPONDENT BURDEN (list length / effort).
+   7 authored respondents. Each respondent has a true channel + a write-in
+   tolerance (high = will type into "Other" when their channel is missing;
+   low = won't, so they pick the closest listed option or skip). Live
+   ledger shows four tradeoff dimensions per M's "consequence ledger":
+   ANSWER-SPACE COVERAGE (everyone has a place), MUTUAL EXCLUSIVITY (no
+   overlaps), ANALYST DETAIL (specific vs lumped), RESPONDENT BURDEN
+   (list length / effort).
 
-   The deep lesson the author flagged: "Other (please specify)" only
-   captures HIGH-effort respondents. LOW-effort respondents satisfice
-   into the wrong specific options. The professional fix is to PILOT
-   (see who's satisficing where) and add SPECIFIC options for those
-   channels. */
+   The lesson, stated safely (Run N audit, §7): "Other (please specify)"
+   helps but is not a full repair for a missing option. It asks the
+   respondent to notice the mismatch, choose the escape hatch, and write a
+   better answer — and not everyone will. In THIS authored cast, four
+   won't, so a bare "Other" leaves them mis-filed or absent. The
+   professional move is to PILOT (watch where people mis-file or skip) and
+   PROMOTE common write-ins to their own listed options. We do NOT claim
+   "Other mainly captures high-effort respondents" as a general empirical
+   law — only that a write-in is extra effort some respondents decline. */
 
 export type Channel = {
   id: string;
@@ -627,10 +632,10 @@ export const channelTasks: ChannelTask[] = [
     id: "capture",
     title: "Get everyone onto their real channel",
     brief:
-      "The starter four leave Cleo and Pat mis-filed and Dev and Lin gone entirely. Add options until all seven land on their TRUE channel — watch Coverage and Analyst detail climb. (Tempted to just add “Other”? Try it — these four are all low-effort and won't write one in.)",
+      "The starter four leave Cleo and Pat mis-filed and Dev and Lin gone entirely. Add options until all seven land on their TRUE channel — watch answer-space coverage and analyst detail climb. (Tempted to just add “Other”? Try it — in this cast the four won't bother with the write-in, so they mis-file or skip anyway.)",
     pass: channelAllClean,
     passText:
-      "✓ All seven on their true channel. Notice what “Other” alone could NOT do: the four missing-channel visitors are low-effort, so they mis-filed or vanished rather than type a write-in. Coverage is about giving people a real place — not a catch-all they won't use.",
+      "✓ All seven on their true channel. Notice what “Other” alone did not do here: a write-in is extra effort, and these four declined it — so they mis-filed or skipped. “Other” helps, but it isn't a full repair for a missing option. Coverage is about giving people a real place to land — not only an escape hatch some won't use.",
     hint: (offered) => {
       const t = channelTallies(offered);
       if (t.abandoned > 0)
@@ -648,13 +653,13 @@ export const channelTasks: ChannelTask[] = [
     id: "trim",
     title: "Ship the leanest honest list",
     brief:
-      "A teammate wants to add an “Online” catch-all and an “Other” box “to be safe.” Try them and watch Exclusivity and Respondent burden — then ship the shortest list that keeps everyone clean.",
+      "A teammate wants to add an “Online” catch-all and an “Other” box “to be safe.” Try them and watch mutual exclusivity and respondent burden — then ship the shortest list that keeps everyone clean.",
     pass: (offered) =>
       channelAllClean(offered) &&
       !offeredHasBroad(offered) &&
       offered.length <= 8,
     passText:
-      "✓ Lean and all-clean. The “Online” bucket lumped three distinct channels into one (Exclusivity drops, and you can't tell TikTok from a podcast afterward); “Other” just added length the low-effort visitors never used. Every option should earn its place.",
+      "✓ Lean and all-clean. The “Online” bucket lumped three distinct channels into one (mutual exclusivity drops, and you can't tell TikTok from a podcast afterward); “Other” just added length the cast's write-in-avoiders never used. Every option should earn its place.",
     hint: (offered) => {
       if (!channelAllClean(offered))
         return "First get everyone back to clean — Task 1's state.";
@@ -1330,13 +1335,15 @@ export const fpTasks: FpTask[] = [
 /* ─── Exercise 9 (data id E9) — Acquiescence / yea-saying (PUSH) ───────────
    Agree/disagree formats invite agreement regardless of content: some
    people ("yea-sayers") tick Agree even when their real view is mixed or
-   negative, so agreement is inflated. The instinctive fix — a reverse-coded
+   negative, so agreement is inflated. The instinctive fix — a reverse-worded
    check item — DETECTS the yea-sayers (they agree with both a statement and
    its opposite) but doesn't tell you what they actually think, and it makes
    careful respondents parse an awkward second item. The real fix is
    item-specific wording ("How friendly was the barista?"), which removes the
-   thing there is to agree with. Mechanic = compare three designs; distinct
-   counterintuitive beat (the textbook reverse-coding move is the trap).
+   thing there is to agree with. (Precise term: the second item is reverse-
+   WORDED; flipping its score to align with the first is reverse-CODING. The
+   drawer spells this out.) Mechanic = compare three designs; distinct
+   counterintuitive beat (the textbook reverse-wording move is the trap).
    Verb: COMPARE. */
 
 export type AcqView = "friendly" | "unfriendly" | "mixed";
@@ -1360,7 +1367,7 @@ export const acqCast: AcqRespondent[] = [
 export type AcqDesign = "agree" | "reverse" | "item";
 export const acqDesignLabel: Record<AcqDesign, string> = {
   agree: "Agree / disagree",
-  reverse: "+ reverse-coded check",
+  reverse: "+ reverse-worded check",
   item: "Item-specific wording"
 };
 export const acqDesignStem: Record<AcqDesign, string> = {
@@ -1370,7 +1377,7 @@ export const acqDesignStem: Record<AcqDesign, string> = {
 };
 export const acqDesignNote: Record<AcqDesign, string> = {
   agree: "Agree/disagree invites agreement. The yea-sayers tick Agree no matter what they actually felt, so two people who found the barista cold (and one who was lukewarm) get recorded as agreeing the barista was friendly. Agreement is inflated before you analyze a thing.",
-  reverse: "The reverse-coded item catches the yea-sayers — they agree with “friendly” AND “unfriendly,” which is a contradiction, so you can flag them as inconsistent. But notice two things: you still don't know what they actually think, and every careful respondent had to stop and parse a second, opposite-worded item. Detection is not measurement.",
+  reverse: "The reverse-worded item catches the yea-sayers — they agree with “friendly” AND “unfriendly,” which is a contradiction, so you can flag them as inconsistent. But notice two things: you still don't know what they actually think, and every careful respondent had to stop and parse a second, opposite-worded item. Detection is not measurement — treat it as a deliberate, pretested check, not a free attention test.",
   item: "There's nothing here to simply agree with — the respondent has to place the barista on a scale of friendliness. The acquiescence pull is gone, and every recorded answer now matches the person's real view."
 };
 
@@ -1422,14 +1429,14 @@ export const acqTasks: AcqTask[] = [
     id: "detect",
     title: "Try the textbook fix: catch the yea-sayers",
     brief:
-      "Agreement looks high — but is it real? The standard move is a reverse-coded check: ask the same thing the opposite way and flag anyone who agrees with both. Switch to that design and see who it catches.",
+      "Agreement looks high — but is it real? The standard move is a reverse-worded check: ask the same thing the opposite way and flag anyone who agrees with both. Switch to that design and see who it catches.",
     pass: (d) => d === "reverse",
     passText:
       "✓ It flags the three easy-agreers — they “agreed” the barista was both friendly and unfriendly. Useful to know. But look closely: you still don't know what those three actually think, two genuinely-careful respondents had to untangle a double-worded item, and the headline agreement number on the original item didn't budge. You detected the problem; you didn't measure around it.",
     hint: (d) =>
       d === "reverse"
-        ? "Reverse-coded check is on — see who gets flagged."
-        : "Switch to the “+ reverse-coded check” design."
+        ? "Reverse-worded check is on — see who gets flagged."
+        : "Switch to the “+ reverse-worded check” design."
   },
   {
     id: "measure",
@@ -1470,7 +1477,7 @@ export const exerciseReceipts: Record<string, ExerciseReceipt> = {
   E4: {
     marks: [{ branchId: "slot", concepts: ["completeness", "the “Other” tradeoff"] }],
     caveat:
-      "“Other, please specify” is a coverage patch, not an analysis category. Respondents who avoid the extra effort satisfice into a wrong specific option instead — pilot, observe satisficing, then promote common write-ins to their own options."
+      "“Other, please specify” is an escape hatch, not a full repair for a missing option — and not an analysis category. Some respondents who'd rather not write a sentence pick the closest listed option instead. Pilot, watch where people mis-file or skip, then promote common write-ins to their own options."
   },
   E5: {
     marks: [
@@ -1500,18 +1507,319 @@ export const exerciseReceipts: Record<string, ExerciseReceipt> = {
   E9: {
     marks: [{ branchId: "push", concepts: ["acquiescence / yea-saying", "agree-disagree vs item-specific wording"] }],
     caveat:
-      "Agree/disagree formats invite agreement regardless of content. A reverse-coded check detects yea-sayers but doesn't measure their real view (and adds respondent burden); where you can, replace agree/disagree with item-specific response options."
+      "Agree/disagree formats invite agreement regardless of content. A reverse-worded check detects yea-sayers but doesn't measure their real view (and adds respondent burden); where you can, replace agree/disagree with item-specific response options."
   }
 };
+
+/* ─── Per-exercise source drawers ─────────────────────────────────────────
+   The credibility layer Run N (docs/research/2026-05-27-terms-and-evidence,
+   §12) recommended: each exercise gets a collapsed drawer that hands the
+   visitor the REAL field vocabulary for what they just practiced, an honest
+   evidence-strength badge, the boundary of what NOT to overclaim, and named
+   sources they could cite. This is what lets a visitor hold their own with a
+   methodologist — and it keeps the lab honest about where the fixed cast is
+   an illustration rather than an empirical finding. Keyed by data-id. The
+   evidence strengths and safe phrasings are taken from Run N §6.1 / §12 /
+   §13; sources are the verified anchors in §1.3 (no fabricated page nums). */
+
+export type EvidenceStrength =
+  | "textbook-consensus"
+  | "directionally-supported"
+  | "plausible-illustration"
+  | "contested";
+
+export const evidenceStrengthMeta: Record<
+  EvidenceStrength,
+  { label: string; gloss: string }
+> = {
+  "textbook-consensus": {
+    label: "Textbook consensus",
+    gloss: "Standard, widely-agreed survey-methodology guidance."
+  },
+  "directionally-supported": {
+    label: "Directionally supported",
+    gloss:
+      "The direction is well documented; the size of the effect varies with topic, mode, and wording."
+  },
+  "plausible-illustration": {
+    label: "Plausible illustration",
+    gloss: "A defensible teaching example, not a specific empirical finding."
+  },
+  contested: {
+    label: "Contested · use with care",
+    gloss:
+      "Real but debated; the lab states only the part the evidence supports."
+  }
+};
+
+export type FieldTerm = { term: string; gloss: string };
+
+export type SourceDrawer = {
+  /* One sentence: the transferable thing this exercise teaches. */
+  teaches: string;
+  /* The real terminology a methodologist would use for it. */
+  fieldTerms: FieldTerm[];
+  /* Which of the lab's own coinages showed up here (links to glossary). */
+  labShorthand?: string;
+  evidence: EvidenceStrength;
+  /* 2–4 sentences on what the evidence actually supports. */
+  supports: string;
+  /* The honesty line: what NOT to overclaim. */
+  boundary: string;
+  /* Named anchors (author / title / org). No page numbers invented. */
+  sources: string[];
+  /* Optional visual-vs-oral or device caveat where it matters. */
+  modeCaveat?: string;
+};
+
+export const sourceDrawers: Record<string, SourceDrawer> = {
+  E1: {
+    teaches:
+      "A scale's wording, balance, options, and order are all part of the measurement — change them and the same feelings can report differently.",
+    fieldTerms: [
+      { term: "leading / biased wording", gloss: "A stem that nudges the answer in one direction before options are read." },
+      { term: "balanced scale", gloss: "Symmetric positive and negative categories around a center — semantically, not just numerically." },
+      { term: "midpoint / neutral category", gloss: "The middle position; a midpoint is not automatically psychologically neutral." },
+      { term: "response-order effects (primacy / recency)", gloss: "Answers shift with the order options appear in." }
+    ],
+    labShorthand: "SLOT · RULER · PUSH",
+    evidence: "directionally-supported",
+    supports:
+      "Leading wording can shift answers toward the favored side; removing a midpoint changes the task for middle-position respondents; missing strong-negative categories push some dissatisfied people onto a weaker option, a skip, or “Other”; and option order can become part of the measurement. Primacy and recency in particular are textbook response-order effects.",
+    boundary:
+      "The fixed cast shows direction, not magnitude. A uniform “+1” shift for every respondent is a teaching animation, not an empirical effect size — real sizes depend on topic, mode, and wording.",
+    sources: [
+      "Pew Research Center, “Writing Survey Questions”",
+      "Krosnick & Presser, “Question and Questionnaire Design” (2010)",
+      "Schuman & Presser, “Questions and Answers in Attitude Surveys” (1981)"
+    ],
+    modeCaveat:
+      "Order effects are mode-sensitive: visual / self-administered lists more often risk primacy; interviewer-read lists can risk recency."
+  },
+  E2: {
+    teaches: "One answer slot cannot cleanly measure two different judgments.",
+    fieldTerms: [
+      { term: "double-barreled question / item", gloss: "A question that asks about more than one concept while allowing one answer." }
+    ],
+    labShorthand: "SLOT",
+    evidence: "textbook-consensus",
+    supports:
+      "A double-barreled item combines more than one concept. Respondents who feel differently about the parts cannot answer unambiguously, and analysts cannot tell which concept the recorded answer reflects.",
+    boundary:
+      "Not every compound sentence is double-barreled. “And” is a clue, not the test — the test is whether one response has to cover two distinct constructs.",
+    sources: [
+      "Pew Research Center, “Writing Survey Questions”",
+      "Fowler, “Improving Survey Questions”",
+      "Krosnick & Presser (2010)"
+    ]
+  },
+  E3: {
+    teaches:
+      "Closed categories should give every respondent exactly one home — overlaps and gaps both create avoidable classification error.",
+    fieldTerms: [
+      { term: "mutually exclusive categories", gloss: "No respondent has two valid homes on the list." },
+      { term: "exhaustive categories", gloss: "Every expected answer has a place — bounded by respondent burden." },
+      { term: "category boundaries", gloss: "Where one option ends and the next begins; overlaps make boundary cases arbitrary." }
+    ],
+    labShorthand: "BOUNDARY · (consulting: MECE)",
+    evidence: "textbook-consensus",
+    supports:
+      "Closed-ended categories should not overlap and should cover the range. Overlaps like 18–25 and 25–35 make a boundary case's bucket arbitrary; gaps leave some respondents no home. Either way the data records how people resolved the ambiguity, not just what is true of them.",
+    boundary:
+      "Exhaustiveness is bounded by burden — you can't list everything. The goal is meaningful, non-overlapping categories for the construct, not infinite ones. “MECE” is consulting shorthand; the survey phrasing is “mutually exclusive and exhaustive.”",
+    sources: [
+      "Pew Research Center, “Writing Survey Questions”",
+      "AAPOR, “Best Practices for Survey Research”",
+      "Krosnick & Presser (2010)"
+    ]
+  },
+  E4: {
+    teaches:
+      "“Other (please specify)” helps, but it does not fully repair an incomplete list — a write-in asks for extra effort some respondents won't spend.",
+    fieldTerms: [
+      { term: "closed / open / partially-closed question", gloss: "Fixed options, free text, or fixed options plus an “Other” write-in." },
+      { term: "residual category (“Other”)", gloss: "A catch-all for answers the list didn't anticipate." },
+      { term: "satisficing", gloss: "Giving an acceptable rather than optimal answer to save effort (Krosnick)." },
+      { term: "respondent burden", gloss: "The effort a question asks for; a write-in costs more than a tap." },
+      { term: "option-set coverage", gloss: "Whether expected answers have a place — distinct from “coverage error” in sampling." }
+    ],
+    labShorthand: "SLOT · option-set coverage",
+    evidence: "directionally-supported",
+    supports:
+      "Satisficing is well supported, and closed lists shape what becomes visible. When a plausible option is missing, some respondents pick a close-enough listed option, skip, or use “Other”; the missing category is undercounted by design. A write-in path costs effort, so it is an imperfect patch.",
+    boundary:
+      "Do not claim “Other” mainly captures high-effort respondents — too strong without direct evidence about other-specify behavior in this mode. The cast illustrates the mechanism, not a population rate.",
+    sources: [
+      "Krosnick, “Response Strategies for Coping with the Cognitive Demands of Attitude Measures” (1991)",
+      "Krosnick & Presser (2010)",
+      "Pew Research Center, “Writing Survey Questions”"
+    ],
+    modeCaveat:
+      "Write-in behavior also varies by device — typing an “Other” on a phone keyboard is more burdensome than on a desktop."
+  },
+  E5: {
+    teaches:
+      "Diagnosis is the skill: name which failure class each item shows — and notice when a number is actually fine.",
+    fieldTerms: [
+      { term: "failure classes", gloss: "Stem wording vs option wording vs option set vs category boundaries vs scale design — distinct problems." },
+      { term: "total survey error", gloss: "The umbrella for every way a survey number can mislead, of which response-option fit is one slice." }
+    ],
+    labShorthand: "SLOT · RULER · PUSH · BOUNDARY",
+    evidence: "textbook-consensus",
+    supports:
+      "Response-option design is one measurement-error source. A misleading survey number can also come from coverage, sampling variability, nonresponse, recall / reference period, mode, weighting, or processing. A good reviewer separates these — and resists “fixing” an item that is already sound.",
+    boundary:
+      "This lab inspects response options; it does not certify a whole instrument. Pretesting and cognitive interviewing are the evidence layer that confirms a fix actually worked.",
+    sources: [
+      "AAPOR, “Standard Definitions” (total survey error)",
+      "AAPOR, “Best Practices for Survey Research”",
+      "Willis, “Cognitive Interviewing” (2005); CDC/NCHS Q-Bank"
+    ]
+  },
+  E6: {
+    teaches:
+      "More scale points are not automatically more truth — too few crushes real differences, too many asks for distinctions people can't reliably supply.",
+    fieldTerms: [
+      { term: "scale length / number of scale points", gloss: "How many ordered categories a rating scale offers." },
+      { term: "verbal anchors / fully labeled scale", gloss: "Words on the points; labeling every point beats labeling only the ends." }
+    ],
+    labShorthand: "RULER",
+    evidence: "contested",
+    supports:
+      "More points can add detail, but returns often diminish and burden or ambiguity can rise. For many attitude items a 5–7 point range is a common default. The best length depends on the construct, the labels, the population, and how the data will be used.",
+    boundary:
+      "There is no universal “5–7” law, and reliability does not simply “reverse” past seven points — don't state either as a rule. Cite a specific study before claiming a precise threshold.",
+    sources: [
+      "Krosnick & Presser (2010)",
+      "Revilla, Saris & Krosnick, “Choosing the Number of Categories in Agree–Disagree Scales” (2014)",
+      "Saris & Gallhofer, “Design, Evaluation, and Analysis of Questionnaires” (2014)"
+    ]
+  },
+  E7: {
+    teaches:
+      "Midpoint, neutral, “Don't know”, “No opinion”, and “Not applicable” are different options with different consequences — not interchangeable.",
+    fieldTerms: [
+      { term: "midpoint", gloss: "The middle scale position — may read as moderate, ambivalent, or neither." },
+      { term: "neutral category", gloss: "“Neither side”; a truly neutral respondent needs a home." },
+      { term: "non-substantive options (“Don't know” / “No opinion”)", gloss: "The person can't or won't give a substantive answer." },
+      { term: "not applicable", gloss: "The question's premise doesn't apply to this respondent." }
+    ],
+    labShorthand: "SLOT",
+    evidence: "directionally-supported",
+    supports:
+      "A midpoint is a scale position; a neutral category means “neither side”; “Don't know”/“No opinion” are non-substantive; “Not applicable” means the premise doesn't apply. Offering an explicit opt-out can improve measurement by separating uncertainty from real answers.",
+    boundary:
+      "“Don't know” is context-dependent — offered too readily it can become an easy exit and invite satisficing. None of these five substitute for one another.",
+    sources: [
+      "Krosnick & Presser (2010)",
+      "Schuman & Presser (1981)",
+      "Pew Research Center, “Writing Survey Questions”"
+    ]
+  },
+  E8: {
+    teaches:
+      "A question that assumes a fact the respondent doesn't share has no honest answer — they need an escape before the substantive options.",
+    fieldTerms: [
+      { term: "false-premise question", gloss: "Presupposes something untrue for the respondent (a use, an experience, an opinion)." },
+      { term: "screening / filter question", gloss: "A prior item that routes only eligible respondents into the question." },
+      { term: "not applicable / “haven't used it”", gloss: "The escape that separates the premise from the measurement." }
+    ],
+    labShorthand: "SLOT",
+    evidence: "textbook-consensus",
+    supports:
+      "If a question presupposes something untrue for a respondent, forcing them into substantive options manufactures answers. A screening / filter step or a “not applicable” path keeps ineligible people out of the denominator and tells you why people dropped out.",
+    boundary:
+      "“Not applicable” and “Don't know” are not the same, and a screen can hide routing problems if overused — design the escape on purpose, and pretest the funnel.",
+    sources: [
+      "Pew Research Center, “Writing Survey Questions”",
+      "CDC/NCHS Q-Bank",
+      "Krosnick & Presser (2010)"
+    ]
+  },
+  E9: {
+    teaches:
+      "Agree/disagree formats invite agreement regardless of content; item-specific wording removes the thing there is to agree with.",
+    fieldTerms: [
+      { term: "acquiescence (yea-saying)", gloss: "Agreeing regardless of content. “Yea-saying” is informal; acquiescence is the formal term." },
+      { term: "reverse-worded item", gloss: "An item worded in the opposite direction. Distinct from reverse-CODING — flipping its score during scale construction." },
+      { term: "item-specific wording", gloss: "Replacing agree/disagree with its own answer scale (“How friendly…?”), so there's nothing to merely agree with." },
+      { term: "response style / method effect", gloss: "Systematic ways people use a scale regardless of content; reverse-worded items can add their own." }
+    ],
+    labShorthand: "PUSH",
+    evidence: "directionally-supported",
+    supports:
+      "Agree/disagree batteries are well known to invite acquiescence, and replacing them with item-specific scales is standard advice. A reverse-worded check can detect easy agreers — they agree with a statement and its opposite.",
+    boundary:
+      "Whether reverse-worded items catch more than they cost is contested — they can confuse careful respondents and add method effects. Use them deliberately and pretest; they are not free attention checks.",
+    sources: [
+      "Krosnick & Presser (2010)",
+      "Schuman & Presser (1981)",
+      "van Sonderen, Sanderman & Coyne, “Ineffectiveness of Reverse Wording” (2013)"
+    ]
+  }
+};
+
+/* ─── Closing “where this comes from” / further reading ───────────────────
+   A rationed set (Run N §8 warns against bibliography confetti): the core
+   texts the lab leans on + the free public resources a visitor can open
+   today. Real, verifiable works; author/title/year only. */
+export type ReadingItem = {
+  name: string;
+  what: string;
+  kind: "core-text" | "public-resource";
+};
+
+export const furtherReading: ReadingItem[] = [
+  {
+    kind: "core-text",
+    name: "Krosnick & Presser, “Question and Questionnaire Design” (2010)",
+    what: "The reference chapter behind most of this lab: scales, midpoints, acquiescence, satisficing, order effects."
+  },
+  {
+    kind: "core-text",
+    name: "Tourangeau, Rips & Rasinski, “The Psychology of Survey Response” (2000)",
+    what: "The four-step response process (comprehend → retrieve → judge → respond) the closing lens uses."
+  },
+  {
+    kind: "core-text",
+    name: "Schuman & Presser, “Questions and Answers in Attitude Surveys” (1981)",
+    what: "Classic experiments on wording, response order, and the middle option."
+  },
+  {
+    kind: "core-text",
+    name: "Saris & Gallhofer, “Design, Evaluation, and Analysis of Questionnaires” (2014)",
+    what: "Scale length, balance, and measurement quality, with evidence."
+  },
+  {
+    kind: "public-resource",
+    name: "Pew Research Center — “Writing Survey Questions”",
+    what: "Free, readable walkthrough of wording, order, open vs. closed, and balance."
+  },
+  {
+    kind: "public-resource",
+    name: "AAPOR — “Best Practices” & “Standard Definitions”",
+    what: "Survey rigor, and the total-survey-error vocabulary (coverage, nonresponse, measurement)."
+  },
+  {
+    kind: "public-resource",
+    name: "CDC/NCHS Q-Bank",
+    what: "Searchable bank of real evaluated questions and cognitive-interview findings."
+  },
+  {
+    kind: "public-resource",
+    name: "Willis, “Cognitive Interviewing: A Tool for Improving Questionnaire Design” (2005)",
+    what: "How professionals pretest a question before trusting it."
+  }
+];
 
 /* ─── Terms of art vs the lab's own shorthand ────────────────────────────
    The author's concern: a visitor shouldn't leave thinking the lab's
    coinages (SLOT/RULER/PUSH, "the flip") are established survey vocabulary,
    or misuse a borrowed term (MECE) with a real methodologist. This glossary
    is rendered as an expandable panel in the closing map and as the source
-   of the small "term" markers. Classifications are conservative; Run N
-   (docs/research/2026-05-27-terms-and-evidence) is staged to verify and
-   refine them. */
+   of the small "term" markers. Classifications are conservative and were
+   verified against Run N (docs/research/2026-05-27-terms-and-evidence,
+   §4.2 term-audit table). */
 export type TermStatus = "established" | "borrowed" | "lab";
 
 export const termStatusLabel: Record<TermStatus, string> = {
@@ -1654,9 +1962,9 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
         label: "Pilot “Other” write-ins",
         status: "practiced",
         ask:
-          "Are low-effort respondents satisficing onto a wrong option instead of filling in “Other”?",
+          "When their channel is missing, do some respondents pick the closest wrong option instead of writing into “Other”?",
         remember:
-          "“Other, please specify” is a coverage patch, not an analysis category. Promote common write-ins to their own options.",
+          "“Other, please specify” is an escape hatch, not a full repair — a write-in is extra effort some decline. Pilot, then promote common write-ins to their own options.",
         exerciseIds: ["E4"]
       },
       {
@@ -1714,7 +2022,7 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
         ask:
           "Does the number of points match what respondents can actually distinguish?",
         remember:
-          "More points do not automatically mean more truth — too few crushes real differences; beyond roughly 5–7 categories, gaps get narrower than people can reliably tell apart (false precision).",
+          "More points do not automatically mean more truth — too few crushes real differences; past a handful of well-labeled points, returns tend to diminish and you risk asking for distinctions finer than people can supply. The best length depends on the construct, the labels, and the use.",
         exerciseIds: ["E6"],
         sourceCue: "Krosnick & Presser; Saris & Gallhofer."
       },
@@ -1784,7 +2092,7 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
         ask:
           "Is the format inviting agreement instead of measuring the construct?",
         remember:
-          "Agree / disagree formats pull yes-saying respondents toward agreement regardless of content. Reverse-coded items detect but don't measure them; item-specific wording removes the pull.",
+          "Agree / disagree formats pull yes-saying respondents toward agreement regardless of content. Reverse-worded items detect but don't measure them; item-specific wording removes the pull.",
         exerciseIds: ["E9"],
         sourceCue: "Krosnick & Presser."
       },
@@ -1888,7 +2196,7 @@ export const credentialingFacts: CredentialingFact[] = [
   {
     id: "scale-length",
     text:
-      "I wouldn't assume an 11-point scale is more precise — the familiar 5–7 point range is the safer professional default because reliability gains tend to flatten or reverse past about seven categories.",
+      "I wouldn't assume an 11-point scale is more precise — for many attitude items the familiar 5–7 point range is a safe default because reliability gains tend to flatten past about seven categories. The best length still depends on the construct, the labels, and how the data will be used.",
     sourceCue: "Krosnick & Presser on scale points; Saris & Gallhofer."
   },
   {
@@ -1906,7 +2214,7 @@ export const credentialingFacts: CredentialingFact[] = [
   {
     id: "dk",
     text:
-      "A “Don't know” or “No opinion” option can IMPROVE measurement when the alternative is forcing uncertain respondents to guess.",
+      "A “Don't know” or “No opinion” option can IMPROVE measurement when the alternative is forcing uncertain respondents to guess — though offered too readily it can also invite satisficing, so the call depends on whether the question is one people can reasonably lack a view on.",
     sourceCue: "Krosnick & Presser; Andrews findings on DK options."
   },
   {
@@ -1924,8 +2232,8 @@ export const credentialingFacts: CredentialingFact[] = [
   {
     id: "reverse-coded",
     text:
-      "Reverse-worded items aren't magic attention checks; they often add confusion and noise rather than catching careless respondents.",
-    sourceCue: "Survey-methodology critiques of reverse coding."
+      "Reverse-worded items aren't magic attention checks — they can confuse careful respondents, and the evidence on whether they catch more than they cost is mixed, so use them deliberately and pretest.",
+    sourceCue: "Survey-methodology critiques of reverse-worded items."
   },
   {
     id: "cognitive-testing",

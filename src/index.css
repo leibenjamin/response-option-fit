@@ -4578,6 +4578,173 @@ summary:focus-visible {
   padding-top: var(--s-2);
 }
 
+/* ─── Per-exercise source drawer (field terms + evidence + sources) ─── */
+
+.lab-source-drawer {
+  margin-top: var(--s-3);
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  padding: var(--s-2) var(--s-4);
+}
+
+.lab-source-summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.lab-source-summary::-webkit-details-marker { display: none; }
+
+.lab-source-summary-text {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.lab-source-summary-text::after {
+  content: " +";
+  color: var(--ink-mute);
+}
+.lab-source-drawer[open] .lab-source-summary-text::after {
+  content: " –";
+}
+
+.lab-evidence-badge {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1px var(--s-2);
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.lab-evidence-badge--textbook-consensus { color: var(--route-r); }
+.lab-evidence-badge--directionally-supported { color: var(--route-w); }
+.lab-evidence-badge--plausible-illustration { color: var(--ink-soft); }
+.lab-evidence-badge--contested { color: var(--accent); }
+
+.lab-source-body {
+  margin-top: var(--s-3);
+  border-top: 1px solid var(--line-faint);
+  padding-top: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-source-teaches {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.lab-source-section-key {
+  margin: var(--s-1) 0 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.lab-source-terms {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.lab-source-term {
+  display: grid;
+  gap: 1px;
+}
+
+.lab-source-term-name {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.lab-source-term-gloss {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.lab-source-line {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.lab-source-line--boundary {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.lab-source-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-right: var(--s-2);
+}
+
+.lab-source-cites {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.lab-source-cite-list {
+  list-style: none;
+  margin: var(--s-1) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lab-source-cite-list li {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  padding-left: var(--s-3);
+  text-indent: calc(-1 * var(--s-3));
+}
+.lab-source-cite-list li::before {
+  content: "— ";
+  color: var(--ink-mute);
+}
+
+/* The illustrative-effect-size caveat under E1's flip */
+.lab-claim-caveat {
+  margin: var(--s-2) 0 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  border-left: 2px solid var(--line);
+  padding-left: var(--s-3);
+}
+.lab-claim-caveat em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
 /* ─── Exercise 2 — Double-barreled flag + repair ─── */
 
 .lab-bundled-list {
@@ -5997,11 +6164,82 @@ summary:focus-visible {
   color: var(--ink-soft);
 }
 
+/* Closing: where this comes from / further reading + the boundary note */
+
+.lab-km-reading-intro {
+  margin: var(--s-3) 0 0;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line-faint);
+  padding-top: var(--s-3);
+}
+
+.lab-km-reading {
+  list-style: none;
+  margin: var(--s-3) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.lab-km-reading-item {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 1px var(--s-3);
+  align-items: baseline;
+}
+
+.lab-km-reading-kind {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  justify-self: start;
+  align-self: start;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1px var(--s-2);
+  border: 1px solid currentColor;
+  border-radius: 2px;
+}
+.lab-km-reading-item--core-text .lab-km-reading-kind { color: var(--route-w); }
+.lab-km-reading-item--public-resource .lab-km-reading-kind { color: var(--route-r); }
+
+.lab-km-reading-name {
+  grid-column: 2;
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.lab-km-reading-what {
+  grid-column: 2;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.lab-km-boundary-note {
+  margin: var(--s-5) 0 0;
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  border-left: 3px solid var(--accent);
+  padding-left: var(--s-4);
+}
+
 @media (forced-colors: active) {
   .lab-review-choice,
   .lab-review-item,
   .lab-review-lens,
-  .lab-km-term-badge {
+  .lab-km-term-badge,
+  .lab-evidence-badge,
+  .lab-km-reading-kind {
     border: 1px solid CanvasText;
   }
   .lab-review-choice.is-picked {

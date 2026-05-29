@@ -39,7 +39,9 @@ import {
   coverageLabel,
   credentialingFacts,
   doubleBarreledItems,
+  evidenceStrengthMeta,
   exerciseReceipts,
+  furtherReading,
   fpCast,
   fpFunnel,
   fpLandingFor,
@@ -63,6 +65,7 @@ import {
   scaleMeters,
   scalePointLabels,
   scaleTasks,
+  sourceDrawers,
   startingAgeBuckets,
   startingChannels,
   termGlossary,
@@ -78,7 +81,8 @@ import {
   type FpGates,
   type KnowledgeBranch,
   type LedgerLevel,
-  type ReviewDiagnosis
+  type ReviewDiagnosis,
+  type SourceDrawer as SourceDrawerData
 } from "../data/lab-exercises";
 
 /* The `#lab` page — SQLBolt-style multi-exercise practice on response-
@@ -455,10 +459,18 @@ function ScaleBuilderExercise({ num }: { num: number }) {
             Next time you&rsquo;re handed a &ldquo;92% satisfied,&rdquo; ask
             to see the stem, the scale, and the order before you believe it.
           </p>
+          <p className="lab-claim-caveat lab-selectable">
+            This cast is illustrative. The <em>direction</em> of each effect —
+            a leading stem pulling answers up, missing strong-negatives,
+            primacy on a long list — is well documented; the exact{" "}
+            <em>size</em> in any real survey depends on the topic, the mode,
+            and the wording.
+          </p>
         </section>
       )}
 
       <PostReceipt exerciseId="E1" visible={hostileDone} />
+      <SourceDrawer exerciseId="E1" visible={hostileDone} />
     </ExerciseFrame>
   );
 }
@@ -718,6 +730,7 @@ function DoubleBarreledExercise({ num }: { num: number }) {
       )}
 
       <PostReceipt exerciseId="E2" visible={exercisePassed} />
+      <SourceDrawer exerciseId="E2" visible={exercisePassed} />
     </ExerciseFrame>
   );
 }
@@ -945,6 +958,7 @@ function BucketTinkerExercise({ num }: { num: number }) {
       </div>
 
       <PostReceipt exerciseId="E3" visible={allDone} />
+      <SourceDrawer exerciseId="E3" visible={allDone} />
     </ExerciseFrame>
   );
 }
@@ -1136,8 +1150,8 @@ function ChannelTinkerExercise({ num }: { num: number }) {
 
           <div className="lab-channel-ledger" aria-label="Consequence ledger">
             <LedgerMeter
-              label="Coverage"
-              hint="Did everyone answer at all? Visitors who give up hurt this."
+              label="Answer-space coverage"
+              hint="Does everyone have an option to pick? Visitors who give up hurt this. (Distinct from “coverage error” in sampling.)"
               level={ledger.coverage}
             />
             <LedgerMeter
@@ -1146,7 +1160,7 @@ function ChannelTinkerExercise({ num }: { num: number }) {
               level={ledger.analystDetail}
             />
             <LedgerMeter
-              label="Exclusivity"
+              label="Mutual exclusivity"
               hint="Are the options non-overlapping? A broad “Online” bucket kills it."
               level={ledger.exclusivity}
             />
@@ -1171,16 +1185,18 @@ function ChannelTinkerExercise({ num }: { num: number }) {
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-channel-pass">
-          ✓ Lean and all-clean. The two things you proved: &ldquo;Other&rdquo;
-          can&rsquo;t rescue low-effort visitors (they mis-file or vanish before
-          they&rsquo;ll type), and a broad &ldquo;Online&rdquo; bucket buys
-          coverage by destroying the detail you were trying to collect. The
-          professional move is to pilot, watch where people mis-file, and
-          promote those into real options.
+          ✓ Lean and all-clean. The two things this cast showed:
+          &ldquo;Other&rdquo; is an escape hatch, not a full repair — a write-in
+          is extra effort, and the people who won&rsquo;t take it mis-file or
+          skip instead; and a broad &ldquo;Online&rdquo; bucket buys coverage by
+          destroying the detail you were trying to collect. The professional
+          move is to pilot, watch where people mis-file or skip, and promote
+          those channels into real options.
         </p>
       )}
 
       <PostReceipt exerciseId="E4" visible={allDone} />
+      <SourceDrawer exerciseId="E4" visible={allDone} />
     </ExerciseFrame>
   );
 }
@@ -1386,6 +1402,7 @@ function ShipReviewExercise({ num }: { num: number }) {
       )}
 
       <PostReceipt exerciseId="E5" visible={exercisePassed} />
+      <SourceDrawer exerciseId="E5" visible={exercisePassed} />
     </ExerciseFrame>
   );
 }
@@ -1556,6 +1573,7 @@ function ScaleLengthExercise({ num }: { num: number }) {
       )}
 
       <PostReceipt exerciseId="E6" visible={allDone} />
+      <SourceDrawer exerciseId="E6" visible={allDone} />
     </ExerciseFrame>
   );
 }
@@ -1700,6 +1718,7 @@ function OatMilkExercise({ num }: { num: number }) {
       )}
 
       <PostReceipt exerciseId="E7" visible={allDone} />
+      <SourceDrawer exerciseId="E7" visible={allDone} />
     </ExerciseFrame>
   );
 }
@@ -1858,6 +1877,7 @@ function FalsePremiseExercise({ num }: { num: number }) {
       )}
 
       <PostReceipt exerciseId="E8" visible={allDone} />
+      <SourceDrawer exerciseId="E8" visible={allDone} />
     </ExerciseFrame>
   );
 }
@@ -1996,6 +2016,7 @@ function AcquiescenceExercise({ num }: { num: number }) {
       )}
 
       <PostReceipt exerciseId="E9" visible={allDone} />
+      <SourceDrawer exerciseId="E9" visible={allDone} />
     </ExerciseFrame>
   );
 }
@@ -2077,6 +2098,89 @@ function PostReceipt({
   );
 }
 
+/* The credibility layer: the real field vocabulary for what was just
+   practiced, an honest evidence-strength badge, the boundary of what not to
+   overclaim, and named sources. Collapsed by default; appears with the
+   receipt once the exercise is solved. */
+function SourceDrawer({
+  exerciseId,
+  visible
+}: {
+  exerciseId: string;
+  visible: boolean;
+}) {
+  const drawer: SourceDrawerData | undefined = sourceDrawers[exerciseId];
+  if (!visible || !drawer) return null;
+  const ev = evidenceStrengthMeta[drawer.evidence];
+  return (
+    <details
+      className="lab-source-drawer"
+      data-testid={`lab-source-${exerciseId}`}
+    >
+      <summary className="lab-source-summary">
+        <span className="lab-source-summary-text">Sources &amp; field terms</span>
+        <span
+          className={`lab-evidence-badge lab-evidence-badge--${drawer.evidence}`}
+          title={ev.gloss}
+        >
+          {ev.label}
+        </span>
+      </summary>
+      <div className="lab-source-body lab-selectable">
+        <p className="lab-source-teaches">{drawer.teaches}</p>
+
+        <p className="lab-source-section-key">The real terms for this</p>
+        <dl className="lab-source-terms">
+          {drawer.fieldTerms.map((t) => (
+            <div key={t.term} className="lab-source-term">
+              <dt className="lab-source-term-name">{t.term}</dt>
+              <dd className="lab-source-term-gloss">{t.gloss}</dd>
+            </div>
+          ))}
+        </dl>
+
+        {drawer.labShorthand && (
+          <p className="lab-source-line">
+            <span className="lab-source-label">Lab shorthand</span>{" "}
+            {drawer.labShorthand}
+          </p>
+        )}
+
+        <p className="lab-source-line">
+          <span className="lab-source-label">Evidence</span> {ev.label} —{" "}
+          {ev.gloss}
+        </p>
+
+        <p className="lab-source-line">
+          <span className="lab-source-label">What the evidence supports</span>{" "}
+          {drawer.supports}
+        </p>
+
+        <p className="lab-source-line lab-source-line--boundary">
+          <span className="lab-source-label">Don&rsquo;t overclaim</span>{" "}
+          {drawer.boundary}
+        </p>
+
+        {drawer.modeCaveat && (
+          <p className="lab-source-line">
+            <span className="lab-source-label">Mode caveat</span>{" "}
+            {drawer.modeCaveat}
+          </p>
+        )}
+
+        <div className="lab-source-cites">
+          <span className="lab-source-label">Sources</span>
+          <ul className="lab-source-cite-list">
+            {drawer.sources.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </details>
+  );
+}
+
 function branchLabel(id: KnowledgeBranch["id"]): string {
   switch (id) {
     case "slot":
@@ -2098,6 +2202,7 @@ function KnowledgeMap() {
   const [openTerms, setOpenTerms] = useState(false);
   const [openCredentialing, setOpenCredentialing] = useState(false);
   const [openTourangeau, setOpenTourangeau] = useState(false);
+  const [openReading, setOpenReading] = useState(false);
 
   return (
     <section className="lab-km" aria-labelledby="lab-km-title" data-testid="lab-km">
@@ -2112,7 +2217,7 @@ function KnowledgeMap() {
           prove (BOUNDARY)?
         </p>
         <p className="lab-km-coverage-line lab-selectable">
-          The ✓ marks are what these seven exercises gave you hands-on; the ◇
+          The ✓ marks are what these nine exercises gave you hands-on; the ◇
           marks are important things still ahead, named here on purpose so the
           map doesn&rsquo;t pretend to be the whole field.
         </p>
@@ -2204,6 +2309,40 @@ function KnowledgeMap() {
           ))}
         </ol>
       </details>
+
+      <details
+        className="lab-km-panel"
+        open={openReading}
+        onToggle={(e) => setOpenReading((e.target as HTMLDetailsElement).open)}
+      >
+        <summary>Where this comes from · further reading</summary>
+        <p className="lab-km-reading-intro lab-selectable">
+          The lab leans on a small set of standard works. These are real and
+          worth your time — the public resources are free to open today.
+        </p>
+        <ul className="lab-km-reading">
+          {furtherReading.map((r) => (
+            <li
+              key={r.name}
+              className={`lab-km-reading-item lab-km-reading-item--${r.kind}`}
+            >
+              <span className="lab-km-reading-kind">
+                {r.kind === "core-text" ? "Core text" : "Free / public"}
+              </span>
+              <span className="lab-km-reading-name lab-selectable">{r.name}</span>
+              <span className="lab-km-reading-what lab-selectable">{r.what}</span>
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      <p className="lab-km-boundary-note lab-selectable">
+        <strong>One honest boundary.</strong> This lab is about response-option
+        design — one kind of measurement problem. A misleading survey number
+        can also come from coverage, sampling variability, nonresponse, recall,
+        mode, weighting, or processing. Clean answer choices don&rsquo;t fix a
+        bad sample.
+      </p>
 
       <p className="lab-km-close lab-selectable">
         A professional knows which inspection pass they&rsquo;re running.
