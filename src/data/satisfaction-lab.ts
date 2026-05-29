@@ -237,7 +237,7 @@ export const tasks: LabTask[] = [
     pass: (design) =>
       isSatisfied(landingFor(cast.find((c) => c.id === "cleo")!, design)),
     passText:
-      "Cleo never said she was satisfied. You took away her honest middle (or tilted the question), and a forced choice rounded her up. That is how dropping a true neutral quietly inflates the positive side.",
+      "Cleo never said she was satisfied. You took away her honest middle (or tilted the question), and with no neutral to land on she got rounded up. That is how dropping a true neutral quietly inflates the positive side.",
     hint: () =>
       "Right now Cleo can land on a true middle option. What if the scale didn't offer one — or the stem nudged everyone up?"
   },

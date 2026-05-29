@@ -232,9 +232,9 @@ test.describe("Response Option Fit Lab - desktop", () => {
     );
   });
 
-  test("E9 acquiescence: reverse-coding only detects yea-sayers; item-specific wording is the real fix", async ({ page }) => {
+  test("E9 acquiescence: a reverse-worded check only detects yea-sayers; item-specific wording is the real fix", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    /* Task 1 wants the reverse-coded check (detection); Task 2 wants the
+    /* Task 1 wants the reverse-worded check (detection); Task 2 wants the
        item-specific wording (measurement). */
     await page.getByTestId("lab-acq-design-reverse").click();
     await expect(page.getByTestId("lab-acq-pass")).toHaveCount(0);
@@ -307,6 +307,24 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.getByTestId("lab-review-check").click();
     await expect(page.getByTestId("lab-review-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E5")).toBeVisible();
+  });
+
+  test("a solved exercise reveals a source drawer with an evidence badge, real field terms, and named sources", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* Drawer is gated to completion (appears with the receipt). */
+    await expect(page.getByTestId("lab-source-E6")).toHaveCount(0);
+    /* Same sequence that solves E6: 11 clears Task 1, 7 clears Task 2. */
+    await page.getByTestId("lab-scale-points-11").click();
+    await page.getByTestId("lab-scale-points-7").click();
+    const drawer = page.getByTestId("lab-source-E6");
+    await expect(drawer).toBeVisible();
+    /* Honest evidence-strength badge in the summary. */
+    await expect(drawer.locator(".lab-evidence-badge")).toBeVisible();
+    /* Expand it and confirm the credibility payload. */
+    await drawer.locator("summary").click();
+    await expect(drawer).toContainText("scale length");
+    await expect(drawer).toContainText("overclaim");
+    await expect(drawer).toContainText("Krosnick");
   });
 
   test("archived hub (now at #hub) frames the app as interactive and embeds an interactive first puzzle", async ({ page }) => {
