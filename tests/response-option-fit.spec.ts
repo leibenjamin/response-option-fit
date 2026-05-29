@@ -169,16 +169,16 @@ test.describe("Response Option Fit Lab - desktop", () => {
     testInfo.skip(testInfo.project.name !== "desktop", "desktop only");
   });
 
-  test("the lab home (/) loads the SQLBolt-style five-exercise practice page", async ({ page }) => {
+  test("the lab home (/) loads the SQLBolt-style multi-exercise practice page", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
     await expect(page.locator("#survey-lab-title")).toContainText(
-      "Five ways a survey quietly lies"
+      "The quiet ways a survey lies"
     );
-    /* Five exercise cards present. */
-    await expect(page.locator(".lab-exercise")).toHaveCount(5);
+    /* Seven exercise cards present. */
+    await expect(page.locator(".lab-exercise")).toHaveCount(7);
     /* Each named with its primary verb. */
     const verbs = await page.locator(".lab-exercise-verb").allInnerTexts();
-    expect(verbs.length).toBe(5);
+    expect(verbs.length).toBe(7);
     /* The closing knowledge map carries the four SLOT/RULER/PUSH/BOUNDARY
        branches with the marker legend. */
     await expect(page.getByTestId("lab-km")).toBeVisible();
@@ -189,8 +189,31 @@ test.describe("Response Option Fit Lab - desktop", () => {
   test("the lab's #lab and / hashes are equivalent", async ({ page }) => {
     await page.goto(`${BASE_URL}/#lab`);
     await expect(page.locator("#survey-lab-title")).toContainText(
-      "Five ways a survey quietly lies"
+      "The quiet ways a survey lies"
     );
+  });
+
+  test("E6 scale length: too few crushes distinctions, 11 points is false precision, 5–7 passes both", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* Start at 3 points — distinctions meter is low (genuinely-different
+       visitors collapse). Cranking to 11 satisfies Task 1 but the second
+       meter (trustworthy) goes low; 7 points passes both. */
+    await page.getByTestId("lab-scale-points-11").click();
+    await expect(page.getByTestId("lab-scale-pass")).toHaveCount(0);
+    await page.getByTestId("lab-scale-points-7").click();
+    await expect(page.getByTestId("lab-scale-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E6")).toBeVisible();
+  });
+
+  test("E7 don't-know/NA: only the design with both opt-outs keeps neutral, DK, and NA distinct", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* Adding only DK clears the scale (Task 1) but lumps never-tried into
+       Don't-know, so Task 2 stays open until NA is added too. */
+    await page.getByTestId("lab-oat-design-dk").click();
+    await expect(page.getByTestId("lab-oat-pass")).toHaveCount(0);
+    await page.getByTestId("lab-oat-design-both").click();
+    await expect(page.getByTestId("lab-oat-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E7")).toBeVisible();
   });
 
   test("E1 scale builder runs honest → round-up → order-flip → hostile and reveals the flip", async ({ page }) => {
