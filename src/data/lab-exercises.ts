@@ -1202,89 +1202,153 @@ export const oatMilkTasks: OatMilkTask[] = [
    is wrong. Question: "Did order-ahead save you time?" A bare Yes/No is
    answered by people who never installed the app and people who have it but
    never used order-ahead — they have no basis, yet they land in "No,"
-   inflating it. The fix is an eligibility funnel: screen people out before
-   the outcome. Mechanic = a two-step funnel the visitor switches on; the
-   cast flows down and drops out at gates. Distinct verb: GATE.
+   inflating it.
 
-   Two gates matter for DIFFERENT reasons: the feature gate ("have you used
-   order-ahead?") cleans the outcome (only real users answer); the app gate
-   ("do you use the app?"), placed first, also SPLITS the drop-outs into
-   "never installed" vs "has the app but never used the feature" — turning an
-   undifferentiated non-response into an informative funnel. */
-
-export type FpState = "yes" | "no" | "no-feature" | "no-app";
+   REDESIGN 2026-05-29 (was: two pre-labeled toggles the task named, i.e.
+   instruction-following). Now the reviewer CHOOSES screeners from a shelf of
+   candidates, two of which are productive-failure decoys — so Task 1 is a
+   real eligibility decision, not a button-press:
+     - feature  (correct): "have you used order-ahead?" establishes basis.
+     - app      (necessary, not sufficient): "do you use the app?" — alone it
+       leaves Dev (has app, never used the feature) in the denominator; its
+       real job is to SPLIT the drop-outs in Task 2.
+     - smartphone (decoy, under-screen): everyone owns a phone → screens out
+       no one → denominator stays dirty. A screen must exclude the no-basis
+       people, not just sound relevant.
+     - weekly   (decoy, over-screen): drops Cleo, an occasional-but-real user
+       whose "No, it was slower" is valid signal → a false negative. Too-tight
+       screens throw away the very complaint you're trying to measure.
+   The funnel resolves a drop-out's reason in canonical order (app → feature →
+   …) so app-before-feature still splits never-installed vs has-app-never-used. */
 
 export type FpCustomer = {
   id: string;
   name: string;
-  state: FpState;
   story: string;
+  hasApp: boolean;
+  /* usedFeature === has a basis to judge order-ahead. */
+  usedFeature: boolean;
+  /* Frequent user — only relevant to the over-screen decoy. */
+  usesWeekly: boolean;
+  ownsPhone: boolean;
+  /* Outcome answer if they reach the question. No-basis people, forced to
+     answer about something they never did, land in "No". */
+  answer: "yes" | "no";
 };
 
 export const fpCast: FpCustomer[] = [
-  { id: "ada", name: "Ada", state: "yes", story: "uses order-ahead daily; it saves her the line" },
-  { id: "ben", name: "Ben", state: "yes", story: "orders ahead on busy mornings; loves it" },
-  { id: "cleo", name: "Cleo", state: "no", story: "tried order-ahead twice; it was actually slower" },
-  { id: "dev", name: "Dev", state: "no-feature", story: "has the app but has never used order-ahead" },
-  { id: "eve", name: "Eve", state: "no-app", story: "doesn't have the app at all" },
-  { id: "fin", name: "Fin", state: "no-app", story: "pays at the counter; never installed the app" }
+  { id: "ada", name: "Ada", story: "uses order-ahead daily; it saves her the line", hasApp: true, usedFeature: true, usesWeekly: true, ownsPhone: true, answer: "yes" },
+  { id: "ben", name: "Ben", story: "orders ahead on busy mornings; loves it", hasApp: true, usedFeature: true, usesWeekly: true, ownsPhone: true, answer: "yes" },
+  { id: "cleo", name: "Cleo", story: "tried order-ahead twice; it was actually slower", hasApp: true, usedFeature: true, usesWeekly: false, ownsPhone: true, answer: "no" },
+  { id: "dev", name: "Dev", story: "has the app but has never used order-ahead", hasApp: true, usedFeature: false, usesWeekly: false, ownsPhone: true, answer: "no" },
+  { id: "eve", name: "Eve", story: "doesn't have the app at all", hasApp: false, usedFeature: false, usesWeekly: false, ownsPhone: true, answer: "no" },
+  { id: "fin", name: "Fin", story: "pays at the counter; never installed the app", hasApp: false, usedFeature: false, usesWeekly: false, ownsPhone: true, answer: "no" }
 ];
 
-export type FpGates = { app: boolean; feature: boolean };
-export const fpStartGates: FpGates = { app: false, feature: false };
-
-export type FpStage = "outcome" | "out-no-app" | "out-no-feature";
-export type FpLanding = {
-  stage: FpStage;
-  /* For outcome arrivals: their Yes/No answer. */
-  answer: "yes" | "no" | null;
-  /* True iff this person actually has a basis to judge order-ahead. */
-  basis: boolean;
+export type FpScreenerId = "feature" | "app" | "smartphone" | "weekly";
+export type FpScreener = {
+  id: FpScreenerId;
+  /* The question, exactly as it would appear before the outcome item. */
+  label: string;
+  /* Does this customer pass the screen (stay in)? */
+  keeps: (c: FpCustomer) => boolean;
+  kind: "correct" | "necessary" | "decoy-loose" | "decoy-overscreen";
+  /* Shown only once the screener is active — names what it just did. */
+  activeNote: string;
 };
 
-export function fpLandingFor(c: FpCustomer, g: FpGates): FpLanding {
-  /* The funnel runs app-gate first, then feature-gate. */
-  if (c.state === "no-app") {
-    if (g.app) return { stage: "out-no-app", answer: null, basis: false };
-    if (g.feature) return { stage: "out-no-feature", answer: null, basis: false };
-    return { stage: "outcome", answer: "no", basis: false };
+export const fpScreeners: FpScreener[] = [
+  {
+    id: "feature",
+    label: "Have you used order-ahead?",
+    keeps: (c) => c.usedFeature,
+    kind: "correct",
+    activeNote: "Keeps only people who have actually used order-ahead — the ones with a basis to answer."
+  },
+  {
+    id: "app",
+    label: "Do you use our app?",
+    keeps: (c) => c.hasApp,
+    kind: "necessary",
+    activeNote: "Keeps app users. Necessary, but not enough on its own — someone can have the app and still have never used order-ahead."
+  },
+  {
+    id: "smartphone",
+    label: "Do you own a smartphone?",
+    keeps: (c) => c.ownsPhone,
+    kind: "decoy-loose",
+    activeNote: "Everyone here owns a phone, so this screens out no one. Sounding relevant isn't the same as excluding the people with no basis."
+  },
+  {
+    id: "weekly",
+    label: "Do you use order-ahead at least weekly?",
+    keeps: (c) => c.usesWeekly,
+    kind: "decoy-overscreen",
+    activeNote: "Too tight: it drops Cleo, who used order-ahead twice and found it slower. Her “No” is exactly the signal you want — and you just threw it away."
   }
-  if (c.state === "no-feature") {
-    if (g.feature) return { stage: "out-no-feature", answer: null, basis: false };
-    return { stage: "outcome", answer: "no", basis: false };
+];
+
+/* Canonical order for resolving WHY a screened-out person dropped (and for the
+   Task-2 split: app first, then feature). */
+export const fpScreenerOrder: FpScreenerId[] = ["app", "feature", "smartphone", "weekly"];
+
+export const fpStartActive: FpScreenerId[] = [];
+
+export type FpLanding =
+  | { stage: "outcome"; answer: "yes" | "no"; basis: boolean }
+  /* Screened out by `byId`; `wrong` = a real-basis person dropped (a false negative). */
+  | { stage: "screened"; byId: FpScreenerId; basis: boolean; wrong: boolean };
+
+export function fpLandingFor(c: FpCustomer, active: FpScreenerId[]): FpLanding {
+  /* First active screener (in canonical order) that this customer fails. */
+  for (const id of fpScreenerOrder) {
+    if (!active.includes(id)) continue;
+    const s = fpScreeners.find((x) => x.id === id)!;
+    if (!s.keeps(c)) {
+      return { stage: "screened", byId: id, basis: c.usedFeature, wrong: c.usedFeature };
+    }
   }
-  /* yes / no — real users, always reach the outcome. */
-  return { stage: "outcome", answer: c.state, basis: true };
+  return { stage: "outcome", answer: c.answer, basis: c.usedFeature };
 }
 
 export type FpFunnel = {
   outcomeYes: number;
   outcomeNo: number;
   outcomeTotal: number;
-  /* Outcome answerers who have no basis (the contamination). */
+  /* Outcome answerers with no basis (the contamination). */
   merged: number;
+  /* Real-basis users wrongly screened out (false negatives). */
+  wronglyScreened: number;
+  /* Drop-out reasons, for the funnel split. */
   outNoApp: number;
   outNoFeature: number;
+  outOther: number;
 };
 
-export function fpFunnel(g: FpGates): FpFunnel {
+export function fpFunnel(active: FpScreenerId[]): FpFunnel {
   const f: FpFunnel = {
     outcomeYes: 0,
     outcomeNo: 0,
     outcomeTotal: 0,
     merged: 0,
+    wronglyScreened: 0,
     outNoApp: 0,
-    outNoFeature: 0
+    outNoFeature: 0,
+    outOther: 0
   };
   for (const c of fpCast) {
-    const l = fpLandingFor(c, g);
+    const l = fpLandingFor(c, active);
     if (l.stage === "outcome") {
       f.outcomeTotal += 1;
       if (l.answer === "yes") f.outcomeYes += 1;
       else f.outcomeNo += 1;
       if (!l.basis) f.merged += 1;
-    } else if (l.stage === "out-no-app") f.outNoApp += 1;
-    else f.outNoFeature += 1;
+    } else {
+      if (l.wrong) f.wronglyScreened += 1;
+      if (l.byId === "app") f.outNoApp += 1;
+      else if (l.byId === "feature") f.outNoFeature += 1;
+      else f.outOther += 1;
+    }
   }
   return f;
 }
@@ -1293,37 +1357,51 @@ export type FpTask = {
   id: "clean" | "informative";
   title: string;
   brief: string;
-  pass: (g: FpGates) => boolean;
+  pass: (active: FpScreenerId[]) => boolean;
   passText: string;
-  hint: (g: FpGates) => string;
+  hint: (active: FpScreenerId[]) => string;
 };
 
 export const fpTasks: FpTask[] = [
   {
     id: "clean",
-    title: "Stop counting people who never used it",
+    title: "Get the denominator honest",
     brief:
-      "As written, the Yes/No is answered by people who never installed the app and people who have it but never used order-ahead — they have no experience to report, yet they all land in “No.” Add the screener that lets only real order-ahead users reach the question.",
-    pass: (g) => fpFunnel(g).merged === 0,
+      "As written, the Yes/No is answered by people who never installed the app and people who have it but never used order-ahead — no experience to report, yet they all land in “No.” Add a screener so only people with a real basis reach the question. Two of the four are traps: one screens out no one, one screens out too much. Find the one that fits.",
+    pass: (a) => {
+      const f = fpFunnel(a);
+      return f.merged === 0 && f.wronglyScreened === 0;
+    },
     passText:
-      "✓ The denominator just got honest. The bare question read “4 of 6 — 67% — say order-ahead didn't save time”; now it's “1 of 3 people who actually used it.” Same world, a completely different headline, because three of those four “No”s came from people with no basis to answer.",
-    hint: (g) =>
-      fpFunnel(g).merged > 0
-        ? `${fpFunnel(g).merged} people are still answering who never used order-ahead. Switch on the “have you used order-ahead?” screener so only real users reach the outcome.`
-        : "Only real users reach the question now — on to Task 2."
+      "✓ The denominator just got honest. The bare question read “4 of 6 — 67% — say order-ahead didn't save time”; now it's “1 of 3 people who actually used it.” Same world, a completely different headline — because three of those four “No”s came from people with no basis to answer.",
+    hint: (a) => {
+      const f = fpFunnel(a);
+      if (f.wronglyScreened > 0)
+        return `You're screening too hard — ${f.wronglyScreened} real user (Cleo, who tried it and found it slower) just dropped out. Her “No” is valid signal. Use a screener that keeps everyone who has a basis.`;
+      if (f.merged > 0)
+        return `${f.merged} people are still answering who never used order-ahead. “Owns a smartphone” or “uses the app” isn't enough — only “have you used order-ahead?” establishes a basis.`;
+      return "Only real users reach the question now — on to Task 2.";
+    }
   },
   {
     id: "informative",
     title: "Make the drop-outs tell you why",
     brief:
-      "Good — but right now everyone who didn't qualify is lumped into one “didn't use it” pile. Add the earlier “do you use the app?” step so the funnel separates people who never installed the app from people who have it but never tried the feature.",
-    pass: (g) => fpFunnel(g).merged === 0 && g.app && g.feature,
+      "The denominator is clean, but everyone who didn't qualify is lumped into one “didn't use it” pile. The owner wants to know WHY: is it a discovery problem (never installed the app) or an adoption one (has it, never tried the feature)? Add the screener that separates those two — and notice the funnel only splits them when it asks about the app first.",
+    pass: (a) => {
+      const f = fpFunnel(a);
+      return f.merged === 0 && f.wronglyScreened === 0 && a.includes("app") && a.includes("feature");
+    },
     passText:
-      "✓ Now the drop-outs aren't one undifferentiated non-response. You can see two never installed the app and one has it but hasn't tried order-ahead — which tells you whether to fix discovery or adoption, not just guess. A screener doesn't only clean the outcome; an ordered one turns who-fell-out into data.",
-    hint: (g) =>
-      g.app && g.feature
-        ? "Both steps on — the funnel now splits the drop-outs."
-        : "Switch on the “do you use the app?” step too, so the no-app people separate from the has-app-never-used people."
+      "✓ Now the drop-outs aren't one undifferentiated non-response. Two never installed the app; one has it but hasn't tried order-ahead — so you know whether to fix discovery or adoption instead of guessing. A screener doesn't only clean the outcome; an ordered one turns who-fell-out into data.",
+    hint: (a) => {
+      const f = fpFunnel(a);
+      if (f.merged > 0 || f.wronglyScreened > 0)
+        return "First get Task 1's clean denominator back (the feature screener, and not the over-tight weekly one).";
+      return a.includes("app")
+        ? "Both the app and feature screeners are on — the funnel now splits the drop-outs."
+        : "Add the “do you use the app?” screener too, so the never-installed people separate from the has-app-never-used one.";
+    }
   }
 ];
 
