@@ -239,19 +239,31 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("lab-receipt-E7")).toBeVisible();
   });
 
-  test("E8 false premise: the feature screener cleans the denominator, the app screener splits the drop-outs", async ({ page }) => {
+  test("E8 false premise: the loose and over-tight screeners are traps; only the basis screener cleans the denominator; the app screener then splits the drop-outs", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    /* Bare Yes/No: people who never used order-ahead are merged into the
-       answers (no basis). The feature screener clears them; the app
-       screener (added on top) makes the funnel informative. */
-    await page.getByTestId("lab-fp-gate-feature").click();
+    /* Decoy 1 — "owns a smartphone" screens out no one, denominator stays
+       dirty (Dev, a non-user, still answers). */
+    await page.getByTestId("lab-fp-screener-smartphone").click();
     await expect(page.getByTestId("lab-fp-pass")).toHaveCount(0);
-    await page.getByTestId("lab-fp-gate-app").click();
+    await expect(page.getByTestId("lab-fp-landing-dev")).toContainText("Answers");
+    await page.getByTestId("lab-fp-screener-smartphone").click();
+    /* Decoy 2 — "weekly" over-screens, dropping Cleo, a valid occasional user. */
+    await page.getByTestId("lab-fp-screener-weekly").click();
+    await expect(page.getByTestId("lab-fp-pass")).toHaveCount(0);
+    await expect(page.getByTestId("lab-fp-landing-cleo")).toContainText(
+      "wrongly dropped"
+    );
+    await page.getByTestId("lab-fp-screener-weekly").click();
+    /* Correct feature screener cleans the denominator (Task 1) — but Task 2
+       (split the drop-outs) is still pending, so no full pass yet. */
+    await page.getByTestId("lab-fp-screener-feature").click();
+    await expect(page.getByTestId("lab-fp-pass")).toHaveCount(0);
+    /* Adding the app screener splits never-installed from has-app-never-used. */
+    await page.getByTestId("lab-fp-screener-app").click();
     await expect(page.getByTestId("lab-fp-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E8")).toBeVisible();
-    /* A never-installed customer is screened out, not answering. */
     await expect(page.getByTestId("lab-fp-landing-eve")).toContainText(
-      "Screened out"
+      "never installed the app"
     );
   });
 

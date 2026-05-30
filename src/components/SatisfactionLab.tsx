@@ -45,7 +45,8 @@ import {
   fpCast,
   fpFunnel,
   fpLandingFor,
-  fpStartGates,
+  fpScreeners,
+  fpStartActive,
   fpTasks,
   oatMilkCast,
   oatMilkConflation,
@@ -78,7 +79,7 @@ import {
   type CoverageStatus,
   type E7Design,
   type ExerciseReceipt,
-  type FpGates,
+  type FpScreenerId,
   type KnowledgeBranch,
   type LedgerLevel,
   type ReviewDiagnosis,
@@ -1724,17 +1725,24 @@ function OatMilkExercise({ num }: { num: number }) {
    Exercise 3 (data id E8) — False premise / eligibility  (verb: GATE)
    ─────────────────────────────────────────────────────────────────────── */
 
+const fpScreenedWhere: Record<FpScreenerId, string> = {
+  app: "Screened out — never installed the app",
+  feature: "Screened out — has the app, never used order-ahead",
+  smartphone: "Screened out — no smartphone",
+  weekly: "Screened out — not a weekly user"
+};
+
 function FalsePremiseExercise({ num }: { num: number }) {
-  const [gates, setGates] = useState<FpGates>({ ...fpStartGates });
+  const [active, setActive] = useState<FpScreenerId[]>([...fpStartActive]);
   const [completed, setCompleted] = useState<string[]>([]);
 
   useEffect(() => {
     setCompleted((prev) => {
-      const active = fpTasks.find((t) => !prev.includes(t.id));
-      if (active && active.pass(gates)) return [...prev, active.id];
+      const next = fpTasks.find((t) => !prev.includes(t.id));
+      if (next && next.pass(active)) return [...prev, next.id];
       return prev;
     });
-  }, [gates]);
+  }, [active]);
 
   const activeTask = fpTasks.find((t) => !completed.includes(t.id)) ?? null;
   const activeIndex = activeTask ? fpTasks.indexOf(activeTask) : fpTasks.length;
@@ -1743,10 +1751,12 @@ function FalsePremiseExercise({ num }: { num: number }) {
     ? fpTasks.find((t) => t.id === lastDoneId) ?? null
     : null;
   const allDone = completed.length === fpTasks.length;
-  const f = fpFunnel(gates);
+  const f = fpFunnel(active);
 
-  const toggleGate = (k: keyof FpGates) =>
-    setGates((g) => ({ ...g, [k]: !g[k] }));
+  const toggle = (id: FpScreenerId) =>
+    setActive((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
 
   return (
     <ExerciseFrame
@@ -1759,9 +1769,10 @@ function FalsePremiseExercise({ num }: { num: number }) {
       <p className="lab-exercise-setup">
         Roast &amp; Brew asks one question about its app:{" "}
         <strong>&ldquo;Did order-ahead save you time?&rdquo;</strong> — Yes / No.
-        Six customers answer, but only three have ever used order-ahead. Switch
-        on eligibility screeners and watch who should never have been in the
-        denominator drop out of the funnel.
+        Six customers answer, but only three have ever used order-ahead. You can
+        add a screening question before it — but the right screen is the one
+        that keeps everyone with a real basis and drops everyone without one.
+        Two of the four below are traps.
       </p>
 
       <TaskBand
@@ -1779,7 +1790,7 @@ function FalsePremiseExercise({ num }: { num: number }) {
                 total: fpTasks.length,
                 title: activeTask.title,
                 brief: activeTask.brief,
-                hint: activeTask.hint(gates)
+                hint: activeTask.hint(active)
               }
             : null
         }
@@ -1788,29 +1799,37 @@ function FalsePremiseExercise({ num }: { num: number }) {
       />
 
       <div className="lab-control">
-        <p className="lab-control-key">Eligibility screeners — switch on in order</p>
-        <div className="lab-fp-gates" role="group" aria-label="Screeners">
-          <button
-            type="button"
-            aria-pressed={gates.app}
-            className={`lab-fp-gate ${gates.app ? "is-on" : ""}`}
-            data-testid="lab-fp-gate-app"
-            onClick={() => toggleGate("app")}
-          >
-            <span className="lab-fp-gate-step" aria-hidden="true">1</span>
-            Ask first: &ldquo;Do you use our app?&rdquo;
-          </button>
-          <button
-            type="button"
-            aria-pressed={gates.feature}
-            className={`lab-fp-gate ${gates.feature ? "is-on" : ""}`}
-            data-testid="lab-fp-gate-feature"
-            onClick={() => toggleGate("feature")}
-          >
-            <span className="lab-fp-gate-step" aria-hidden="true">2</span>
-            Then ask: &ldquo;Have you used order-ahead?&rdquo;
-          </button>
-        </div>
+        <p className="lab-control-key">
+          Candidate screeners — add one before the outcome question
+        </p>
+        <ul className="lab-fp-screeners" aria-label="Candidate screeners">
+          {fpScreeners.map((s) => {
+            const on = active.includes(s.id);
+            return (
+              <li key={s.id}>
+                <button
+                  type="button"
+                  aria-pressed={on}
+                  className={`lab-fp-screener ${on ? "is-on" : ""}`}
+                  data-testid={`lab-fp-screener-${s.id}`}
+                  onClick={() => toggle(s.id)}
+                >
+                  <span className="lab-fp-screener-mark" aria-hidden="true">
+                    {on ? "✓" : "+"}
+                  </span>
+                  <span className="lab-fp-screener-q lab-selectable">
+                    {s.label}
+                  </span>
+                </button>
+                {on && (
+                  <p className="lab-fp-screener-note lab-selectable">
+                    {s.activeNote}
+                  </p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       <p className="lab-fp-headline lab-selectable" aria-live="polite">
@@ -1823,25 +1842,32 @@ function FalsePremiseExercise({ num }: { num: number }) {
             That&rsquo;s a contaminated denominator.
           </>
         ) : (
-          <> — and every one of them actually used it.</>
+          <> — and every one actually used it.</>
+        )}
+        {f.wronglyScreened > 0 && (
+          <span className="lab-fp-headline-warn">
+            {" "}
+            You also dropped <strong>{f.wronglyScreened}</strong> real user with
+            a valid answer — a false negative.
+          </span>
         )}
       </p>
 
       <ul className="lab-fp-cast" aria-label="Where each customer lands">
         {fpCast.map((c) => {
-          const l = fpLandingFor(c, gates);
+          const l = fpLandingFor(c, active);
           const where =
             l.stage === "outcome"
               ? `Answers “${l.answer === "yes" ? "Yes" : "No"}”`
-              : l.stage === "out-no-app"
-                ? "Screened out: not an app user"
-                : "Screened out: hasn't used order-ahead";
+              : fpScreenedWhere[l.byId];
           const cls =
-            l.stage !== "outcome"
-              ? "is-out"
-              : l.basis
+            l.stage === "outcome"
+              ? l.basis
                 ? "is-basis"
-                : "is-merged";
+                : "is-merged"
+              : l.wrong
+                ? "is-wrong"
+                : "is-out";
           return (
             <li
               key={c.id}
@@ -1858,6 +1884,11 @@ function FalsePremiseExercise({ num }: { num: number }) {
                 {l.stage === "outcome" && !l.basis && (
                   <span className="lab-fp-tag">no basis — merged in</span>
                 )}
+                {l.stage === "screened" && l.wrong && (
+                  <span className="lab-fp-tag lab-fp-tag--warn">
+                    valid user — wrongly dropped
+                  </span>
+                )}
               </span>
             </li>
           );
@@ -1866,10 +1897,12 @@ function FalsePremiseExercise({ num }: { num: number }) {
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-fp-pass">
-          ✓ A clean-looking Yes/No can sit on a wrong denominator. Screening
-          eligibility before the outcome question keeps people who were never
-          exposed out of the average — and an ordered funnel turns &ldquo;who
-          dropped out&rdquo; into something you can act on.
+          ✓ A clean-looking Yes/No can sit on a wrong denominator. The screen
+          that fits keeps everyone with a real basis and drops everyone without
+          one — &ldquo;owns a phone&rdquo; was too loose, &ldquo;weekly&rdquo;
+          too tight. And asking about the app first turns one undifferentiated
+          &ldquo;didn&rsquo;t use it&rdquo; pile into a discovery-vs-adoption
+          diagnosis.
         </p>
       )}
 
