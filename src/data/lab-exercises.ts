@@ -396,8 +396,10 @@ export type Channel = {
    "wordofmouth" are deliberately split: "friend or family" is narrow
    (intimates), and the lab's key case (Cleo, below) heard about the shop
    from an acquaintance — a channel "friend or family" silently excludes.
-   "online_broad" is the over-wide bucket that lumps the three digital
-   channels (social / search / podcast). */
+   Two BROAD buckets bisect the eight specifics cleanly by online/offline,
+   so Task 2 (fit the list to a decision) has a clean two-bucket answer:
+     online_broad  → social, search, podcast
+     offline_broad → friend, wordofmouth, print, walkby, event */
 export const channelBank: Channel[] = [
   { id: "social", label: "Social media", kind: "specific" },
   { id: "search", label: "Search engine", kind: "specific" },
@@ -408,11 +410,16 @@ export const channelBank: Channel[] = [
   { id: "walkby", label: "Walked past / saw your storefront", kind: "specific" },
   { id: "event", label: "A local event, fair, or market", kind: "specific" },
   { id: "other", label: "Other (please specify)", kind: "catch-all" },
-  { id: "online_broad", label: "Online", kind: "broad" }
+  { id: "online_broad", label: "Online", kind: "broad" },
+  { id: "offline_broad", label: "Offline (print, word of mouth, in person)", kind: "broad" }
 ];
 
-/* Which specific channels the broad "Online" bucket swallows. */
-export const broadCoveredChannels = new Set(["social", "search", "podcast"]);
+/* Which specific channels each broad bucket swallows. A respondent is
+   "lumped" if an offered broad bucket covers their true channel. */
+export const broadBucketCoverage: Record<string, string[]> = {
+  online_broad: ["social", "search", "podcast"],
+  offline_broad: ["friend", "wordofmouth", "print", "walkby", "event"]
+};
 
 export const startingChannels = ["social", "search", "friend", "print"];
 
@@ -435,6 +442,14 @@ export type ChannelRespondent = {
   satisficeNote: string;
 };
 
+/* The stories deliberately don't keyword-match their channel — you can't
+   skim "TikTok → Social media" and transcribe. Several point the WRONG way
+   (a coworker reshared it → still Social, not word-of-mouth; a podcast HOST
+   plugged it → Podcast, not "someone mentioned us"), so the only way to get
+   everyone clean is to reason about each person's real channel and watch the
+   live landing confirm it. The notes describe EFFORT (the model's key
+   variable) and whether they have a fallback — not where each one rounds to,
+   which the cast shows live. */
 export const channelRespondents: ChannelRespondent[] = [
   {
     id: "ada",
@@ -442,8 +457,8 @@ export const channelRespondents: ChannelRespondent[] = [
     trueChannelId: "social",
     effort: "high",
     satisficeTo: "",
-    story: "saw a TikTok of your latte art",
-    satisficeNote: "would reach for Other and type “TikTok,” or give up if there's no Other."
+    story: "started following you after a coworker kept reposting your latte art",
+    satisficeNote: "high-effort: she'll type her real channel into Other if it isn't listed (and only give up if there's no Other)."
   },
   {
     id: "ben",
@@ -451,8 +466,8 @@ export const channelRespondents: ChannelRespondent[] = [
     trueChannelId: "search",
     effort: "high",
     satisficeTo: "",
-    story: "googled “best coffee near me”",
-    satisficeNote: "would use Other to write “Google,” or give up without it."
+    story: "was comparing nearby cafés on his phone and yours came up first",
+    satisficeNote: "high-effort: writes his real channel into Other when it's missing."
   },
   {
     id: "eve",
@@ -460,8 +475,8 @@ export const channelRespondents: ChannelRespondent[] = [
     trueChannelId: "print",
     effort: "high",
     satisficeTo: "",
-    story: "saw your ad in the neighborhood magazine",
-    satisficeNote: "would write it into Other; no plausible listed option otherwise."
+    story: "spotted your ad while flipping through the neighborhood magazine",
+    satisficeNote: "high-effort: writes it into Other if there's no print option."
   },
   {
     id: "cleo",
@@ -469,8 +484,8 @@ export const channelRespondents: ChannelRespondent[] = [
     trueChannelId: "wordofmouth",
     effort: "low",
     satisficeTo: "friend",
-    story: "her dentist's receptionist mentioned you",
-    satisficeNote: "a receptionist isn't “friend or family,” but with no general word-of-mouth option she rounds to the closest one — quietly mis-filing herself."
+    story: "heard about you from her dentist's receptionist, in passing",
+    satisficeNote: "low-effort: won't write anything in — she just picks whichever listed option feels closest. (A receptionist isn't “friend or family.”)"
   },
   {
     id: "pat",
@@ -478,8 +493,8 @@ export const channelRespondents: ChannelRespondent[] = [
     trueChannelId: "podcast",
     effort: "low",
     satisficeTo: "social",
-    story: "heard a podcast host plug your beans",
-    satisficeNote: "“I heard it on my phone” → she grabs Social media, the nearest digital-sounding option. Now a podcast ad reads as social-media reach."
+    story: "heard a podcast host she trusts plug your beans mid-episode",
+    satisficeNote: "low-effort: won't type a write-in — she grabs the nearest listed option instead."
   },
   {
     id: "dev",
@@ -487,8 +502,8 @@ export const channelRespondents: ChannelRespondent[] = [
     trueChannelId: "walkby",
     effort: "low",
     satisficeTo: "",
-    story: "walked past for a week, finally came in",
-    satisficeNote: "no listed option fits “I just walked by,” and she won't bother with a write-in — so she leaves it blank and vanishes from the data."
+    story: "passed your window every morning for a week before coming in",
+    satisficeNote: "low-effort, and nothing close fits “I just walked by” — with no real home she leaves it blank."
   },
   {
     id: "lin",
@@ -496,8 +511,8 @@ export const channelRespondents: ChannelRespondent[] = [
     trueChannelId: "event",
     effort: "low",
     satisficeTo: "",
-    story: "met you at the food fair last weekend",
-    satisficeNote: "“a fair” has no home here and she won't write one in — another silent drop-out."
+    story: "tasted your cold brew at the Saturday night market",
+    satisficeNote: "low-effort: won't write in a one-off like a night market — another silent drop-out."
   }
 ];
 
@@ -526,10 +541,12 @@ export function channelLandingFor(
   if (offered.includes(r.trueChannelId)) {
     return { state: "clean", pickedId: r.trueChannelId };
   }
-  /* 2. A broad bucket that genuinely covers them → lumped (one tap, fits,
-     but loses the specific channel). Preferred over Other / satisficing. */
-  if (offered.includes("online_broad") && broadCoveredChannels.has(r.trueChannelId)) {
-    return { state: "lumped", pickedId: "online_broad" };
+  /* 2. An offered broad bucket that covers them → lumped (one tap, fits, but
+     loses the specific channel). Preferred over Other / satisficing. */
+  for (const bucketId of offered) {
+    if (broadBucketCoverage[bucketId]?.includes(r.trueChannelId)) {
+      return { state: "lumped", pickedId: bucketId };
+    }
   }
   /* 3. High-effort respondents will write into Other. */
   if (r.effort === "high" && offered.includes("other")) {
@@ -567,9 +584,23 @@ export function channelTallies(offered: string[]): ChannelTallies {
   return t;
 }
 
-export function offeredHasBroad(offered: string[]): boolean {
+/* True mutual-exclusivity violation: a broad bucket AND a specific channel it
+   covers are BOTH offered, so a respondent has two valid homes. Two
+   non-overlapping broad buckets (Task 2's answer) do NOT count as overlap. */
+export function offeredHasOverlap(offered: string[]): boolean {
   return offered.some(
-    (id) => (channelBank.find((c) => c.id === id)?.kind ?? null) === "broad"
+    (id) =>
+      broadBucketCoverage[id] != null &&
+      broadBucketCoverage[id].some((specific) => offered.includes(specific))
+  );
+}
+
+/* Only broad buckets offered (no specific channels, no Other) — the lean
+   "fit the list to the decision" shape Task 2 asks for. */
+export function channelOnlyBroad(offered: string[]): boolean {
+  return (
+    offered.length > 0 &&
+    offered.every((id) => broadBucketCoverage[id] != null)
   );
 }
 
@@ -596,7 +627,9 @@ export function channelLedger(offered: string[]): ChannelLedger {
     t.abandoned === 0 ? "high" : answered >= t.total - 1 ? "medium" : "low";
   const analystDetail: LedgerLevel =
     t.clean === t.total ? "high" : t.clean >= 4 ? "medium" : "low";
-  const exclusivity: LedgerLevel = offeredHasBroad(offered) ? "low" : "high";
+  /* Low only when a broad bucket overlaps a specific it covers — NOT just
+     because a broad bucket is present (two clean buckets are exclusive). */
+  const exclusivity: LedgerLevel = offeredHasOverlap(offered) ? "low" : "high";
   const respondentBurden: LedgerLevel =
     offered.length <= 4 ? "low" : offered.length <= 8 ? "medium" : "high";
   return { coverage, exclusivity, analystDetail, respondentBurden };
@@ -608,13 +641,20 @@ export function channelAllClean(offered: string[]): boolean {
   return channelTallies(offered).clean === channelRespondents.length;
 }
 
-/* The two-task ladder. Task 1 drives Coverage + Analyst detail (get
-   everyone onto their true channel; discover that "Other" can't rescue
-   low-effort people). Task 2 drives Exclusivity + Respondent burden (the
-   broad-bucket and Other padding are dead weight — ship the leanest list
-   that stays all-clean). */
+/* Everyone lumped into a broad bucket — Task 2's "fit the list to the
+   online-vs-offline decision" state. */
+export function channelAllLumped(offered: string[]): boolean {
+  return channelTallies(offered).lumped === channelRespondents.length;
+}
+
+/* The two-task ladder, redesigned 2026-05-29. Task 1 (CAPTURE): read past the
+   keyword-wrong stories, give everyone their true channel; discover that
+   "Other" can't rescue the low-effort visitors. Task 2 (FIT): the gestalt
+   flip — the owner's question changes to "online vs offline, nothing finer,"
+   so the per-channel detail becomes burden and the broad bucket that was WRONG
+   in Task 1 is exactly RIGHT here. The right grain depends on the decision. */
 export type ChannelTask = {
-  id: "capture" | "trim";
+  id: "capture" | "fit";
   title: string;
   brief: string;
   pass: (offered: string[]) => boolean;
@@ -627,42 +667,38 @@ export const channelTasks: ChannelTask[] = [
     id: "capture",
     title: "Get everyone onto their real channel",
     brief:
-      "The starter four leave Cleo and Pat mis-filed and Dev and Lin gone entirely. Add options until all seven land on their TRUE channel — watch answer-space coverage and analyst detail climb. (Tempted to just add “Other”? Try it — in this cast the four won't bother with the write-in, so they mis-file or skip anyway.)",
+      "The starter four leave two visitors mis-filed and two gone entirely. Read each story past the obvious keyword — a coworker resharing a post is still Social; a podcast HOST plugging you is Podcast, not “someone mentioned us.” Add options until all seven land on their TRUE channel. (Tempted to just add “Other”? Try it — the low-effort visitors won't bother with the write-in, so they mis-file or skip anyway.)",
     pass: channelAllClean,
     passText:
-      "✓ All seven on their true channel. Notice what “Other” alone did not do here: a write-in is extra effort, and these four declined it — so they mis-filed or skipped. “Other” helps, but it isn't a full repair for a missing option. Coverage is about giving people a real place to land — not only an escape hatch some won't use.",
+      "✓ All seven on their true channel — and you had to reason it out, not skim it. Notice what “Other” alone did not do: a write-in is extra effort, and the low-effort visitors declined it, so they mis-filed or skipped. “Other” helps, but it isn't a full repair for a missing option.",
     hint: (offered) => {
       const t = channelTallies(offered);
       if (t.abandoned > 0)
-        return `${t.abandoned} visitor(s) left it blank — no option fits them and they won't write one in. Add the specific channel(s) they came through.`;
+        return `${t.abandoned} visitor(s) left it blank — no option fits them and they won't write one in. Work out the real channel behind their story and add it.`;
       if (t.satisficed > 0)
-        return `${t.satisficed} visitor(s) mis-filed onto a wrong option. Find whose true channel still isn't offered (look at Cleo and Pat) and add it.`;
+        return `${t.satisficed} visitor(s) mis-filed onto a close-but-wrong option. Whose real channel still isn't offered? Don't trust the obvious keyword — read what actually happened.`;
       if (t.lumped > 0)
-        return "Someone's getting swallowed by the broad “Online” bucket instead of their real channel — add their specific option.";
+        return "Someone's getting swallowed by a broad bucket instead of their real channel — add their specific option.";
       if (t.other > 0)
         return "Someone's parked in “Other.” That captures them but loses the channel — add their specific option so it's structured.";
       return "Almost — everyone needs their own true channel offered.";
     }
   },
   {
-    id: "trim",
-    title: "Ship the leanest honest list",
+    id: "fit",
+    title: "Now fit the list to the decision",
     brief:
-      "A teammate wants to add an “Online” catch-all and an “Other” box “to be safe.” Try them and watch mutual exclusivity and respondent burden — then ship the shortest list that keeps everyone clean.",
-    pass: (offered) =>
-      channelAllClean(offered) &&
-      !offeredHasBroad(offered) &&
-      offered.length <= 8,
+      "Forget per-channel for a moment. The owner is deciding ONE thing: should she shift her ad budget online? She needs online vs offline — nothing finer. Rebuild the answer choices for THAT question, with the least burden on respondents. (The two broad buckets you avoided in Task 1 are waiting on the shelf.)",
+    pass: (offered) => channelOnlyBroad(offered) && channelAllLumped(offered),
     passText:
-      "✓ Lean and all-clean. The “Online” bucket lumped three distinct channels into one (mutual exclusivity drops, and you can't tell TikTok from a podcast afterward); “Other” just added length the cast's write-in-avoiders never used. Every option should earn its place.",
+      "✓ Same seven people, a different right answer. In Task 1 every channel had to earn its own option, because the question was per-channel. Here the only question is online vs offline — so the detail is burden, and the broad split you avoided before is now exactly right. There's no universally “complete” list: the right grain is the one the decision needs. (Watch the ledger — detail dropped on purpose; coverage, exclusivity, and burden all stayed healthy.)",
     hint: (offered) => {
-      if (!channelAllClean(offered))
-        return "First get everyone back to clean — Task 1's state.";
-      if (offeredHasBroad(offered))
-        return "The broad “Online” bucket overlaps social / search / podcast — it tanks Exclusivity. Drop it.";
-      if (offered.length > 8)
-        return "The list is long enough to be a burden. Drop any option no real visitor needs (the “Other” box, for one — nobody used it).";
-      return "Lean and clean.";
+      if (channelAllLumped(offered) && channelOnlyBroad(offered)) return "Done.";
+      if (channelAllClean(offered))
+        return "This question doesn't need per-channel detail — swap the eight specifics for the two broad buckets (“Online” and “Offline”).";
+      if (!channelOnlyBroad(offered))
+        return "Drop everything except the two broad buckets — any specific channel or the “Other” box is finer detail than this decision needs.";
+      return "You need BOTH buckets: the online visitors need “Online,” the offline visitors need “Offline.” Add the missing one.";
     }
   }
 ];
@@ -1548,9 +1584,9 @@ export const exerciseReceipts: Record<string, ExerciseReceipt> = {
     marks: [{ branchId: "slot", concepts: ["mutually exclusive boundaries", "coverage of the full range"] }]
   },
   E4: {
-    marks: [{ branchId: "slot", concepts: ["completeness", "the “Other” tradeoff"] }],
+    marks: [{ branchId: "slot", concepts: ["completeness", "the “Other” tradeoff", "the right grain depends on the decision"] }],
     caveat:
-      "“Other, please specify” is an escape hatch, not a full repair for a missing option — and not an analysis category. Some respondents who'd rather not write a sentence pick the closest listed option instead. Pilot, watch where people mis-file or skip, then promote common write-ins to their own options."
+      "“Other, please specify” is an escape hatch, not a full repair for a missing option — and not an analysis category. Some respondents who'd rather not write a sentence pick the closest listed option instead. And “complete” is relative: a broad bucket that loses needed detail for one question is exactly right for another — match the grain to the decision the answers serve."
   },
   E5: {
     marks: [
@@ -1708,18 +1744,18 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
   },
   E4: {
     teaches:
-      "“Other (please specify)” helps, but it does not fully repair an incomplete list — a write-in asks for extra effort some respondents won't spend.",
+      "“Other (please specify)” doesn't fully repair an incomplete list — and what counts as “complete” depends on the decision: the right category grain is the one the analysis needs.",
     fieldTerms: [
       { term: "closed / open / partially-closed question", gloss: "Fixed options, free text, or fixed options plus an “Other” write-in." },
       { term: "residual category (“Other”)", gloss: "A catch-all for answers the list didn't anticipate." },
       { term: "satisficing", gloss: "Giving an acceptable rather than optimal answer to save effort (Krosnick)." },
-      { term: "respondent burden", gloss: "The effort a question asks for; a write-in costs more than a tap." },
+      { term: "category granularity / fitness for use", gloss: "How fine the categories are; the right level depends on the construct and the decision, not a universal ideal." },
       { term: "option-set coverage", gloss: "Whether expected answers have a place — distinct from “coverage error” in sampling." }
     ],
     labShorthand: "SLOT · option-set coverage",
     evidence: "directionally-supported",
     supports:
-      "Satisficing is well supported, and closed lists shape what becomes visible. When a plausible option is missing, some respondents pick a close-enough listed option, skip, or use “Other”; the missing category is undercounted by design. A write-in path costs effort, so it is an imperfect patch.",
+      "Satisficing is well supported, and closed lists shape what becomes visible. When a plausible option is missing, some respondents pick a close-enough listed option, skip, or use “Other.” And category granularity should match the construct: collapsing categories loses detail, but detail the decision doesn't need is just respondent burden — “complete” is relative to the question.",
     boundary:
       "Do not claim “Other” mainly captures high-effort respondents — too strong without direct evidence about other-specify behavior in this mode. The cast illustrates the mechanism, not a population rate.",
     sources: [

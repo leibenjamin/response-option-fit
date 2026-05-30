@@ -967,7 +967,7 @@ function BucketTinkerExercise({ num }: { num: number }) {
 
 const channelStateText: Record<ChannelLandingState, string> = {
   clean: "on their true channel",
-  lumped: "lumped into “Online”",
+  lumped: "lumped into a broad bucket",
   other: "wrote it into “Other”",
   satisficed: "mis-filed here",
   abandoned: "left it blank"
@@ -1014,18 +1014,18 @@ function ChannelTinkerExercise({ num }: { num: number }) {
     <ExerciseFrame
       num={num}
       title="Build the option set the whole audience can answer honestly."
-      issue="Incomplete option sets · the “Other” trap · satisficing · broad buckets"
+      issue="Incomplete option sets · the “Other” trap · satisficing · fitting the list to the decision"
       modifier="channel"
       verb="tinker"
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew&rsquo;s onboarding form asks &ldquo;How did you hear
-        about us?&rdquo; Toggle options on and off; seven real visitors flow
-        through and the ledger shows the four consequences of every move.
-        Each visitor picks their true channel when it&rsquo;s offered —
-        otherwise they pick the closest wrong option, fall back to
-        &ldquo;Other,&rdquo; or leave it blank, exactly as the note on their
-        row says.
+        about us?&rdquo; Toggle options on and off; seven visitors flow through
+        and the ledger shows the four consequences of every move. Each lands on
+        their true channel when it&rsquo;s offered — otherwise the closest wrong
+        option, &ldquo;Other,&rdquo; or nothing, depending on how much effort
+        they&rsquo;ll spend. Read the stories closely: the obvious keyword often
+        points at the wrong option.
       </p>
 
       <TaskBand
@@ -1159,7 +1159,7 @@ function ChannelTinkerExercise({ num }: { num: number }) {
             />
             <LedgerMeter
               label="Mutual exclusivity"
-              hint="Are the options non-overlapping? A broad “Online” bucket kills it."
+              hint="Could a visitor have two valid homes? A broad bucket overlapping a specific channel it covers kills it — two non-overlapping buckets don't."
               level={ledger.exclusivity}
             />
             <LedgerMeter
@@ -1176,20 +1176,22 @@ function ChannelTinkerExercise({ num }: { num: number }) {
 
       {allClean && !allDone && (
         <p className="lab-exercise-pass" aria-live="polite">
-          ✓ Everyone&rsquo;s on their true channel. Now the leaner half of the
-          job — see the task above.
+          ✓ Everyone&rsquo;s on their true channel. Now the owner asks a
+          different question — see the task above.
         </p>
       )}
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-channel-pass">
-          ✓ Lean and all-clean. The two things this cast showed:
-          &ldquo;Other&rdquo; is an escape hatch, not a full repair — a write-in
-          is extra effort, and the people who won&rsquo;t take it mis-file or
-          skip instead; and a broad &ldquo;Online&rdquo; bucket buys coverage by
-          destroying the detail you were trying to collect. The professional
-          move is to pilot, watch where people mis-file or skip, and promote
-          those channels into real options.
+          ✓ You built the list two different right ways. For &ldquo;invest per
+          channel,&rdquo; every channel needed its own option and a broad bucket
+          would have destroyed the detail. For &ldquo;online vs offline,&rdquo;
+          that same detail is wasted respondent effort and the broad split is
+          exactly right. The lesson isn&rsquo;t &ldquo;buckets bad&rdquo; or
+          &ldquo;buckets good&rdquo; — it&rsquo;s that the right grain, and even
+          what counts as a &ldquo;complete&rdquo; list, depends on the decision
+          the answers have to serve. (And &ldquo;Other&rdquo; stays an imperfect
+          escape hatch the low-effort visitors won&rsquo;t use either way.)
         </p>
       )}
 
