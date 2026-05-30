@@ -105,9 +105,11 @@ Standard references the drawers name:
   the four-step response process used as the closing expert lens.
 - **Fowler, "Improving Survey Questions"** — practical wording guidance,
   including response-category interpretation and vague frequency wording.
-- **U.S. Census Bureau DICE Questionnaire Design Guidelines (April 1, 2026)** —
-  current public Census guidance for questionnaire components, mode-sensitive
-  presentation, and design documentation.
+- **U.S. Census Bureau — DICE design guidelines** ("Design Guidelines for U.S.
+  Census Bureau Web Surveys and Censuses" and "…for CAPI and CATI Instruments,"
+  v. April 1, 2026) — current public Census guidance for questionnaire
+  components, mode-sensitive presentation, and design documentation. DICE = Data
+  Ingest and Collection for the Enterprise.
 
 Evidence-strength labels are deliberately conservative: contested or
 magnitude-dependent claims (reverse-worded items; an optimal "5-7" scale
