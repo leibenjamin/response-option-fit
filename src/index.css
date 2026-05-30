@@ -5548,26 +5548,6 @@ summary:focus-visible {
   max-width: 70ch;
 }
 
-.lab-km-legend {
-  list-style: none;
-  margin: var(--s-2) 0 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-4) var(--s-5);
-  border-top: 1px solid var(--line-faint);
-  padding-top: var(--s-2);
-}
-
-.lab-km-legend-item {
-  display: flex;
-  align-items: center;
-  gap: var(--s-2);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  color: var(--ink-2);
-}
-
 .lab-km-marker {
   display: inline-grid;
   place-items: center;
@@ -5583,6 +5563,109 @@ summary:focus-visible {
 .lab-km-marker--planned { color: var(--accent); background: var(--accent-paper); }
 .lab-km-marker--didactic { color: var(--ink-soft); background: var(--paper-2); }
 .lab-km-marker--outOfScope { color: var(--ink-mute); background: var(--paper-3); }
+
+/* ─── Coverage gauge (replaced the plain legend) + shared segment colors ─── */
+
+.lab-km-gauge {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  padding: var(--s-4) var(--s-5);
+}
+.lab-km-gauge-stat {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  flex: none;
+}
+.lab-km-gauge-num {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 0.9;
+  color: var(--route-r);
+}
+.lab-km-gauge-stat-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  line-height: 1.3;
+}
+.lab-km-gauge-body {
+  flex: 1 1 18rem;
+  min-width: 14rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.lab-km-gauge-bar {
+  display: flex;
+  gap: 3px;
+  height: 16px;
+}
+.lab-km-gauge-seg {
+  display: block;
+  border-radius: 3px;
+}
+/* Shared segment colors — gauge bar, per-branch strips, legend dots. */
+.lab-km-gauge-seg--practiced { background: var(--route-r); }
+.lab-km-gauge-seg--planned { background: var(--accent); }
+.lab-km-gauge-seg--didactic { background: var(--ink-soft); }
+.lab-km-gauge-seg--outOfScope { background: var(--line); }
+.lab-km-gauge-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+}
+.lab-km-gauge-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+.lab-km-gauge-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex: none;
+}
+.lab-km-gauge-legend-n {
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.lab-km-gauge-caption {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 75ch;
+}
+
+/* Reveal-on-scroll: under reduced-motion this whole block is inert (elements
+   stay at their visible default), so no hiding ever happens. */
+@media (prefers-reduced-motion: no-preference) {
+  .lab-km:not(.is-in) .lab-km-gauge,
+  .lab-km:not(.is-in) .lab-km-branch {
+    opacity: 0;
+  }
+  .lab-km.is-in .lab-km-gauge {
+    animation: mo-fade-up var(--mo-3) var(--mo-ease) both;
+  }
+  .lab-km.is-in .lab-km-branch {
+    animation: mo-fade-up var(--mo-3) var(--mo-ease) both;
+    animation-delay: var(--km-stagger, 0ms);
+  }
+}
 
 .lab-km-grid {
   display: grid;
@@ -5615,10 +5698,35 @@ summary:focus-visible {
 
 .lab-km-branch-head {
   display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+/* Big typographic chapter-mark per branch — S / R / P / B in the branch color. */
+.lab-km-branch-mark {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent);
+  border: 1.5px solid currentColor;
+  border-radius: 8px;
+  background: var(--accent-paper);
+}
+.lab-km-branch--ruler .lab-km-branch-mark { color: var(--route-w); background: rgba(69, 87, 116, 0.08); }
+.lab-km-branch--push .lab-km-branch-mark { color: var(--accent-2); background: var(--accent-paper); }
+.lab-km-branch--boundary .lab-km-branch-mark { color: var(--ink-soft); background: var(--paper-2); }
+
+.lab-km-branch-headtext {
+  display: flex;
   flex-direction: column;
-  gap: var(--s-1);
-  border-bottom: 1px solid var(--line-faint);
-  padding-bottom: var(--s-2);
+  gap: 1px;
+  min-width: 0;
 }
 
 .lab-km-branch-eyebrow {
@@ -5648,6 +5756,20 @@ summary:focus-visible {
   font-size: 13px;
   line-height: 1.45;
   color: var(--ink-soft);
+}
+
+/* Per-branch coverage strip: a thin segmented bar (practiced / planned / …). */
+.lab-km-branch-strip {
+  display: flex;
+  gap: 2px;
+  height: 6px;
+  overflow: hidden;
+  margin-top: var(--s-1);
+}
+.lab-km-branch-strip-seg {
+  display: block;
+  border-radius: 2px;
+  min-width: 4px;
 }
 
 .lab-km-branch-nodes {
@@ -5687,6 +5809,7 @@ summary:focus-visible {
   font-size: 14px;
   color: var(--ink-mute);
   margin-left: auto;
+  order: 1;
 }
 .lab-km-node-details[open] .lab-km-node-summary::before {
   content: "–";
@@ -6102,17 +6225,6 @@ summary:focus-visible {
 }
 
 /* ─── Closing map: SLOT/RULER/PUSH shorthand note + terms glossary ─── */
-
-.lab-km-shorthand-note {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--ink-soft);
-  border: 1px dashed var(--line);
-  background: var(--paper);
-  padding: var(--s-3) var(--s-4);
-  max-width: 78ch;
-}
 
 .lab-km-terms {
   list-style: none;
@@ -6698,14 +6810,6 @@ summary:focus-visible {
   .lab-acq-design.is-on { background: Highlight; color: HighlightText; }
 }
 
-/* ─── Closing-map coverage line ─── */
-.lab-km-coverage-line {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--ink-soft);
-  max-width: 78ch;
-}
 
 @media (forced-colors: active) {
   .lab-oat-design { border: 1px solid CanvasText; }
