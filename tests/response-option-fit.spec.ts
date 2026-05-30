@@ -232,13 +232,14 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("lab-receipt-E6")).toBeVisible();
   });
 
-  test("E7 don't-know/NA: only the design with both opt-outs keeps neutral, DK, and NA distinct", async ({ page }) => {
+  test("E7 don't-know/NA: adding 'Don't know' looks done (nobody forced onto Neutral) but lumps the never-tried in — you must add 'Not applicable' too", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    /* Adding only DK clears the scale (Task 1) but lumps never-tried into
-       Don't-know, so Task 2 stays open until NA is added too. */
-    await page.getByTestId("lab-oat-design-dk").click();
+    /* Toggling DK on clears Task 1 (no one forced onto Neutral) but lumps the
+       never-tried into Don't-know, so the full pass stays closed. */
+    await page.getByTestId("lab-oat-toggle-dk").click();
     await expect(page.getByTestId("lab-oat-pass")).toHaveCount(0);
-    await page.getByTestId("lab-oat-design-both").click();
+    /* Adding NA gives the never-tried their own home → both tasks done. */
+    await page.getByTestId("lab-oat-toggle-na").click();
     await expect(page.getByTestId("lab-oat-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E7")).toBeVisible();
   });
