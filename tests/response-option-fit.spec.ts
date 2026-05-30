@@ -193,6 +193,29 @@ test.describe("Response Option Fit Lab - desktop", () => {
     );
   });
 
+  test("E2 double-barreled: flag the six bundles (incl. the two with no \"and\"), skip the two \"and\" decoys, then repair the triple", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* No pre-reveal spoiler tag should point at the no-"and" items. */
+    await expect(page.locator(".lab-bundled-tag")).toHaveCount(0);
+    /* The six bundled items: two with no "and" (hot-fresh, fix-quickly), three
+       with "and", one triple. Leave the two clean + two "and"-decoys alone. */
+    for (const id of [
+      "barista-friendly",
+      "hot-fresh",
+      "coffee-quality",
+      "barista-triple",
+      "fix-quickly",
+      "atmosphere"
+    ]) {
+      await page.getByTestId(`lab-bundled-${id}`).click();
+    }
+    await page.getByTestId("lab-bundled-check").click();
+    await expect(page.getByTestId("lab-bundled-pass")).toBeVisible();
+    /* Repair sub-task: the clean three-question split is the right move. */
+    await page.getByTestId("lab-repair-three").click();
+    await expect(page.getByTestId("lab-receipt-E2")).toBeVisible();
+  });
+
   test("E6 scale length: too few crushes distinctions, 11 points is false precision, 5–7 passes both", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
     /* Start at 3 points — distinctions meter is low (genuinely-different
