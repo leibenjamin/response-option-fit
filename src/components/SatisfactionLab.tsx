@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatedNumber } from "../lib/motion";
 import {
   biasTells,
@@ -2286,14 +2286,125 @@ function branchLabel(id: KnowledgeBranch["id"]): string {
    Closing knowledge map
    ─────────────────────────────────────────────────────────────────────── */
 
+/* Reveal-on-scroll: adds `is-in` once the element enters the viewport, so the
+   closing map animates in as you reach it. Reduced-motion users get the final
+   state instantly (the global prefers-reduced-motion rule zeroes durations);
+   environments without IntersectionObserver just render revealed. */
+function useInView<T extends HTMLElement>(): [React.RefObject<T>, boolean] {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || inView) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.12 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [inView]);
+  return [ref, inView];
+}
+
+const coverageGaugeOrder: CoverageStatus[] = [
+  "practiced",
+  "planned",
+  "didactic",
+  "outOfScope"
+];
+
+/* Count map nodes by coverage status, across all branches and per branch. */
+function countCoverage(branches: KnowledgeBranch[]): Record<CoverageStatus, number> {
+  const c: Record<CoverageStatus, number> = {
+    practiced: 0,
+    planned: 0,
+    didactic: 0,
+    outOfScope: 0
+  };
+  for (const b of branches) for (const n of b.nodes) c[n.status] += 1;
+  return c;
+}
+
+/* The visual coverage gauge: a count-up of practiced points + a single stacked
+   bar of the four statuses, so the honesty (not everything was practiced) is
+   something you SEE, not just read. */
+function CoverageGauge({ branches }: { branches: KnowledgeBranch[] }) {
+  const counts = countCoverage(branches);
+  const total = coverageGaugeOrder.reduce((s, k) => s + counts[k], 0);
+  return (
+    <div className="lab-km-gauge" data-testid="lab-km-gauge">
+      <div className="lab-km-gauge-stat">
+        <span className="lab-km-gauge-num">
+          <AnimatedNumber value={counts.practiced} />
+        </span>
+        <span className="lab-km-gauge-stat-label">
+          inspection points
+          <br />
+          practiced hands-on
+        </span>
+      </div>
+      <div className="lab-km-gauge-body">
+        <div
+          className="lab-km-gauge-bar"
+          role="img"
+          aria-label={`${counts.practiced} practiced, ${counts.planned} still ahead, ${counts.didactic} shown not practiced, ${counts.outOfScope} out of scope, of ${total} named`}
+        >
+          {coverageGaugeOrder.map((s) =>
+            counts[s] > 0 ? (
+              <span
+                key={s}
+                className={`lab-km-gauge-seg lab-km-gauge-seg--${s}`}
+                style={{ flexGrow: counts[s] }}
+              />
+            ) : null
+          )}
+        </div>
+        <ul className="lab-km-gauge-legend" aria-hidden="true">
+          {coverageGaugeOrder.map((s) => (
+            <li key={s} className="lab-km-gauge-legend-item">
+              <span className={`lab-km-gauge-dot lab-km-gauge-seg--${s}`} />
+              <span className="lab-km-gauge-legend-n">{counts[s]}</span>
+              <span className="lab-km-gauge-legend-label">
+                {coverageGaugeShort[s]}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+const coverageGaugeShort: Record<CoverageStatus, string> = {
+  practiced: "practiced (✓)",
+  planned: "still ahead (◇)",
+  didactic: "shown, not practiced (◌)",
+  outOfScope: "out of scope (⊘)"
+};
+
 function KnowledgeMap() {
   const [openTerms, setOpenTerms] = useState(false);
   const [openCredentialing, setOpenCredentialing] = useState(false);
   const [openTourangeau, setOpenTourangeau] = useState(false);
   const [openReading, setOpenReading] = useState(false);
+  const [mapRef, mapInView] = useInView<HTMLElement>();
 
   return (
-    <section className="lab-km" aria-labelledby="lab-km-title" data-testid="lab-km">
+    <section
+      ref={mapRef}
+      className={`lab-km ${mapInView ? "is-in" : ""}`}
+      aria-labelledby="lab-km-title"
+      data-testid="lab-km"
+    >
       <header className="lab-km-head">
         <p className="lab-km-eyebrow">Closing map</p>
         <h2 id="lab-km-title" className="lab-km-title lab-selectable">
@@ -2304,25 +2415,20 @@ function KnowledgeMap() {
           Does the format PUSH the answer? And what would this inspection NOT
           prove (BOUNDARY)?
         </p>
-        <p className="lab-km-coverage-line lab-selectable">
-          The ✓ marks are what these nine exercises gave you hands-on; the ◇
-          marks are important things still ahead, named here on purpose so the
-          map doesn&rsquo;t pretend to be the whole field.
-        </p>
-        <p className="lab-km-shorthand-note lab-selectable">
-          SLOT / RULER / PUSH / BOUNDARY are <strong>this lab&rsquo;s own
-          shorthand</strong> for organizing what you practiced — not standard
-          survey-methodology terms. The concepts inside them
-          (double-barreled, primacy, satisficing…) are the real ones; lead
-          with those, and see &ldquo;Which of these are real terms of
-          art?&rdquo; below.
-        </p>
-        <CoverageLegend />
       </header>
 
+      <CoverageGauge branches={responseOptionKnowledgeMap} />
+      <p className="lab-km-gauge-caption lab-selectable">
+        SLOT / RULER / PUSH / BOUNDARY are <strong>this lab&rsquo;s own
+        shorthand</strong> — not field terms; the concepts inside
+        (double-barreled, primacy, satisficing…) are the real ones. The ◇ and ⊘
+        marks are named on purpose, so the map never pretends to be the whole
+        field.
+      </p>
+
       <div className="lab-km-grid">
-        {responseOptionKnowledgeMap.map((b) => (
-          <KnowledgeBranchCard key={b.id} branch={b} />
+        {responseOptionKnowledgeMap.map((b, i) => (
+          <KnowledgeBranchCard key={b.id} branch={b} index={i} />
         ))}
       </div>
 
@@ -2440,46 +2546,51 @@ function KnowledgeMap() {
   );
 }
 
-function CoverageLegend() {
-  const statuses: CoverageStatus[] = [
-    "practiced",
-    "planned",
-    "didactic",
-    "outOfScope"
-  ];
-  return (
-    <ul className="lab-km-legend" aria-label="Coverage marker legend">
-      {statuses.map((s) => (
-        <li key={s} className="lab-km-legend-item">
-          <span
-            className={`lab-km-marker lab-km-marker--${s}`}
-            aria-hidden="true"
-          >
-            {coverageGlyph[s]}
-          </span>
-          <span className="lab-km-legend-label">{coverageLabel[s]}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function KnowledgeBranchCard({ branch }: { branch: KnowledgeBranch }) {
+function KnowledgeBranchCard({
+  branch,
+  index
+}: {
+  branch: KnowledgeBranch;
+  index: number;
+}) {
+  const counts = countCoverage([branch]);
+  const branchTotal = coverageGaugeOrder.reduce((s, k) => s + counts[k], 0);
   return (
     <section
       className={`lab-km-branch lab-km-branch--${branch.id}`}
+      style={{ "--km-stagger": `${index * 70}ms` } as React.CSSProperties}
       aria-labelledby={`lab-km-branch-${branch.id}-title`}
     >
       <header className="lab-km-branch-head">
-        <p className="lab-km-branch-eyebrow">{branch.label.toUpperCase()}</p>
-        <h3
-          id={`lab-km-branch-${branch.id}-title`}
-          className="lab-km-branch-question lab-selectable"
-        >
-          {branch.question}
-        </h3>
-        <p className="lab-km-branch-memory lab-selectable">{branch.memorySentence}</p>
+        <span className="lab-km-branch-mark" aria-hidden="true">
+          {branch.label.charAt(0).toUpperCase()}
+        </span>
+        <div className="lab-km-branch-headtext">
+          <p className="lab-km-branch-eyebrow">{branch.label.toUpperCase()}</p>
+          <h3
+            id={`lab-km-branch-${branch.id}-title`}
+            className="lab-km-branch-question lab-selectable"
+          >
+            {branch.question}
+          </h3>
+        </div>
       </header>
+      <p className="lab-km-branch-memory lab-selectable">{branch.memorySentence}</p>
+      <div
+        className="lab-km-branch-strip"
+        role="img"
+        aria-label={`${counts.practiced} of ${branchTotal} practiced in this pass`}
+      >
+        {coverageGaugeOrder.map((s) =>
+          counts[s] > 0 ? (
+            <span
+              key={s}
+              className={`lab-km-branch-strip-seg lab-km-gauge-seg--${s}`}
+              style={{ flexGrow: counts[s] }}
+            />
+          ) : null
+        )}
+      </div>
       <ul className="lab-km-branch-nodes">
         {branch.nodes.map((n) => (
           <li

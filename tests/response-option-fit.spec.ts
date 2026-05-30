@@ -180,10 +180,14 @@ test.describe("Response Option Fit Lab - desktop", () => {
     const verbs = await page.locator(".lab-exercise-verb").allInnerTexts();
     expect(verbs.length).toBe(9);
     /* The closing knowledge map carries the four SLOT/RULER/PUSH/BOUNDARY
-       branches with the marker legend. */
+       branches and the visual coverage gauge. */
     await expect(page.getByTestId("lab-km")).toBeVisible();
     await expect(page.locator(".lab-km-branch")).toHaveCount(4);
-    await expect(page.locator(".lab-km-legend")).toBeVisible();
+    await expect(page.getByTestId("lab-km-gauge")).toBeVisible();
+    /* The gauge's stacked bar shows every coverage status as a segment. */
+    await expect(
+      page.locator(".lab-km-gauge-bar .lab-km-gauge-seg")
+    ).toHaveCount(4);
   });
 
   test("the lab's #lab and / hashes are equivalent", async ({ page }) => {
