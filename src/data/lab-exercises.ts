@@ -765,7 +765,7 @@ export const reviewElements: ReviewElement[] = [
     id: "q-delightful",
     kind: "question",
     label: "Question 1",
-    text: "How delightful was your visit to Roast & Brew?",
+    text: "Roast & Brew is famous for its delightful service. How satisfied were you with your visit?",
     options: [
       "Very satisfied",
       "Satisfied",
@@ -775,9 +775,9 @@ export const reviewElements: ReviewElement[] = [
     ],
     correct: "push",
     whenRight:
-      "PUSH. The scale underneath is actually balanced — the problem is the word “delightful,” which pre-loads a positive answer before anyone reads an option. That's the leading-stem move you ran in Exercise 1. Fix: ask “How was your visit?”",
+      "PUSH. The five points are a balanced satisfaction scale, and they match the question — that part's fine. The problem is the lead-in, “famous for its delightful service,” which primes a positive answer before anyone reads an option. That's the leading-stem move from Exercise 1. Fix: drop the praise — just “How satisfied were you with your visit?”",
     hint:
-      "Look at the scale vs the wording. The five points are balanced and fine. So what's tilting the answer — and which lens is about wording that steers?"
+      "The scale and the question agree (both about satisfaction), and the five points are balanced. So what's tilting the answer before the options are even read — and which lens is about wording that steers?"
   },
   {
     id: "q-barista",
