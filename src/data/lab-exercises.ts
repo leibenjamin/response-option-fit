@@ -83,9 +83,6 @@ export type DoubleBarreledItem = {
   kind: "clean" | "bundled-2" | "bundled-3" | "decoy";
   /* For bundled-2 / bundled-3, the named separable parts — shown on Check. */
   ideas?: string[];
-  /* True for bundled items that contain NO "and" — used to spotlight that
-     the word isn't the test. */
-  noAnd?: boolean;
   /* The per-item feedback line shown on Check. */
   note: string;
 };
@@ -115,7 +112,6 @@ export const doubleBarreledItems: DoubleBarreledItem[] = [
     text: "Did you get a hot, fresh drink?",
     kind: "bundled-2",
     ideas: ["hot", "fresh"],
-    noAnd: true,
     note: "Bundled — and notice there's no “and.” Hot and fresh are separable: a drink can arrive hot but made from stale grounds, or freshly pulled but gone lukewarm. The comma hides the same two-judgments problem."
   },
   {
@@ -143,7 +139,6 @@ export const doubleBarreledItems: DoubleBarreledItem[] = [
     text: "Did the barista fix your order quickly?",
     kind: "bundled-2",
     ideas: ["fixed it", "did it quickly"],
-    noAnd: true,
     note: "Bundled — no “and” again. It asks two things at once: was it fixed, and was that quick? Someone whose order was fixed but slowly (or fast but still wrong) can't answer yes or no honestly."
   },
   {

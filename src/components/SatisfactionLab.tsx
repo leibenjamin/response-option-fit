@@ -583,9 +583,6 @@ function DoubleBarreledExercise({ num }: { num: number }) {
                 <span className="lab-bundled-body">
                   <span className="lab-bundled-text lab-selectable">
                     {item.text}
-                    {item.noAnd && !revealed && (
-                      <span className="lab-bundled-tag"> · no “and”</span>
-                    )}
                   </span>
                   {revealed && (
                     <span className="lab-bundled-note">{item.note}</span>

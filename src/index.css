@@ -5903,15 +5903,6 @@ summary:focus-visible {
   background: rgba(93, 110, 68, 0.1);
 }
 
-/* ─── E2: the "no and" hint tag ─── */
-.lab-bundled-tag {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  color: var(--ink-mute);
-  white-space: nowrap;
-}
-
 /* ─── E4: new landing states + tally chips + satisfice note ─── */
 .lab-channel-tally.is-abandoned strong { color: var(--ink); }
 .lab-channel-tally.is-lumped strong { color: var(--route-w); }
