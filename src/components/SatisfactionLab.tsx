@@ -52,12 +52,30 @@ import {
   fpScreeners,
   fpStartActive,
   fpTasks,
+  labelScaleCast,
+  labelScaleDesigns,
+  labelScaleInventedCount,
+  labelScaleLandingFor,
+  labelScalePulledCount,
+  labelScaleTasks,
+  nominalOrderOptions,
   oatMilkCast,
   oatMilkConflation,
   oatMilkDesigns,
   oatMilkLandingFor,
   oatMilkPhantomOnScale,
   oatMilkTasks,
+  orderCast,
+  orderLandingFor,
+  orderMeters,
+  orderTasks,
+  ordinalOrderedLabels,
+  ordinalRandomizedLabels,
+  quantifierCast,
+  quantifierDesigns,
+  quantifierLandingFor,
+  quantifierMeters,
+  quantifierTasks,
   responseOptionKnowledgeMap,
   reviewDiagnosisAsk,
   reviewDiagnosisLabel,
@@ -84,7 +102,11 @@ import {
   type ExerciseReceipt,
   type FpScreenerId,
   type KnowledgeBranch,
+  type LabelScaleDesignId,
   type LedgerLevel,
+  type NominalOrderMode,
+  type OrdinalOrderMode,
+  type QuantifierDesignId,
   type ReviewDiagnosis,
   type SourceDrawer as SourceDrawerData
 } from "../data/lab-exercises";
@@ -92,7 +114,8 @@ import {
 /* The `#lab` page — SQLBolt-style multi-exercise practice on response-
    option-design issues, plus a closing 4-branch knowledge map (SLOT /
    RULER / PUSH / BOUNDARY) per output-L. Each exercise uses a distinct
-   primary verb (tinker / repair / sort / review) so the lab doesn't feel
+   primary verb (tinker / repair / gate / label / anchor / order / review)
+   so the lab doesn't feel
    like the same puzzle reskinned; wrong moves are designed cul-de-sacs,
    recoverable and informative (output-M). A prominent task band sits at
    the top of each task-driven exercise (so the visitor's eye meets the
@@ -111,11 +134,11 @@ export function SatisfactionLab() {
           Each exercise below is one real failure mode in how survey answer
           choices are written. Tinker with the controls, watch a fixed cast of
           people flow through, and read the consequence. Wrong moves are part
-          of the practice — they show what would have shipped. The closing
-          card maps what you covered (and what&rsquo;s still out there).
+          of the practice — they show what would have shipped. The closing map
+          shows what you covered (and what&rsquo;s still out there).
         </p>
         <p className="lab-route-meta">
-          Nine hands-on exercises · ≈25 minutes · any order. The people in
+          Twelve hands-on exercises · ≈35 minutes · any order. The people in
           each one are authored, illustrative cases — a fixed cast to reason
           about, not real respondents or survey statistics.
         </p>
@@ -147,7 +170,16 @@ export function SatisfactionLab() {
           <OatMilkExercise num={8} />
         </li>
         <li>
-          <ShipReviewExercise num={9} />
+          <VerbalLabelsExercise num={9} />
+        </li>
+        <li>
+          <QuantifierExercise num={10} />
+        </li>
+        <li>
+          <OrderExercise num={11} />
+        </li>
+        <li>
+          <ShipReviewExercise num={12} />
         </li>
       </ol>
 
@@ -1226,7 +1258,8 @@ function LedgerMeter({
 }
 
 /* ───────────────────────────────────────────────────────────────────────
-   Exercise 5 — Review the draft before it ships  (verb: REVIEW)
+   Display Exercise 12 / data id E5 — Review the draft before it ships
+   (verb: REVIEW)
    ─────────────────────────────────────────────────────────────────────── */
 
 const reviewDiagnoses: ReviewDiagnosis[] = [
@@ -2153,6 +2186,520 @@ function AcquiescenceExercise({ num }: { num: number }) {
 
       <PostReceipt exerciseId="E9" visible={allDone} />
       <SourceDrawer exerciseId="E9" visible={allDone} />
+    </ExerciseFrame>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Exercise 10 — Full verbal labels / anchors  (verb: LABEL)
+   ─────────────────────────────────────────────────────────────────────── */
+
+function VerbalLabelsExercise({ num }: { num: number }) {
+  const [designId, setDesignId] = useState<LabelScaleDesignId>("endpoint");
+  const [completed, setCompleted] = useState<string[]>([]);
+  const design = labelScaleDesigns.find((d) => d.id === designId)!;
+
+  useEffect(() => {
+    setCompleted((prev) => {
+      const active = labelScaleTasks.find((t) => !prev.includes(t.id));
+      if (active && active.pass(design)) return [...prev, active.id];
+      return prev;
+    });
+  }, [design]);
+
+  const activeTask =
+    labelScaleTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask
+    ? labelScaleTasks.indexOf(activeTask)
+    : labelScaleTasks.length;
+  const lastDoneId = completed[completed.length - 1];
+  const lastDoneTask = lastDoneId
+    ? labelScaleTasks.find((t) => t.id === lastDoneId) ?? null
+    : null;
+  const allDone = completed.length === labelScaleTasks.length;
+  const invented = labelScaleInventedCount(design);
+  const pulled = labelScalePulledCount(design);
+
+  return (
+    <ExerciseFrame
+      num={num}
+      title="Label the whole ruler, then make the words fair."
+      issue="Verbal anchors · fully labeled scales · semantic balance"
+      modifier="labels"
+      verb="label"
+    >
+      <p className="lab-exercise-setup">
+        Roast &amp; Brew wants a five-point visit rating. A numeric scale looks
+        tidy in the export, but if the middle points are blank, each visitor has
+        to invent the ruler. Try the obvious repair — then check whether the
+        new words are actually balanced.
+      </p>
+
+      <TaskBand
+        testidPrefix="lab-label-task"
+        items={labelScaleTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: labelScaleTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(design)
+              }
+            : null
+        }
+        passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
+        allDoneText={null}
+      />
+
+      <div className="lab-control">
+        <p className="lab-control-key">Pick the scale labels</p>
+        <div className="lab-label-designs" role="group" aria-label="Scale label designs">
+          {labelScaleDesigns.map((d) => (
+            <button
+              key={d.id}
+              type="button"
+              aria-pressed={designId === d.id}
+              className={`lab-label-design ${designId === d.id ? "is-on" : ""}`}
+              data-testid={`lab-label-design-${d.id}`}
+              onClick={() => setDesignId(d.id)}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <section className="lab-label-scale" aria-label="Candidate scale">
+        <p className="lab-label-stem lab-selectable">{design.stem}</p>
+        <ol className="lab-label-points">
+          {design.labels.map((label, i) => (
+            <li key={`${design.id}-${label}`} className="lab-label-point">
+              <span className="lab-label-point-num">{i + 1}</span>
+              <span className="lab-label-point-text lab-selectable">{label}</span>
+            </li>
+          ))}
+        </ol>
+        <p className="lab-label-note lab-selectable" aria-live="polite">
+          {design.note}
+        </p>
+      </section>
+
+      <ul className="lab-label-cast" aria-label="Where each visitor lands">
+        {labelScaleCast.map((v) => {
+          const land = labelScaleLandingFor(v, design);
+          return (
+            <li
+              key={v.id}
+              className={`lab-label-row is-${land.quality}`}
+              data-testid={`lab-label-landing-${v.id}`}
+            >
+              <span className="lab-label-who">
+                <strong>{v.name}</strong>
+                <span className="lab-label-story lab-selectable"> {v.story}</span>
+              </span>
+              <span className="lab-label-arrow" aria-hidden="true">→</span>
+              <span className="lab-label-pick">
+                {land.label}
+                <span className="lab-label-tag">{land.note}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="lab-channel-ledger" aria-label="Readouts">
+        <LedgerMeter
+          label="Middle defined"
+          hint={`${invented} visitor(s) still have to invent an unlabeled point.`}
+          level={invented === 0 ? "high" : "low"}
+        />
+        <LedgerMeter
+          label="Words balanced"
+          hint={
+            design.allPointsLabeled
+              ? `${pulled} visitor(s) are being nudged by positive label wording.`
+              : "Balance cannot be judged until every point has words."
+          }
+          level={pulled === 0 && design.balanced ? "high" : "low"}
+        />
+      </div>
+
+      {allDone && (
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-label-pass">
+          ✓ The numbers now carry shared meanings, and the words no longer lean
+          positive. Full verbal labels are not decoration: they are the ruler’s
+          tick marks. But every tick mark still has to be fair.
+        </p>
+      )}
+
+      <PostReceipt exerciseId="E10" visible={allDone} />
+      <SourceDrawer exerciseId="E10" visible={allDone} />
+    </ExerciseFrame>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Exercise 11 — Vague quantifiers / fake precision  (verb: ANCHOR)
+   ─────────────────────────────────────────────────────────────────────── */
+
+function QuantifierExercise({ num }: { num: number }) {
+  const [designId, setDesignId] = useState<QuantifierDesignId>("vague");
+  const [completed, setCompleted] = useState<string[]>([]);
+  const design = quantifierDesigns.find((d) => d.id === designId)!;
+  const meters = quantifierMeters(design);
+
+  useEffect(() => {
+    setCompleted((prev) => {
+      const active = quantifierTasks.find((t) => !prev.includes(t.id));
+      if (active && active.pass(design)) return [...prev, active.id];
+      return prev;
+    });
+  }, [design]);
+
+  const activeTask =
+    quantifierTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask
+    ? quantifierTasks.indexOf(activeTask)
+    : quantifierTasks.length;
+  const lastDoneId = completed[completed.length - 1];
+  const lastDoneTask = lastDoneId
+    ? quantifierTasks.find((t) => t.id === lastDoneId) ?? null
+    : null;
+  const allDone = completed.length === quantifierTasks.length;
+
+  return (
+    <ExerciseFrame
+      num={num}
+      title="Turn vague frequency words into a defensible ruler."
+      issue="Vague quantifiers · reference periods · fake precision"
+      modifier="quantifier"
+      verb="anchor"
+    >
+      <p className="lab-exercise-setup">
+        The owner wants to segment occasional versus regular visitors. The
+        first draft uses &ldquo;Rarely / Sometimes / Often.&rdquo; That sounds
+        natural, but those words are not units. Your job is to anchor the
+        question without replacing vagueness with fake precision.
+      </p>
+
+      <TaskBand
+        testidPrefix="lab-quant-task"
+        items={quantifierTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: quantifierTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(design)
+              }
+            : null
+        }
+        passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
+        allDoneText={null}
+      />
+
+      <div className="lab-control">
+        <p className="lab-control-key">Pick the answer format</p>
+        <div className="lab-quant-designs" role="group" aria-label="Frequency response designs">
+          {quantifierDesigns.map((d) => (
+            <button
+              key={d.id}
+              type="button"
+              aria-pressed={designId === d.id}
+              className={`lab-quant-design ${designId === d.id ? "is-on" : ""}`}
+              data-testid={`lab-quant-design-${d.id}`}
+              onClick={() => setDesignId(d.id)}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <section className="lab-quant-card" aria-label="Candidate question">
+        <p className="lab-quant-question lab-selectable">{design.question}</p>
+        <ul className="lab-quant-options">
+          {design.options.map((o) => (
+            <li key={`${design.id}-${o}`} className="lab-selectable">{o}</li>
+          ))}
+        </ul>
+        <p className="lab-quant-note lab-selectable" aria-live="polite">
+          {design.note}
+        </p>
+      </section>
+
+      <ul className="lab-quant-cast" aria-label="Where each visitor lands">
+        {quantifierCast.map((v) => {
+          const land = quantifierLandingFor(v, design);
+          return (
+            <li
+              key={v.id}
+              className={`lab-quant-row is-${land.quality}`}
+              data-testid={`lab-quant-landing-${v.id}`}
+            >
+              <span className="lab-quant-who">
+                <strong>{v.name}</strong>
+                <span className="lab-quant-story lab-selectable"> {v.story}</span>
+              </span>
+              <span className="lab-quant-arrow" aria-hidden="true">→</span>
+              <span className="lab-quant-pick">
+                {land.label}
+                <span className="lab-quant-tag">{land.note}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <div className="lab-channel-ledger" aria-label="Readouts">
+        <LedgerMeter
+          label="Vague words removed"
+          hint="Do the options stop asking respondents to translate counts into private frequency words?"
+          level={meters.distinctions}
+        />
+        <LedgerMeter
+          label="Precision honest"
+          hint="Does the format ask only for distinctions people can supply and analysts can use?"
+          level={meters.trustworthy}
+        />
+      </div>
+
+      {allDone && (
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-quant-pass">
+          ✓ You did not just swap soft words for hard-looking numbers. The
+          repaired item names the reference period, asks for countable ranges,
+          and keeps the precision matched to the decision.
+        </p>
+      )}
+
+      <PostReceipt exerciseId="E11" visible={allDone} />
+      <SourceDrawer exerciseId="E11" visible={allDone} />
+    </ExerciseFrame>
+  );
+}
+
+/* ───────────────────────────────────────────────────────────────────────
+   Exercise 12 — Standalone option order / randomization  (verb: ORDER)
+   ─────────────────────────────────────────────────────────────────────── */
+
+function OrderExercise({ num }: { num: number }) {
+  const [nominal, setNominal] = useState<NominalOrderMode>("fixed");
+  const [ordinal, setOrdinal] = useState<OrdinalOrderMode>("randomized");
+  const [completed, setCompleted] = useState<string[]>([]);
+  const meters = orderMeters(nominal, ordinal);
+  const nominalList =
+    nominal === "fixed"
+      ? nominalOrderOptions
+      : [
+          "Preview: first position changes by respondent",
+          "Example A: Search appears first",
+          "Example B: Walked by appears first",
+          "Example C: Podcast ad appears first"
+        ];
+  const ordinalList =
+    ordinal === "ordered" ? ordinalOrderedLabels : ordinalRandomizedLabels;
+
+  useEffect(() => {
+    setCompleted((prev) => {
+      const active = orderTasks.find((t) => !prev.includes(t.id));
+      if (active && active.pass(nominal, ordinal)) return [...prev, active.id];
+      return prev;
+    });
+  }, [nominal, ordinal]);
+
+  const activeTask = orderTasks.find((t) => !completed.includes(t.id)) ?? null;
+  const activeIndex = activeTask ? orderTasks.indexOf(activeTask) : orderTasks.length;
+  const lastDoneId = completed[completed.length - 1];
+  const lastDoneTask = lastDoneId
+    ? orderTasks.find((t) => t.id === lastDoneId) ?? null
+    : null;
+  const allDone = completed.length === orderTasks.length;
+
+  return (
+    <ExerciseFrame
+      num={num}
+      title="Randomize the right list, not every list."
+      issue="Response-order effects · primacy / recency · nominal vs ordinal"
+      modifier="order"
+      verb="order"
+    >
+      <p className="lab-exercise-setup">
+        Order is a real source of push, but the repair depends on what kind of
+        options you have. An unordered channel list can rotate so no option owns
+        the first slot. A satisfaction scale is a ruler — scramble it and you
+        break the continuum. This draft starts broken in both places: the
+        channel list is fixed for everyone, and the satisfaction labels are
+        scrambled.
+      </p>
+
+      <TaskBand
+        testidPrefix="lab-order-task"
+        items={orderTasks.map((t) => ({
+          id: t.id,
+          title: t.title,
+          done: completed.includes(t.id),
+          active: t.id === activeTask?.id
+        }))}
+        active={
+          activeTask
+            ? {
+                index: activeIndex + 1,
+                total: orderTasks.length,
+                title: activeTask.title,
+                brief: activeTask.brief,
+                hint: activeTask.hint(nominal, ordinal)
+              }
+            : null
+        }
+        passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
+        allDoneText={null}
+      />
+
+      <div className="lab-order-grid">
+        <section className="lab-order-panel">
+          <p className="lab-order-key">Unordered nominal list</p>
+          <p className="lab-order-question lab-selectable">
+            How did you hear about us?
+          </p>
+          <div className="lab-order-buttons" role="group" aria-label="Nominal list order">
+            <button
+              type="button"
+              aria-pressed={nominal === "fixed"}
+              className={`lab-order-btn ${nominal === "fixed" ? "is-on" : ""}`}
+              data-testid="lab-order-nominal-fixed"
+              onClick={() => setNominal("fixed")}
+            >
+              Fixed order
+            </button>
+            <button
+              type="button"
+              aria-pressed={nominal === "rotated"}
+              className={`lab-order-btn ${nominal === "rotated" ? "is-on" : ""}`}
+              data-testid="lab-order-nominal-rotated"
+              onClick={() => setNominal("rotated")}
+            >
+              Rotate / randomize
+            </button>
+          </div>
+          <ol className="lab-order-list">
+            {nominalList.map((o) => (
+              <li key={o} className="lab-selectable">{o}</li>
+            ))}
+          </ol>
+          {nominal === "rotated" && (
+            <p className="lab-order-preview-note lab-selectable">
+              Rotation preview, not a respondent-facing answer list.
+            </p>
+          )}
+        </section>
+
+        <section className="lab-order-panel">
+          <p className="lab-order-key">Ordered satisfaction scale</p>
+          <p className="lab-order-question lab-selectable">
+            How satisfied were you?
+          </p>
+          <div className="lab-order-buttons" role="group" aria-label="Ordinal scale order">
+            <button
+              type="button"
+              aria-pressed={ordinal === "randomized"}
+              className={`lab-order-btn ${ordinal === "randomized" ? "is-on" : ""}`}
+              data-testid="lab-order-ordinal-randomized"
+              onClick={() => setOrdinal("randomized")}
+            >
+              Randomize labels
+            </button>
+            <button
+              type="button"
+              aria-pressed={ordinal === "ordered"}
+              className={`lab-order-btn ${ordinal === "ordered" ? "is-on" : ""}`}
+              data-testid="lab-order-ordinal-ordered"
+              onClick={() => setOrdinal("ordered")}
+            >
+              Keep continuum
+            </button>
+          </div>
+          <ol className="lab-order-list">
+            {ordinalList.map((o) => (
+              <li key={o} className="lab-selectable">{o}</li>
+            ))}
+          </ol>
+        </section>
+      </div>
+
+      <ul className="lab-order-cast" aria-label="Where each visitor lands">
+        {orderCast.map((r) => {
+          const land = orderLandingFor(r, nominal, ordinal);
+          return (
+            <li
+              key={r.id}
+              className={`lab-order-row is-${land.nominalQuality} is-${land.ordinalQuality}`}
+              data-testid={`lab-order-landing-${r.id}`}
+            >
+              <span className="lab-order-who">
+                <strong>{r.name}</strong>
+                <span className="lab-order-story lab-selectable"> {r.story}</span>
+              </span>
+              <span className="lab-order-arrow" aria-hidden="true">→</span>
+              <span className="lab-order-pick">
+                {land.nominalPick}
+                <span className="lab-order-tag">
+                  {land.nominalQuality === "primacy"
+                    ? "first-option drift"
+                    : "reason preserved"}
+                  {" · "}
+                  {land.ordinalQuality === "scrambled"
+                    ? "scale order broken"
+                    : "scale order meaningful"}
+                </span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <p className="lab-order-mode lab-selectable">
+        Mode caveat: visual self-administered lists often raise primacy risk;
+        interviewer-read lists can raise recency risk. Either way, the first
+        decision is whether the list is unordered or a meaningful continuum.
+      </p>
+
+      <div className="lab-channel-ledger" aria-label="Readouts">
+        <LedgerMeter
+          label="Nominal order fair"
+          hint="Does any single channel always get the first-read advantage?"
+          level={meters.nominalFairness}
+        />
+        <LedgerMeter
+          label="Ordinal meaning intact"
+          hint="Does the satisfaction scale still read as a continuum?"
+          level={meters.ordinalMeaning}
+        />
+      </div>
+
+      {allDone && (
+        <p className="lab-exercise-pass lab-selectable" data-testid="lab-order-pass">
+          ✓ The fix is list-specific. Rotate unordered answer choices when order
+          would otherwise steer attention; keep ordinal response scales in a
+          meaningful sequence. Randomization is a tool, not a virtue by itself.
+        </p>
+      )}
+
+      <PostReceipt exerciseId="E12" visible={allDone} />
+      <SourceDrawer exerciseId="E12" visible={allDone} />
     </ExerciseFrame>
   );
 }

@@ -6,7 +6,7 @@ offers a set of places to put it, and the exported column remembers only the
 answer place and downstream code, not the private judgment that got it there.
 
 The deployed home (`/`) is a single SQLBolt-style practice page titled "The
-quiet ways a survey lies." It is organized as nine authored exercises, each a
+quiet ways a survey lies." It is organized as twelve authored exercises, each a
 different response-option failure mode. The visitor makes a small decision,
 sees an immediate consequence on a fixed cast of authored respondents, and then
 recognizes the missing rule. A broader exhibit — an archived twelve-puzzle
@@ -15,7 +15,7 @@ shelf — remains reachable by URL hash (see "Archived walk" below).
 
 ## The Lab Exercises
 
-The nine exercises each isolate one response-option failure mode and give the
+The twelve exercises each isolate one response-option failure mode and give the
 visitor a distinct mechanic, so the page does not feel like one puzzle
 reskinned: build a rating scale and watch a leading stem, a missing
 strong-negative, a dropped midpoint, and option order each move the result;
@@ -24,8 +24,11 @@ ineligible respondents do not inflate the denominator; fix overlapping age
 buckets; assemble a "how did you hear about us" answer set against a cast that
 satisfices or skips when their channel is missing; compare agree/disagree,
 reverse-worded, and item-specific formats for acquiescence; trade off scale
-length; tell a true neutral from "Don't know" from "Not applicable"; and, as a
-capstone, review a draft survey and diagnose each part.
+length; tell a true neutral from "Don't know" from "Not applicable"; label every
+point of a scale without positive-tilting the words; replace vague frequency
+words without falling into a fake 0-100 precision trap; decide when to rotate
+unordered options without scrambling an ordinal scale; and, as a capstone,
+review a draft survey and diagnose each part.
 
 Wrong moves are designed cul-de-sacs: recoverable, and informative because the
 consequence is shown on the cast rather than scored. The casts are authored and
@@ -43,7 +46,7 @@ and named sources. The label is load-bearing: it stops a contested claim
 being dressed the same as a textbook one (double-barreled items are
 unanswerable).
 
-A closing knowledge map organizes the nine exercises into four inspection
+A closing knowledge map organizes the twelve exercises into four inspection
 passes under the lab's own shorthand — SLOT (does every real answer have a
 place), RULER (does the scale work), PUSH (does the format push the answer),
 BOUNDARY (what would this inspection not prove). The map states plainly that
@@ -155,11 +158,11 @@ and casts are authored teaching material, labeled as authored and illustrative.
 Where the lab states a design principle, the per-exercise source drawers name
 the standard survey-methodology references behind it — Pew Research Center
 ("Writing Survey Questions"), Krosnick & Presser, Schuman & Presser, AAPOR,
-Saris & Gallhofer, Revilla/Saris/Krosnick, Willis, and the CDC/NCHS Q-Bank —
-and pair each with an evidence-strength label so the claim is not stated past
-what the source supports. The archived walk separately anchors its twelve
-puzzles to public Census Bureau cognitive-testing reports (see
-source-notes.md).
+Saris & Gallhofer, Revilla/Saris/Krosnick, Tourangeau, Fowler, Willis, the
+CDC/NCHS Q-Bank, and the Census DICE questionnaire-design guidance — and pair
+each with an evidence-strength label so the claim is not stated past what the
+source supports. The archived walk separately anchors its twelve puzzles to
+public Census Bureau cognitive-testing reports (see source-notes.md).
 
 The app should not imply that an authored cast's behavior is a source finding,
 a validated replacement wording, an official agency answer key, or a population

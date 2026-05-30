@@ -6834,13 +6834,215 @@ summary:focus-visible {
   padding-top: var(--s-2);
 }
 
+/* ─── E10–E12: labels, quantifiers, and order ─── */
+
+.lab-label-designs,
+.lab-quant-designs,
+.lab-order-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+.lab-order-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.lab-label-design,
+.lab-quant-design,
+.lab-order-btn {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  color: var(--ink-2);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.25;
+  padding: var(--s-3);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--mo-1) var(--mo-ease),
+    background-color var(--mo-1) var(--mo-ease),
+    border-color var(--mo-1) var(--mo-ease),
+    color var(--mo-1) var(--mo-ease);
+}
+.lab-label-design:hover:not(:disabled),
+.lab-label-design:focus-visible:not(:disabled),
+.lab-quant-design:hover:not(:disabled),
+.lab-quant-design:focus-visible:not(:disabled),
+.lab-order-btn:hover:not(:disabled),
+.lab-order-btn:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+.lab-label-design.is-on,
+.lab-quant-design.is-on,
+.lab-order-btn.is-on {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper-card);
+}
+
+.lab-label-scale,
+.lab-quant-card,
+.lab-order-panel {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: var(--s-4) var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.lab-label-stem,
+.lab-quant-question,
+.lab-order-question {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.lab-label-points,
+.lab-quant-options,
+.lab-order-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.lab-label-point,
+.lab-quant-options li,
+.lab-order-list li {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  padding: var(--s-2) var(--s-3);
+  font-size: 13.5px;
+  line-height: 1.25;
+  color: var(--ink-2);
+}
+.lab-label-point {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+.lab-label-point-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.lab-label-note,
+.lab-quant-note,
+.lab-order-mode {
+  margin: 0;
+  border-left: 3px solid var(--accent-soft);
+  background: var(--paper-2);
+  padding: var(--s-3) var(--s-4);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.lab-order-preview-note {
+  margin: calc(var(--s-1) * -1) 0 0;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.lab-label-cast,
+.lab-quant-cast,
+.lab-order-cast {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lab-label-row,
+.lab-quant-row,
+.lab-order-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.95fr);
+  gap: var(--s-3);
+  align-items: baseline;
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--line-faint);
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.lab-label-row:last-child,
+.lab-quant-row:last-child,
+.lab-order-row:last-child { border-bottom: 0; }
+.lab-label-who strong,
+.lab-quant-who strong,
+.lab-order-who strong {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--ink);
+}
+.lab-label-story,
+.lab-quant-story,
+.lab-order-story { color: var(--ink-soft); }
+.lab-label-arrow,
+.lab-quant-arrow,
+.lab-order-arrow { color: var(--ink-mute); }
+.lab-label-pick,
+.lab-quant-pick,
+.lab-order-pick {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+}
+.lab-label-tag,
+.lab-quant-tag,
+.lab-order-tag {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+.lab-label-row.is-clean .lab-label-pick,
+.lab-quant-row.is-clean .lab-quant-pick,
+.lab-order-row.is-clean .lab-order-pick { color: var(--route-r); }
+.lab-label-row.is-invented .lab-label-pick,
+.lab-quant-row.is-vague .lab-quant-pick,
+.lab-order-row.is-primacy .lab-order-pick { color: var(--accent-2); }
+.lab-label-row.is-pulled .lab-label-pick,
+.lab-quant-row.is-fake .lab-quant-pick,
+.lab-order-row.is-scrambled .lab-order-pick { color: var(--route-w); }
+
+.lab-order-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4);
+}
+.lab-order-key {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
 @media (forced-colors: active) {
   .lab-fp-screener,
   .lab-acq-judge-btn,
-  .lab-acq-design { border: 1px solid CanvasText; }
+  .lab-acq-design,
+  .lab-label-design,
+  .lab-quant-design,
+  .lab-order-btn { border: 1px solid CanvasText; }
   .lab-acq-judge-btn[aria-pressed="true"] { background: Highlight; color: HighlightText; }
   .lab-fp-screener.is-on,
-  .lab-acq-design.is-on { background: Highlight; color: HighlightText; }
+  .lab-acq-design.is-on,
+  .lab-label-design.is-on,
+  .lab-quant-design.is-on,
+  .lab-order-btn.is-on { background: Highlight; color: HighlightText; }
 }
 
 
@@ -6872,7 +7074,10 @@ summary:focus-visible {
     grid-template-columns: minmax(0, 1fr);
   }
   .lab-oat-designs,
-  .lab-acq-designs {
+  .lab-acq-designs,
+  .lab-label-designs,
+  .lab-quant-designs,
+  .lab-order-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -6887,17 +7092,26 @@ summary:focus-visible {
   .lab-scalelen-row,
   .lab-oat-row,
   .lab-fp-row,
-  .lab-acq-row {
+  .lab-acq-row,
+  .lab-label-row,
+  .lab-quant-row,
+  .lab-order-row {
     grid-template-columns: minmax(0, 1fr);
   }
   .lab-scalelen-arrow,
   .lab-oat-arrow,
   .lab-fp-arrow,
-  .lab-acq-arrow { display: none; }
+  .lab-acq-arrow,
+  .lab-label-arrow,
+  .lab-quant-arrow,
+  .lab-order-arrow { display: none; }
   .lab-scalelen-pick,
   .lab-oat-pick,
   .lab-fp-where,
-  .lab-acq-rec {
+  .lab-acq-rec,
+  .lab-label-pick,
+  .lab-quant-pick,
+  .lab-order-pick {
     text-align: left;
     padding-top: var(--s-1);
   }

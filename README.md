@@ -3,20 +3,23 @@
 Response Option Fit Lab is a static, interactive teaching lab about how survey
 answer choices can quietly distort what a survey measures. The deployed home is
 a single SQLBolt-style practice page, titled "The quiet ways a survey lies.",
-that walks the visitor through nine hands-on exercises — each one a different
+that walks the visitor through twelve hands-on exercises — each one a different
 way a response-option set can fail.
 
 Each exercise is compact and hands-on: tinker with a control (build a rating
 scale, fix overlapping age buckets, choose an answer set, screen a false
-premise, compare question formats), watch a fixed cast of authored respondents
-flow through, and read the consequence. Wrong moves are part of the practice —
+premise, compare question formats, label a scale, anchor vague frequency words,
+or set order rules), watch a fixed cast of authored respondents flow through,
+and read the consequence. Wrong moves are part of the practice —
 they show what would have shipped. A solved exercise opens a source drawer with
 the real field vocabulary for what you just did, an honest evidence-strength
 label, the boundary of what not to overclaim, and named sources. A closing
-knowledge map organizes the nine exercises into four inspection passes (the
+knowledge map organizes the twelve exercises into four inspection passes (the
 lab's own SLOT / RULER / PUSH / BOUNDARY shorthand), marks what it did and did
 not cover, distinguishes the lab's shorthand from real terms of art, and lists
-further reading.
+further reading. The latest expansion adds practiced coverage for full verbal
+labels, vague quantifiers / fake precision, and standalone option-order
+decisions.
 
 The cast in each exercise is illustrative — a small authored set to reason
 about, not real respondents or survey statistics. The one honesty rule is that
@@ -41,8 +44,9 @@ design principle, the per-exercise source drawers name the standard
 survey-methodology references behind it (Pew Research Center, Krosnick &
 Presser, AAPOR, the CDC/NCHS Q-Bank, and others) and carry an honest
 evidence-strength label, so a "textbook consensus" claim is not dressed the
-same as a "contested" one. The archived walk additionally anchors its twelve
-puzzles to public U.S. Census Bureau cognitive-testing reports. The app does
+same as a "contested" or "directionally supported" teaching contrast. The
+archived walk additionally anchors its twelve puzzles to public U.S. Census
+Bureau cognitive-testing reports. The app does
 not reproduce agency logos, screenshots, or PDF imagery, and it does not
 validate alternate wording.
 
@@ -103,7 +107,7 @@ readable with no horizontal overflow on desktop or mobile.
 ## Limitations
 
 - This is an interactive teaching lab, not a survey analyzer or measurement tool.
-- It is nine authored lab exercises (plus an archived twelve-puzzle walk) and
+- It is twelve authored lab exercises (plus an archived twelve-puzzle walk) and
   does not claim to generalize across all survey instruments, modes, or
   populations. The per-exercise casts are illustrative, not effect-size
   estimates.
@@ -127,8 +131,8 @@ interaction, motion, and visual feedback when those make the lab meaningfully
 better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
-Current measured production build: entry JavaScript `88 KB gzip` plus the
-lab home route chunk `37 KB gzip`, CSS `24 KB gzip`. Routes are
+Current measured production build: entry JavaScript `88.23 KB gzip` plus the
+lab home route chunk `47.29 KB gzip`, CSS `25.11 KB gzip`. Routes are
 code-split, so the walk, build, field guide, and reference shelf load on
 demand. All interaction is client-side; no third-party runtime requests are
 expected.

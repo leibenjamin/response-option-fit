@@ -74,7 +74,7 @@ PDF URLs, and short quoted respondent material where used. The source list is:
 
 ## Lab Exercise Sources
 
-The nine lab exercises are author-first. Their scenarios and casts are authored
+The twelve lab exercises are author-first. Their scenarios and casts are authored
 teaching material, labeled as authored and illustrative — they demonstrate a
 mechanism, not a prevalence or an effect size. What the lab borrows from the
 literature is the *principle* each exercise teaches, surfaced in the
@@ -103,11 +103,18 @@ Standard references the drawers name:
   pretesting and question evaluation.
 - **Tourangeau, Rips & Rasinski, "The Psychology of Survey Response" (2000)** —
   the four-step response process used as the closing expert lens.
+- **Fowler, "Improving Survey Questions"** — practical wording guidance,
+  including response-category interpretation and vague frequency wording.
+- **U.S. Census Bureau DICE Questionnaire Design Guidelines (April 1, 2026)** —
+  current public Census guidance for questionnaire components, mode-sensitive
+  presentation, and design documentation.
 
 Evidence-strength labels are deliberately conservative: contested or
 magnitude-dependent claims (reverse-worded items; an optimal "5-7" scale
-length; whether "Other" mainly captures higher-effort respondents) are marked
-contested or directionally supported, never textbook consensus.
+length; whether "Other" mainly captures higher-effort respondents; how much
+fully labeling a scale helps in a given mode; and the lab's 0-100
+fake-precision contrast) are marked contested or directionally supported, never
+textbook consensus.
 
 ## Guardrails
 

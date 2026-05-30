@@ -7,6 +7,11 @@ import {
 import { playFormVignettes, recordOutcome } from "../src/data/play-the-form";
 import { workbenchSpecimens } from "../src/data/workbench-specimens";
 import { interactivePuzzleBySpecimenId } from "../src/components/Workbench";
+import {
+  exerciseReceipts,
+  responseOptionKnowledgeMap,
+  sourceDrawers
+} from "../src/data/lab-exercises";
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:4173";
 
@@ -162,6 +167,35 @@ test.describe("Response Option Fit Lab - interaction contract", () => {
     expect(droveAlone!.results.some((item) => item.fate === "clean")).toBe(true);
     expect(droveAlone!.results.some((item) => item.fate === "forced")).toBe(true);
   });
+
+  test("lab receipt, source-drawer, and knowledge-map exercise links stay internally consistent", () => {
+    const exerciseIds = Object.keys(exerciseReceipts).sort();
+    expect(exerciseIds).toEqual([
+      "E1",
+      "E10",
+      "E11",
+      "E12",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6",
+      "E7",
+      "E8",
+      "E9"
+    ]);
+    expect(Object.keys(sourceDrawers).sort()).toEqual(exerciseIds);
+
+    const known = new Set(exerciseIds);
+    for (const branch of responseOptionKnowledgeMap) {
+      for (const node of branch.nodes) {
+        for (const id of node.exerciseIds) {
+          if (id === "future" || id === "none") continue;
+          expect(known.has(id), `${node.id} references known exercise ${id}`).toBe(true);
+        }
+      }
+    }
+  });
 });
 
 test.describe("Response Option Fit Lab - desktop", () => {
@@ -174,11 +208,14 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.locator("#survey-lab-title")).toContainText(
       "The quiet ways a survey lies"
     );
-    /* Nine exercise cards present. */
-    await expect(page.locator(".lab-exercise")).toHaveCount(9);
+    /* Twelve exercise cards present; the capstone stays last. */
+    await expect(page.locator(".lab-exercise")).toHaveCount(12);
+    await expect(page.locator(".lab-exercise").last()).toContainText(
+      "Review the draft before it ships"
+    );
     /* Each named with its primary verb. */
     const verbs = await page.locator(".lab-exercise-verb").allInnerTexts();
-    expect(verbs.length).toBe(9);
+    expect(verbs.length).toBe(12);
     /* The closing knowledge map carries the four SLOT/RULER/PUSH/BOUNDARY
        branches and the visual coverage gauge. */
     await expect(page.getByTestId("lab-km")).toBeVisible();
@@ -188,6 +225,10 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(
       page.locator(".lab-km-gauge-bar .lab-km-gauge-seg")
     ).toHaveCount(4);
+    await expect(page.locator(".lab-km-node--practiced")).toHaveCount(16);
+    await expect(page.locator(".lab-km-node--planned")).toHaveCount(2);
+    await expect(page.locator(".lab-km-node--didactic")).toHaveCount(2);
+    await expect(page.locator(".lab-km-node--outOfScope")).toHaveCount(3);
   });
 
   test("the lab's #lab and / hashes are equivalent", async ({ page }) => {
@@ -242,6 +283,105 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.getByTestId("lab-oat-toggle-na").click();
     await expect(page.getByTestId("lab-oat-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E7")).toBeVisible();
+  });
+
+  test("E3 bucket tinker: fixes overlaps, covers under-18, and splits the 45+ lump", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    await page.getByTestId("lab-bucket-end-b1").fill("24");
+    await page.getByTestId("lab-bucket-end-b2").fill("34");
+    await page.getByTestId("lab-bucket-end-b3").fill("44");
+    await expect(page.locator('[data-testid="lab-bucket-task-fix-overlap"].is-done')).toHaveCount(1);
+
+    await page.getByTestId("lab-bucket-start-b1").fill("0");
+    await expect(page.locator('[data-testid="lab-bucket-task-extend-low"].is-done')).toHaveCount(1);
+
+    await page.getByTestId("lab-bucket-end-b4").fill("64");
+    await page.getByTestId("lab-bucket-add").click();
+    const lastBucket = page.locator(".lab-bucket-row").last();
+    await lastBucket.locator("input").nth(1).fill("");
+    await expect(page.getByTestId("lab-receipt-E3")).toBeVisible();
+    await expect(page.getByTestId("lab-bucket-fit-sam")).toContainText("45–64");
+    await expect(page.getByTestId("lab-bucket-fit-pat")).toContainText("65+");
+  });
+
+  test("E10 verbal labels: endpoint-only and positive-tilted labels fail; a fully labeled balanced scale passes", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    await page.getByTestId("lab-label-design-tilted").click();
+    await expect(page.getByTestId("lab-label-pass")).toHaveCount(0);
+    await expect(page.getByTestId("lab-label-landing-cleo")).toContainText(
+      "neutral lands on"
+    );
+    await page.getByTestId("lab-label-design-balanced").click();
+    await expect(page.getByTestId("lab-label-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E10")).toBeVisible();
+  });
+
+  test("E11 quantifiers: vague words and a 0–100 precision trap fail; anchored ranges pass", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    await page.getByTestId("lab-quant-design-score").click();
+    await expect(page.getByTestId("lab-quant-pass")).toHaveCount(0);
+    await expect(page.locator('[data-testid="lab-quant-task-remove-vague-words"].is-done')).toHaveCount(1);
+    await expect(page.locator(".lab-exercise--quantifier")).toContainText(
+      "Vague words removed"
+    );
+    await expect(page.getByTestId("lab-quant-landing-ben")).toContainText(
+      "/100"
+    );
+    await page.getByTestId("lab-quant-design-anchored").click();
+    await expect(page.getByTestId("lab-quant-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E11")).toBeVisible();
+  });
+
+  test("E12 order: rotate unordered options but keep the ordinal satisfaction ruler ordered", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    await page.getByTestId("lab-order-nominal-rotated").click();
+    await expect(page.getByTestId("lab-order-pass")).toHaveCount(0);
+    await expect(page.getByTestId("lab-order-landing-eve")).toContainText(
+      "scale order broken"
+    );
+    await page.getByTestId("lab-order-ordinal-ordered").click();
+    await expect(page.getByTestId("lab-order-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E12")).toBeVisible();
+  });
+
+  test("E10-E12 source drawers expose conservative terms and evidence badges", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+
+    await page.getByTestId("lab-label-design-tilted").click();
+    await page.getByTestId("lab-label-design-balanced").click();
+    const labelDrawer = page.getByTestId("lab-source-E10");
+    await expect(labelDrawer).toBeVisible();
+    await expect(labelDrawer.locator(".lab-evidence-badge")).toHaveText(
+      "Directionally supported"
+    );
+    await labelDrawer.locator("summary").click();
+    await expect(labelDrawer).toContainText("verbal labels");
+    await expect(labelDrawer).toContainText("semantic balance");
+    await expect(labelDrawer).toContainText("Do not claim every scale");
+
+    await page.getByTestId("lab-quant-design-score").click();
+    await page.getByTestId("lab-quant-design-anchored").click();
+    const quantDrawer = page.getByTestId("lab-source-E11");
+    await expect(quantDrawer).toBeVisible();
+    await expect(quantDrawer.locator(".lab-evidence-badge")).toHaveText(
+      "Directionally supported"
+    );
+    await quantDrawer.locator("summary").click();
+    await expect(quantDrawer).toContainText("vague quantifiers");
+    await expect(quantDrawer).toContainText("false precision");
+    await expect(quantDrawer).toContainText("teaching contrast");
+
+    await page.getByTestId("lab-order-nominal-rotated").click();
+    await page.getByTestId("lab-order-ordinal-ordered").click();
+    const orderDrawer = page.getByTestId("lab-source-E12");
+    await expect(orderDrawer).toBeVisible();
+    await expect(orderDrawer.locator(".lab-evidence-badge")).toHaveText(
+      "Directionally supported"
+    );
+    await orderDrawer.locator("summary").click();
+    await expect(orderDrawer).toContainText("response-order effects");
+    await expect(orderDrawer).toContainText("ordinal scale");
+    await expect(orderDrawer).toContainText("mode");
   });
 
   test("E8 false premise: the loose and over-tight screeners are traps; only the basis screener cleans the denominator; the app screener then splits the drop-outs", async ({ page }) => {
