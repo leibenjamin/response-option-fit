@@ -301,28 +301,48 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("lab-receipt-E1")).toBeVisible();
   });
 
-  test("E4 channel set: 'Other' alone can't rescue low-effort visitors; the trim task needs the broad/Other padding gone", async ({ page }) => {
+  test("E4 channel set: read past the keyword-wrong stories to get everyone clean; then refit the SAME cast to an online-vs-offline decision", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
     const clean = page.locator(".lab-channel-tally.is-clean strong");
     await expect(clean).toHaveText("3");
-    /* Adding only "Other" does NOT raise the clean count — the missing-channel
+    /* "Other" alone does NOT raise the clean count — the missing-channel
        visitors are low-effort and won't write one in. */
     await page.getByTestId("lab-channel-other").click();
     await expect(clean).toHaveText("3");
-    /* Add the four missing specific channels → everyone lands clean. */
+    await page.getByTestId("lab-channel-other").click();
+    /* Task 1: add the four missing channels. The stories point the wrong way —
+       Pat's "podcast host" is Podcast (not word-of-mouth); Cleo's "receptionist"
+       is word-of-mouth (not a friend) — so you reason it out, not skim it. */
     for (const id of ["wordofmouth", "podcast", "walkby", "event"]) {
       await page.getByTestId(`lab-channel-${id}`).click();
     }
     await expect(clean).toHaveText("7");
-    /* Task 2 (trim) is still pending while the unused "Other" pads the list. */
-    await expect(page.getByTestId("lab-channel-pass")).toHaveCount(0);
-    /* Drop the padding → both tasks complete. */
-    await page.getByTestId("lab-channel-other").click();
-    await expect(page.getByTestId("lab-channel-pass")).toBeVisible();
-    await expect(page.getByTestId("lab-receipt-E4")).toBeVisible();
-    /* Cleo (an acquaintance referral) lands on a true word-of-mouth option. */
     await expect(page.getByTestId("lab-channel-landing-cleo")).toContainText(
       "Someone else mentioned us"
+    );
+    /* Task 2 (fit) still pending — the all-clean per-channel list isn't it. */
+    await expect(page.getByTestId("lab-channel-pass")).toHaveCount(0);
+    /* Refit for "online vs offline": drop all eight specifics, add the two
+       broad buckets. The bucket that was WRONG in Task 1 is now RIGHT. */
+    for (const id of [
+      "social",
+      "search",
+      "friend",
+      "print",
+      "wordofmouth",
+      "podcast",
+      "walkby",
+      "event"
+    ]) {
+      await page.getByTestId(`lab-channel-${id}`).click();
+    }
+    await page.getByTestId("lab-channel-online_broad").click();
+    await page.getByTestId("lab-channel-offline_broad").click();
+    /* Everyone lumped into a broad bucket → both tasks done. */
+    await expect(page.getByTestId("lab-channel-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E4")).toBeVisible();
+    await expect(page.locator(".lab-channel-tally.is-lumped strong")).toHaveText(
+      "7"
     );
   });
 
