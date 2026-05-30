@@ -2490,8 +2490,8 @@ export const furtherReading: ReadingItem[] = [
   },
   {
     kind: "public-resource",
-    name: "U.S. Census Bureau — DICE Questionnaire Design Guidelines (April 1, 2026)",
-    what: "Current public design guidance for Census web, phone, and in-person instruments, including question components and mode-specific presentation."
+    name: "U.S. Census Bureau — DICE design guidelines: “…Web Surveys and Censuses” + “…CAPI and CATI Instruments” (v. April 1, 2026)",
+    what: "Current public Census questionnaire-design guidance for web, phone, and in-person instruments — question components and mode-specific presentation. (DICE = Data Ingest and Collection for the Enterprise.)"
   },
   {
     kind: "public-resource",
