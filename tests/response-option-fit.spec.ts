@@ -267,11 +267,21 @@ test.describe("Response Option Fit Lab - desktop", () => {
     );
   });
 
-  test("E9 acquiescence: a reverse-worded check only detects yea-sayers; item-specific wording is the real fix", async ({ page }) => {
+  test("E9 acquiescence: switching to the reverse-worded check isn't enough — you must judge that it detects without measuring; then item-specific wording is the fix", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    /* Task 1 wants the reverse-worded check (detection); Task 2 wants the
-       item-specific wording (measurement). */
+    /* Task 1: switch to the reverse-worded check — the judgment gate appears,
+       and switching alone does NOT pass. */
     await page.getByTestId("lab-acq-design-reverse").click();
+    await expect(page.getByTestId("lab-acq-judge")).toBeVisible();
+    await expect(page.getByTestId("lab-acq-pass")).toHaveCount(0);
+    /* The tempting wrong judgment ("it fixed it") shows a correction and does
+       not advance the task. */
+    await page.getByTestId("lab-acq-judge-fixed").click();
+    await expect(page.getByTestId("lab-acq-judge-wrong")).toBeVisible();
+    await expect(page.getByTestId("lab-acq-pass")).toHaveCount(0);
+    /* The right judgment (detection ≠ measurement) clears Task 1. */
+    await page.getByTestId("lab-acq-judge-flagged").click();
+    /* Task 2 still pending until item-specific wording. */
     await expect(page.getByTestId("lab-acq-pass")).toHaveCount(0);
     await page.getByTestId("lab-acq-design-item").click();
     await expect(page.getByTestId("lab-acq-pass")).toBeVisible();

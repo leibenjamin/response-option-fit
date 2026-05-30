@@ -1464,13 +1464,20 @@ export type AcqRespondent = {
   story: string;
 };
 
+/* The stories give only each person's REAL experience — no "easy agreer"
+   labels. The yea-saying reveals itself as the mismatch: Cleo felt brushed off,
+   yet the agree/disagree format records her "Agree, the barista was friendly."
+   The user reads that contradiction instead of being told who's a yea-sayer.
+   (Eve is a yea-sayer who genuinely liked her visit — so her Agree is
+   coincidentally accurate, yet the reverse-worded check still flags her: the
+   check catches a response STYLE, not a wrong answer.) */
 export const acqCast: AcqRespondent[] = [
-  { id: "ada", name: "Ada", trueView: "friendly", yeaSayer: false, story: "the barista was genuinely warm" },
+  { id: "ada", name: "Ada", trueView: "friendly", yeaSayer: false, story: "the barista was genuinely warm with her" },
   { id: "ben", name: "Ben", trueView: "unfriendly", yeaSayer: false, story: "found the barista cold and rushed" },
-  { id: "cleo", name: "Cleo", trueView: "unfriendly", yeaSayer: true, story: "felt brushed off — but tends to agree with whatever a form says" },
-  { id: "dev", name: "Dev", trueView: "mixed", yeaSayer: true, story: "a so-so encounter; an easy agreer" },
-  { id: "eve", name: "Eve", trueView: "friendly", yeaSayer: true, story: "had a nice visit; also agrees easily" },
-  { id: "fin", name: "Fin", trueView: "unfriendly", yeaSayer: false, story: "plainly unimpressed with the service" }
+  { id: "cleo", name: "Cleo", trueView: "unfriendly", yeaSayer: true, story: "felt brushed off at the counter" },
+  { id: "dev", name: "Dev", trueView: "mixed", yeaSayer: true, story: "had a so-so, forgettable encounter" },
+  { id: "eve", name: "Eve", trueView: "friendly", yeaSayer: true, story: "had a genuinely nice visit" },
+  { id: "fin", name: "Fin", trueView: "unfriendly", yeaSayer: false, story: "was plainly unimpressed with the service" }
 ];
 
 export type AcqDesign = "agree" | "reverse" | "item";
@@ -1524,41 +1531,58 @@ export function acqTrackTrueLevel(d: AcqDesign): LedgerLevel {
   return "low";
 }
 
+/* Task 1's pass needs the visitor's JUDGMENT, not just the active design:
+   switching to the reverse-worded check is the textbook move, but it only
+   completes the task once the visitor recognizes the check DETECTED the
+   yea-sayers without MEASURING anything (judgedFlagged). The tempting wrong
+   judgment ("it fixed it") is the productive-failure beat. */
 export type AcqTask = {
   id: "detect" | "measure";
   title: string;
   brief: string;
-  pass: (d: AcqDesign) => boolean;
+  pass: (d: AcqDesign, judgedFlagged: boolean) => boolean;
   passText: string;
-  hint: (d: AcqDesign) => string;
+  hint: (d: AcqDesign, judgedFlagged: boolean) => string;
 };
+
+/* The judgment prompt shown once the reverse-worded check is active. */
+export const acqJudgmentQuestion =
+  "The check flags everyone who agreed with both “friendly” and “unfriendly.” Did it fix your measurement of how friendly the barista actually was?";
+export const acqJudgmentFixed = "Yes — the fakers are caught";
+export const acqJudgmentFlagged = "No — it flagged them, but the friendly number didn't move";
+export const acqJudgmentWrongNote =
+  "Look again. The headline still reads the same number “agree the barista was friendly” — the flagged answers are still inside it. And you can't just delete the three: one of them genuinely did find the barista friendly. You now know WHO answers unreliably, not what any of them actually think.";
 
 export const acqTasks: AcqTask[] = [
   {
     id: "detect",
-    title: "Try the textbook fix: catch the yea-sayers",
+    title: "Try the textbook fix — then judge it",
     brief:
-      "Agreement looks high — but is it real? The standard move is a reverse-worded check: ask the same thing the opposite way and flag anyone who agrees with both. Switch to that design and see who it catches.",
-    pass: (d) => d === "reverse",
+      "Agreement reads high — but read the rows: some “Agree, the barista was friendly” answers come from people who felt brushed off or so-so. They tick Agree on anything. The standard move is a reverse-worded check (ask the opposite too, flag anyone who agrees with both). Add it — then decide whether it actually fixed your measurement.",
+    pass: (d, judgedFlagged) => d === "reverse" && judgedFlagged,
     passText:
-      "✓ It flags the three easy-agreers — they “agreed” the barista was both friendly and unfriendly. Useful to know. But look closely: you still don't know what those three actually think, two genuinely-careful respondents had to untangle a double-worded item, and the headline agreement number on the original item didn't budge. You detected the problem; you didn't measure around it.",
-    hint: (d) =>
-      d === "reverse"
-        ? "Reverse-worded check is on — see who gets flagged."
-        : "Switch to the “+ reverse-worded check” design."
+      "✓ Right call. The check flags the easy-agreers — useful to know — but your friendly number didn't move: their “Agree”s are still in it, two careful respondents had to untangle a double-worded item, and you still don't know what the flagged three actually think. You detected the problem; you didn't measure around it.",
+    hint: (d, judgedFlagged) =>
+      d !== "reverse"
+        ? "Switch to the “+ reverse-worded check” design to try the textbook fix."
+        : judgedFlagged
+          ? "You judged it right — detection isn't measurement. On to Task 2."
+          : "It's on — now make the call below: did flagging the agree-with-everything respondents actually fix what you're measuring?"
   },
   {
     id: "measure",
-    title: "Now actually measure the thing",
+    title: "Now actually measure it",
     brief:
-      "Drop the agree/disagree framing entirely and ask it item-specifically — “how friendly was the barista?” on a scale. With nothing to simply agree with, the acquiescence pull disappears.",
+      "Detection isn't measurement. Of the three designs, pick the one that removes the thing there is to agree with — so a recorded answer has to track the person's real view, not their willingness to nod along.",
     pass: (d) => d === "item" && acqTrackTrueLevel(d) === "high",
     passText:
-      "✓ Every recorded answer now matches the respondent's real view, because there's no statement to nod along to — you asked them to rate, not to agree. That's the durable fix: where you can, replace agree/disagree with item-specific response options. (Reverse-coded items are a detection patch, not a substitute.)",
+      "✓ Every recorded answer now matches the respondent's real view, because there's no statement to nod along to — you asked them to rate, not to agree. That's the durable fix: where you can, replace agree/disagree with item-specific response options. (A reverse-worded check is a detection patch, not a substitute.)",
     hint: (d) =>
       d === "item"
         ? "Answers track true views now."
-        : "Switch to the item-specific wording."
+        : d === "reverse"
+          ? "The check detects, it doesn't measure. Which design removes the statement people nod along to?"
+          : "Agree/disagree is what invites the nodding. Which design asks them to rate instead of agree?"
   }
 ];
 
