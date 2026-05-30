@@ -19,6 +19,10 @@ import {
   acqDesignNote,
   acqDesignStem,
   acqFlagged,
+  acqJudgmentFixed,
+  acqJudgmentFlagged,
+  acqJudgmentQuestion,
+  acqJudgmentWrongNote,
   acqMatchesTrue,
   acqRecorded,
   acqTasks,
@@ -1918,17 +1922,21 @@ function FalsePremiseExercise({ num }: { num: number }) {
    Exercise 6 (data id E9) — Acquiescence / yea-saying  (verb: COMPARE)
    ─────────────────────────────────────────────────────────────────────── */
 
+type AcqJudgment = "none" | "fixed" | "flagged";
+
 function AcquiescenceExercise({ num }: { num: number }) {
   const [designId, setDesignId] = useState<AcqDesign>("agree");
+  const [judgment, setJudgment] = useState<AcqJudgment>("none");
   const [completed, setCompleted] = useState<string[]>([]);
 
   useEffect(() => {
     setCompleted((prev) => {
       const active = acqTasks.find((t) => !prev.includes(t.id));
-      if (active && active.pass(designId)) return [...prev, active.id];
+      if (active && active.pass(designId, judgment === "flagged"))
+        return [...prev, active.id];
       return prev;
     });
-  }, [designId]);
+  }, [designId, judgment]);
 
   const activeTask = acqTasks.find((t) => !completed.includes(t.id)) ?? null;
   const activeIndex = activeTask ? acqTasks.indexOf(activeTask) : acqTasks.length;
@@ -1939,6 +1947,9 @@ function AcquiescenceExercise({ num }: { num: number }) {
   const allDone = completed.length === acqTasks.length;
   const level = acqTrackTrueLevel(designId);
   const designs: AcqDesign[] = ["agree", "reverse", "item"];
+  const task1Done = completed.includes("detect");
+  const flaggedCount = acqCast.filter((c) => acqFlagged(c, designId)).length;
+  const showJudgment = designId === "reverse" && !task1Done;
 
   return (
     <ExerciseFrame
@@ -1949,10 +1960,11 @@ function AcquiescenceExercise({ num }: { num: number }) {
       verb="compare"
     >
       <p className="lab-exercise-setup">
-        Roast &amp; Brew wants to know how friendly its barista was. Six
-        customers answer; three of them are easy agreers who tend to tick
-        &ldquo;Agree&rdquo; on anything. Compare three ways to ask, and watch
-        whether the recorded answers track what people actually felt.
+        Roast &amp; Brew wants to know how friendly its barista was, and asks
+        customers to agree or disagree: &ldquo;The barista was friendly.&rdquo;
+        Six answer. Read each row — a recorded &ldquo;Agree&rdquo; next to
+        someone who felt brushed off is the tell. Your job is to make the survey
+        measure friendliness, not agreeableness.
       </p>
 
       <TaskBand
@@ -1970,7 +1982,7 @@ function AcquiescenceExercise({ num }: { num: number }) {
                 total: acqTasks.length,
                 title: activeTask.title,
                 brief: activeTask.brief,
-                hint: activeTask.hint(designId)
+                hint: activeTask.hint(designId, judgment === "flagged")
               }
             : null
         }
@@ -2037,11 +2049,55 @@ function AcquiescenceExercise({ num }: { num: number }) {
         />
       </div>
 
+      {showJudgment && (
+        <div className="lab-acq-judge" data-testid="lab-acq-judge">
+          <p className="lab-acq-judge-q lab-selectable">
+            {flaggedCount > 0
+              ? `It flagged ${flaggedCount} answers as inconsistent. `
+              : ""}
+            {acqJudgmentQuestion}
+          </p>
+          <div
+            className="lab-acq-judge-choices"
+            role="group"
+            aria-label="Your judgment"
+          >
+            <button
+              type="button"
+              className={`lab-acq-judge-btn ${judgment === "fixed" ? "is-wrong" : ""}`}
+              aria-pressed={judgment === "fixed"}
+              data-testid="lab-acq-judge-fixed"
+              onClick={() => setJudgment("fixed")}
+            >
+              {acqJudgmentFixed}
+            </button>
+            <button
+              type="button"
+              className="lab-acq-judge-btn"
+              aria-pressed={judgment === "flagged"}
+              data-testid="lab-acq-judge-flagged"
+              onClick={() => setJudgment("flagged")}
+            >
+              {acqJudgmentFlagged}
+            </button>
+          </div>
+          {judgment === "fixed" && (
+            <p
+              className="lab-acq-judge-wrong lab-selectable"
+              aria-live="polite"
+              data-testid="lab-acq-judge-wrong"
+            >
+              {acqJudgmentWrongNote}
+            </p>
+          )}
+        </div>
+      )}
+
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-acq-pass">
           ✓ Where you can, swap agree/disagree for item-specific wording: with
           nothing to nod along to, the acquiescence pull disappears and answers
-          track real views. A reverse-coded check is a detection patch — useful
+          track real views. A reverse-worded check is a detection patch — useful
           to flag the easy agreers, but it doesn&rsquo;t measure them, and it
           taxes everyone else.
         </p>

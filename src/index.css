@@ -6624,9 +6624,76 @@ summary:focus-visible {
 .lab-acq-row.is-match .lab-acq-rec { color: var(--route-r); }
 .lab-acq-row.is-mismatch .lab-acq-rec { color: var(--accent-2); }
 
+/* The detection-vs-measurement judgment (the productive-failure beat) */
+.lab-acq-judge {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--paper-card);
+  padding: var(--s-3) var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.lab-acq-judge-q {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.lab-acq-judge-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.lab-acq-judge-btn {
+  flex: 1 1 0;
+  min-width: 12rem;
+  border: 1px solid var(--line-soft);
+  background: var(--paper);
+  color: var(--ink-2);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  padding: var(--s-2) var(--s-3);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform var(--mo-1) var(--mo-ease),
+    border-color var(--mo-1) var(--mo-ease),
+    background-color var(--mo-1) var(--mo-ease),
+    color var(--mo-1) var(--mo-ease);
+}
+.lab-acq-judge-btn:hover:not(:disabled),
+.lab-acq-judge-btn:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+.lab-acq-judge-btn[aria-pressed="true"] {
+  border-color: var(--route-r);
+  background: rgba(93, 110, 68, 0.1);
+  color: var(--ink);
+}
+.lab-acq-judge-btn.is-wrong[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+  color: var(--accent-2);
+}
+.lab-acq-judge-wrong {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line-faint);
+  padding-top: var(--s-2);
+}
+
 @media (forced-colors: active) {
   .lab-fp-screener,
+  .lab-acq-judge-btn,
   .lab-acq-design { border: 1px solid CanvasText; }
+  .lab-acq-judge-btn[aria-pressed="true"] { background: Highlight; color: HighlightText; }
   .lab-fp-screener.is-on,
   .lab-acq-design.is-on { background: Highlight; color: HighlightText; }
 }
