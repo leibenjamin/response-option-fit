@@ -1205,7 +1205,7 @@ export const oatMilkTasks: OatMilkTask[] = [
     id: "off-scale",
     title: "Get the non-answers off the satisfaction scale",
     brief:
-      "Three visitors have no view of the oat milk to give — one has no opinion, two never tried it. Right now they're forced onto Neutral, inflating it. Flip through the designs and find one where nobody is pushed onto the scale who shouldn't be there.",
+      "Three visitors have no view of the oat milk to give — one has no opinion, two never tried it. Right now they're forced onto Neutral, inflating it. Add the opt-out that gives the no-view visitors somewhere honest to go, so nobody is pushed onto the satisfaction scale who shouldn't be there.",
     pass: (d) => oatMilkPhantomOnScale(d) === 0,
     passText:
       "✓ The satisfaction scale now holds only people with a real view. Notice the headline “% satisfied” just changed — the forced answers were quietly shaping it.",
@@ -1218,7 +1218,7 @@ export const oatMilkTasks: OatMilkTask[] = [
     id: "distinct-opt-outs",
     title: "Keep each opt-out meaning one thing",
     brief:
-      "Look closely at the design you picked. A “Don't know” bucket that secretly contains people who NEVER TRIED the drink isn't honest data either — “no opinion” and “never tried” are different states. Find the design where every opt-out means exactly one thing.",
+      "Look closely at what you just added. A “Don't know” bucket that secretly contains people who NEVER TRIED the drink isn't honest data either — “no opinion” and “never tried” are different states. Add the second opt-out so every option means exactly one thing.",
     pass: (d) => oatMilkPhantomOnScale(d) === 0 && oatMilkConflation(d) === 0,
     passText:
       "✓ A true Neutral (tried it, felt mid), a “Don't know” (has a basis to judge, no opinion), and a “Not applicable” (no basis at all) are three different states — and now each option holds exactly one of them. An opt-out didn't weaken the survey; it's what makes the rest of the numbers trustworthy.",

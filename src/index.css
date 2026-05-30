@@ -3964,6 +3964,13 @@ summary:focus-visible {
   color: var(--ink);
 }
 
+/* The committed prediction keeps a quiet dashed outline once revealed. */
+.lab-seg.is-predicted:not(.is-on) {
+  border-style: dashed;
+  border-color: var(--route-w);
+  color: var(--route-w);
+}
+
 .lab-scale {
   list-style: none;
   margin: 0;
@@ -6357,6 +6364,23 @@ summary:focus-visible {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+.lab-scalelen-predict {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.lab-scalelen-reveal {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  border-left: 3px solid var(--route-w);
+  padding-left: var(--s-3);
+}
+
 .lab-scalelen-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
@@ -6461,6 +6485,9 @@ summary:focus-visible {
   padding: var(--s-3) var(--s-4);
   text-align: left;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
   transition:
     transform var(--mo-1) var(--mo-ease),
     background-color var(--mo-1) var(--mo-ease),
@@ -6473,10 +6500,16 @@ summary:focus-visible {
   color: var(--accent-2);
 }
 .lab-oat-design.is-on {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper-card);
+  border-color: var(--route-r);
+  background: rgba(93, 110, 68, 0.1);
+  color: var(--ink);
 }
+.lab-oat-toggle-mark {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+.lab-oat-design.is-on .lab-oat-toggle-mark { color: var(--route-r); }
 .lab-oat-note {
   margin: 0;
   border-left: 3px solid var(--accent-soft);

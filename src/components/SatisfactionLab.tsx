@@ -81,7 +81,6 @@ import {
   type AgeBucket,
   type ChannelLandingState,
   type CoverageStatus,
-  type E7Design,
   type ExerciseReceipt,
   type FpScreenerId,
   type KnowledgeBranch,
@@ -1417,15 +1416,26 @@ function ShipReviewExercise({ num }: { num: number }) {
 
 function ScaleLengthExercise({ num }: { num: number }) {
   const [points, setPoints] = useState<number>(scaleLengthStart);
+  /* Predict-then-reveal: the visitor commits a guess before the meters appear,
+     so the exercise is "commit, then check," not "click all five til both go
+     green." `predicted` = their first pick; null = haven't guessed yet. */
+  const [predicted, setPredicted] = useState<number | null>(null);
   const [completed, setCompleted] = useState<string[]>([]);
+  const hasPredicted = predicted !== null;
 
   useEffect(() => {
+    if (!hasPredicted) return;
     setCompleted((prev) => {
       const active = scaleTasks.find((t) => !prev.includes(t.id));
       if (active && active.pass(points)) return [...prev, active.id];
       return prev;
     });
-  }, [points]);
+  }, [points, hasPredicted]);
+
+  const pick = (n: number) => {
+    if (predicted === null) setPredicted(n);
+    setPoints(n);
+  };
 
   const activeTask = scaleTasks.find((t) => !completed.includes(t.id)) ?? null;
   const activeIndex = activeTask ? scaleTasks.indexOf(activeTask) : scaleTasks.length;
@@ -1447,9 +1457,9 @@ function ScaleLengthExercise({ num }: { num: number }) {
     >
       <p className="lab-exercise-setup">
         The same satisfaction question, six visitors with real but in-between
-        feelings (shown here on a 0–100 axis). You choose how many points the
-        answer scale offers. More points feels more precise — watch the two
-        meters and find out whether it actually is.
+        feelings. You choose how many points the answer scale offers. More
+        points <em>feels</em> more precise — so before the meters reveal, commit
+        a guess: which length reads well on both? Then tinker and find out.
       </p>
 
       <TaskBand
@@ -1480,7 +1490,11 @@ function ScaleLengthExercise({ num }: { num: number }) {
       />
 
       <div className="lab-control">
-        <p className="lab-control-key">Number of scale points</p>
+        <p className="lab-control-key">
+          {hasPredicted
+            ? "Number of scale points"
+            : "Predict first — which length reads well on BOTH meters?"}
+        </p>
         <div
           className="lab-segmented lab-segmented--wide"
           role="group"
@@ -1490,16 +1504,30 @@ function ScaleLengthExercise({ num }: { num: number }) {
             <button
               key={n}
               type="button"
-              className={`lab-seg ${points === n ? "is-on" : ""}`}
+              className={`lab-seg ${points === n && hasPredicted ? "is-on" : ""} ${predicted === n ? "is-predicted" : ""}`}
               aria-pressed={points === n}
               data-testid={`lab-scale-points-${n}`}
-              onClick={() => setPoints(n)}
+              onClick={() => pick(n)}
             >
               {n} points
             </button>
           ))}
         </div>
       </div>
+
+      {!hasPredicted && (
+        <p className="lab-scalelen-predict lab-selectable">
+          Pick one to commit your guess. No peeking — the cast and the meters
+          appear after you choose.
+        </p>
+      )}
+
+      {hasPredicted && (
+        <>
+          <p className="lab-scalelen-reveal lab-selectable" aria-live="polite">
+            You predicted <strong>{predicted} points</strong>. Here&rsquo;s how
+            every length actually does — tinker and compare.
+          </p>
 
       <div className="lab-scalelen-grid">
         <section className="lab-scalelen-scale" aria-label="The scale as offered">
@@ -1565,6 +1593,8 @@ function ScaleLengthExercise({ num }: { num: number }) {
           level={meters.trustworthy}
         />
       </div>
+        </>
+      )}
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-scale-pass">
@@ -1587,9 +1617,13 @@ function ScaleLengthExercise({ num }: { num: number }) {
    ─────────────────────────────────────────────────────────────────────── */
 
 function OatMilkExercise({ num }: { num: number }) {
-  const [designId, setDesignId] = useState<E7Design["id"]>("none");
+  /* Two independent opt-out toggles instead of four preset tabs: the visitor
+     BUILDS the opt-out set ("which does this question need?") and discovers that
+     a "Don't know" alone looks done but secretly lumps the never-tried in. */
+  const [dk, setDk] = useState(false);
+  const [na, setNa] = useState(false);
   const [completed, setCompleted] = useState<string[]>([]);
-  const design = oatMilkDesigns.find((d) => d.id === designId)!;
+  const design = oatMilkDesigns.find((d) => d.hasDK === dk && d.hasNA === na)!;
 
   useEffect(() => {
     setCompleted((prev) => {
@@ -1598,7 +1632,7 @@ function OatMilkExercise({ num }: { num: number }) {
       return prev;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [designId]);
+  }, [dk, na]);
 
   const activeTask = oatMilkTasks.find((t) => !completed.includes(t.id)) ?? null;
   const activeIndex = activeTask ? oatMilkTasks.indexOf(activeTask) : oatMilkTasks.length;
@@ -1620,10 +1654,10 @@ function OatMilkExercise({ num }: { num: number }) {
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew asks how satisfied you are with its new oat-milk
-        drinks. Seven visitors answer — but three have no real view to give
-        (one has no opinion, two never tried it). Flip between the four
-        designs and watch where everyone lands. The lesson is in what each
-        opt-out does, and what its absence does.
+        drinks, on a five-point scale. Seven visitors answer — but three have no
+        real view to give (one has no opinion, two never tried it). Decide which
+        opt-outs to add, and watch where everyone lands. Careful: the obvious
+        first fix isn&rsquo;t the whole fix.
       </p>
 
       <TaskBand
@@ -1650,24 +1684,38 @@ function OatMilkExercise({ num }: { num: number }) {
       />
 
       <div className="lab-control">
-        <p className="lab-control-key">The question design — tap to compare</p>
+        <p className="lab-control-key">
+          The five-point scale is always there. Add opt-outs:
+        </p>
         <div
           className="lab-oat-designs"
           role="group"
-          aria-label="Survey designs"
+          aria-label="Opt-out options to add"
         >
-          {oatMilkDesigns.map((d) => (
-            <button
-              key={d.id}
-              type="button"
-              aria-pressed={designId === d.id}
-              className={`lab-oat-design ${designId === d.id ? "is-on" : ""}`}
-              data-testid={`lab-oat-design-${d.id}`}
-              onClick={() => setDesignId(d.id)}
-            >
-              {d.label}
-            </button>
-          ))}
+          <button
+            type="button"
+            aria-pressed={dk}
+            className={`lab-oat-design ${dk ? "is-on" : ""}`}
+            data-testid="lab-oat-toggle-dk"
+            onClick={() => setDk((v) => !v)}
+          >
+            <span className="lab-oat-toggle-mark" aria-hidden="true">
+              {dk ? "✓" : "+"}
+            </span>
+            Add &ldquo;Don&rsquo;t know / no opinion&rdquo;
+          </button>
+          <button
+            type="button"
+            aria-pressed={na}
+            className={`lab-oat-design ${na ? "is-on" : ""}`}
+            data-testid="lab-oat-toggle-na"
+            onClick={() => setNa((v) => !v)}
+          >
+            <span className="lab-oat-toggle-mark" aria-hidden="true">
+              {na ? "✓" : "+"}
+            </span>
+            Add &ldquo;Not applicable / haven&rsquo;t tried it&rdquo;
+          </button>
         </div>
       </div>
 
