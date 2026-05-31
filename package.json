@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build:subpath": "VITE_BASE_PATH=/response-option-fit/ npm run build",
+    "og": "node scripts/build-og.mjs",
     "preview": "vite preview",
     "test": "playwright test"
   },
