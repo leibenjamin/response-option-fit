@@ -140,3 +140,71 @@ diagnostic. It removes Worker behavior from the variables.
 
 Then bind the generated static assets to the Worker as `ASSETS` in the
 Cloudflare configuration for the deployment target.
+
+## Analytics (Cloudflare Web Analytics)
+
+The project's posture is privacy-respecting, not analytics-free: a cookieless,
+aggregate beacon is acceptable (see the colophon). Cloudflare Web Analytics fits
+the deployment and adds no cookies and no personal data.
+
+### What it measures — and what it does NOT
+
+Cloudflare Web Analytics is **page-traffic** analytics: visits, page views,
+rough unique visitors (cookieless, sampled), referrers, countries, devices, and
+Core Web Vitals. That answers "how many people reached the lab."
+
+It does **not** do custom events or per-visitor funnels. So it will NOT, on its
+own, tell you:
+
+- how far each visitor got (how many exercises they finished),
+- how many visitors complete all twelve,
+- how many download or copy the completion certificate,
+- conversion between any two feature/funnel steps.
+
+Those require **custom event tracking**, which Cloudflare Web Analytics does not
+provide. See "Custom events" below.
+
+### Setup, given the Worker mount
+
+The app is served at `benlei.org/response-option-fit/` by the mount Worker (it
+fetches the Pages assets and re-serves them under the path). Because the Worker
+generates the HTML response, **zone-level automatic beacon injection is
+unreliable here** — inject the beacon in the Worker instead, so it lands only in
+production (and never in the local build or the Playwright suite, which assert no
+third-party requests):
+
+1. Cloudflare dashboard → **Web Analytics** → add a site → copy the **token**.
+2. In `cloudflare/worker-mount-response-option-fit.js`, inject the beacon into
+   the HTML response with `HTMLRewriter` (append to `<head>`), gated on the token:
+   ```js
+   // after fetching the asset response, before returning it, when it is HTML:
+   const BEACON = `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"YOUR_TOKEN"}'></script>`;
+   return new HTMLRewriter()
+     .on("head", { element(e) { e.append(BEACON, { html: true }); } })
+     .transform(response);
+   ```
+3. Allow Cloudflare Insights in the CSP (`public/_headers`, and any CSP the
+   Worker sets): add `https://static.cloudflareinsights.com` to `script-src` and
+   `https://cloudflareinsights.com` to `connect-src`. Without this the strict CSP
+   blocks the beacon and logs a console error.
+
+Nothing in the app bundle or `index.html` changes, so the local build and tests
+stay free of third-party requests. (Deliberately not pre-wired here: it needs the
+account-specific token, and the CSP is left strict until the beacon is actually
+added.)
+
+### Custom events (held for a later, cross-app decision)
+
+To get the feature/funnel stats above, emit custom events from the client to a
+first-party endpoint and aggregate them privately. The Cloudflare-native,
+cookieless option is **Workers Analytics Engine**: a Pages Function (e.g.
+`functions/api/event.ts`) writes a data point per event
+(`writeDataPoint({ blobs: [name], doubles: [value] })`), queried later via the
+GraphQL/SQL API. Candidate events for this app: `exercise_completed` (with the
+running count), `all_complete`, `certificate_copied`, `certificate_png`. Keep it
+aggregate and id-less to preserve the privacy posture, and acknowledge it in the
+colophon.
+
+This is intentionally **not built yet**: the same event/funnel structure is
+likely to be designed once and reused across several portfolio apps, so it should
+wait for that shared decision rather than being shaped ad hoc here.
