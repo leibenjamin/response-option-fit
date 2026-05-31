@@ -27,12 +27,14 @@ authored content is labeled as authored; the lab never presents invented
 numbers as empirical findings, and softens any claim past what the cited
 evidence supports.
 
-A broader exhibit remains reachable by URL hash for reference: an archived
-twelve-puzzle "walk" of Census-sourced answer-choice traps (`#walk`), the
-previous landing hub (`#hub`), a build-and-break export trap (`#build`), a
-reviewer field guide (`#field-guide`), a reference shelf (`#reference`), and a
-colophon (`#colophon`). React + TypeScript + Vite; hash routing; static
-security headers; local-only settings controls; no backend or runtime AI.
+An earlier version of this project was a multi-route exhibit — a guided
+twelve-puzzle "walk" of Census-sourced answer-choice traps, an overview hub, a
+build-and-break export trap, a reviewer field guide, and a reference shelf. That
+exhibit was retired on 2026-05-31 in favor of the focused lab; it remains in the
+git history, and its old URL hashes now resolve to the lab so older links still
+land on the current home. A production-notes colophon is reachable at
+`#colophon`. React + TypeScript + Vite; hash routing; static security headers;
+local-only settings controls; no backend or runtime AI.
 
 ## Sources And Attribution
 
@@ -44,10 +46,8 @@ design principle, the per-exercise source drawers name the standard
 survey-methodology references behind it (Pew Research Center, Krosnick &
 Presser, AAPOR, the CDC/NCHS Q-Bank, and others) and carry an honest
 evidence-strength label, so a "textbook consensus" claim is not dressed the
-same as a "contested" or "directionally supported" teaching contrast. The
-archived walk additionally anchors its twelve puzzles to public U.S. Census
-Bureau cognitive-testing reports. The app does
-not reproduce agency logos, screenshots, or PDF imagery, and it does not
+same as a "contested" or "directionally supported" teaching contrast. The app
+does not reproduce agency logos, screenshots, or PDF imagery, and it does not
 validate alternate wording.
 
 The app code is MIT licensed. Short source wording excerpts and report
@@ -99,26 +99,20 @@ npm test
 ```
 
 The Playwright suite drives each lab exercise end-to-end (including the gated
-source drawers), verifies the archived walk puzzles still render interactive
-surfaces with no exposition fallback, checks that no freeform survey input or
-runtime AI exists, and confirms reduced-motion and forced-colors modes stay
-readable with no horizontal overflow on desktop or mobile.
+source drawers and the sticky contents rail), checks the lab data contract
+(receipts, source drawers, and knowledge-map links stay internally consistent),
+checks that no freeform survey input or runtime AI exists, and confirms
+reduced-motion and forced-colors modes stay readable with no horizontal overflow
+on desktop or mobile.
 
 ## Limitations
 
 - This is an interactive teaching lab, not a survey analyzer or measurement tool.
-- It is twelve authored lab exercises (plus an archived twelve-puzzle walk) and
-  does not claim to generalize across all survey instruments, modes, or
-  populations. The per-exercise casts are illustrative, not effect-size
-  estimates.
-- Puzzle cases are authored teaching situations unless explicitly marked as
-  source material. Public reports remain optional context for the original
-  answer-choice problem.
-- The commute answer-set builder topic is anchored to ACS commute materials, but
-  its named situations are authored teaching situations. Its official
-  longest-distance rule is the only source-supported build rule; the other
-  commute rules are authored teaching instructions. The sandwich topic and all
-  sandwich rules are teaching cases only.
+- It is twelve authored lab exercises and does not claim to generalize across all
+  survey instruments, modes, or populations. The per-exercise casts are
+  illustrative, not effect-size estimates.
+- Exercise cases are authored teaching situations. Named public sources support
+  the design principle behind an exercise, not the specific authored cast.
 - Teaching-case labels are not source claims. Public reports remain the
   authority for reported quotes, findings, and recommendations.
 - Repair directions are conceptual and are not validated replacement wording.
@@ -131,11 +125,10 @@ interaction, motion, and visual feedback when those make the lab meaningfully
 better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
-Current measured production build: entry JavaScript `88.23 KB gzip` plus the
-lab home route chunk `47.29 KB gzip`, CSS `25.11 KB gzip`. Routes are
-code-split, so the walk, build, field guide, and reference shelf load on
-demand. All interaction is client-side; no third-party runtime requests are
-expected.
+Current measured production build (2026-05-31, after retiring the old exhibit):
+entry JavaScript `51.12 KB gzip` plus the lab home route chunk `49.56 KB gzip`,
+CSS `20.12 KB gzip`. The lab home route is code-split and loads on demand. All
+interaction is client-side; no third-party runtime requests are expected.
 
 ## Privacy Budget
 
@@ -148,10 +141,9 @@ to:
 - Current persistence is limited to opt-in, on-device settings data
   (`localStorage`). The Settings surface supports JSON export/import/clear and
   shows the exact stored keys and values for transparency. When Remember is on,
-  the names of puzzles opened in walk mode are stored locally so the knowledge
-  map can resume across visits; when Remember is off, walk progress is
-  in-memory only and is lost on reload. The walk puzzles and the answer-set
-  builder do not persist per-choice or per-rule interaction state.
+  the settings choice itself is kept on the device so it persists across visits;
+  when Remember is off, nothing is written and the choice is lost on reload. The
+  lab does not persist per-exercise interaction state.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
   chooses outside this site when reviewing their own survey material.

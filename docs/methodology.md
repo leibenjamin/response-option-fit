@@ -9,9 +9,11 @@ The deployed home (`/`) is a single SQLBolt-style practice page titled "The
 quiet ways a survey lies." It is organized as twelve authored exercises, each a
 different response-option failure mode. The visitor makes a small decision,
 sees an immediate consequence on a fixed cast of authored respondents, and then
-recognizes the missing rule. A broader exhibit — an archived twelve-puzzle
-walk, a build-and-break export trap, a reviewer field guide, and a reference
-shelf — remains reachable by URL hash (see "Archived walk" below).
+recognizes the missing rule. An earlier version of this project was a multi-route
+exhibit (an overview hub, a paginated twelve-puzzle walk anchored to public
+Census cognitive-testing reports, a build-and-break export trap, a reviewer field
+guide, and a reference shelf); it was retired on 2026-05-31 in favor of the
+focused lab and remains in the project's git history.
 
 ## The Lab Exercises
 
@@ -58,8 +60,8 @@ weighting, and processing are out of scope here).
 
 ## Interaction Posture
 
-The design priority is interaction and transfer. Each lab exercise (and each
-archived walk puzzle) is an interactive module with:
+The design priority is interaction and transfer. Each lab exercise is an
+interactive module with:
 
 - a role for the visitor, such as mode mapper, form operator, sequence reviewer,
   rule finder, or counting-rule reviewer;
@@ -70,21 +72,11 @@ archived walk puzzle) is an interactive module with:
 - a reveal that names the pattern only after the visitor has touched the
   problem.
 
-In the archived walk, the opening hook is the smallest version of that problem,
-not a detached word game: a survey asks, "In one word, what was your usual way
-to get to work last week?", then four honest commute answers arrive. The
-visitor decides whether to accept, reject, or demand a rule for each submitted
-answer before the walk expands into full answer choices, yes/no paths,
-catch-alls, device boundaries, and numeric fields. In that hook, "Accept it"
-means the reviewer decides the form can accept the submitted answer under the
-visible instruction. It does not mean the survey respondent is answering, and
-it does not introduce a database/storage term of art.
-
 ## Voice And Terminology
 
 The app separates five voices:
 
-- **App user:** the visitor solving a puzzle. Button labels should name the
+- **App user:** the visitor solving an exercise. Button labels should name the
   visitor's immediate move: accept, reject, route, choose, open, test, set, add,
   or count.
 - **Survey respondent:** the person in the authored or sourced situation. Their
@@ -105,48 +97,14 @@ coding, archival capture, or respondent answer entry depending on the context.
 Use `recorded` only when the visitor is explicitly operating a form or when the
 copy is describing a downstream data record.
 
-## Archived Walk
-
-The earlier twelve-puzzle "walk" predates the lab and remains reachable at
-`#walk` for reference. Its puzzles are anchored to public Census Bureau
-cognitive-testing reports (see source-notes.md) and use the same interaction
-posture. They are:
-
-1. **Ride-hailing:** route commutes into one option and watch app ride, taxi,
-   carpool, and bike-share meanings split the column.
-2. **Business / industry:** code one worker's answer at several altitudes and
-   watch employer, workplace, industry, and sector mix.
-3. **Refrigerated medicine:** play the form, mis-record a no-medicine
-   household, then add the missing gate.
-4. **Electric vehicle type:** classify vehicle cards under hidden technical and
-   everyday rules.
-5. **Owner advertising:** stop a signal from leaking across two adjacent
-   questions.
-6. **Usual hours:** compress a volatile schedule into one number and see the
-   swing disappear.
-7. **Notebook computer:** sort portable devices before "notebook" drifts across
-   laptop, Chromebook, tablet, and literal-notebook meanings.
-8. **Move reasons:** open catch-all drawers and see concrete moving reasons stay
-   hidden until write-in recoding is enabled.
-9. **Sump pump:** open the denominator gate between no flooding, no pump
-   failure, and no pump.
-10. **TV-connected devices:** switch hidden boundary rules and see Apple TV,
-    Roku-like boxes, game systems, and connected laptops move.
-11. **Natural disasters:** set whether Yes means any reason or the main reason.
-12. **Weeks worked:** count the same year under different private recipes.
-
-The answer-set builder, the field guide, the cold-read capstone, and the exit
-artifact remain part of the same interaction arc: respondent, form, analyst,
-reviewer.
-
 ## Interaction Variety
 
-The walk should not feel like twelve repeated cards. Reusing primitives is fine
+The lab should not feel like twelve repeated cards. Reusing primitives is fine
 when it keeps the implementation maintainable, but the user's job should vary:
-map a route, find a rule, sort a label, trace a signal, open a gate, draw a
-device boundary, set a threshold, or expose a counting recipe. Future work should
-prefer a distinct mechanic over a smaller but less useful surface when those
-goals conflict.
+build a scale, find a rule, sort a label, repair an item, open a gate, refit an
+option set, set a threshold, or judge a format. Future work should prefer a
+distinct mechanic over a smaller but less useful surface when those goals
+conflict.
 
 Performance, page length, and test count are things to observe. They are not
 reasons to collapse the lab back into article-like exposition.
@@ -161,16 +119,13 @@ the standard survey-methodology references behind it — Pew Research Center
 Saris & Gallhofer, Revilla/Saris/Krosnick, Tourangeau, Fowler, Willis, the
 CDC/NCHS Q-Bank, and the Census DICE questionnaire-design guidance — and pair
 each with an evidence-strength label so the claim is not stated past what the
-source supports. The archived walk separately anchors its twelve puzzles to
-public Census Bureau cognitive-testing reports (see source-notes.md).
+source supports.
 
 The app should not imply that an authored cast's behavior is a source finding,
 a validated replacement wording, an official agency answer key, or a population
 estimate. Named sources are cited at the author/title/org level; the lab does
-not invent page numbers. When a real respondent quote appears (in the walk
-reveals), it is treated as quoted source material. When a cast or exercise case
-appears, it should be read as a teaching illustration unless the UI explicitly
-says otherwise.
+not invent page numbers. A cast or exercise case should be read as a teaching
+illustration unless the UI explicitly says otherwise.
 
 ## Learning Model
 
@@ -181,11 +136,11 @@ of long explanation. The intended sequence is:
 2. Make a plausible choice.
 3. See the route, ledger, or export consequence.
 4. Name the pattern after the failure is visible.
-5. Carry the move to the next puzzle.
+5. Carry the move to the next exercise.
 
-This is why the walk no longer has a lightweight exposition fallback. A text
-explanation can be useful backmatter, but it is not the experience this app is
-trying to sell.
+This is why the lab leads with interaction rather than a lightweight exposition
+fallback. A text explanation can be useful backmatter, but it is not the
+experience this app is trying to sell.
 
 ## Boundaries
 
