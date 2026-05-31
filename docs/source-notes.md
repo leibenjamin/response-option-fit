@@ -2,7 +2,7 @@
 
 ## Source Posture
 
-Response Option Fit Lab is an authored interaction: small puzzles, visible
+Response Option Fit Lab is an authored interaction: small exercises, visible
 traces, feedback, and transfer practice. Public sources are retained as
 optional anchors for the underlying answer-choice problems and for any short
 quoted material.
@@ -12,22 +12,23 @@ authored teaching content.
 
 ## What Is Authored
 
-- Puzzle people, trips, devices, households, weeks, routes, and feedback.
+- Exercise casts: the people, visits, devices, households, channels, and
+  feedback in each exercise.
 - Visual ledgers, consequence copy, repair candidates, threshold choices, and
   boundary paths.
-- The opening one-word commute hook and its acceptance/rejection/rule feedback.
-- Answer-set builder situations and teaching rules except where a rule is
-  explicitly labeled source-supported.
-- Capstone scene framing and most plain-language reveal copy.
+- Ship-review capstone scene framing and most plain-language reveal copy.
 
 Authored material should be interaction-optimized. It should not be described as
 observed respondent behavior or validated wording.
 
-## What Comes From Public Sources
+## Retired Walk — Source Anchors (historical)
 
-The reference shelf preserves public source anchors for the original
-answer-choice problems, report titles, years, section/page references, direct
-PDF URLs, and short quoted respondent material where used. The source list is:
+The earlier twelve-puzzle walk (retired 2026-05-31; see methodology.md) anchored
+its puzzles to public U.S. Census Bureau cognitive-testing reports. The lab that
+replaced it draws on the survey-methodology references listed under "Lab Exercise
+Sources" below, not these specimen reports. This list is kept as a record of the
+retired walk's provenance — report titles, years, section/page references, direct
+PDF URLs, and short quoted respondent material where used:
 
 1. **Ride-hailing** - *Cognitive Testing for the 2022 ACS Content Test Round 3
    Briefing and Recommendations Report* (2022), sections 2.3.2-2.3.3,
