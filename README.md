@@ -141,11 +141,11 @@ to:
   visitor analytics are added they will be cookieless and aggregate (no personal
   data, no cross-site tracking) and acknowledged in the colophon.
 - No PII collected or transmitted under any condition.
-- On-device progress: with Remember on (Settings), the exercises you've finished
-  and your certificate count are kept in `localStorage` so they resume across
-  visits; with it off they stay in memory and reset on reload. The Settings
-  surface shows the exact stored keys and values and supports JSON
-  export/import/clear.
+- On-device progress: with Remember on (its default), the exercises you've
+  finished and your certificate count are kept in `localStorage` so they resume
+  across visits; turn it off in Settings and they stay in memory and reset on
+  reload. The Settings surface shows the exact stored keys and values and
+  supports JSON export/import/clear.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
   chooses outside this site when reviewing their own survey material.
