@@ -238,6 +238,28 @@ test.describe("Response Option Fit Lab - desktop", () => {
     );
   });
 
+  test("the contents rail jumps to an exercise and to the closing map", async ({
+    page
+  }) => {
+    await page.goto(`${BASE_URL}/`);
+    const contents = page.getByTestId("lab-contents");
+    await expect(contents).toBeVisible();
+    /* The disclosure is collapsed by default; open it to reach the links. */
+    await contents.getByText("Jump to exercise").click();
+    /* Twelve exercise links plus the closing-map link. */
+    await expect(
+      page.locator('[data-testid^="lab-contents-link-"]')
+    ).toHaveCount(13);
+    /* Jumping moves keyboard focus to the target heading (so it isn't just a
+       silent scroll for screen-reader users). */
+    await page.getByTestId("lab-contents-link-10").click();
+    await expect(page.locator("#lab-exercise-10 h2")).toBeFocused();
+    /* Re-open (jumping auto-closes the rail) and jump to the closing map. */
+    await contents.getByText("Jump to exercise").click();
+    await page.getByTestId("lab-contents-link-map").click();
+    await expect(page.locator("#lab-km-title")).toBeFocused();
+  });
+
   test("E2 double-barreled: flag the six bundles (incl. the two with no \"and\"), skip the two \"and\" decoys, then repair the triple", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
     /* No pre-reveal spoiler tag should point at the no-"and" items. */

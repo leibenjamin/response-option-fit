@@ -3873,6 +3873,122 @@ summary:focus-visible {
   max-width: 72ch;
 }
 
+/* ─── Lab contents rail: a sticky jump-to-exercise nav for the long page ─── */
+.lab-contents {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  margin-top: calc(-1 * var(--s-3));
+  padding-block: var(--s-2);
+}
+.lab-contents-disc {
+  margin: 0;
+}
+.lab-contents-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2) var(--s-3);
+  padding: var(--s-1) 0;
+  color: var(--ink);
+}
+.lab-contents-summary::-webkit-details-marker {
+  display: none;
+}
+.lab-contents-toggle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.lab-contents-toggle::before {
+  content: "▸";
+  display: inline-block;
+  transition: transform 120ms ease;
+}
+.lab-contents-disc[open] .lab-contents-toggle::before {
+  transform: rotate(90deg);
+}
+.lab-contents-here {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.lab-contents-list {
+  list-style: none;
+  margin: var(--s-3) 0 var(--s-2);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--s-1) var(--s-3);
+}
+.lab-contents-link {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-1) var(--s-2);
+  border: 1px solid transparent;
+  text-decoration: none;
+  color: var(--ink-mute);
+}
+.lab-contents-link:hover,
+.lab-contents-link:focus-visible {
+  color: var(--ink);
+  background: var(--accent-paper);
+}
+.lab-contents-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  width: 1.6em;
+  text-align: right;
+  flex: none;
+  color: var(--ink-soft);
+}
+.lab-contents-label {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.2;
+}
+.lab-contents-verb {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lab-contents-link.is-here {
+  color: var(--ink);
+  border-color: var(--accent-soft);
+  background: var(--accent-paper);
+}
+.lab-contents-link.is-here .lab-contents-num {
+  color: var(--accent-2);
+}
+/* Keep jump targets clear of the sticky rail. */
+.lab-exercise,
+.lab-km {
+  scroll-margin-top: 4.25rem;
+}
+@media (forced-colors: active) {
+  .lab-contents {
+    border-bottom: 1px solid;
+  }
+  .lab-contents-link.is-here {
+    outline: 2px solid;
+    outline-offset: -2px;
+  }
+}
+
 .lab-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

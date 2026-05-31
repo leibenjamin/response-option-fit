@@ -122,6 +122,160 @@ import {
    task before the workspace), and a micro-receipt names which map branch
    each pass exercised. */
 
+/* Contents rail: the page is long (~12 stacked exercises + a closing map),
+   which the page-fatigue audits flagged as the main risk for mobile and
+   screen-reader visitors. This gives a way to jump and a sense of place
+   (scroll-spy highlight) WITHOUT gamifying — no scores, no checklist, no
+   solve-state pressure. Labels are concept-led, verb-tagged shorthands; the
+   anchors are the section ids on each ExerciseFrame and the closing map. */
+type LabNavItem = { num: number; label: string; verb: string; anchor: string };
+
+const LAB_NAV: LabNavItem[] = [
+  { num: 1, label: "Design the answer scale", verb: "tinker", anchor: "lab-exercise-1" },
+  { num: 2, label: "Double-barreled items", verb: "repair", anchor: "lab-exercise-2" },
+  { num: 3, label: "False premise / eligibility", verb: "gate", anchor: "lab-exercise-3" },
+  { num: 4, label: "Age buckets", verb: "tinker", anchor: "lab-exercise-4" },
+  { num: 5, label: "The option set", verb: "tinker", anchor: "lab-exercise-5" },
+  { num: 6, label: "Acquiescence", verb: "compare", anchor: "lab-exercise-6" },
+  { num: 7, label: "Scale length", verb: "tinker", anchor: "lab-exercise-7" },
+  { num: 8, label: "Don't-know / N/A", verb: "compare", anchor: "lab-exercise-8" },
+  { num: 9, label: "Verbal labels", verb: "label", anchor: "lab-exercise-9" },
+  { num: 10, label: "Vague quantifiers", verb: "anchor", anchor: "lab-exercise-10" },
+  { num: 11, label: "Option order", verb: "order", anchor: "lab-exercise-11" },
+  { num: 12, label: "Ship-review capstone", verb: "review", anchor: "lab-exercise-12" }
+];
+
+const MAP_ANCHOR = "closing-map";
+
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+function LabContents() {
+  const [activeAnchor, setActiveAnchor] = useState<string>(LAB_NAV[0].anchor);
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  /* Scroll-spy: highlight whichever section currently owns the middle of the
+     viewport. Pure orientation — it never blocks or scores anything, and if
+     IntersectionObserver is unavailable the rail still works as plain links. */
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const anchors = [...LAB_NAV.map((n) => n.anchor), MAP_ANCHOR];
+    const sections = anchors
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort(
+            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
+          );
+        if (visible[0]) setActiveAnchor(visible[0].target.id);
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
+  const jumpTo = (anchor: string) => {
+    const el = document.getElementById(anchor);
+    if (!el) return;
+    el.scrollIntoView({
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+      block: "start"
+    });
+    /* Move focus to the heading so keyboard / screen-reader users land where
+       the scroll did, without yanking the viewport a second time. */
+    const heading = el.querySelector<HTMLElement>("h2");
+    const target = heading ?? el;
+    target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
+    setActiveAnchor(anchor);
+    if (detailsRef.current) detailsRef.current.open = false;
+  };
+
+  const activeItem = LAB_NAV.find((n) => n.anchor === activeAnchor) ?? null;
+  const here =
+    activeAnchor === MAP_ANCHOR
+      ? "Closing map"
+      : activeItem
+        ? `Exercise ${activeItem.num} · ${activeItem.label}`
+        : `Exercise ${LAB_NAV[0].num} · ${LAB_NAV[0].label}`;
+
+  const renderLink = (
+    anchor: string,
+    num: string,
+    label: string,
+    verb: string,
+    testid: string,
+    extraClass = ""
+  ) => (
+    <a
+      className={`lab-contents-link ${extraClass} ${
+        activeAnchor === anchor ? "is-here" : ""
+      }`}
+      href={`#${anchor}`}
+      aria-current={activeAnchor === anchor ? "true" : undefined}
+      data-testid={testid}
+      onClick={(e) => {
+        e.preventDefault();
+        jumpTo(anchor);
+      }}
+    >
+      <span className="lab-contents-num" aria-hidden="true">
+        {num}
+      </span>
+      <span className="lab-contents-label">{label}</span>
+      <span className="lab-contents-verb" aria-hidden="true">
+        {verb}
+      </span>
+    </a>
+  );
+
+  return (
+    <nav className="lab-contents" aria-label="Lab contents" data-testid="lab-contents">
+      <details className="lab-contents-disc" ref={detailsRef}>
+        <summary className="lab-contents-summary">
+          <span className="lab-contents-toggle">Jump to exercise</span>
+          <span className="lab-contents-here" aria-live="polite">
+            {here}
+          </span>
+        </summary>
+        <ol className="lab-contents-list">
+          {LAB_NAV.map((n) => (
+            <li key={n.anchor}>
+              {renderLink(
+                n.anchor,
+                String(n.num),
+                n.label,
+                n.verb,
+                `lab-contents-link-${n.num}`
+              )}
+            </li>
+          ))}
+          <li>
+            {renderLink(
+              MAP_ANCHOR,
+              "★",
+              "Closing map",
+              "review",
+              "lab-contents-link-map",
+              "lab-contents-link--map"
+            )}
+          </li>
+        </ol>
+      </details>
+    </nav>
+  );
+}
+
 export function SatisfactionLab() {
   return (
     <main id="survey-lab" className="lab-route" aria-labelledby="survey-lab-title">
@@ -143,6 +297,8 @@ export function SatisfactionLab() {
           about, not real respondents or survey statistics.
         </p>
       </header>
+
+      <LabContents />
 
       <ol className="lab-exercises">
         <li>
@@ -2725,6 +2881,7 @@ function ExerciseFrame({
 }) {
   return (
     <section
+      id={`lab-exercise-${num}`}
       className={`lab-exercise lab-exercise--${modifier}`}
       aria-labelledby={`lab-exercise-${num}-title`}
     >
@@ -2996,6 +3153,7 @@ function KnowledgeMap() {
   return (
     <section
       ref={mapRef}
+      id="closing-map"
       className={`lab-km ${mapInView ? "is-in" : ""}`}
       aria-labelledby="lab-km-title"
       data-testid="lab-km"
