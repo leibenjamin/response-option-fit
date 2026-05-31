@@ -1,11 +1,136 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import {
   exerciseReceipts,
   responseOptionKnowledgeMap,
   sourceDrawers
 } from "../src/data/lab-exercises";
+import {
+  buildCertificateMarkdown,
+  certificateCode
+} from "../src/lib/certificate";
+import { LAB_EXERCISE_IDS, TOTAL_EXERCISES } from "../src/lib/progress";
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:4173";
+
+/* Solve all twelve exercises on a freshly-loaded lab page, using the same
+   sequences the per-exercise tests verify. Used to drive the completion
+   certificate to its unlocked state. */
+async function solveAll12(page: Page) {
+  // E1 — scale builder
+  await page.getByTestId("lab-stem-plain").click();
+  await page.getByTestId("lab-point-vsat").click();
+  await page.getByTestId("lab-point-neutral").click();
+  await page.getByTestId("lab-point-vdis").click();
+  await page.getByTestId("lab-point-neutral").click();
+  await page.getByTestId("lab-order-negative-first").click();
+  await page.getByTestId("lab-stem-leading").click();
+  await page.getByTestId("lab-point-dis").click();
+  await page.getByTestId("lab-point-vdis").click();
+  await page.getByTestId("lab-point-ssat").click();
+  await expect(page.getByTestId("lab-receipt-E1")).toBeVisible();
+
+  // E2 — double-barreled
+  for (const id of [
+    "barista-friendly",
+    "hot-fresh",
+    "coffee-quality",
+    "barista-triple",
+    "fix-quickly",
+    "atmosphere"
+  ]) {
+    await page.getByTestId(`lab-bundled-${id}`).click();
+  }
+  await page.getByTestId("lab-bundled-check").click();
+  await page.getByTestId("lab-repair-three").click();
+  await expect(page.getByTestId("lab-receipt-E2")).toBeVisible();
+
+  // E8 — false premise
+  await page.getByTestId("lab-fp-screener-smartphone").click();
+  await page.getByTestId("lab-fp-screener-smartphone").click();
+  await page.getByTestId("lab-fp-screener-weekly").click();
+  await page.getByTestId("lab-fp-screener-weekly").click();
+  await page.getByTestId("lab-fp-screener-feature").click();
+  await page.getByTestId("lab-fp-screener-app").click();
+  await expect(page.getByTestId("lab-receipt-E8")).toBeVisible();
+
+  // E3 — bucket tinker
+  await page.getByTestId("lab-bucket-end-b1").fill("24");
+  await page.getByTestId("lab-bucket-end-b2").fill("34");
+  await page.getByTestId("lab-bucket-end-b3").fill("44");
+  await page.getByTestId("lab-bucket-start-b1").fill("0");
+  await page.getByTestId("lab-bucket-end-b4").fill("64");
+  await page.getByTestId("lab-bucket-add").click();
+  await page.locator(".lab-bucket-row").last().locator("input").nth(1).fill("");
+  await expect(page.getByTestId("lab-receipt-E3")).toBeVisible();
+
+  // E4 — channel set
+  await page.getByTestId("lab-channel-other").click();
+  await page.getByTestId("lab-channel-other").click();
+  for (const id of ["wordofmouth", "podcast", "walkby", "event"]) {
+    await page.getByTestId(`lab-channel-${id}`).click();
+  }
+  for (const id of [
+    "social",
+    "search",
+    "friend",
+    "print",
+    "wordofmouth",
+    "podcast",
+    "walkby",
+    "event"
+  ]) {
+    await page.getByTestId(`lab-channel-${id}`).click();
+  }
+  await page.getByTestId("lab-channel-online_broad").click();
+  await page.getByTestId("lab-channel-offline_broad").click();
+  await expect(page.getByTestId("lab-receipt-E4")).toBeVisible();
+
+  // E9 — acquiescence
+  await page.getByTestId("lab-acq-design-reverse").click();
+  await page.getByTestId("lab-acq-judge-flagged").click();
+  await page.getByTestId("lab-acq-design-item").click();
+  await expect(page.getByTestId("lab-receipt-E9")).toBeVisible();
+
+  // E6 — scale length
+  await page.getByTestId("lab-scale-points-11").click();
+  await page.getByTestId("lab-scale-points-7").click();
+  await expect(page.getByTestId("lab-receipt-E6")).toBeVisible();
+
+  // E7 — don't-know / NA
+  await page.getByTestId("lab-oat-toggle-dk").click();
+  await page.getByTestId("lab-oat-toggle-na").click();
+  await expect(page.getByTestId("lab-receipt-E7")).toBeVisible();
+
+  // E10 — verbal labels
+  await page.getByTestId("lab-label-design-tilted").click();
+  await page.getByTestId("lab-label-design-balanced").click();
+  await expect(page.getByTestId("lab-receipt-E10")).toBeVisible();
+
+  // E11 — quantifiers
+  await page.getByTestId("lab-quant-design-score").click();
+  await page.getByTestId("lab-quant-design-anchored").click();
+  await expect(page.getByTestId("lab-receipt-E11")).toBeVisible();
+
+  // E12 — order
+  await page.getByTestId("lab-order-nominal-rotated").click();
+  await page.getByTestId("lab-order-ordinal-ordered").click();
+  await expect(page.getByTestId("lab-receipt-E12")).toBeVisible();
+
+  // E5 — ship-review capstone
+  const calls: [string, string][] = [
+    ["q-delightful", "push"],
+    ["q-barista", "slot"],
+    ["q-often", "ruler"],
+    ["q-age", "slot"],
+    ["q-visits", "fine"],
+    ["footnote-sample", "boundary"]
+  ];
+  for (const [el, d] of calls) {
+    await page.getByTestId(`lab-review-choice-${el}-${d}`).click();
+  }
+  await page.getByTestId("lab-review-check").click();
+  await expect(page.getByTestId("lab-receipt-E5")).toBeVisible();
+}
 
 test.describe("Response Option Fit Lab - data contract", () => {
   test("lab receipt, source-drawer, and knowledge-map exercise links stay internally consistent", () => {
@@ -35,6 +160,39 @@ test.describe("Response Option Fit Lab - data contract", () => {
         }
       }
     }
+  });
+
+  test("progress ids cover exactly the twelve receipts", () => {
+    expect(TOTAL_EXERCISES).toBe(12);
+    expect([...LAB_EXERCISE_IDS].sort()).toEqual(Object.keys(exerciseReceipts).sort());
+  });
+
+  test("certificate code is deterministic and content-bound; markdown carries the payload", () => {
+    /* Same inputs -> same code; different coverage or date -> different code. */
+    expect(certificateCode("2026-05-31", 12, 12)).toBe(
+      certificateCode("2026-05-31", 12, 12)
+    );
+    expect(certificateCode("2026-05-31", 12, 12)).not.toBe(
+      certificateCode("2026-05-31", 11, 12)
+    );
+    expect(certificateCode("2026-05-31", 12, 12)).not.toBe(
+      certificateCode("2026-06-01", 12, 12)
+    );
+    expect(certificateCode("2026-05-31", 12, 12)).toMatch(
+      /^ROF-[0-9A-Z]{4}-[0-9A-Z]{4}$/
+    );
+
+    const complete = buildCertificateMarkdown(12, 12, "May 31, 2026", "ROF-AAAA-BBBB");
+    expect(complete).toContain("Certificate of Completion");
+    expect(complete).toContain("**SLOT**");
+    expect(complete).toContain("Things I can now say without bluffing");
+    expect(complete).toContain("Further reading");
+    expect(complete).toContain("not a cryptographic signature");
+    expect(complete).toContain("ROF-AAAA-BBBB");
+    /* Partial coverage is honest: "Practice", not "Completion". */
+    expect(buildCertificateMarkdown(8, 12, "May 31, 2026", "X")).toContain(
+      "Certificate of Practice"
+    );
   });
 });
 
@@ -397,6 +555,44 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(drawer).toContainText("scale length");
     await expect(drawer).toContainText("overclaim");
     await expect(drawer).toContainText("Krosnick");
+  });
+
+  test("the completion certificate is gated until all twelve are solved, then offers Markdown + PNG", async ({
+    page,
+    context
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto(`${BASE_URL}/`);
+    /* Locked on a fresh visit: 0 of 12, no take-buttons. */
+    await expect(page.getByTestId("lab-cert-count")).toHaveText("0");
+    await expect(page.getByTestId("lab-cert-copy")).toHaveCount(0);
+    await expect(page.getByTestId("lab-contents-progress")).toContainText(
+      "0 of 12"
+    );
+
+    await solveAll12(page);
+
+    /* Unlocked: 12 of 12, completion wording, both take-buttons, rail ticks. */
+    await expect(page.getByTestId("lab-cert-count")).toHaveText("12");
+    await expect(page.getByTestId("lab-cert")).toContainText("all twelve");
+    await expect(page.getByTestId("lab-cert-copy")).toBeVisible();
+    await expect(page.getByTestId("lab-cert-png")).toBeVisible();
+    await expect(page.getByTestId("lab-contents-progress")).toContainText(
+      "12 of 12"
+    );
+    await expect(page.locator(".lab-contents-link.is-done")).toHaveCount(12);
+
+    /* PNG renders client-side and downloads (no third-party request). */
+    const downloadPromise = page.waitForEvent("download");
+    await page.getByTestId("lab-cert-png").click();
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(
+      /^response-option-fit-certificate-ROF-[0-9A-Z]{4}-[0-9A-Z]{4}\.png$/
+    );
+
+    /* Markdown copy reports success. */
+    await page.getByTestId("lab-cert-copy").click();
+    await expect(page.getByTestId("lab-cert-status")).toBeVisible();
   });
 
   test("no freeform input, third-party runtime requests, or desktop overflow", async ({ page }) => {

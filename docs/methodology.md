@@ -144,9 +144,13 @@ experience this app is trying to sell.
 
 ## Boundaries
 
-- No backend, analytics, automated analyzer, upload, or freeform survey text input.
-- No score, grade, leaderboard, streak, or claim that the visitor's choices
-  validate a survey design.
+- No backend, automated analyzer, upload, or freeform survey text input. On-device
+  progress (completed exercises + certificate count) is opt-in and clearable;
+  any visitor analytics stay cookieless and aggregate.
+- No score or grade on the work, no leaderboard or streak, and no claim that the
+  visitor's choices validate a survey design. The completion certificate is a
+  self-issued keepsake, gated on finishing all twelve — not an accredited
+  credential, and its verification code is a content checksum, not a signature.
 - No claim that any repair direction is tested replacement wording.
 - No claim that authored situations estimate prevalence or error rates.
 - No claim stated past what the cited evidence supports: contested or

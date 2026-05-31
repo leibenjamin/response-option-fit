@@ -3313,6 +3313,139 @@ summary:focus-visible {
   }
 }
 
+/* Quiet progress in the rail: a count chip + a check on solved exercises. */
+.lab-contents-progress {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.lab-contents-link.is-done .lab-contents-num {
+  color: var(--accent-2);
+  font-weight: 700;
+}
+.lab-contents-link.is-done .lab-contents-label {
+  color: var(--ink-soft);
+}
+.lab-contents-done-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ─── Closing-map certificate: the completion payoff ─── */
+.lab-cert {
+  margin: var(--s-6) 0;
+  padding: var(--s-6) var(--s-6) var(--s-5);
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.lab-cert-eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.lab-cert-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(20px, 2.4vw, 27px);
+  line-height: 1.12;
+  color: var(--ink);
+}
+.lab-cert-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+.lab-cert-bar {
+  flex: 1 1 200px;
+  height: 8px;
+  background: var(--paper-3);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.lab-cert-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 240ms ease;
+}
+.lab-cert-count {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.lab-cert-count strong {
+  color: var(--accent-2);
+}
+.lab-cert-blurb {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 64ch;
+}
+.lab-cert-blurb--locked {
+  color: var(--ink-soft);
+}
+.lab-cert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-1);
+}
+.lab-cert-button {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  padding: var(--s-2) var(--s-4);
+  color: var(--paper-card);
+  background: var(--accent-2);
+  border: 1px solid var(--accent-2);
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+.lab-cert-button:hover,
+.lab-cert-button:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.lab-cert-status {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+@media (forced-colors: active) {
+  .lab-cert {
+    border: 1px solid;
+  }
+  .lab-cert-bar-fill {
+    background: Highlight;
+  }
+  .lab-cert-button {
+    border: 1px solid;
+  }
+}
+
 .lab-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

@@ -2,7 +2,7 @@ const PREFIX = "rofl:v1:";
 const SCHEMA_VERSION = 1 as const;
 const STORAGE_CHANGE_EVENT = "rofl-storage-change";
 const SETTINGS_STORAGE_KEY = `${PREFIX}settings`;
-const WALK_STATE_STORAGE_KEY = `${PREFIX}walk-state`;
+const PROGRESS_STORAGE_KEY = `${PREFIX}progress`;
 
 export type Snapshot = {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -97,31 +97,16 @@ function validateSnapshotEntry(key: string, value: unknown): string | null {
     return null;
   }
 
-  if (key === WALK_STATE_STORAGE_KEY) {
+  if (key === PROGRESS_STORAGE_KEY) {
     if (!isPlainObject(value)) {
-      return `Snapshot value for "${WALK_STATE_STORAGE_KEY}" must be an object.`;
+      return `Snapshot value for "${PROGRESS_STORAGE_KEY}" must be an object.`;
     }
-    const v = value as {
-      visited?: unknown;
-      recapsDismissed?: unknown;
-      lastSpecimenId?: unknown;
-    };
-    const visitedOk =
-      Array.isArray(v.visited) &&
-      v.visited.every((s) => typeof s === "string");
-    const recapsOk =
-      Array.isArray(v.recapsDismissed) &&
-      v.recapsDismissed.every(
-        (n) => typeof n === "number" && Number.isFinite(n)
-      );
-    /* lastSpecimenId is optional and tolerates missing/null for snapshots
-       written by a build that pre-dates this field. */
-    const lastOk =
-      v.lastSpecimenId === undefined ||
-      v.lastSpecimenId === null ||
-      typeof v.lastSpecimenId === "string";
-    if (!visitedOk || !recapsOk || !lastOk) {
-      return `Snapshot value for "${WALK_STATE_STORAGE_KEY}" must have string-array "visited", number-array "recapsDismissed", and optional string "lastSpecimenId".`;
+    const v = value as { completed?: unknown };
+    const completedOk =
+      Array.isArray(v.completed) &&
+      v.completed.every((s) => typeof s === "string");
+    if (!completedOk) {
+      return `Snapshot value for "${PROGRESS_STORAGE_KEY}" must have a string-array "completed".`;
     }
     return null;
   }
