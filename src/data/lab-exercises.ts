@@ -2409,7 +2409,7 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
     supports:
       "Vague quantifiers are a standard survey-design risk because respondents map them to different numeric realities. Reference periods and countable ranges make the answer task clearer. The 0–100 frequency score is a teaching contrast for false precision: it removes vague words, but still asks respondents to invent a private conversion.",
     boundary:
-      "Anchored ranges are still design choices, not natural law. They must fit the analysis need, the expected distribution, and what respondents can reasonably recall.",
+      "Anchored ranges are still design choices, not natural law. They must fit the analysis need, the expected distribution, and what respondents can reasonably recall. A 0–100 scale isn't automatically wrong either — it tips into false precision only when respondents don't share the unit, reference period, or reporting rule.",
     sources: [
       "Tourangeau, Rips & Rasinski, “The Psychology of Survey Response” (2000)",
       "Fowler, “Improving Survey Questions”",
@@ -2477,6 +2477,11 @@ export const furtherReading: ReadingItem[] = [
     kind: "public-resource",
     name: "Pew Research Center — “Writing Survey Questions”",
     what: "Free, readable walkthrough of wording, order, open vs. closed, and balance."
+  },
+  {
+    kind: "public-resource",
+    name: "Pew Research Center — “When Online Survey Respondents Only ‘Select Some That Apply’”",
+    what: "Why a check-all list and a forced-choice (yes/no per item) battery aren't interchangeable — select-all can under-collect endorsements."
   },
   {
     kind: "public-resource",
@@ -2814,6 +2819,17 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
         sourceCue: "Krosnick on satisficing; DICE/Census mode guidance."
       },
       {
+        id: "push.selectAll",
+        label: "Select-all vs. forced-choice",
+        status: "planned",
+        ask:
+          "Can respondents stop after a few boxes instead of judging every item?",
+        remember:
+          "A check-all list and a yes/no-per-item battery aren't equivalent — select-all can under-collect because people stop once they've picked enough; forced-choice makes them weigh each item, at the cost of more burden.",
+        exerciseIds: ["future"],
+        sourceCue: "Pew on select-all-that-apply vs. forced-choice."
+      },
+      {
         id: "push.reverseCoded",
         label: "Reverse-coded item traps",
         status: "didactic",
@@ -2902,13 +2918,13 @@ export const credentialingFacts: CredentialingFact[] = [
   {
     id: "scale-length",
     text:
-      "I wouldn't assume an 11-point scale is more precise — for many attitude items the familiar 5–7 point range is a safe default because reliability gains tend to flatten past about seven categories. The best length still depends on the construct, the labels, and how the data will be used.",
+      "I wouldn't assume an 11-point scale is automatically more precise — for many attitude items 5–7 points is a common starting range, and gains beyond that are often small or context-dependent. The best length still depends on the construct, the labels, the population, the mode, and how the data will be used.",
     sourceCue: "Krosnick & Presser on scale points; Saris & Gallhofer."
   },
   {
     id: "label-every-point",
     text:
-      "I'd rather label every response point when possible — endpoint-only numeric scales ask respondents to invent the middle.",
+      "I'd label every response point when the mode and screen space allow — endpoint-only numeric scales ask respondents to invent the middle. The catch: full labels only help if the words stay balanced and legible.",
     sourceCue: "Survey-methodology literature on verbal anchors."
   },
   {
