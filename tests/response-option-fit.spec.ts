@@ -226,7 +226,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
       page.locator(".lab-km-gauge-bar .lab-km-gauge-seg")
     ).toHaveCount(4);
     await expect(page.locator(".lab-km-node--practiced")).toHaveCount(16);
-    await expect(page.locator(".lab-km-node--planned")).toHaveCount(2);
+    await expect(page.locator(".lab-km-node--planned")).toHaveCount(3);
     await expect(page.locator(".lab-km-node--didactic")).toHaveCount(2);
     await expect(page.locator(".lab-km-node--outOfScope")).toHaveCount(3);
   });
