@@ -129,7 +129,9 @@ experience back into dry text.
 Current measured production build (2026-05-31, after retiring the old exhibit):
 entry JavaScript `51.12 KB gzip` plus the lab home route chunk `49.56 KB gzip`,
 CSS `20.12 KB gzip`. The lab home route is code-split and loads on demand. All
-interaction is client-side; no third-party runtime requests are expected.
+interaction is client-side. The only optional third-party runtime request is a
+privacy-friendly, cookieless analytics beacon (Cloudflare Web Analytics) when it
+is enabled for the deployment; see [docs/deployment.md](docs/deployment.md).
 
 ## Privacy Budget
 
