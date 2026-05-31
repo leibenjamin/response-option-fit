@@ -14,7 +14,11 @@ export type Settings = {
   remember: boolean;
 };
 
-const DEFAULT_SETTINGS: Settings = { remember: false };
+/* Remembering progress is ON by default: completing exercises and then losing
+   the count on a refresh is the worse surprise, and the stored data is
+   on-device, transparent in Settings, and clearable. Turning the toggle off
+   makes the visit ephemeral and clears every rofl:v1:* key. */
+const DEFAULT_SETTINGS: Settings = { remember: true };
 const SETTINGS_KEY = "settings";
 const STORAGE_CHANGE_EVENT = "rofl-storage-change";
 

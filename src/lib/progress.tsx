@@ -92,7 +92,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
      no progress key lingers (turning Remember off in settings already clears
      everything; this is a defensive mirror). */
   useEffect(() => {
-    if (remember) {
+    /* Only write once there is something to remember, so a visitor who opens
+       the page and does nothing leaves no key behind even though Remember
+       defaults on. */
+    if (remember && completed.size > 0) {
       writeJSON<StoredProgress>(PROGRESS_KEY, { completed: [...completed] });
     } else {
       remove(PROGRESS_KEY);
