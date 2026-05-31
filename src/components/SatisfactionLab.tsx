@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatedNumber } from "../lib/motion";
+import { useProgress } from "../lib/progress";
+import { LabCertificate } from "./LabCertificate";
 import {
   biasTells,
   cast,
@@ -124,25 +126,33 @@ import {
 
 /* Contents rail: the page is long (~12 stacked exercises + a closing map),
    which the page-fatigue audits flagged as the main risk for mobile and
-   screen-reader visitors. This gives a way to jump and a sense of place
-   (scroll-spy highlight) WITHOUT gamifying — no scores, no checklist, no
-   solve-state pressure. Labels are concept-led, verb-tagged shorthands; the
-   anchors are the section ids on each ExerciseFrame and the closing map. */
-type LabNavItem = { num: number; label: string; verb: string; anchor: string };
+   screen-reader visitors. It gives a way to jump, a sense of place (scroll-spy
+   highlight), and a quiet sense of progress (a check on each solved exercise +
+   an "N of 12" count) — reflective, not a pressuring score. Labels are
+   concept-led, verb-tagged shorthands; the anchors are the section ids on each
+   ExerciseFrame and the closing map; `dataId` maps the display number to the
+   internal exercise id so completion (keyed by data id) lights the right row. */
+type LabNavItem = {
+  num: number;
+  label: string;
+  verb: string;
+  anchor: string;
+  dataId: string;
+};
 
 const LAB_NAV: LabNavItem[] = [
-  { num: 1, label: "Design the answer scale", verb: "tinker", anchor: "lab-exercise-1" },
-  { num: 2, label: "Double-barreled items", verb: "repair", anchor: "lab-exercise-2" },
-  { num: 3, label: "False premise / eligibility", verb: "gate", anchor: "lab-exercise-3" },
-  { num: 4, label: "Age buckets", verb: "tinker", anchor: "lab-exercise-4" },
-  { num: 5, label: "The option set", verb: "tinker", anchor: "lab-exercise-5" },
-  { num: 6, label: "Acquiescence", verb: "compare", anchor: "lab-exercise-6" },
-  { num: 7, label: "Scale length", verb: "tinker", anchor: "lab-exercise-7" },
-  { num: 8, label: "Don't-know / N/A", verb: "compare", anchor: "lab-exercise-8" },
-  { num: 9, label: "Verbal labels", verb: "label", anchor: "lab-exercise-9" },
-  { num: 10, label: "Vague quantifiers", verb: "anchor", anchor: "lab-exercise-10" },
-  { num: 11, label: "Option order", verb: "order", anchor: "lab-exercise-11" },
-  { num: 12, label: "Ship-review capstone", verb: "review", anchor: "lab-exercise-12" }
+  { num: 1, label: "Design the answer scale", verb: "tinker", anchor: "lab-exercise-1", dataId: "E1" },
+  { num: 2, label: "Double-barreled items", verb: "repair", anchor: "lab-exercise-2", dataId: "E2" },
+  { num: 3, label: "False premise / eligibility", verb: "gate", anchor: "lab-exercise-3", dataId: "E8" },
+  { num: 4, label: "Age buckets", verb: "tinker", anchor: "lab-exercise-4", dataId: "E3" },
+  { num: 5, label: "The option set", verb: "tinker", anchor: "lab-exercise-5", dataId: "E4" },
+  { num: 6, label: "Acquiescence", verb: "compare", anchor: "lab-exercise-6", dataId: "E9" },
+  { num: 7, label: "Scale length", verb: "tinker", anchor: "lab-exercise-7", dataId: "E6" },
+  { num: 8, label: "Don't-know / N/A", verb: "compare", anchor: "lab-exercise-8", dataId: "E7" },
+  { num: 9, label: "Verbal labels", verb: "label", anchor: "lab-exercise-9", dataId: "E10" },
+  { num: 10, label: "Vague quantifiers", verb: "anchor", anchor: "lab-exercise-10", dataId: "E11" },
+  { num: 11, label: "Option order", verb: "order", anchor: "lab-exercise-11", dataId: "E12" },
+  { num: 12, label: "Ship-review capstone", verb: "review", anchor: "lab-exercise-12", dataId: "E5" }
 ];
 
 const MAP_ANCHOR = "closing-map";
@@ -158,6 +168,7 @@ function prefersReducedMotion(): boolean {
 function LabContents() {
   const [activeAnchor, setActiveAnchor] = useState<string>(LAB_NAV[0].anchor);
   const detailsRef = useRef<HTMLDetailsElement>(null);
+  const { completed, count, total } = useProgress();
 
   /* Scroll-spy: highlight whichever section currently owns the middle of the
      viewport. Pure orientation — it never blocks or scores anything, and if
@@ -215,12 +226,13 @@ function LabContents() {
     label: string,
     verb: string,
     testid: string,
+    done: boolean,
     extraClass = ""
   ) => (
     <a
       className={`lab-contents-link ${extraClass} ${
         activeAnchor === anchor ? "is-here" : ""
-      }`}
+      } ${done ? "is-done" : ""}`}
       href={`#${anchor}`}
       aria-current={activeAnchor === anchor ? "true" : undefined}
       data-testid={testid}
@@ -230,9 +242,12 @@ function LabContents() {
       }}
     >
       <span className="lab-contents-num" aria-hidden="true">
-        {num}
+        {done ? "✓" : num}
       </span>
-      <span className="lab-contents-label">{label}</span>
+      <span className="lab-contents-label">
+        {label}
+        {done && <span className="lab-contents-done-sr"> — practiced</span>}
+      </span>
       <span className="lab-contents-verb" aria-hidden="true">
         {verb}
       </span>
@@ -247,6 +262,12 @@ function LabContents() {
           <span className="lab-contents-here" aria-live="polite">
             {here}
           </span>
+          <span
+            className="lab-contents-progress"
+            data-testid="lab-contents-progress"
+          >
+            {count} of {total} practiced
+          </span>
         </summary>
         <ol className="lab-contents-list">
           {LAB_NAV.map((n) => (
@@ -256,7 +277,8 @@ function LabContents() {
                 String(n.num),
                 n.label,
                 n.verb,
-                `lab-contents-link-${n.num}`
+                `lab-contents-link-${n.num}`,
+                completed.has(n.dataId)
               )}
             </li>
           ))}
@@ -267,6 +289,7 @@ function LabContents() {
               "Closing map",
               "review",
               "lab-contents-link-map",
+              false,
               "lab-contents-link--map"
             )}
           </li>
@@ -2906,6 +2929,14 @@ function PostReceipt({
   exerciseId: string;
   visible: boolean;
 }) {
+  /* PostReceipt is the one surface every exercise reveals on completion, so
+     this is the single place that records progress for all twelve. Hooks run
+     before the early return to respect the rules of hooks. */
+  const { markComplete } = useProgress();
+  useEffect(() => {
+    if (visible) markComplete(exerciseId);
+  }, [visible, exerciseId, markComplete]);
+
   const receipt: ExerciseReceipt | undefined = exerciseReceipts[exerciseId];
   if (!visible || !receipt) return null;
   return (
@@ -3178,6 +3209,8 @@ function KnowledgeMap() {
         marks are named on purpose, so the map never pretends to be the whole
         field.
       </p>
+
+      <LabCertificate />
 
       <div className="lab-km-grid">
         {responseOptionKnowledgeMap.map((b, i) => (

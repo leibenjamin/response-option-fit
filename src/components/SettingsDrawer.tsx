@@ -277,14 +277,14 @@ export function SettingsDrawer({ open, onClose }: Props) {
             </span>
             <span className="settings-toggle-body">
               <span className="settings-toggle-label">
-                Remember local settings on this device
+                Remember my progress on this device
               </span>
               <span className="settings-toggle-sub">
-                Keeps this settings choice on this device so it persists
-                across visits instead of resetting each time. The lab saves
-                no per-exercise progress; the controls below show and clear
-                anything kept locally. Removed when you turn this off or
-                clear stored data.
+                Keeps the exercises you&rsquo;ve finished (and your certificate
+                count) on this device, so they resume across visits instead of
+                resetting each time. Everything stays on this device — nothing
+                is uploaded; the controls below show and clear exactly what is
+                kept. Removed when you turn this off or clear stored data.
               </span>
             </span>
           </label>

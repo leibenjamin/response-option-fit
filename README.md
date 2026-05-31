@@ -17,9 +17,10 @@ label, the boundary of what not to overclaim, and named sources. A closing
 knowledge map organizes the twelve exercises into four inspection passes (the
 lab's own SLOT / RULER / PUSH / BOUNDARY shorthand), marks what it did and did
 not cover, distinguishes the lab's shorthand from real terms of art, and lists
-further reading. The latest expansion adds practiced coverage for full verbal
-labels, vague quantifiers / fake precision, and standalone option-order
-decisions.
+further reading. A quiet progress count (and a check on each solved exercise in
+the contents rail) tracks how far you've gone; finishing all twelve unlocks a
+self-issued completion certificate — copy-as-Markdown or a downloadable PNG, with
+your coverage, takeaways, sources, and a content-checksum stamp — to keep.
 
 The cast in each exercise is illustrative — a small authored set to reason
 about, not real respondents or survey statistics. The one honesty rule is that
@@ -135,15 +136,16 @@ interaction is client-side; no third-party runtime requests are expected.
 The exhibit is static and runs entirely in the browser. The project commits
 to:
 
-- No backend, no analytics, no cookies, no third-party origins in the runtime
-  bundle.
+- Privacy-respecting by default: no ad tech, no cookies for cross-site tracking,
+  no third-party origins in the runtime bundle, and no selling of data. If
+  visitor analytics are added they will be cookieless and aggregate (no personal
+  data, no cross-site tracking) and acknowledged in the colophon.
 - No PII collected or transmitted under any condition.
-- Current persistence is limited to opt-in, on-device settings data
-  (`localStorage`). The Settings surface supports JSON export/import/clear and
-  shows the exact stored keys and values for transparency. When Remember is on,
-  the settings choice itself is kept on the device so it persists across visits;
-  when Remember is off, nothing is written and the choice is lost on reload. The
-  lab does not persist per-exercise interaction state.
+- On-device progress: with Remember on (Settings), the exercises you've finished
+  and your certificate count are kept in `localStorage` so they resume across
+  visits; with it off they stay in memory and reset on reload. The Settings
+  surface shows the exact stored keys and values and supports JSON
+  export/import/clear.
 - No user input is sent off-device. The exhibit deliberately contains no
   freeform text inputs, and the prompt pack is static copy for tools the user
   chooses outside this site when reviewing their own survey material.

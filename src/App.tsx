@@ -3,6 +3,7 @@ import { Colophon } from "./components/Colophon";
 import { SettingsButton } from "./components/SettingsButton";
 import { SettingsDrawer } from "./components/SettingsDrawer";
 import { parseHash, routeToHash, type Route } from "./lib/routes";
+import { ProgressProvider } from "./lib/progress";
 import { SettingsProvider } from "./lib/settings";
 
 const SatisfactionLab = lazy(() =>
@@ -152,7 +153,9 @@ function AppShell() {
 export default function App() {
   return (
     <SettingsProvider>
-      <AppShell />
+      <ProgressProvider>
+        <AppShell />
+      </ProgressProvider>
     </SettingsProvider>
   );
 }
