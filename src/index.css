@@ -17,7 +17,7 @@
   --ink: #14161a;
   --ink-2: #2b2f36;
   --ink-soft: #54585f;
-  --ink-mute: #80848d;
+  --ink-mute: #66696f;
 
   /* Paper */
   --paper: #f5f1ea;
@@ -102,7 +102,9 @@ body::before {
 }
 
 a {
-  color: var(--accent);
+  /* --accent-2 (darker) rather than --accent so link text clears WCAG AA
+     contrast (4.5:1) on paper even at small sizes. */
+  color: var(--accent-2);
   text-decoration: none;
   border-bottom: 1px solid var(--accent-soft);
   transition: border-color 120ms ease, color 120ms ease;
