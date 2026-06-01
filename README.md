@@ -127,8 +127,9 @@ better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
 Current measured production build (2026-05-31, after retiring the old exhibit):
-entry JavaScript `51.12 KB gzip` plus the lab home route chunk `49.56 KB gzip`,
-CSS `20.12 KB gzip`. The lab home route is code-split and loads on demand. All
+entry JavaScript `51.45 KB gzip` plus the lab home route chunk `52.70 KB gzip`,
+CSS `10.97 KB gzip` (after pruning the retired exhibit's dead styles). The lab
+home route is code-split and loads on demand. All
 interaction is client-side. The only optional third-party runtime request is a
 privacy-friendly, cookieless analytics beacon (Cloudflare Web Analytics) when it
 is enabled for the deployment; see [docs/deployment.md](docs/deployment.md).
