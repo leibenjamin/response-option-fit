@@ -311,10 +311,13 @@ export function SatisfactionLab() {
         </h1>
         <p className="lab-route-lede">
           Each exercise below is one real failure mode in how survey answer
-          choices are written. Tinker with the controls, watch a fixed cast of
-          people flow through, and read the consequence. Wrong moves are part
-          of the practice — they show what would have shipped. The closing map
-          shows what you covered (and what&rsquo;s still out there).
+          choices are written. They all come from one coffee shop&rsquo;s
+          surveys — Roast &amp; Brew&rsquo;s — so the only thing changing from
+          exercise to exercise is the design, not the domain. Tinker with the
+          controls, watch a fixed cast of people flow through, and read the
+          consequence. Wrong moves are part of the practice — they show what
+          would have shipped. The closing map shows what you covered (and
+          what&rsquo;s still out there).
         </p>
         <p className="lab-route-meta">
           Twelve hands-on exercises · ≈35 minutes · any order. The people in
@@ -1002,11 +1005,12 @@ function BucketTinkerExercise({ num }: { num: number }) {
       verb="tinker"
     >
       <p className="lab-exercise-setup">
-        A workshop registration form asks for age in buckets. The starter set
-        has overlapping boundaries, no under-18 coverage, and lumps everyone
-        over 45 together. Edit the endpoints, add or remove buckets, and watch
-        the dashboard tell you who&rsquo;s stuck in two buckets, who&rsquo;s in
-        none, and who&rsquo;s lumped. A wrong move is informative — try one.
+        Roast &amp; Brew&rsquo;s customer survey ends by asking age, in buckets,
+        for its demographic breakdown. The starter set has overlapping
+        boundaries, no under-18 coverage, and lumps everyone over 45 together.
+        Edit the endpoints, add or remove buckets, and watch the dashboard tell
+        you who&rsquo;s stuck in two buckets, who&rsquo;s in none, and
+        who&rsquo;s lumped. A wrong move is informative — try one.
       </p>
 
       <TaskBand
@@ -2720,11 +2724,12 @@ function OrderExercise({ num }: { num: number }) {
     >
       <p className="lab-exercise-setup">
         Order is a real source of push, but the repair depends on what kind of
-        options you have. An unordered channel list can rotate so no option owns
-        the first slot. A satisfaction scale is a ruler — scramble it and you
-        break the continuum. This draft starts broken in both places: the
-        channel list is fixed for everyone, and the satisfaction labels are
-        scrambled.
+        options you have. Two of Roast &amp; Brew&rsquo;s questions start broken:
+        its &ldquo;how did you hear about us&rdquo; channel list is fixed for
+        everyone, so one option always owns the first slot — and its satisfaction
+        labels have been scrambled. An unordered list can rotate so no option
+        owns the first read; a satisfaction scale is a ruler — scramble it and
+        you break the continuum. Fix each the right way.
       </p>
 
       <TaskBand
