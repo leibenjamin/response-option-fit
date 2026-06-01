@@ -653,8 +653,11 @@ function ScaleBuilderExercise({ num }: { num: number }) {
           <p className="lab-selectable">
             You didn&rsquo;t change a single visitor&rsquo;s feeling — you
             changed the options and the wording, and the report now reads{" "}
-            <strong>{satCount} of 5 satisfied</strong>. Every move you made
-            is a tell you can now read in someone else&rsquo;s survey:
+            <strong>{satCount} of 5 satisfied</strong>. That&rsquo;s the kind of
+            number an owner acts on: read it as &ldquo;people are happy&rdquo;
+            and the very thing the unhappy ones disliked stays exactly as it is —
+            they never surface to say otherwise. Every move you made is a tell
+            you can now read in someone else&rsquo;s survey:
           </p>
           <ul className="lab-tells lab-selectable">
             {biasTells(design)
@@ -869,7 +872,8 @@ function DoubleBarreledExercise({ num }: { num: number }) {
           The two you left alone do say &ldquo;and,&rdquo; but it sits in a
           program&rsquo;s name and in the people you&rsquo;d recommend us to,
           not in two things being rated. The word is never the test; two
-          separable judgments is.
+          separable judgments is. Miss one and it ships as a single number — a
+          low score with no way to tell which half to fix.
         </p>
       )}
 
@@ -2169,12 +2173,14 @@ function FalsePremiseExercise({ num }: { num: number }) {
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-fp-pass">
-          ✓ A clean-looking Yes/No can sit on a wrong denominator. The screen
-          that fits keeps everyone with a real basis and drops everyone without
-          one — &ldquo;owns a phone&rdquo; was too loose, &ldquo;weekly&rdquo;
-          too tight. And asking about the app first turns one undifferentiated
-          &ldquo;didn&rsquo;t use it&rdquo; pile into a discovery-vs-adoption
-          diagnosis.
+          ✓ A clean-looking Yes/No can sit on a wrong denominator: leave the
+          non-users in and &ldquo;Did order-ahead save you time?&rdquo; blends in
+          people who never opened the feature, so the team reads a muddy adoption
+          number and tunes the wrong thing. The screen that fits keeps everyone
+          with a real basis and drops everyone without one — &ldquo;owns a
+          phone&rdquo; was too loose, &ldquo;weekly&rdquo; too tight. And asking
+          about the app first turns one undifferentiated &ldquo;didn&rsquo;t use
+          it&rdquo; pile into a discovery-vs-adoption diagnosis.
         </p>
       )}
 
@@ -2361,11 +2367,14 @@ function AcquiescenceExercise({ num }: { num: number }) {
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-acq-pass">
-          ✓ Where you can, swap agree/disagree for item-specific wording: with
-          nothing to nod along to, the acquiescence pull disappears and answers
-          track real views. A reverse-worded check is a detection patch — useful
-          to flag the easy agreers, but it doesn&rsquo;t measure them, and it
-          taxes everyone else.
+          ✓ Under agree/disagree, the customers who felt brushed off still
+          &ldquo;agree the barista was friendly&rdquo; — the report reads
+          all-friendly and the one who needs coaching never surfaces. Where you
+          can, swap agree/disagree for item-specific wording: with nothing to nod
+          along to, the acquiescence pull disappears and answers track real
+          views. A reverse-worded check is a detection patch — useful to flag the
+          easy agreers, but it doesn&rsquo;t measure them, and it taxes everyone
+          else.
         </p>
       )}
 
@@ -2665,7 +2674,10 @@ function QuantifierExercise({ num }: { num: number }) {
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-quant-pass">
-          ✓ You did not just swap soft words for hard-looking numbers. The
+          ✓ With &ldquo;Rarely / Sometimes / Often,&rdquo; the owner can&rsquo;t
+          tell an occasional visitor from a regular — everyone lands near
+          &ldquo;Sometimes&rdquo; and the segmentation the question was for never
+          happens. You did not just swap soft words for hard-looking numbers. The
           repaired item names the reference period, asks for countable ranges,
           and keeps the precision matched to the decision.
         </p>
