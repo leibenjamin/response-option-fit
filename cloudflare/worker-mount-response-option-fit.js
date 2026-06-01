@@ -1,81 +1,120 @@
-const MOUNT_PATH = "/response-option-fit";
+/* Mount Worker for benlei.org/response-option-fit/.
 
-/* Cloudflare Web Analytics beacon. It is injected here in the mount Worker —
-   not in index.html — so it ships only in production and never loads during the
-   local build or the Playwright suite (which assert no third-party requests).
-   It is gated on a token: set `CF_BEACON_TOKEN` as a Worker variable after
-   enabling Web Analytics in the Cloudflare dashboard (see docs/deployment.md).
-   With no token, this Worker behaves exactly as before. The CSP already allows
-   the beacon's domains (see public/_headers). */
+   It reverse-proxies the Cloudflare Pages deployment under the path prefix and
+   sets the site's security headers (including the CSP) itself, overriding
+   whatever the Pages origin returns. This file is the reference copy of the
+   Worker that runs in the Cloudflare dashboard; keep them in sync.
+
+   Cloudflare Web Analytics: set CF_BEACON_TOKEN below to the hex token from the
+   dashboard (Analytics & Logs -> Web Analytics -> your site). When it is set,
+   the Worker injects the cookieless beacon into HTML responses and widens its
+   own CSP to allow it. Leave it "" to keep analytics off. The token is not a
+   secret — it ships in the page — so it is fine to hardcode here. See
+   docs/deployment.md. */
+
+const PREFIX = "/response-option-fit";
+const PAGES_ORIGIN = "https://response-option-fit.pages.dev";
+
+const CF_BEACON_TOKEN = ""; // paste the hex token to enable analytics
 const CF_BEACON_SRC = "https://static.cloudflareinsights.com/beacon.min.js";
 
-function mountedAssetRequest(request) {
-  const sourceUrl = new URL(request.url);
-  const assetUrl = new URL(request.url);
-  const strippedPath = sourceUrl.pathname.slice(MOUNT_PATH.length);
-
-  assetUrl.pathname = strippedPath || "/";
-  return new Request(assetUrl, request);
+/* A real Web Analytics token is a hex string; refuse anything else so a
+   misconfigured value can never break out of the data attribute. */
+function analyticsEnabled() {
+  return /^[a-f0-9]{16,64}$/i.test(CF_BEACON_TOKEN);
 }
 
-function isNavigationRequest(request) {
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    return false;
-  }
-
-  const accept = request.headers.get("accept") ?? "";
-  return accept.includes("text/html");
-}
-
-function isHtmlResponse(response) {
-  return (response.headers.get("content-type") ?? "").includes("text/html");
-}
-
-/* A real Cloudflare Web Analytics token is a hex string; refuse anything else so
-   a misconfigured variable can never break out of the data attribute. */
-function isValidToken(token) {
-  return typeof token === "string" && /^[a-f0-9]{16,64}$/i.test(token);
-}
-
-function injectBeacon(response, token) {
-  const beacon =
-    `<script defer src="${CF_BEACON_SRC}" ` +
-    `data-cf-beacon='{"token":"${token}"}'></script>`;
-  return new HTMLRewriter()
-    .on("head", {
-      element(element) {
-        element.append(beacon, { html: true });
-      }
-    })
-    .transform(response);
+function securityHeaders(base, analyticsOn) {
+  const headers = new Headers(base);
+  const scriptSrc = analyticsOn
+    ? "'self' https://static.cloudflareinsights.com"
+    : "'self'";
+  const connectSrc = analyticsOn
+    ? "'self' https://cloudflareinsights.com"
+    : "'self'";
+  headers.set(
+    "Content-Security-Policy",
+    `default-src 'none'; script-src ${scriptSrc}; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src ${connectSrc}; form-action 'none'; base-uri 'self'; frame-ancestors 'none'`
+  );
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("X-Frame-Options", "DENY");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set(
+    "Permissions-Policy",
+    "accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+  );
+  return headers;
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request) {
     const url = new URL(request.url);
 
-    if (url.pathname === MOUNT_PATH) {
-      url.pathname = `${MOUNT_PATH}/`;
+    if (url.pathname === PREFIX) {
+      url.pathname = `${PREFIX}/`;
       return Response.redirect(url.toString(), 308);
     }
 
-    if (!url.pathname.startsWith(`${MOUNT_PATH}/`)) {
+    if (!url.pathname.startsWith(`${PREFIX}/`)) {
       return new Response("Not found", { status: 404 });
     }
 
-    const assetRequest = mountedAssetRequest(request);
-    let assetResponse = await env.ASSETS.fetch(assetRequest);
+    const upstreamUrl = new URL(PAGES_ORIGIN);
+    upstreamUrl.pathname = url.pathname.slice(PREFIX.length) || "/";
+    upstreamUrl.search = url.search;
 
-    if (assetResponse.status === 404 && isNavigationRequest(request)) {
-      const fallbackUrl = new URL(assetRequest.url);
-      fallbackUrl.pathname = "/index.html";
-      assetResponse = await env.ASSETS.fetch(new Request(fallbackUrl, request));
+    let upstreamResponse = await fetch(
+      new Request(upstreamUrl.toString(), {
+        method: request.method,
+        headers: request.headers,
+        body:
+          request.method === "GET" || request.method === "HEAD"
+            ? undefined
+            : request.body,
+        redirect: "follow"
+      })
+    );
+
+    const accept = request.headers.get("accept") || "";
+    if (upstreamResponse.status === 404 && accept.includes("text/html")) {
+      const fallbackUrl = new URL(PAGES_ORIGIN);
+      fallbackUrl.pathname = "/";
+      upstreamResponse = await fetch(fallbackUrl.toString(), {
+        headers: request.headers,
+        redirect: "follow"
+      });
     }
 
-    if (isValidToken(env.CF_BEACON_TOKEN) && isHtmlResponse(assetResponse)) {
-      return injectBeacon(assetResponse, env.CF_BEACON_TOKEN);
+    const analyticsOn = analyticsEnabled();
+    const headers = securityHeaders(upstreamResponse.headers, analyticsOn);
+    const contentType = upstreamResponse.headers.get("content-type") || "";
+
+    if (analyticsOn && contentType.includes("text/html")) {
+      /* Injecting changes the body, so drop length/encoding and let the runtime
+         re-encode; HTMLRewriter decodes the upstream body to parse it. */
+      headers.delete("content-length");
+      headers.delete("content-encoding");
+      const beacon =
+        `<script defer src="${CF_BEACON_SRC}" ` +
+        `data-cf-beacon='{"token":"${CF_BEACON_TOKEN}"}'></script>`;
+      const transformed = new HTMLRewriter()
+        .on("head", {
+          element(element) {
+            element.append(beacon, { html: true });
+          }
+        })
+        .transform(upstreamResponse);
+      return new Response(transformed.body, {
+        status: upstreamResponse.status,
+        statusText: upstreamResponse.statusText,
+        headers
+      });
     }
 
-    return assetResponse;
+    return new Response(upstreamResponse.body, {
+      status: upstreamResponse.status,
+      statusText: upstreamResponse.statusText,
+      headers
+    });
   }
 };

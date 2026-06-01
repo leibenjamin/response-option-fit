@@ -164,76 +164,59 @@ own, tell you:
 Those require **custom event tracking**, which Cloudflare Web Analytics does not
 provide. See "Custom events" below.
 
-### Setup — the repo side is already wired; you only touch the dashboard
+### How the live site is actually served (read this first)
 
-The app is served at `benlei.org/response-option-fit/` by the mount Worker, which
-fetches the Pages assets and re-serves them under the path. Because the Worker
-generates the HTML response, the analytics beacon is injected **by the Worker**,
-not by `index.html`. That matters two ways: it keeps the beacon out of the local
-build and the Playwright suite (which assert no third-party requests), and it
-means turning analytics on is a dashboard task, not a code change.
+`benlei.org/response-option-fit/` is served by the mount Worker, which
+**reverse-proxies** `https://response-option-fit.pages.dev` under the path prefix
+and **sets the security headers (including the CSP) itself**, overriding whatever
+the Pages origin returns. Two consequences:
 
-As of 2026-05-31 the repo is wired for this:
+- The live CSP is the one in the Worker, **not** `public/_headers`. `public/_headers`
+  governs only the Pages origin (`response-option-fit.pages.dev`) and other hosts;
+  the Worker overrides it on the mounted path. So the analytics CSP allowance lives
+  in the Worker.
+- Enabling analytics is a **Worker code change** (the deployed Worker reads no
+  environment variables; the token is a constant in the Worker source). The token
+  is public — it ships in the page — so hardcoding it in the Worker is fine.
 
-- `cloudflare/worker-mount-response-option-fit.js` injects the Cloudflare Web
-  Analytics beacon into HTML responses **only when** a `CF_BEACON_TOKEN` Worker
-  variable is set (and only when it looks like a real hex token). With no token it
-  behaves exactly as before — no beacon, no third-party request.
-- `public/_headers` already allows the beacon's domains in the CSP
-  (`static.cloudflareinsights.com` for the script, `cloudflareinsights.com` for
-  the report), so nothing is CSP-blocked once the beacon is present.
+`cloudflare/worker-mount-response-option-fit.js` in the repo is the reference copy
+of that Worker, with the beacon injection already written and gated on a
+`CF_BEACON_TOKEN` constant (empty by default). The local build and the Playwright
+suite never see the beacon (it is injected only by the live Worker), so they keep
+asserting no third-party requests.
 
-**Prerequisite — make the deployed Worker the current code first.** The mount
-Worker was created *before* this injection existed, so the Worker running on
-Cloudflare right now is the older version without it. Setting the variable alone
-does nothing until the deployed Worker is the current
-`cloudflare/worker-mount-response-option-fit.js` (the one that contains
-`CF_BEACON_TOKEN`, `isValidToken`, and `HTMLRewriter`). Re-deploy it the same way
-you deployed it originally:
+### Turn analytics on
 
-- if you used **wrangler**, run `wrangler deploy` from the repo;
-- if you **pasted the code into the dashboard editor** (Workers & Pages → your
-  Worker → Edit code / Quick edit), paste the current file and **Save and deploy**;
-- if the Worker is **connected to the GitHub repo**, trigger a new deployment.
+1. **Make a Web Analytics site and copy the token.** Cloudflare dashboard
+   (dash.cloudflare.com) → left sidebar → **Analytics & Logs → Web Analytics**
+   (an account-level page, not inside a specific domain) → **Add a site** →
+   hostname `benlei.org`. Cloudflare shows a `<script>` snippet; you only need the
+   **token**, the hex string inside `data-cf-beacon='{"token":"…"}'`. (If you
+   already created a Web Analytics site for `benlei.org`, reuse its token.)
+2. **Update the mount Worker's code.** Open the Worker that serves the mount
+   (Workers & Pages → your `mount-response-option-fit` Worker → **Edit code**).
+   Replace its source with the current
+   `cloudflare/worker-mount-response-option-fit.js` from the repo (it keeps the
+   exact reverse-proxy + header behavior you have now and adds the gated beacon),
+   set `const CF_BEACON_TOKEN = "your-hex-token";` near the top, and **Save and
+   deploy**. (If you manage the Worker with `wrangler`, edit the file and
+   `wrangler deploy`.) Do **not** paste the `env.ASSETS` version from older notes —
+   your Worker proxies the Pages origin and has no assets binding.
+3. **Verify.** Open `https://benlei.org/response-option-fit/`, devtools →
+   **Network** → reload → confirm `beacon.min.js` loads from
+   `static.cloudflareinsights.com` with no **Console** CSP error. Data appears in
+   the Web Analytics dashboard within a few minutes; the site is the whole
+   `benlei.org` hostname, so filter to the path `/response-option-fit/` to see just
+   the lab.
 
-Confirm in the dashboard editor that the live Worker source contains
-`HTMLRewriter` before continuing. (Then clicking "Deploy" after setting the
-variable in the next step redeploys *that* current code, which is what you want.)
+If `beacon.min.js` does not appear: (a) confirm the deployed Worker is the new
+source (it should contain `HTMLRewriter`); (b) confirm the token is plain hex —
+the `analyticsEnabled()` guard (`^[a-f0-9]{16,64}$`) drops anything else, so copy
+just the token value, no quotes or braces; (c) if HTML renders but looks broken,
+it is an encoding edge case — tell the maintainer and we adjust the inject branch.
 
-To turn it on:
-
-1. **Make a Web Analytics site and copy the token.** In the Cloudflare dashboard
-   (dash.cloudflare.com), left sidebar → **Analytics & Logs → Web Analytics**
-   (this is an account-level page, not inside a specific domain). Click **Add a
-   site**, enter the hostname `benlei.org`, and create it. Cloudflare then shows a
-   `<script>` snippet — you do **not** paste it anywhere; you only need the
-   **token**, the hex string inside `data-cf-beacon='{"token":"…"}'`. Copy that
-   token. (Stale tutorials tell you to paste the snippet into your HTML — that is
-   the manual path; here the Worker injects it, so you skip it.)
-2. **Give the token to the Worker.** Dashboard → **Workers & Pages** → open the
-   Worker that serves the mount → **Settings → Variables and Secrets** → add a
-   variable named exactly `CF_BEACON_TOKEN`, paste the token as the value, and
-   **Deploy**. (A plaintext *Variable* is fine — the token is not a secret. If you
-   manage the Worker with `wrangler` instead, add it under `[vars]` in
-   `wrangler.toml`, or run `wrangler secret put CF_BEACON_TOKEN`, then redeploy.)
-3. **Verify.** Open `https://benlei.org/response-option-fit/`, open browser
-   devtools → **Network**, reload, and confirm `beacon.min.js` loads from
-   `static.cloudflareinsights.com` with no error in the **Console**. Numbers show
-   up in the Web Analytics dashboard within a few minutes. The site is the whole
-   `benlei.org` hostname; filter to the path `/response-option-fit/` in the
-   dashboard to see just the lab.
-
-If `beacon.min.js` does not appear in the Network tab, the two likely causes are:
-(a) the deployed Worker is still the old code — redo the prerequisite and confirm
-the live source contains `HTMLRewriter`; or (b) the token is not a plain hex string
-— the Worker's `isValidToken` guard (`^[a-f0-9]{16,64}$`) drops anything else, so
-copy the exact `token` value from the beacon snippet, with no quotes or braces.
-
-To turn it back off, delete the `CF_BEACON_TOKEN` variable and redeploy; the
-beacon disappears and the site makes no third-party request again. (A simpler-
-sounding alternative — the *automatic* per-zone Web Analytics with no token — is
-unreliable here because the Worker generates the HTML, so the edge does not
-inject the beacon for it. Use the token path above.)
+To turn it back off, set `CF_BEACON_TOKEN = ""` and redeploy; the beacon
+disappears and the CSP narrows back to `'self'`.
 
 ### Custom events (held for a later, cross-app decision)
 
