@@ -80,18 +80,19 @@
         <p>Accessibility is treated here as release work, not as a certification claim. The page is built to common WCAG 2.2 AA expectations, but coverage is bounded by what is actually tested rather than asserted in the abstract.</p>
         <p><strong>Tested in CI</strong> on every build:</p>
         <ul>
-          <li>keyboard navigation through puzzle routes in headless Chromium, including widget operation by Space, Enter, and arrow keys;</li>
-          <li>skip-link is the first focusable element on the exhibit page and lands on the main exhibit;</li>
+          <li>keyboard operation of every exercise (Space / Enter), the contents rail, and the Settings dialog, including a focus trap that returns focus to its opener on Escape, and contents-rail jumps that move focus to the target heading;</li>
+          <li>the skip link is the first focusable element and lands on the lab's main heading;</li>
           <li>page changes move focus to the page heading and announce the transition through a polite live region;</li>
           <li>widget state is exposed for assertions and announced through a shared lexicon of polite-live-region templates;</li>
           <li>WCAG AA body-text contrast against the page background;</li>
-          <li>automated WCAG 2.0 / 2.1 A and AA checks (axe-core) on the lab and the colophon, with reveal-on-scroll sections settled to their final state before scanning;</li>
+          <li>automated WCAG 2.0 / 2.1 A and AA checks plus landmark best-practices (axe-core) on the lab, the colophon, and the fully-solved certificate state, with reveal-on-scroll sections settled to their final state before scanning;</li>
+          <li>reflow with no horizontal scrolling down to a 320&nbsp;px viewport (the WCAG 1.4.10 reflow width), alongside the desktop and mobile overflow checks;</li>
           <li>no horizontal overflow at 1280, 1440, 1920, and Pixel-5 mobile widths;</li>
           <li>answer-choice diagram dots stay equal-diameter at 100%, 125%, and 150% zoom and remain visible under <code>forced-colors</code>;</li>
           <li>reduced-motion media query collapses transitions to zero duration;</li>
           <li>no inline event handlers, no inline scripts, no third-party network requests on load.</li>
         </ul>
-        <p><strong>Known gaps and pending work.</strong> Manual screen-reader walkthroughs in NVDA, JAWS, and VoiceOver are pending. Manual zoom audits at 200% and 400% are pending. Cross-browser audits in Firefox and Safari are pending. The exhibit is not yet certified against WCAG 2.2 AA; what is published here is the test surface a build cannot ship without.</p>
+        <p><strong>Known gaps and pending work.</strong> Manual screen-reader walkthroughs in NVDA, JAWS, and VoiceOver are still pending; the automated checks above approximate but do not replace them. Manual zoom audits with real browser magnification at 200% and 400% are pending, though automated reflow at a 320&nbsp;px viewport passes. Cross-browser audits in Firefox and Safari are pending. The exhibit is not yet certified against WCAG 2.2 AA; what is published here is the test surface a build cannot ship without.</p>
         <p>Accessibility issues are taken seriously. Report bugs at <a href="mailto:contact@benlei.org">contact@benlei.org</a> or open an issue at <a href="https://github.com/leibenjamin/response-option-fit/issues" target="_blank" rel="noopener noreferrer">github.com/leibenjamin/response-option-fit/issues</a>, and please include browser, device, assistive technology, and reproduction steps.</p>
       </section>
 

@@ -259,9 +259,11 @@ function LabContents() {
       <details className="lab-contents-disc" ref={detailsRef}>
         <summary className="lab-contents-summary">
           <span className="lab-contents-toggle">Jump to exercise</span>
-          <span className="lab-contents-here" aria-live="polite">
-            {here}
-          </span>
+          {/* Visual scroll-spy only — not a live region: announcing the
+              current section on every scroll change is noise for a screen
+              reader, which already gets position from the headings and the
+              aria-current link in the open list. */}
+          <span className="lab-contents-here">{here}</span>
           <span
             className="lab-contents-progress"
             data-testid="lab-contents-progress"
@@ -2939,10 +2941,13 @@ function PostReceipt({
 
   const receipt: ExerciseReceipt | undefined = exerciseReceipts[exerciseId];
   if (!visible || !receipt) return null;
+  /* A plain region rather than <aside>: an aside is a complementary landmark,
+     and twelve of them (one per solved exercise) nested in <main> with the same
+     name just clutter a screen reader's landmark list. The visible "You
+     practiced" heading labels it, and it reads in flow right after its exercise. */
   return (
-    <aside
+    <div
       className="lab-receipt"
-      aria-label="What you practiced in this exercise"
       data-testid={`lab-receipt-${exerciseId}`}
     >
       <p className="lab-receipt-key">You practiced</p>
@@ -2965,7 +2970,7 @@ function PostReceipt({
           <strong>Professional caveat:</strong> {receipt.caveat}
         </p>
       )}
-    </aside>
+    </div>
   );
 }
 

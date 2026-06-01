@@ -594,6 +594,62 @@ test.describe("Response Option Fit Lab - desktop", () => {
     /* Markdown copy reports success. */
     await page.getByTestId("lab-cert-copy").click();
     await expect(page.getByTestId("lab-cert-status")).toBeVisible();
+
+    /* The fully-solved state — twelve receipts, the unlocked certificate, the
+       progress bar — has no axe WCAG or landmark (best-practice) violations
+       either. Receipts are plain regions (not stacked complementary landmarks)
+       and the progress bar is a real progressbar. */
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.evaluate(async () => {
+      for (let y = 0; y <= document.body.scrollHeight; y += 600) {
+        window.scrollTo(0, y);
+        await new Promise((resolve) => setTimeout(resolve, 15));
+      }
+      window.scrollTo(0, 0);
+    });
+    const solvedAxe = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
+      .analyze();
+    expect(solvedAxe.violations.map((v) => `${v.id} (${v.nodes.length})`)).toEqual(
+      []
+    );
+  });
+
+  test("keyboard: skip link, dialog focus trap, rail jump, and widget operation", async ({
+    page
+  }) => {
+    await page.goto(`${BASE_URL}/`);
+    await page.waitForSelector("#survey-lab-title");
+
+    /* The skip link is the first focusable element and lands on the heading. */
+    await page.keyboard.press("Tab");
+    await expect(page.getByTestId("skip-link")).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#survey-lab-title")).toBeFocused();
+
+    /* The Settings dialog traps focus and returns it to the opener on Escape. */
+    await page.getByTestId("settings-button").focus();
+    await page.getByTestId("settings-button").press("Enter");
+    await page.getByTestId("settings-drawer").waitFor();
+    for (let i = 0; i < 8; i++) await page.keyboard.press("Tab");
+    expect(
+      await page.evaluate(
+        () => !!document.activeElement?.closest("[data-testid=settings-drawer]")
+      )
+    ).toBe(true);
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("settings-button")).toBeFocused();
+
+    /* Activating a contents-rail link by keyboard moves focus to the target
+       heading (not just a silent scroll). */
+    await page.getByText("Jump to exercise").click();
+    await page.getByTestId("lab-contents-link-7").press("Enter");
+    await expect(page.locator("#lab-exercise-7-title")).toBeFocused();
+
+    /* An exercise is fully operable from the keyboard. */
+    await page.getByTestId("lab-scale-points-11").press("Enter");
+    await page.getByTestId("lab-scale-points-7").press("Enter");
+    await expect(page.getByTestId("lab-receipt-E6")).toBeVisible();
   });
 
   test("no WCAG 2 AA accessibility violations (axe-core) on the lab or the colophon", async ({
