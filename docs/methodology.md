@@ -32,6 +32,14 @@ words without falling into a fake 0-100 precision trap; decide when to rotate
 unordered options without scrambling an ordinal scale; and, as a capstone,
 review a draft survey and diagnose each part.
 
+All twelve are framed around a single running example — one coffee shop's
+surveys, Roast & Brew's — so the domain stays fixed while the design problem
+changes from exercise to exercise. The running example is a teaching device, not
+a story: it holds the variable constant the way a textbook reuses one dataset,
+and it deliberately avoids recurring-character callbacks or narrative beats that
+would read as gimmicky to the professional audience. The capstone then reviews
+that same shop's draft survey, so the arc closes where it started.
+
 Wrong moves are designed cul-de-sacs: recoverable, and informative because the
 consequence is shown on the cast rather than scored. The casts are authored and
 deterministic; the only counts shown are over the named cast, never a
