@@ -183,6 +183,23 @@ As of 2026-05-31 the repo is wired for this:
   (`static.cloudflareinsights.com` for the script, `cloudflareinsights.com` for
   the report), so nothing is CSP-blocked once the beacon is present.
 
+**Prerequisite — make the deployed Worker the current code first.** The mount
+Worker was created *before* this injection existed, so the Worker running on
+Cloudflare right now is the older version without it. Setting the variable alone
+does nothing until the deployed Worker is the current
+`cloudflare/worker-mount-response-option-fit.js` (the one that contains
+`CF_BEACON_TOKEN`, `isValidToken`, and `HTMLRewriter`). Re-deploy it the same way
+you deployed it originally:
+
+- if you used **wrangler**, run `wrangler deploy` from the repo;
+- if you **pasted the code into the dashboard editor** (Workers & Pages → your
+  Worker → Edit code / Quick edit), paste the current file and **Save and deploy**;
+- if the Worker is **connected to the GitHub repo**, trigger a new deployment.
+
+Confirm in the dashboard editor that the live Worker source contains
+`HTMLRewriter` before continuing. (Then clicking "Deploy" after setting the
+variable in the next step redeploys *that* current code, which is what you want.)
+
 To turn it on:
 
 1. **Make a Web Analytics site and copy the token.** In the Cloudflare dashboard
@@ -205,6 +222,12 @@ To turn it on:
    up in the Web Analytics dashboard within a few minutes. The site is the whole
    `benlei.org` hostname; filter to the path `/response-option-fit/` in the
    dashboard to see just the lab.
+
+If `beacon.min.js` does not appear in the Network tab, the two likely causes are:
+(a) the deployed Worker is still the old code — redo the prerequisite and confirm
+the live source contains `HTMLRewriter`; or (b) the token is not a plain hex string
+— the Worker's `isValidToken` guard (`^[a-f0-9]{16,64}$`) drops anything else, so
+copy the exact `token` value from the beacon snippet, with no quotes or braces.
 
 To turn it back off, delete the `CF_BEACON_TOKEN` variable and redeploy; the
 beacon disappears and the site makes no third-party request again. (A simpler-
