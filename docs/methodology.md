@@ -150,6 +150,14 @@ This is why the lab leads with interaction rather than a lightweight exposition
 fallback. A text explanation can be useful backmatter, but it is not the
 experience this app is trying to sell.
 
+Where it is clean and specific, a reveal also names the **decision the bad number
+drives** — not just that a count moved, but what a reader does with it (an owner
+acts on an inflated "satisfied" and leaves the problem in place; a contaminated
+denominator becomes a muddy adoption number the team tunes against). This is for
+the audience, who make decisions on survey data; the "so what" is the point. It
+is kept factual about what the data shows or hides, never a melodramatic business
+outcome, and it is used on a few exercises, not forced onto every one.
+
 ## Boundaries
 
 - No backend, automated analyzer, upload, or freeform survey text input. On-device
