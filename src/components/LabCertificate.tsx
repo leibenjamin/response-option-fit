@@ -132,16 +132,21 @@ export function LabCertificate() {
           : "Finish the set to claim your certificate."}
       </h3>
 
-      <div
-        className="lab-cert-progress"
-        data-testid="lab-cert-progress"
-        role="group"
-        aria-label={`${count} of ${total} exercises practiced`}
-      >
-        <div className="lab-cert-bar" aria-hidden="true">
+      <div className="lab-cert-progress" data-testid="lab-cert-progress">
+        <div
+          className="lab-cert-bar"
+          role="progressbar"
+          aria-label="Exercises practiced"
+          aria-valuemin={0}
+          aria-valuemax={total}
+          aria-valuenow={count}
+          aria-valuetext={`${count} of ${total} exercises practiced`}
+        >
           <span className="lab-cert-bar-fill" style={{ width: `${pct}%` }} />
         </div>
-        <p className="lab-cert-count">
+        {/* aria-hidden: the progressbar above already conveys this to a screen
+            reader, so the visible count would otherwise be read twice. */}
+        <p className="lab-cert-count" aria-hidden="true">
           <strong data-testid="lab-cert-count">{count}</strong> of {total}{" "}
           exercises practiced
         </p>
