@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 import {
   exerciseReceipts,
   responseOptionKnowledgeMap,
@@ -593,6 +594,37 @@ test.describe("Response Option Fit Lab - desktop", () => {
     /* Markdown copy reports success. */
     await page.getByTestId("lab-cert-copy").click();
     await expect(page.getByTestId("lab-cert-status")).toBeVisible();
+  });
+
+  test("no WCAG 2 AA accessibility violations (axe-core) on the lab or the colophon", async ({
+    page
+  }) => {
+    for (const [path, sel] of [
+      ["/", "#survey-lab-title"],
+      ["/#colophon", "#colophon-title"]
+    ] as const) {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(`${BASE_URL}${path}`);
+      await page.waitForSelector(sel);
+      /* Settle every reveal-on-scroll section to full opacity before scanning,
+         so the scan reflects the contrast a reader actually sees, not a frame
+         caught mid-reveal. */
+      await page.evaluate(async () => {
+        for (let y = 0; y <= document.body.scrollHeight; y += 500) {
+          window.scrollTo(0, y);
+          await new Promise((resolve) => setTimeout(resolve, 20));
+        }
+        window.scrollTo(0, 0);
+      });
+      await page.waitForTimeout(200);
+      const results = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .analyze();
+      expect(
+        results.violations.map((v) => `${v.id} (${v.nodes.length} nodes)`),
+        path
+      ).toEqual([]);
+    }
   });
 
   test("no freeform input, third-party runtime requests, or desktop overflow", async ({ page }) => {

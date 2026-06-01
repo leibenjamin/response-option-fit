@@ -169,6 +169,7 @@ export function AnimatedNumber({
     <span
       className={["motion-count", className].filter(Boolean).join(" ")}
       data-motion-state={motionState}
+      role="img"
       aria-label={ariaLabel ?? finalText}
       aria-live="off"
       style={countStyle}
