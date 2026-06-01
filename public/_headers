@@ -1,9 +1,14 @@
 # Recommended security/cache headers for the Response Option Fit Lab static build.
 # Cloudflare Pages and Netlify both honor this `_headers` file at the site root.
 # For other hosts, mirror these into the host's header configuration.
+#
+# The CSP allows Cloudflare Web Analytics' beacon (static.cloudflareinsights.com
+# for the script, cloudflareinsights.com for the report). The beacon itself is
+# only injected by the mount Worker when a token is configured (see
+# docs/deployment.md); these allowances are inert until then.
 
 /*
-  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'; base-uri 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'none'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; form-action 'none'; base-uri 'self'; frame-ancestors 'none'
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
