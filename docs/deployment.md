@@ -215,6 +215,29 @@ the `analyticsEnabled()` guard (`^[a-f0-9]{16,64}$`) drops anything else, so cop
 just the token value, no quotes or braces; (c) if HTML renders but looks broken,
 it is an encoding edge case — tell the maintainer and we adjust the inject branch.
 
+**Two CSP gotchas, both already handled in the Worker — verify if you see CSP
+errors in the console:**
+
+- *`beacon.min.js` blocked by `script-src 'self'`.* The build also bakes a
+  `<meta http-equiv="Content-Security-Policy">` into the HTML (`vite.config.ts`),
+  scoped to `'self'`. A browser enforces **every** CSP it is handed, so that
+  strict meta blocks the beacon even though the Worker's header CSP allows it.
+  The Worker strips that meta on the mounted path (the `meta[http-equiv]`
+  handler in the inject branch) so its header is the single authoritative
+  policy. If the beacon is still blocked by `'self'`, the deployed Worker is an
+  older copy without that strip — redeploy the current repo source.
+- *A blocked **inline** script (not `beacon.min.js`, usually near `</body>`).*
+  The app ships **no inline scripts** — the whole build is one external module —
+  so any inline script on the live page is injected by a Cloudflare **edge**
+  feature, not by this app or this Worker. The usual cause is Cloudflare's
+  **automatic Web Analytics injection** (a second, redundant beacon on top of the
+  Worker's), and occasionally **Rocket Loader** or **Email Address Obfuscation**.
+  Fix it at the source, not by loosening the CSP: in **Web Analytics → your site
+  → Manage site**, switch injection from automatic to **manual** (the Worker does
+  the injection); if it persists, turn off **Speed → Optimization → Rocket
+  Loader** and **Scrape Shield → Email Address Obfuscation** for the zone. The
+  strict CSP intentionally forbids inline scripts; keep it that way.
+
 To turn it back off, set `CF_BEACON_TOKEN = ""` and redeploy; the beacon
 disappears and the CSP narrows back to `'self'`.
 

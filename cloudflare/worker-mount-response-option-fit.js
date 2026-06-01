@@ -97,7 +97,22 @@ export default {
       const beacon =
         `<script defer src="${CF_BEACON_SRC}" ` +
         `data-cf-beacon='{"token":"${CF_BEACON_TOKEN}"}'></script>`;
+      /* The build also bakes a <meta http-equiv="Content-Security-Policy"> into
+         the HTML (vite.config.ts), still scoped to script-src 'self'. A browser
+         enforces every CSP it is handed, so that strict meta would block the
+         beacon even though the header CSP set above allows it. Strip the meta on
+         the mounted path and let this Worker's header be the single authoritative
+         policy — it is also the more complete one (meta CSP cannot express
+         frame-ancestors). */
       const transformed = new HTMLRewriter()
+        .on("meta[http-equiv]", {
+          element(element) {
+            const kind = (element.getAttribute("http-equiv") || "").toLowerCase();
+            if (kind === "content-security-policy") {
+              element.remove();
+            }
+          }
+        })
         .on("head", {
           element(element) {
             element.append(beacon, { html: true });

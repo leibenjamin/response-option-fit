@@ -4,6 +4,13 @@ import react from "@vitejs/plugin-react";
 // frame-ancestors is intentionally NOT in the meta CSP — that directive is
 // only honored as an HTTP response header and is ignored when delivered via
 // <meta http-equiv>. See public/_headers for the real header CSP.
+//
+// This meta CSP governs static-host and *.pages.dev delivery. On the live
+// Worker-mounted path (benlei.org/response-option-fit/) the mount Worker sets
+// its own header CSP and strips this meta, so the header is the single
+// authoritative policy there — that is also where the analytics allowance is
+// added when the beacon is injected. Keep this meta strict; do not widen it for
+// analytics.
 const PROD_CSP =
   "default-src 'none'; " +
   "script-src 'self'; " +
