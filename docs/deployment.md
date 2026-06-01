@@ -141,105 +141,90 @@ diagnostic. It removes Worker behavior from the variables.
 Then bind the generated static assets to the Worker as `ASSETS` in the
 Cloudflare configuration for the deployment target.
 
-## Analytics (Cloudflare Web Analytics)
+## Analytics
 
-The project's posture is privacy-respecting, not analytics-free: a cookieless,
-aggregate beacon is acceptable (see the colophon). Cloudflare Web Analytics fits
-the deployment and adds no cookies and no personal data.
+This deployment runs **two** layers: Cloudflare's **server-side** traffic
+analytics (always on, no code, cannot be ad-blocked) and the client-side Web
+Analytics **beacon** (on; adds Core Web Vitals). The beacon is a third-party
+request on page load, so the colophon discloses it; see "The client beacon (on)."
 
-### What it measures — and what it does NOT
+### Server-side traffic analytics (what we use — already on)
 
-Cloudflare Web Analytics is **page-traffic** analytics: visits, page views,
-rough unique visitors (cookieless, sampled), referrers, countries, devices, and
-Core Web Vitals. That answers "how many people reached the lab."
+`benlei.org` is proxied through Cloudflare (orange-cloud), so Cloudflare counts
+every request at the edge with nothing added to the page. In the dashboard
+(**Analytics & Logs → Traffic**, or the zone's Web Analytics view) filter the
+path to `/response-option-fit/` to see the lab's traffic: requests, visits,
+bandwidth, cache-hit rate, referrers, countries, devices. Edge-measured, so it
+**cannot be ad-blocked** and needs no code. This answers "how many people reached
+the lab," which is the number that matters for a portfolio piece. (The
+`Cache Hit Rate` and `Bandwidth Served` tiles are the tell that the data is
+server-side: only the edge can know them — a client beacon cannot.)
 
-It does **not** do custom events or per-visitor funnels. So it will NOT, on its
-own, tell you:
+It does **not** do custom events or per-visitor funnels — how far each visitor
+got, how many finished all twelve, certificate copies, step-to-step conversion.
+Those need **custom event tracking**; see "Custom events" below.
 
-- how far each visitor got (how many exercises they finished),
-- how many visitors complete all twelve,
-- how many download or copy the completion certificate,
-- conversion between any two feature/funnel steps.
+### The client beacon (on)
 
-Those require **custom event tracking**, which Cloudflare Web Analytics does not
-provide. See "Custom events" below.
+Cloudflare Web Analytics' client-side **beacon** (`beacon.min.js` from
+`static.cloudflareinsights.com`) adds Core Web Vitals and load timing, reported to
+the Web Analytics (RUM) dashboard. It is **on** for this deployment.
 
-### How the live site is actually served (read this first)
+How it is wired: the token is **not** committed. The repo Worker keeps
+`const CF_BEACON_TOKEN = ""`; the live `mount-response-option-fit` Worker has the
+hex token set in its dashboard source, and that is what turns injection on. The
+token is public (it ships in the page), so this split is only to keep the repo
+host-agnostic, not for secrecy. To change it: Workers & Pages →
+`mount-response-option-fit` → **Edit code** → set `const CF_BEACON_TOKEN` → **Save
+and deploy**. To turn the beacon off, set it back to `""`, redeploy, and walk the
+colophon disclosures (below) back.
+
+Two consequences worth knowing:
+
+- The beacon is a **third-party request on page load**, so the colophon discloses
+  it — the privacy and materials sections, and the build list at `index.html`
+  line 93. Keep those in sync with whether the beacon is on.
+- It is **ad-blocked** for much of this site's technical audience, so the RUM
+  numbers undercount; the server-side layer above is the count that captures
+  everyone. Treat RUM as the "how fast / Core Web Vitals" view and server-side as
+  the "how many" view.
+
+Verify it loads — note your own browser may block it (Opera's built-in blocker or
+an ad-block extension yields `net::ERR_BLOCKED_BY_CLIENT`, which is the client,
+not the site): open `benlei.org/response-option-fit/` in a browser with no ad
+blocker (or allowlist the site), DevTools → **Network** → reload → `beacon.min.js`
+returns `200` from `static.cloudflareinsights.com` with no **Console** CSP error.
+
+### How the live site is served (background)
 
 `benlei.org/response-option-fit/` is served by the mount Worker, which
 **reverse-proxies** `https://response-option-fit.pages.dev` under the path prefix
 and **sets the security headers (including the CSP) itself**, overriding whatever
-the Pages origin returns. Two consequences:
-
-- The live CSP is the one in the Worker, **not** `public/_headers`. `public/_headers`
-  governs only the Pages origin (`response-option-fit.pages.dev`) and other hosts;
-  the Worker overrides it on the mounted path. So the analytics CSP allowance lives
-  in the Worker.
-- Enabling analytics is a **Worker code change** (the deployed Worker reads no
-  environment variables; the token is a constant in the Worker source). The token
-  is public — it ships in the page — so hardcoding it in the Worker is fine.
-
-`cloudflare/worker-mount-response-option-fit.js` in the repo is the reference copy
-of that Worker, with the beacon injection already written and gated on a
-`CF_BEACON_TOKEN` constant (empty by default). The local build and the Playwright
-suite never see the beacon (it is injected only by the live Worker), so they keep
+the Pages origin returns. So the live CSP is the Worker's, **not**
+`public/_headers` (which governs only the Pages origin and other static hosts).
+The local build and the Playwright suite never see any beacon, so they keep
 asserting no third-party requests.
 
-### Turn analytics on
+### CSP gotchas (handled in the Worker)
 
-1. **Make a Web Analytics site and copy the token.** Cloudflare dashboard
-   (dash.cloudflare.com) → left sidebar → **Analytics & Logs → Web Analytics**
-   (an account-level page, not inside a specific domain) → **Add a site** →
-   hostname `benlei.org`. Cloudflare shows a `<script>` snippet; you only need the
-   **token**, the hex string inside `data-cf-beacon='{"token":"…"}'`. (If you
-   already created a Web Analytics site for `benlei.org`, reuse its token.)
-2. **Update the mount Worker's code.** Open the Worker that serves the mount
-   (Workers & Pages → your `mount-response-option-fit` Worker → **Edit code**).
-   Replace its source with the current
-   `cloudflare/worker-mount-response-option-fit.js` from the repo (it keeps the
-   exact reverse-proxy + header behavior you have now and adds the gated beacon),
-   set `const CF_BEACON_TOKEN = "your-hex-token";` near the top, and **Save and
-   deploy**. (If you manage the Worker with `wrangler`, edit the file and
-   `wrangler deploy`.) Do **not** paste the `env.ASSETS` version from older notes —
-   your Worker proxies the Pages origin and has no assets binding.
-3. **Verify.** Open `https://benlei.org/response-option-fit/`, devtools →
-   **Network** → reload → confirm `beacon.min.js` loads from
-   `static.cloudflareinsights.com` with no **Console** CSP error. Data appears in
-   the Web Analytics dashboard within a few minutes; the site is the whole
-   `benlei.org` hostname, so filter to the path `/response-option-fit/` to see just
-   the lab.
-
-If `beacon.min.js` does not appear: (a) confirm the deployed Worker is the new
-source (it should contain `HTMLRewriter`); (b) confirm the token is plain hex —
-the `analyticsEnabled()` guard (`^[a-f0-9]{16,64}$`) drops anything else, so copy
-just the token value, no quotes or braces; (c) if HTML renders but looks broken,
-it is an encoding edge case — tell the maintainer and we adjust the inject branch.
-
-**Two CSP gotchas, both already handled in the Worker — verify if you see CSP
-errors in the console:**
+Two CSP interactions the beacon depends on, both already handled in the Worker —
+check here first if the beacon is ever CSP-blocked again:
 
 - *`beacon.min.js` blocked by `script-src 'self'`.* The build also bakes a
   `<meta http-equiv="Content-Security-Policy">` into the HTML (`vite.config.ts`),
   scoped to `'self'`. A browser enforces **every** CSP it is handed, so that
-  strict meta blocks the beacon even though the Worker's header CSP allows it.
-  The Worker strips that meta on the mounted path (the `meta[http-equiv]`
-  handler in the inject branch) so its header is the single authoritative
-  policy. If the beacon is still blocked by `'self'`, the deployed Worker is an
-  older copy without that strip — redeploy the current repo source.
+  strict meta would block the beacon even though the Worker's header CSP allows
+  it. The Worker strips that meta on the mounted path (the `meta[http-equiv]`
+  handler) so its header is the single authoritative policy.
 - *A blocked **inline** script (not `beacon.min.js`, usually near `</body>`).*
   The app ships **no inline scripts** — the whole build is one external module —
   so any inline script on the live page is injected by a Cloudflare **edge**
-  feature, not by this app or this Worker. The usual cause is Cloudflare's
-  **automatic Web Analytics injection** (a second, redundant beacon on top of the
-  Worker's), and occasionally **Rocket Loader** or **Email Address Obfuscation**.
-  Fix it at the source, not by loosening the CSP: in **Web Analytics → your site
-  → Manage site**, switch injection from automatic to **manual** (the Worker does
-  the injection); if it persists, turn off **Speed → Optimization → Rocket
-  Loader** and **Scrape Shield → Email Address Obfuscation** for the zone. The
-  strict CSP intentionally forbids inline scripts; keep it that way.
-
-To turn it back off, set `CF_BEACON_TOKEN = ""` and redeploy; the beacon
-disappears and the CSP narrows back to `'self'`.
+  feature, independent of the beacon and present even with analytics off. Likely
+  **Rocket Loader** or bot-detection JS (its hash changes per request),
+  occasionally **Email Address Obfuscation**. Fix it at the source, not by
+  loosening the CSP: turn off **Speed → Optimization → Rocket Loader** (and, if
+  present, **Scrape Shield → Email Address Obfuscation**) for the zone. The strict
+  CSP intentionally forbids inline scripts; keep it that way.
 
 ### Custom events (held for a later, cross-app decision)
 

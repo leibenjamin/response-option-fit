@@ -138,9 +138,9 @@ Current measured production build (2026-05-31, after retiring the old exhibit):
 entry JavaScript `51.45 KB gzip` plus the lab home route chunk `52.70 KB gzip`,
 CSS `10.97 KB gzip` (after pruning the retired exhibit's dead styles). The lab
 home route is code-split and loads on demand. All
-interaction is client-side. The only optional third-party runtime request is a
-privacy-friendly, cookieless analytics beacon (Cloudflare Web Analytics) when it
-is enabled for the deployment; see [docs/deployment.md](docs/deployment.md).
+interaction is client-side. The only third-party runtime request is a
+privacy-friendly, cookieless analytics beacon (Cloudflare Web Analytics); see
+[docs/deployment.md](docs/deployment.md).
 
 ## Privacy Budget
 
@@ -148,9 +148,9 @@ The exhibit is static and runs entirely in the browser. The project commits
 to:
 
 - Privacy-respecting by default: no ad tech, no cookies for cross-site tracking,
-  no third-party origins in the runtime bundle, and no selling of data. If
-  visitor analytics are added they will be cookieless and aggregate (no personal
-  data, no cross-site tracking) and acknowledged in the colophon.
+  no third-party origins in the runtime bundle, and no selling of data. Visitor
+  analytics use Cloudflare Web Analytics — cookieless and aggregate (no personal
+  data, no cross-site tracking) — acknowledged in the colophon.
 - No PII collected or transmitted under any condition.
 - On-device progress: with Remember on (its default), the exercises you've
   finished and your certificate count are kept in `localStorage` so they resume
