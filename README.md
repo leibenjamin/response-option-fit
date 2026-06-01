@@ -1,5 +1,9 @@
 # Response Option Fit Lab
 
+**Live → [benlei.org/response-option-fit](https://benlei.org/response-option-fit/)**
+
+![The Response Option Fit Lab: the title "The quiet ways a survey lies," a jump-to-exercise contents rail listing the twelve exercises, and the first exercise beginning below.](docs/lab-screenshot.png)
+
 Response Option Fit Lab is a static, interactive teaching lab about how survey
 answer choices can quietly distort what a survey measures. The deployed home is
 a single SQLBolt-style practice page, titled "The quiet ways a survey lies.",
