@@ -157,8 +157,8 @@ export function LabCertificate() {
           <p className="lab-cert-blurb lab-selectable">
             A keepsake for finishing the lab — your coverage, the things you can
             now say without bluffing, the sources, and the date. It is
-            self-issued, not an accredited credential; the verification code is a
-            checksum of the contents, not a signature.
+            self-issued, not an accredited credential; the code is a checksum of
+            the certificate's date and contents, not a cryptographic signature.
           </p>
           <div className="lab-cert-actions">
             <button

@@ -169,7 +169,7 @@ test.describe("Response Option Fit Lab - data contract", () => {
     expect([...LAB_EXERCISE_IDS].sort()).toEqual(Object.keys(exerciseReceipts).sort());
   });
 
-  test("certificate code is deterministic and content-bound; markdown carries the payload", () => {
+  test("certificate code is deterministic and bound to date, coverage, and contents; markdown carries the payload", () => {
     /* Same inputs -> same code; different coverage or date -> different code. */
     expect(certificateCode("2026-05-31", 12, 12)).toBe(
       certificateCode("2026-05-31", 12, 12)

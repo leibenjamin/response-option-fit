@@ -43,7 +43,30 @@ export function certificateCode(
   count: number,
   total: number
 ): string {
-  return contentCode(`response-option-fit|v1|${dateISO}|${count}/${total}`);
+  /* Hash the certificate's actual contents — its date, coverage, and the
+     lens/habit/facts/reading payload it renders — so the code is genuinely a
+     checksum of what the certificate says, not only its date and count. It is
+     still a checksum, never a signature: a static site holds no secret key, and
+     the certificate says exactly that. */
+  const manifest = JSON.stringify({
+    app: "response-option-fit",
+    schema: "certificate-v1",
+    dateISO,
+    coverage: { count, total },
+    lenses: LENSES,
+    habit: HABIT,
+    credentialingFacts: credentialingFacts.map(({ id, text, sourceCue }) => ({
+      id,
+      text,
+      sourceCue
+    })),
+    furtherReading: furtherReading.map(({ name, kind, what }) => ({
+      name,
+      kind,
+      what
+    }))
+  });
+  return contentCode(manifest);
 }
 
 export function buildCertificateMarkdown(
@@ -79,7 +102,7 @@ ${HABIT}
 ${reading}
 
 ---
-Verification: ${code} — a checksum of this certificate's date and contents, not a cryptographic signature.
+Code: ${code} — a checksum of this certificate's date, coverage, and contents, not a cryptographic signature.
 A self-issued keepsake from the Response Option Fit Lab (benlei.org/response-option-fit/), not an accredited credential.
 `;
 }
