@@ -18,9 +18,9 @@ export function Colophon() {
           <a
             className="foot-link"
             href={import.meta.env.BASE_URL}
-            data-testid="return-to-exhibit"
+            data-testid="return-to-lab"
           >
-            Return to overview
+            Return to the lab
           </a>
         </p>
       </footer>
