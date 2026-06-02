@@ -35,6 +35,7 @@
   --accent-2: #8a3a26;
   --accent-soft: #e7c8bb;
   --accent-paper: #f3dfd6;
+  --accent-wash: #f6ece6;
 
   /* Muted route hues — used only as small eyebrow tints */
   --route-r: #5d6e44;
@@ -2992,8 +2993,11 @@ summary:focus-visible {
 .lab-taskband {
   border: 1px solid var(--accent-soft);
   border-left: 3px solid var(--accent);
-  background: var(--accent-paper);
-  padding: var(--s-4) var(--s-5);
+  /* A light warm wash, not the saturated peach: the task band is hoisted to the
+     top of all twelve exercises, so a softer ground keeps it present and
+     task-first without becoming the dominant repeated module on the page. */
+  background: var(--accent-wash);
+  padding: var(--s-3) var(--s-4);
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -3018,7 +3022,10 @@ summary:focus-visible {
 }
 
 .lab-taskband .lab-task.is-active {
-  background: var(--paper-card);
+  /* The active rung reads as current through its accent border, accent mark, and
+     darker text — no nested white card. The active-task brief below carries the
+     detail, so the band no longer stacks two cards on the wash. */
+  background: transparent;
   border-color: var(--accent);
 }
 
