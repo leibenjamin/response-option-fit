@@ -426,6 +426,9 @@ summary:focus-visible {
 }
 
 .foot-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   color: inherit;
   border-bottom: 0;
   text-decoration: underline;
@@ -607,6 +610,13 @@ summary:focus-visible {
 .lab-route-proofline strong {
   color: var(--ink-2);
   font-weight: 600;
+}
+
+.lab-route-proofline a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  vertical-align: middle;
 }
 
 /* ─── Lab contents rail: a sticky jump-to-exercise nav for the long page ─── */

@@ -57,8 +57,8 @@ function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
       </Suspense>
       <footer className="foot">
         <p className="foot-line">
-          Static exhibit. No backend, no automated analyzer, no upload of your work, no
-          survey analyzer.
+          Static exhibit. No backend, no upload of your work, no survey
+          analyzer.
         </p>
         <p className="foot-line foot-line--quiet">
           Built for editorial study of response-option fit.

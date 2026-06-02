@@ -11,11 +11,10 @@ import {
    skips requestAnimationFrame entirely, because the global CSS reduced-motion
    rule cannot stop RAF on its own.
 
-   The FLIP (board re-sort) and one-shot in-view cue helpers from the
-   2026-05-24 local research motion spec (docs/research/2026-05-24-persona-wave-followups/
-   output-C-micro-motion-spec.md) are intentionally NOT added yet: FLIP needs the
-   collision/gate boards restructured so cases physically move into lanes, and the
-   hub cue needs the hook re-pointed; both are staged for a later wave. */
+   The FLIP (board re-sort) and one-shot in-view cue helpers are intentionally
+   NOT added yet: FLIP needs the collision/gate boards restructured so cases
+   physically move into lanes, and the hub cue needs the hook re-pointed; both
+   are staged for a later wave. */
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 

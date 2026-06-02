@@ -2,16 +2,11 @@ node_modules/
 dist/
 .vite/
 .local/
-.local-notes/
-.local-notes
-.local-notes/
-.playwright-mcp/
 *.tsbuildinfo
 test-results/
 playwright-report/
 reports/
 coverage/
-tests/verify-hub*.mjs
 .env
 .env.*
 !.env.example
@@ -23,16 +18,6 @@ Thumbs.db
 *.zip
 *.tar.gz
 *.tgz
-
-# Local working docs: handoff notes, page audits, long-form research dumps,
-# red-team notes, deep-research prompts. Curated public docs belong in docs/.
-docs/handoff.md
-docs/design-passes/
-docs/research/
-docs/interactive-overhaul-audit.md
-docs/page-walkthrough-audit.md
-docs/case-lab-deep-research-prompt.md
-docs/specimen-red-team.md
 
 # Stray local artifacts (Office exports, Windows alternate-data-stream files).
 *.docx

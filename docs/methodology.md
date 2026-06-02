@@ -160,7 +160,7 @@ outcome, and it is used on a few exercises, not forced onto every one.
 
 ## Boundaries
 
-- No backend, automated analyzer, upload, or freeform survey text input. On-device
+- No backend, upload, automated analyzer, or freeform survey text input. On-device
   progress (completed exercises + certificate count) is opt-in and clearable;
   any visitor analytics stay cookieless and aggregate.
 - No score or grade on the work, no leaderboard or streak, and no claim that the

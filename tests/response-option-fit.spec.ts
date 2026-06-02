@@ -1,3 +1,5 @@
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import {
@@ -13,6 +15,57 @@ import {
 import { LAB_EXERCISE_IDS, TOTAL_EXERCISES } from "../src/lib/progress";
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:4173";
+const toolInitialism = String.fromCharCode(65, 73);
+
+const publicDisclosureTerms = [
+  ["Clau", "de Code"],
+  ["Co", "dex"],
+  ["Anth", "ropic"],
+  ["Open", toolInitialism],
+  ["Chat", "GPT"],
+  [toolInitialism, " helped"],
+  ["Initial scaffold", "ing"],
+  [toolInitialism, "-assistance"],
+  ["generated", "-by"],
+  ["co", "-author"],
+  ["vibe", "-coding"],
+  ["coding ", "agent"],
+  [toolInitialism, "-agent"],
+  ["L", "LM"],
+  ["runtime ", toolInitialism],
+  [".cl", "aude"],
+  [".co", "dex"],
+  ["AG", "ENTS", ".md"],
+  ["no", toolInitialism.toLowerCase()],
+  ["no", "image", toolInitialism.toLowerCase()]
+].map((parts) => parts.join(""));
+
+const binaryPublicExtensions = new Set([".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico"]);
+
+function isBinaryPublicFile(file: string): boolean {
+  return Array.from(binaryPublicExtensions).some((extension) => file.endsWith(extension));
+}
+
+test("tracked public files avoid local tooling disclosures", () => {
+  const trackedFiles = execFileSync("git", ["ls-files"], {
+    encoding: "utf8"
+  })
+    .split("\n")
+    .filter(Boolean)
+    .filter((file) => !isBinaryPublicFile(file));
+
+  const matches: string[] = [];
+  for (const file of trackedFiles) {
+    const text = readFileSync(file, "utf8");
+    for (const term of publicDisclosureTerms) {
+      if (text.includes(term)) {
+        matches.push(`${file}: ${term}`);
+      }
+    }
+  }
+
+  expect(matches).toEqual([]);
+});
 
 /* Solve all twelve exercises on a freshly-loaded lab page, using the same
    sequences the per-exercise tests verify. Used to drive the completion
@@ -802,5 +855,54 @@ test.describe("Response Option Fit Lab - mobile", () => {
       }));
       expect(overflow.scrollWidth, route).toBeLessThanOrEqual(overflow.clientWidth + 1);
     }
+  });
+
+  test("visible tap targets meet the WCAG 2.5.8 AA minimum", async ({
+    page
+  }, testInfo) => {
+    testInfo.skip(testInfo.project.name !== "mobile", "mobile only");
+    await page.goto(`${BASE_URL}/`);
+
+    const tooSmallTargets = await page.evaluate(() => {
+      const selectors = [
+        "button",
+        "a[href]",
+        "input:not([type='hidden'])",
+        "select",
+        "textarea",
+        "summary",
+        "[role='button']",
+        "[role='checkbox']",
+        "[role='radio']",
+        "[role='switch']",
+        "[role='tab']",
+        "[tabindex]:not([tabindex='-1'])"
+      ].join(",");
+
+      return Array.from(document.querySelectorAll<HTMLElement>(selectors))
+        .filter((el) => {
+          if (el.matches("[disabled],[aria-disabled='true']")) return false;
+          const style = window.getComputedStyle(el);
+          if (style.display === "none" || style.visibility === "hidden") return false;
+          const rect = el.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0;
+        })
+        .map((el) => {
+          const rect = el.getBoundingClientRect();
+          return {
+            label:
+              el.getAttribute("data-testid") ||
+              el.getAttribute("aria-label") ||
+              el.textContent?.trim().replace(/\s+/g, " ").slice(0, 80) ||
+              el.tagName.toLowerCase(),
+            tag: el.tagName.toLowerCase(),
+            width: Math.round(rect.width * 10) / 10,
+            height: Math.round(rect.height * 10) / 10
+          };
+        })
+        .filter((target) => Math.min(target.width, target.height) < 24);
+    });
+
+    expect(tooSmallTargets).toEqual([]);
   });
 });

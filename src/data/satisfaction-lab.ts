@@ -1,16 +1,10 @@
 /* Engine for the scale-builder exercise on the #lab page — Exercise 1 of the
-   SQLBolt-style multi-exercise practice lab (see project_survey_lab_redirect
-   in memory; see docs/design-passes/2026-05-25-strategic-redirect-survey-labs.md).
+   SQLBolt-style multi-exercise practice lab.
 
-   AUDIENCE + SCENARIO RULE — the LAB ITSELF must be clever/satisfying/non-
-   facile for an analyst-level user (the lab's variety + depth do that
-   job across multiple exercises). The scenario INSIDE this single exercise
-   is a vehicle for the lesson, intentionally concrete and non-loaded: a
-   coffee-shop visit feedback survey. NOT "Brightwater" (the original
-   too-generic placeholder) and NOT "you're the manager designing your own
-   360" (the second wrong direction). See
-   [[feedback-lab-scenarios-for-analyst-user]] in memory for the two
-   corrections that landed here.
+   The lab itself carries the analyst-level depth across multiple exercises.
+   This first scenario stays intentionally concrete and non-loaded: a coffee-shop
+   visit feedback survey. The scenario is only the vehicle for the response-scale
+   lesson, not a domain story the visitor needs to learn.
 
    The cast (Ada/Ben/Cleo/Dev/Eve) is a fixed set of named fictional
    visitors to a coffee shop with stated true feelings — NOT a distribution.

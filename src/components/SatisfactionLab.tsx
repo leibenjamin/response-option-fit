@@ -328,7 +328,7 @@ export function SatisfactionLab() {
         <p className="lab-route-proofline">
           Built by <strong>Ben Lei</strong> — a static React + TypeScript exhibit
           with authored interactions, source-bounded claims, and Playwright +
-          accessibility checks; no automated analyzer.{" "}
+          accessibility checks.{" "}
           <a href="#colophon">Colophon</a> ·{" "}
           <a
             href="https://github.com/leibenjamin/response-option-fit"

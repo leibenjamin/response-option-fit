@@ -106,8 +106,8 @@ npm test
 The Playwright suite drives each lab exercise end-to-end (including the gated
 source drawers, the sticky contents rail, and the completion certificate),
 checks the lab data contract (receipts, source drawers, and knowledge-map links
-stay internally consistent), and checks that no freeform survey input or runtime
-automation exists. For accessibility it runs axe-core (WCAG 2.0/2.1 A and AA plus
+stay internally consistent), and checks that no freeform survey input or
+automated analyzer exists. For accessibility it runs axe-core (WCAG 2.0/2.1 A and AA plus
 landmark best-practices) on the lab, the colophon, and the fully-solved
 certificate state; verifies keyboard operation (skip link, the Settings dialog's
 focus trap, contents-rail focus moves, and solving an exercise by keyboard); and
