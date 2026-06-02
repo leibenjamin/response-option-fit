@@ -312,9 +312,9 @@ export function SatisfactionLab() {
         </h1>
         <p className="lab-route-lede">
           Each exercise below is one real failure mode in how survey answer
-          choices are written. They all come from one coffee shop&rsquo;s
-          surveys — Roast &amp; Brew&rsquo;s — so the only thing changing from
-          exercise to exercise is the design, not the domain. Tinker with the
+          choices are written. They are all framed as surveys from one fictional
+          coffee shop, Roast &amp; Brew, so the only thing changing from exercise
+          to exercise is the response-option design, not the domain. Tinker with the
           controls, watch a fixed cast of people flow through, and read the
           consequence. Wrong moves are part of the practice — they show what
           would have shipped. The closing map shows what you covered (and
@@ -668,9 +668,9 @@ function ScaleBuilderExercise({ num }: { num: number }) {
             You didn&rsquo;t change a single visitor&rsquo;s feeling — you
             changed the options and the wording, and the report now reads{" "}
             <strong>{satCount} of 5 satisfied</strong>. That&rsquo;s the kind of
-            number an owner acts on: read it as &ldquo;people are happy&rdquo;
-            and the very thing the unhappy ones disliked stays exactly as it is —
-            they never surface to say otherwise. Every move you made is a tell
+            number an owner may act on: read it as &ldquo;people are happy&rdquo;
+            and the problem the unhappy ones saw can stay hidden, because they
+            never surface to say otherwise. Every move you made is a tell
             you can now read in someone else&rsquo;s survey:
           </p>
           <ul className="lab-tells lab-selectable">
@@ -2190,7 +2190,8 @@ function FalsePremiseExercise({ num }: { num: number }) {
           ✓ A clean-looking Yes/No can sit on a wrong denominator: leave the
           non-users in and &ldquo;Did order-ahead save you time?&rdquo; blends in
           people who never opened the feature, so the team reads a muddy adoption
-          number and tunes the wrong thing. The screen that fits keeps everyone
+          number and risks tuning against the wrong denominator. The screen that
+          fits keeps everyone
           with a real basis and drops everyone without one — &ldquo;owns a
           phone&rdquo; was too loose, &ldquo;weekly&rdquo; too tight. And asking
           about the app first turns one undifferentiated &ldquo;didn&rsquo;t use
@@ -2383,7 +2384,7 @@ function AcquiescenceExercise({ num }: { num: number }) {
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-acq-pass">
           ✓ Under agree/disagree, the customers who felt brushed off still
           &ldquo;agree the barista was friendly&rdquo; — the report reads
-          all-friendly and the one who needs coaching never surfaces. Where you
+          all-friendly and the service problem never surfaces. Where you
           can, swap agree/disagree for item-specific wording: with nothing to nod
           along to, the acquiescence pull disappears and answers track real
           views. A reverse-worded check is a detection patch — useful to flag the
@@ -2690,8 +2691,8 @@ function QuantifierExercise({ num }: { num: number }) {
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-quant-pass">
           ✓ With &ldquo;Rarely / Sometimes / Often,&rdquo; the owner can&rsquo;t
           tell an occasional visitor from a regular — everyone lands near
-          &ldquo;Sometimes&rdquo; and the segmentation the question was for never
-          happens. You did not just swap soft words for hard-looking numbers. The
+          &ldquo;Sometimes&rdquo; and the segmentation the question was for does
+          not happen here. You did not just swap soft words for hard-looking numbers. The
           repaired item names the reference period, asks for countable ranges,
           and keeps the precision matched to the decision.
         </p>
