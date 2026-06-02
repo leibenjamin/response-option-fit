@@ -158,18 +158,18 @@ to:
   reload. The Settings surface shows the exact stored keys and values and
   supports JSON export/import/clear.
 - No user input is sent off-device. The exhibit deliberately contains no
-  freeform text inputs, and the prompt pack is static copy for tools the user
-  chooses outside this site when reviewing their own survey material.
+  freeform text inputs; there is nothing to submit, and nothing about how you
+  work through the exercises is transmitted.
 
 ## License
 
 The application source code is licensed under the **MIT License**; see
 [LICENSE](LICENSE).
 
-Editorial content (exhibit text, answer frames, authored interaction surfaces,
-answer-set builder situation wording, build rules, export-autopsy copy, scenario
-wording, wording-feature questions, quick-practice cases, method notes,
-glossary entries, claim-boundary language, and colophon prose) is licensed under
+Editorial content (exercise scenarios and cast wording, task and feedback copy,
+the source-drawer field-term glosses and evidence labels, the closing
+knowledge-map prose, method notes, glossary entries, claim-boundary language,
+and colophon prose) is licensed under
 **Creative Commons Attribution 4.0 International (CC BY 4.0)**; see
 [CONTENT-LICENSE.md](CONTENT-LICENSE.md).
 

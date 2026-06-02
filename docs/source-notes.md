@@ -124,8 +124,8 @@ textbook consensus.
 - No agency logos, screenshots, or PDF imagery are reproduced.
 - No source-agency endorsement is implied.
 - Repair directions are design ideas, not validated replacement wording.
-- Export-autopsy counts are counts of authored situations on the page, not
-  frequencies or estimates.
+- Counts shown in an exercise are over its small authored cast, not frequencies
+  or population estimates.
 - Source context should not crowd out the interaction. Keep the claim boundary
   honest while preserving the puzzle's usability.
 - Do not present `storage rule` as survey-methods vocabulary. Public methods
