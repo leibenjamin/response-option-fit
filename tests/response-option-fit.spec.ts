@@ -655,6 +655,25 @@ test.describe("Response Option Fit Lab - desktop", () => {
     );
   });
 
+  test("Remember turns off, stays off, and the off choice persists across reload", async ({
+    page
+  }) => {
+    await page.goto(`${BASE_URL}/`);
+    await page.getByTestId("settings-button").click();
+    await page.getByTestId("settings-drawer").waitFor();
+    const toggle = page.getByTestId("settings-remember");
+    await expect(toggle).toBeChecked();
+    await toggle.click();
+    /* Regression: the off path used to reset state to the default (on), so the
+       toggle snapped right back to checked and could not be turned off. */
+    await expect(toggle).not.toBeChecked();
+
+    await page.reload();
+    await page.getByTestId("settings-button").click();
+    await page.getByTestId("settings-drawer").waitFor();
+    await expect(page.getByTestId("settings-remember")).not.toBeChecked();
+  });
+
   test("keyboard: skip link, dialog focus trap, rail jump, and widget operation", async ({
     page
   }) => {

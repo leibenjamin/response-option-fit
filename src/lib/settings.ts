@@ -58,9 +58,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // "Stop remembering me" should leave no rofl:v1:* keys behind.
+    /* Turning off clears all stored progress, then persists the off preference
+       itself so a reload does not silently start remembering again. The result
+       is exactly one stored key — { remember: false } — and no progress. */
     clearAll();
-    setSettings(DEFAULT_SETTINGS);
+    const off: Settings = { remember: false };
+    writeJSON<Settings>(SETTINGS_KEY, off);
+    setSettings(off);
   }, []);
 
   useEffect(() => {

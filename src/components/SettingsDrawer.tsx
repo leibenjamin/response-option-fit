@@ -284,7 +284,9 @@ export function SettingsDrawer({ open, onClose }: Props) {
                 count) on this device, so they resume across visits instead of
                 resetting each time. Everything stays on this device — nothing
                 is uploaded; the controls below show and clear exactly what is
-                kept. Removed when you turn this off or clear stored data.
+                kept. Turn it off and your progress is cleared; the site then
+                keeps only your choice not to remember, so a reload won&rsquo;t
+                quietly start saving again.
               </span>
             </span>
           </label>
