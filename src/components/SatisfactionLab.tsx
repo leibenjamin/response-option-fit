@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatedNumber } from "../lib/motion";
 import { useProgress } from "../lib/progress";
 import { LabCertificate } from "./LabCertificate";
+import { ReviewChecklist } from "./ReviewChecklist";
 import {
   biasTells,
   cast,
@@ -3337,6 +3338,8 @@ function KnowledgeMap() {
           ))}
         </ul>
       </details>
+
+      <ReviewChecklist />
 
       <p className="lab-km-boundary-note lab-selectable">
         <strong>One honest boundary.</strong> This lab is about response-option

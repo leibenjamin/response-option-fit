@@ -7,6 +7,7 @@ import {
 } from "../src/data/lab-exercises";
 import {
   buildCertificateMarkdown,
+  buildReviewChecklistMarkdown,
   certificateCode
 } from "../src/lib/certificate";
 import { LAB_EXERCISE_IDS, TOTAL_EXERCISES } from "../src/lib/progress";
@@ -194,6 +195,18 @@ test.describe("Response Option Fit Lab - data contract", () => {
     expect(buildCertificateMarkdown(8, 12, "May 31, 2026", "X")).toContain(
       "Certificate of Practice"
     );
+  });
+
+  test("the review checklist markdown is ungated and carries the four passes, facts, and reading", () => {
+    const md = buildReviewChecklistMarkdown();
+    expect(md).toContain("Response-option review checklist");
+    expect(md).toContain("**SLOT**");
+    expect(md).toContain("**BOUNDARY**");
+    expect(md).toContain("Things you can say without bluffing");
+    expect(md).toContain("Further reading");
+    /* It is a reference, not a personal keepsake: no name line, date, or code. */
+    expect(md).not.toContain("Completed by");
+    expect(md).not.toContain("ROF-");
   });
 });
 
@@ -556,6 +569,18 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(drawer).toContainText("scale length");
     await expect(drawer).toContainText("overclaim");
     await expect(drawer).toContainText("Krosnick");
+  });
+
+  test("the review checklist is an ungated take-home on the closing map", async ({
+    page,
+    context
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto(`${BASE_URL}/`);
+    await page.getByTestId("lab-checklist").scrollIntoViewIfNeeded();
+    await expect(page.getByTestId("lab-checklist-copy")).toBeVisible();
+    await page.getByTestId("lab-checklist-copy").click();
+    await expect(page.getByTestId("lab-checklist-status")).toBeVisible();
   });
 
   test("the completion certificate is gated until all twelve are solved, then offers Markdown + PNG", async ({

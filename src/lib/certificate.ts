@@ -84,6 +84,39 @@ A self-issued keepsake from the Response Option Fit Lab (benlei.org/response-opt
 `;
 }
 
+/* The ungated sibling of the certificate: the same four passes, credentialing
+   facts, and reading, framed as a reusable review checklist (no name, date,
+   coverage, or verification code — it is a reference to take, not a personal
+   keepsake). Surfaced on the closing map to anyone, including visitors who have
+   not finished all twelve. */
+export function buildReviewChecklistMarkdown(): string {
+  const facts = credentialingFacts.map((f) => `- ${f.text}`).join("\n");
+  const reading = furtherReading
+    .map((r) => `- ${r.name} — ${r.what}`)
+    .join("\n");
+  const lenses = LENSES.map((l) => `- **${l.key}** — ${l.gloss}`).join("\n");
+  return `# Response-option review checklist
+
+Four passes to run on a survey question before it ships — a take-home from the
+Response Option Fit Lab.
+
+## The four inspection passes
+${lenses}
+
+## The habit
+${HABIT}
+
+## Things you can say without bluffing
+${facts}
+
+## Further reading
+${reading}
+
+---
+From the Response Option Fit Lab · benlei.org/response-option-fit/
+`;
+}
+
 function esc(text: string): string {
   return text
     .replace(/&/g, "&amp;")

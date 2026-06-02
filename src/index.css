@@ -841,6 +841,17 @@ summary:focus-visible {
   }
 }
 
+/* The ungated review-checklist take-home reuses the certificate card styling; a
+   left accent (not the certificate's top accent) and a smaller title mark it as
+   the secondary, always-available sibling rather than a second certificate. */
+.lab-km-takeaway {
+  border-top: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+}
+.lab-km-takeaway .lab-cert-title {
+  font-size: clamp(18px, 2vw, 22px);
+}
+
 .lab-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
