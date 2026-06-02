@@ -112,7 +112,8 @@ landmark best-practices) on the lab, the colophon, and the fully-solved
 certificate state; verifies keyboard operation (skip link, the Settings dialog's
 focus trap, contents-rail focus moves, and solving an exercise by keyboard); and
 confirms reduced-motion and forced-colors modes stay readable with no horizontal
-overflow on desktop, mobile, or a 320px reflow viewport.
+overflow on desktop, mobile, or a 320px reflow viewport. Every browser-driven
+test runs in both Chromium and Firefox engines (a Safari/WebKit pass is pending).
 
 ## Limitations
 

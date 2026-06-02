@@ -212,7 +212,10 @@ test.describe("Response Option Fit Lab - data contract", () => {
 
 test.describe("Response Option Fit Lab - desktop", () => {
   test.beforeEach(({}, testInfo) => {
-    testInfo.skip(testInfo.project.name !== "desktop", "desktop only");
+    testInfo.skip(
+      !["desktop", "firefox"].includes(testInfo.project.name),
+      "desktop browsers only"
+    );
   });
 
   test("the lab home (/) loads the SQLBolt-style multi-exercise practice page", async ({ page }) => {
@@ -575,7 +578,9 @@ test.describe("Response Option Fit Lab - desktop", () => {
     page,
     context
   }) => {
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    /* Clipboard permissions are a Chromium-only grant; Firefox throws on it, and
+       the app's copy path falls back to a download there, so ignore failures. */
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => {});
     await page.goto(`${BASE_URL}/`);
     await page.getByTestId("lab-checklist").scrollIntoViewIfNeeded();
     await expect(page.getByTestId("lab-checklist-copy")).toBeVisible();
@@ -602,7 +607,9 @@ test.describe("Response Option Fit Lab - desktop", () => {
     page,
     context
   }) => {
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    /* Clipboard permissions are a Chromium-only grant; Firefox throws on it, and
+       the app's copy path falls back to a download there, so ignore failures. */
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => {});
     await page.goto(`${BASE_URL}/`);
     /* Locked on a fresh visit: 0 of 12, no take-buttons. */
     await expect(page.getByTestId("lab-cert-count")).toHaveText("0");
