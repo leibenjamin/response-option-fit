@@ -90,7 +90,7 @@
           <li>reduced-motion media query collapses transitions to zero duration;</li>
           <li>no inline event handlers and no inline scripts; the only third-party request on load is the cookieless Cloudflare Web Analytics beacon.</li>
         </ul>
-        <p><strong>Known gaps and pending work.</strong> Manual screen-reader walkthroughs in NVDA, JAWS, and VoiceOver are still pending; the automated checks above approximate but do not replace them. Manual zoom audits with real browser magnification at 200% and 400% are pending, though automated reflow at a 320&nbsp;px viewport passes. The automated Playwright suite now runs in both Chromium and Firefox; a Safari/WebKit pass is still pending. The exhibit is not yet certified against WCAG 2.2 AA; what is published here is the test surface a build cannot ship without.</p>
+        <p><strong>Known gaps and pending work.</strong> Manual screen-reader walkthroughs in NVDA, JAWS, and VoiceOver are still pending; the automated checks above approximate but do not replace them. Manual zoom audits with real browser magnification at 200% and 400% are pending, though automated reflow at a 320&nbsp;px viewport passes. The automated Playwright suite runs in Chromium, Firefox, and WebKit (Safari's engine). The exhibit is not yet certified against WCAG 2.2 AA; what is published here is the test surface a build cannot ship without.</p>
         <p>Accessibility issues are taken seriously. Report bugs at <a href="mailto:contact@benlei.org">contact@benlei.org</a> or open an issue at <a href="https://github.com/leibenjamin/response-option-fit/issues" target="_blank" rel="noopener noreferrer">github.com/leibenjamin/response-option-fit/issues</a>, and please include browser, device, assistive technology, and reproduction steps.</p>
       </section>
 
@@ -140,7 +140,7 @@
       <section class="colophon-section" aria-labelledby="colophon-materials">
         <h2 id="colophon-materials">Colophon</h2>
         <p>Body copy is set in <strong>Iowan Old Style</strong> with Charter, Source Serif Pro, and Georgia as fallbacks. Eyebrows, receipts, and utility text use <strong>JetBrains Mono</strong> with IBM Plex Mono and the platform monospace as fallbacks. Navigation, controls, and short labels use <strong>Inter</strong> with the platform sans-serif as a fallback. All faces are loaded from the user's system; no web fonts are fetched at runtime.</p>
-        <p>Built as a static React 18 + TypeScript site with <strong>Vite</strong> and tested with <strong>Playwright</strong> in Chromium and Firefox. No backend services. The one third-party runtime origin is Cloudflare Web Analytics — a cookieless, aggregate page-view beacon.</p>
+        <p>Built as a static React 18 + TypeScript site with <strong>Vite</strong> and tested with <strong>Playwright</strong> in Chromium, Firefox, and WebKit. No backend services. The one third-party runtime origin is Cloudflare Web Analytics — a cookieless, aggregate page-view beacon.</p>
         <p>Repository: <a href="https://github.com/leibenjamin/response-option-fit" target="_blank" rel="noopener noreferrer">github.com/leibenjamin/response-option-fit</a></p>
         <p>License: <strong>MIT</strong> for source code; <strong>CC BY 4.0</strong> for exhibit text, diagrams, and authored scenarios; quoted source material remains under its original terms. U.S. Census Bureau working papers are public-domain U.S. Government works.</p>
       </section>

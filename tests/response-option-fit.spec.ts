@@ -266,7 +266,7 @@ test.describe("Response Option Fit Lab - data contract", () => {
 test.describe("Response Option Fit Lab - desktop", () => {
   test.beforeEach(({}, testInfo) => {
     testInfo.skip(
-      !["desktop", "firefox"].includes(testInfo.project.name),
+      !["desktop", "firefox", "webkit"].includes(testInfo.project.name),
       "desktop browsers only"
     );
   });
@@ -631,9 +631,14 @@ test.describe("Response Option Fit Lab - desktop", () => {
     page,
     context
   }) => {
-    /* Clipboard permissions are a Chromium-only grant; Firefox throws on it, and
-       the app's copy path falls back to a download there, so ignore failures. */
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => {});
+    /* Clipboard permissions are a Chromium-only grant — Firefox throws on it and
+       WebKit poisons the context (its later newPage rejects the unknown
+       permission, which breaks the axe scan). Grant only in Chromium; the app's
+       copy path falls back to a download in the others, so the status assertions
+       still hold. */
+    if (context.browser()?.browserType().name() === "chromium") {
+      await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    }
     await page.goto(`${BASE_URL}/`);
     await page.getByTestId("lab-checklist").scrollIntoViewIfNeeded();
     await expect(page.getByTestId("lab-checklist-copy")).toBeVisible();
@@ -660,9 +665,14 @@ test.describe("Response Option Fit Lab - desktop", () => {
     page,
     context
   }) => {
-    /* Clipboard permissions are a Chromium-only grant; Firefox throws on it, and
-       the app's copy path falls back to a download there, so ignore failures. */
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => {});
+    /* Clipboard permissions are a Chromium-only grant — Firefox throws on it and
+       WebKit poisons the context (its later newPage rejects the unknown
+       permission, which breaks the axe scan). Grant only in Chromium; the app's
+       copy path falls back to a download in the others, so the status assertions
+       still hold. */
+    if (context.browser()?.browserType().name() === "chromium") {
+      await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    }
     await page.goto(`${BASE_URL}/`);
     /* Locked on a fresh visit: 0 of 12, no take-buttons. */
     await expect(page.getByTestId("lab-cert-count")).toHaveText("0");
