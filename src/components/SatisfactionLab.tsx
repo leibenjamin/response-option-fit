@@ -3233,8 +3233,6 @@ function KnowledgeMap() {
         field.
       </p>
 
-      <LabCertificate />
-
       <div className="lab-km-grid">
         {responseOptionKnowledgeMap.map((b, i) => (
           <KnowledgeBranchCard key={b.id} branch={b} index={i} />
@@ -3340,6 +3338,8 @@ function KnowledgeMap() {
       </details>
 
       <ReviewChecklist />
+
+      <LabCertificate />
 
       <p className="lab-km-boundary-note lab-selectable">
         <strong>One honest boundary.</strong> This lab is about response-option

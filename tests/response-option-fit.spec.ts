@@ -583,6 +583,21 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("lab-checklist-status")).toBeVisible();
   });
 
+  test("print media keeps the closing-map gauge and branch cards visible before any scroll", async ({
+    page
+  }) => {
+    await page.goto(`${BASE_URL}/`);
+    await page.emulateMedia({ media: "print" });
+    await expect(page.getByTestId("lab-km-gauge")).toBeVisible();
+    await expect(page.locator(".lab-km-branch")).toHaveCount(4);
+    /* The real assertion: none of the load-bearing map content is left at
+       opacity 0 by the reveal-on-scroll rule when captured before scrolling. */
+    const anyHidden = await page
+      .locator(".lab-km-gauge, .lab-km-branch")
+      .evaluateAll((els) => els.some((el) => getComputedStyle(el).opacity === "0"));
+    expect(anyHidden).toBe(false);
+  });
+
   test("the completion certificate is gated until all twelve are solved, then offers Markdown + PNG", async ({
     page,
     context
