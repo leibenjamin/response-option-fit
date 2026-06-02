@@ -4,17 +4,21 @@ The application is a static, client-rendered React app.
 
 ## Runtime Surface
 
-- No backend, API, authentication, database, analytics, cookies, or service
-  worker.
-- Optional settings persistence uses browser-local storage only when enabled by
-  the reader. Walk visit history and dismissed recap state persist only after
-  the reader turns on Remember in the Settings drawer; otherwise they remain
-  in memory and are lost on reload.
+- No backend, API, authentication, database, cookies, or service worker.
+- Page-traffic measurement is limited to Cloudflare Web Analytics, a cookieless,
+  aggregate beacon (page views only, no personal data, no cross-site tracking).
+- Optional progress and settings persistence uses browser-local storage only
+  when enabled by the reader (the Remember toggle, on by default and clearable in
+  the Settings drawer); otherwise progress stays in memory and is lost on reload.
+  Stored keys are confined to the `rofl:v1:` namespace.
 - No freeform text inputs or contenteditable regions.
-- The settings drawer can import a local JSON settings file, but import parsing
-  happens in the browser and does not transmit the file.
-- No remote fonts, images, iframes, or third-party runtime requests.
-- Outbound report links use HTTPS and open with `target="_blank"` plus
+- The settings drawer can import a local JSON file. Parsing happens entirely in
+  the browser and transmits nothing; the importer rejects any object outside the
+  `rofl:v1:` namespace, validates every entry against its schema, and rolls back
+  to the prior state if any write fails.
+- No remote fonts, images, or iframes. The only third-party runtime request is
+  the cookieless analytics beacon above.
+- Outbound source links use HTTPS and open with `target="_blank"` plus
   `rel="noopener noreferrer"`.
 
 ## HTML And Script Safety
@@ -40,6 +44,12 @@ default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; f
 through a meta tag. The same headers file also includes `X-Frame-Options: DENY`
 for compatibility.
 
+On the live deployment (`benlei.org/response-option-fit/`) the Cloudflare mount
+Worker sets the authoritative CSP as an HTTP response header and strips this meta
+tag, so the header is the single enforced policy there; it is equivalent except
+that it permits the analytics beacon's origin. This meta CSP governs static-host
+and Pages-origin delivery.
+
 ## Referrer Policy
 
 The document sets:
@@ -48,7 +58,7 @@ The document sets:
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 ```
 
-The twelve outbound source links also include `noreferrer`, so those clicks do not
+The outbound source links also include `noreferrer`, so those clicks do not
 send a referrer.
 
 ## Development Server
@@ -62,7 +72,7 @@ network interfaces by default.
 The public app is designed around these review targets:
 
 - no inline event handlers or inline scripts;
-- no third-party network requests on load;
+- only the cookieless analytics beacon loads from a third-party origin;
 - external-link target and rel attributes;
 - expected production CSP and header configuration;
 - skip link and live-region behavior;
