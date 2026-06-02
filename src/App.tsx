@@ -57,7 +57,7 @@ function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
       </Suspense>
       <footer className="foot">
         <p className="foot-line">
-          Static exhibit. No backend, no automated analyzer, no network upload, no
+          Static exhibit. No backend, no automated analyzer, no upload of your work, no
           survey analyzer.
         </p>
         <p className="foot-line foot-line--quiet">
