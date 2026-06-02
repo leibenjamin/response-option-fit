@@ -325,6 +325,19 @@ export function SatisfactionLab() {
           each one are authored, illustrative cases — a fixed cast to reason
           about, not real respondents or survey statistics.
         </p>
+        <p className="lab-route-proofline">
+          Built by <strong>Ben Lei</strong> — a static React + TypeScript exhibit
+          with authored interactions, source-bounded claims, and Playwright +
+          accessibility checks; no automated analyzer.{" "}
+          <a href="#colophon">Colophon</a> ·{" "}
+          <a
+            href="https://github.com/leibenjamin/response-option-fit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </p>
       </header>
 
       <LabContents />

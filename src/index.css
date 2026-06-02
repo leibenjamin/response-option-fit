@@ -592,6 +592,22 @@ summary:focus-visible {
 
 /* Exit artifact — the closing role-arc payoff at the end of #walk/done. */
 
+/* First-screen byline: who made this and the proof trail, kept deliberately
+   quiet (small mono, muted) so it informs a cold hirer without turning the hero
+   into a resume. */
+.lab-route-proofline {
+  margin: var(--s-3) 0 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--ink-mute);
+  max-width: 72ch;
+}
+.lab-route-proofline strong {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
 /* ─── Lab contents rail: a sticky jump-to-exercise nav for the long page ─── */
 .lab-contents {
   position: sticky;
