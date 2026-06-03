@@ -733,7 +733,10 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.getByTestId("settings-drawer").waitFor();
     const toggle = page.getByTestId("settings-remember");
     await expect(toggle).toBeChecked();
-    await toggle.click();
+    /* The checkbox is visually hidden behind a custom track/thumb (the
+       accessible toggle pattern), so drive it the way a user would: click the
+       visible label rather than the 1px input. */
+    await page.getByTestId("settings-drawer").locator(".settings-toggle").click();
     /* Regression: the off path used to reset state to the default (on), so the
        toggle snapped right back to checked and could not be turned off. */
     await expect(toggle).not.toBeChecked();

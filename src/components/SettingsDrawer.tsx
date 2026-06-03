@@ -5,7 +5,8 @@ import {
   useRef,
   useState,
   type ChangeEvent,
-  type KeyboardEvent
+  type KeyboardEvent,
+  type MouseEvent
 } from "react";
 import {
   clearAll,
@@ -161,6 +162,14 @@ export function SettingsDrawer({ open, onClose }: Props) {
     [onClose, open]
   );
 
+  const handleBackdropClick = (event: MouseEvent<HTMLDialogElement>) => {
+    // A click that lands on the full-viewport dialog itself (not the panel) is
+    // a click outside the panel — the expected "dismiss" gesture.
+    if (event.target === dialogRef.current) {
+      onClose();
+    }
+  };
+
   const handleRememberChange = (event: ChangeEvent<HTMLInputElement>) => {
     setConfirmingClear(false);
     setStatus(null);
@@ -245,10 +254,11 @@ export function SettingsDrawer({ open, onClose }: Props) {
       aria-modal="true"
       open={canUseNativeDialog ? undefined : true}
       onKeyDown={handleKeyDown}
+      onClick={handleBackdropClick}
     >
       <div className="settings-drawer-panel" ref={panelRef}>
         <header className="settings-drawer-head">
-          <p className="settings-drawer-eyebrow">Local device</p>
+          <p className="settings-drawer-eyebrow">This browser</p>
           <h2 className="settings-drawer-title" id="settings-drawer-title">
             Settings
           </h2>
@@ -261,10 +271,14 @@ export function SettingsDrawer({ open, onClose }: Props) {
           >
             <span aria-hidden="true">×</span>
           </button>
+          <p className="settings-drawer-lede">
+            Anything this site remembers stays in this browser — nothing is
+            uploaded. Review, export, or clear it here.
+          </p>
         </header>
 
         <section className="settings-section">
-          <p className="settings-section-eyebrow">Persistence</p>
+          <p className="settings-section-eyebrow">Progress</p>
           <label className="settings-toggle">
             <input
               type="checkbox"
@@ -280,20 +294,17 @@ export function SettingsDrawer({ open, onClose }: Props) {
                 Remember my progress on this device
               </span>
               <span className="settings-toggle-sub">
-                Keeps the exercises you&rsquo;ve finished (and your certificate
-                count) on this device, so they resume across visits instead of
-                resetting each time. Everything stays on this device — nothing
-                is uploaded; the controls below show and clear exactly what is
-                kept. Turn it off and your progress is cleared; the site then
-                keeps only your choice not to remember, so a reload won&rsquo;t
-                quietly start saving again.
+                Saves which exercises you&rsquo;ve completed and your certificate
+                count, so they&rsquo;re still here next visit. Turn it off to
+                clear that progress and stop saving — only your choice not to
+                remember is kept.
               </span>
             </span>
           </label>
         </section>
 
         <section className="settings-section">
-          <p className="settings-section-eyebrow">Manage</p>
+          <p className="settings-section-eyebrow">Manage your data</p>
           <div className="settings-actions">
             <button
               type="button"
@@ -362,16 +373,18 @@ export function SettingsDrawer({ open, onClose }: Props) {
         </section>
 
         <section className="settings-section">
-          <p className="settings-section-eyebrow">
-            Stored on this device — read-only view
-          </p>
-          <pre
-            className="settings-storage"
-            data-testid="settings-storage"
-            aria-live="polite"
-          >
-            {storedJSON}
-          </pre>
+          <p className="settings-section-eyebrow">Saved on this device</p>
+          <div className="settings-storage-view" aria-live="polite">
+            {stored.length === 0 ? (
+              <p className="settings-storage-empty" data-testid="settings-storage">
+                Nothing is saved on this device yet.
+              </p>
+            ) : (
+              <pre className="settings-storage" data-testid="settings-storage">
+                {storedJSON}
+              </pre>
+            )}
+          </div>
         </section>
       </div>
     </dialog>
