@@ -5,6 +5,12 @@ The application is a static, client-rendered React app.
 ## Runtime Surface
 
 - No backend, API, authentication, database, cookies, or service worker.
+- The build is served from two public origins: the canonical
+  `benlei.org/response-option-fit/` (the Cloudflare Worker mount) and the
+  Cloudflare Pages deployment it proxies, `response-option-fit.pages.dev`, which
+  is directly reachable. Both serve the same static, secret-free artifact; the
+  document sets `rel="canonical"` to the apex. The Worker is the authoritative
+  security boundary for the canonical URL (see Content Security Policy below).
 - Page-traffic measurement is limited to Cloudflare Web Analytics, a cookieless,
   aggregate beacon (page views only, no personal data, no cross-site tracking).
 - Optional progress and settings persistence uses browser-local storage only
@@ -50,6 +56,30 @@ tag, so the header is the single enforced policy there; it is equivalent except
 that it permits the analytics beacon's origin. This meta CSP governs static-host
 and Pages-origin delivery.
 
+## Worker-Owned Transport And Isolation Headers
+
+The mount Worker also sets the transport- and isolation-level headers itself
+rather than inheriting them from the Pages origin's `_headers`, so the live
+apex does not depend on upstream passthrough for them:
+
+- `Strict-Transport-Security: max-age=31536000; includeSubDomains`
+- `Cross-Origin-Opener-Policy: same-origin`
+- `Cross-Origin-Resource-Policy: same-origin`
+
+Because the app issues no cross-origin requests (`connect-src 'self'`), the
+Worker also strips the permissive `Access-Control-Allow-Origin: *` that
+Cloudflare Pages stamps on the origin response, so the canonical URL does not
+advertise itself as readable by arbitrary origins. The Pages origin
+(`response-option-fit.pages.dev`) still carries that default header; it serves
+the same secret-free static files, so this is cosmetic rather than a disclosure
+risk.
+
+The live apex additionally sits behind a Cloudflare managed challenge for
+automated/datacenter clients, which is verification-relevant: a non-browser
+client (curl, scanners) may receive Cloudflare's challenge interstitial and its
+headers instead of the Worker's. Verify the Worker's headers from a real browser
+session, or directly against the Pages origin, which is not challenge-gated.
+
 ## Referrer Policy
 
 The document sets:
@@ -66,6 +96,22 @@ send a referrer.
 The Vite dev server is bound to `127.0.0.1:5173` with `strictPort: true`. This
 keeps local development on loopback and avoids exposing the dev server on other
 network interfaces by default.
+
+## Dependencies
+
+`npm audit --omit=dev` reports no production vulnerabilities: the only runtime
+dependencies are `react` and `react-dom`, and the deployed artifact is static
+HTML/CSS/JS with no bundled server.
+
+The full `npm audit` reports two *moderate, development-only* advisories
+(`esbuild` ≤ 0.24.2, pulled in transitively by `vite`; GHSA-67mh-4wv8-2f99): a
+running esbuild dev server can be made to return source to another local origin.
+This affects `npm run dev` only — esbuild runs at build time and ships nothing to
+production — and is mitigated by the loopback binding above; the source is also
+public (open-source repo), so there is no secret to disclose. The current Vite 5
+line still pins the affected esbuild, so the clean fix is a major Vite upgrade
+rather than a risky transitive `overrides` pin; it is tracked but not forced on a
+static portfolio site.
 
 ## Accessibility And Privacy Review
 

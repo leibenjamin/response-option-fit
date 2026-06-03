@@ -43,6 +43,29 @@ function securityHeaders(base, analyticsOn) {
     "Permissions-Policy",
     "accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=(), interest-cohort=()"
   );
+
+  /* Own the transport- and isolation-level headers here rather than inheriting
+     them from the Pages origin's _headers. The Pages deployment sets these too,
+     but relying on passthrough means a change there (or any upstream that does
+     not send them) would silently weaken the apex. Setting them on the mounted
+     response makes this Worker the single source of truth for the live site. */
+  headers.set(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains"
+  );
+  headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  headers.set("Cross-Origin-Resource-Policy", "same-origin");
+
+  /* The app makes no cross-origin requests (connect-src 'self'), so it needs no
+     CORS. Cloudflare Pages stamps a permissive `access-control-allow-origin: *`
+     on the origin response; drop it (and its companions) so the apex does not
+     advertise itself as readable by arbitrary origins. */
+  headers.delete("Access-Control-Allow-Origin");
+  headers.delete("Access-Control-Allow-Credentials");
+  headers.delete("Access-Control-Allow-Methods");
+  headers.delete("Access-Control-Allow-Headers");
+  headers.delete("Access-Control-Expose-Headers");
+
   return headers;
 }
 
