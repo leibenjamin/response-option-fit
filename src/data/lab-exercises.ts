@@ -2038,6 +2038,10 @@ export const quantifierTasks: QuantifierTask[] = [
 
 export type NominalOrderMode = "fixed" | "rotated";
 export type OrdinalOrderMode = "randomized" | "ordered";
+/* Order effects are mode-sensitive: a visual/self-administered list tends to
+   favor the FIRST option (primacy); a list read aloud (phone/interviewer) can
+   favor the LAST one heard (recency). Same fixed list, different end drifts. */
+export type NominalReadMode = "screen" | "phone";
 export type OrderListKind = "unclassified" | "unordered" | "continuum";
 
 export type OrderRespondent = {
@@ -2057,13 +2061,17 @@ export const orderCast: OrderRespondent[] = [
   { id: "fin", name: "Fin", trueReason: "Friend or family", story: "was nudged by a cousin's text", uncertain: true }
 ];
 
+/* Order matters for the demo: the two uncertain respondents' true reasons
+   ("Local event", "Friend or family") must sit in the MIDDLE, so that drifting
+   to the first option (primacy) OR the last (recency) is clearly wrong for
+   them — never a coincidence with their truth. */
 export const nominalOrderOptions = [
   "Social media",
   "Search",
   "Friend or family",
   "Podcast ad",
-  "Walked by",
-  "Local event"
+  "Local event",
+  "Walked by"
 ];
 
 export const ordinalOrderedLabels = [
@@ -2084,29 +2092,37 @@ export const ordinalRandomizedLabels = [
 
 export type OrderLanding = {
   nominalPick: string;
-  nominalQuality: "clean" | "primacy";
+  nominalQuality: "clean" | "primacy" | "recency";
   ordinalQuality: "clean" | "scrambled";
 };
 
 export function orderLandingFor(
   r: OrderRespondent,
   nominal: NominalOrderMode,
-  ordinal: OrdinalOrderMode
+  ordinal: OrdinalOrderMode,
+  readMode: NominalReadMode = "screen"
 ): OrderLanding {
+  const drifts = nominal === "fixed" && r.uncertain;
+  const lastOption = nominalOrderOptions[nominalOrderOptions.length - 1];
   return {
-    nominalPick:
-      nominal === "fixed" && r.uncertain
+    nominalPick: drifts
+      ? readMode === "screen"
         ? nominalOrderOptions[0]
-        : r.trueReason,
-    nominalQuality: nominal === "fixed" && r.uncertain ? "primacy" : "clean",
+        : lastOption
+      : r.trueReason,
+    nominalQuality: drifts
+      ? readMode === "screen"
+        ? "primacy"
+        : "recency"
+      : "clean",
     ordinalQuality: ordinal === "ordered" ? "clean" : "scrambled"
   };
 }
 
-export function orderPrimacyCount(nominal: NominalOrderMode): number {
-  return orderCast.filter(
-    (r) => orderLandingFor(r, nominal, "ordered").nominalQuality === "primacy"
-  ).length;
+export function orderDriftCount(nominal: NominalOrderMode): number {
+  // The same uncertain respondents drift under a fixed order; only WHICH end
+  // they land on changes with mode, so the count is mode-independent.
+  return orderCast.filter((r) => nominal === "fixed" && r.uncertain).length;
 }
 
 export function orderMeters(
@@ -2174,7 +2190,7 @@ export const orderTasks: OrderTask[] = [
       if (nominalKind !== "unordered" || ordinalKind !== "continuum")
         return "First classify the two lists correctly.";
       if (nominal !== "rotated")
-        return `${orderPrimacyCount(nominal)} uncertain visitor(s) are drifting to the first visible channel.`;
+        return `${orderDriftCount(nominal)} uncertain visitor(s) are drifting to whichever channel the mode favors — the first on screen, the last when read aloud. Rotating neutralizes both.`;
       if (ordinal !== "ordered")
         return "The satisfaction scale is scrambled — randomization just broke the ruler.";
       return "The unordered list is rotated and the ordered scale is ordered.";
@@ -2873,6 +2889,17 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
           "A 0–100 frequency score can look scientific while collecting guesses dressed up in decimals — and “often / sometimes / rarely” are not stable units without a reference period and anchors.",
         exerciseIds: ["E11"],
         sourceCue: "Tourangeau; Fowler."
+      },
+      {
+        id: "ruler.numericValues",
+        label: "Numeric scale values",
+        status: "didactic",
+        ask:
+          "Could the numbers printed on the points (0–10 vs −5 to +5) change what the same word labels mean?",
+        remember:
+          "The numbers are part of the instrument, not neutral tags: respondents read meaning into them, so a 0–10 and a −5-to-+5 version of the same labeled scale can pull different answers — a negative number reads as failure, not merely “low.” This lab names the effect but does not drill it.",
+        exerciseIds: ["none"],
+        sourceCue: "Schwarz et al. (1991), numeric values of rating scales."
       }
     ]
   },

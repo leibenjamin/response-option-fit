@@ -30,8 +30,10 @@ length; tell a true neutral from "Don't know" from "Not applicable"; label every
 point of a scale by building the middle labels and checking semantic balance;
 spot the collision created by vague frequency words, then replace them without
 falling into a fake 0-100 precision trap; classify option lists before deciding
-what to rotate so an ordinal scale does not get scrambled; and, as a capstone,
-review a draft survey and diagnose each part.
+what to rotate so an ordinal scale does not get scrambled — and see how the
+survey mode flips which end of a fixed list gets the advantage (primacy on
+screen, recency read aloud); and, as a capstone, review a draft survey and
+diagnose each part.
 
 All twelve are framed around a single running example — one coffee shop's
 surveys, Roast & Brew's — so the domain stays fixed while the design problem

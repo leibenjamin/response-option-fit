@@ -302,7 +302,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
     ).toHaveCount(4);
     await expect(page.locator(".lab-km-node--practiced")).toHaveCount(16);
     await expect(page.locator(".lab-km-node--planned")).toHaveCount(3);
-    await expect(page.locator(".lab-km-node--didactic")).toHaveCount(2);
+    await expect(page.locator(".lab-km-node--didactic")).toHaveCount(3);
     await expect(page.locator(".lab-km-node--outOfScope")).toHaveCount(3);
   });
 
@@ -506,6 +506,21 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.getByTestId("lab-order-ordinal-ordered").click();
     await expect(page.getByTestId("lab-order-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E12")).toBeVisible();
+  });
+
+  test("E12 order: which option a fixed list favors flips with survey mode (primacy on screen, recency read aloud)", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* Fin is uncertain, so under a fixed order Fin drifts to whichever end the
+       mode favors. Default (on screen) → the first option; read aloud → the last. */
+    const fin = page.getByTestId("lab-order-landing-fin");
+    await expect(fin).toContainText("Social media");
+    await expect(fin).toContainText("first-option drift");
+    await page.getByTestId("lab-order-mode-phone").click();
+    await expect(fin).toContainText("Walked by");
+    await expect(fin).toContainText("last-option drift");
+    /* Rotating neutralizes the drift regardless of mode. */
+    await page.getByTestId("lab-order-nominal-rotated").click();
+    await expect(fin).toContainText("reason preserved");
   });
 
   test("E10-E12 source drawers expose conservative terms and evidence badges", async ({ page }) => {

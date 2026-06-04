@@ -123,6 +123,7 @@ import {
   type LabelScaleWordId,
   type LedgerLevel,
   type NominalOrderMode,
+  type NominalReadMode,
   type OrderListKind,
   type OrdinalOrderMode,
   type QuantifierFormat,
@@ -1711,7 +1712,7 @@ function ScaleLengthExercise({ num }: { num: number }) {
     <ExerciseFrame
       num={num}
       title="Pick how many points the scale offers."
-      issue="Scale length / granularity · the 5–7 rule · false precision"
+      issue="Scale length / granularity · the 5–7 default · false precision"
       modifier="scale-length"
       verb="tinker"
     >
@@ -2855,6 +2856,7 @@ function OrderExercise({ num }: { num: number }) {
     useState<OrderListKind>("unclassified");
   const [ordinalKind, setOrdinalKind] =
     useState<OrderListKind>("unclassified");
+  const [readMode, setReadMode] = useState<NominalReadMode>("screen");
   const [completed, setCompleted] = useState<string[]>([]);
   const meters = orderMeters(nominal, ordinal);
   const nominalList =
@@ -2926,9 +2928,11 @@ function OrderExercise({ num }: { num: number }) {
     >
       <p className="lab-exercise-setup">
         Order is a real source of push, but the repair depends on what kind of
-        options you have. Roast &amp; Brew has two broken lists: its channel
-        list always puts the same answer first, and its satisfaction labels are
-        scrambled. Classify the lists before you decide what to rotate.
+        options you have — and on how the survey is taken. Roast &amp; Brew has
+        two broken lists: its channel list lets one answer own the favored slot
+        (and which end wins depends on the mode), and its satisfaction labels
+        are scrambled. Classify the lists, watch the mode move the drift, then
+        decide what to rotate.
       </p>
 
       <TaskBand
@@ -3029,7 +3033,7 @@ function OrderExercise({ num }: { num: number }) {
 
       <ul className="lab-order-cast" aria-label="Where each visitor lands">
         {orderCast.map((r) => {
-          const land = orderLandingFor(r, nominal, ordinal);
+          const land = orderLandingFor(r, nominal, ordinal, readMode);
           return (
             <li
               key={r.id}
@@ -3045,8 +3049,10 @@ function OrderExercise({ num }: { num: number }) {
                 {land.nominalPick}
                 <span className="lab-order-tag">
                   {land.nominalQuality === "primacy"
-                    ? "first-option drift"
-                    : "reason preserved"}
+                    ? "first-option drift (on screen)"
+                    : land.nominalQuality === "recency"
+                      ? "last-option drift (read aloud)"
+                      : "reason preserved"}
                   {" · "}
                   {land.ordinalQuality === "scrambled"
                     ? "scale order broken"
@@ -3058,11 +3064,36 @@ function OrderExercise({ num }: { num: number }) {
         })}
       </ul>
 
-      <p className="lab-order-mode lab-selectable">
-        Mode caveat: visual self-administered lists often raise primacy risk;
-        interviewer-read lists can raise recency risk. Either way, the first
-        decision is whether the list is unordered or a meaningful continuum.
-      </p>
+      <div className="lab-order-mode">
+        <span className="lab-order-mode-key">Survey mode for List A</span>
+        <div className="lab-order-mode-buttons" role="group" aria-label="Survey mode">
+          <button
+            type="button"
+            aria-pressed={readMode === "screen"}
+            className={`lab-order-btn ${readMode === "screen" ? "is-on" : ""}`}
+            data-testid="lab-order-mode-screen"
+            onClick={() => setReadMode("screen")}
+          >
+            On screen
+          </button>
+          <button
+            type="button"
+            aria-pressed={readMode === "phone"}
+            className={`lab-order-btn ${readMode === "phone" ? "is-on" : ""}`}
+            data-testid="lab-order-mode-phone"
+            onClick={() => setReadMode("phone")}
+          >
+            Read aloud (phone)
+          </button>
+        </div>
+        <p className="lab-order-mode-note lab-selectable" aria-live="polite">
+          {nominal === "fixed"
+            ? readMode === "screen"
+              ? "On a screen, a fixed list favors the option read first — the uncertain visitors drift to the top. Switch the mode, or rotate, and watch where they go."
+              : "Read aloud, the last option heard gets the edge — the same uncertain visitors now drift to the bottom of the list instead. Which end wins is not fixed; the mode decides."
+            : "Rotated: no single position owns the read, so neither primacy (on screen) nor recency (read aloud) can park the uncertain visitors on one option."}
+        </p>
+      </div>
 
       <div className="lab-channel-ledger" aria-label="Readouts">
         <LedgerMeter

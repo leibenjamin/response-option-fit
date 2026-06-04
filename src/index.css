@@ -4509,6 +4509,26 @@ summary:focus-visible {
   border-left: 3px solid var(--accent-soft);
   background: var(--paper-2);
   padding: var(--s-3) var(--s-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+}
+.lab-order-mode-key {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lab-order-mode-buttons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.lab-order-mode-note {
+  flex-basis: 100%;
+  margin: 0;
   font-size: 14px;
   line-height: 1.55;
   color: var(--ink-2);
@@ -4603,6 +4623,7 @@ summary:focus-visible {
 .lab-label-row.is-invented .lab-label-pick,
 .lab-quant-row.is-vague .lab-quant-pick,
 .lab-order-row.is-primacy .lab-order-pick { color: var(--accent-2); }
+.lab-order-row.is-recency .lab-order-pick { color: var(--accent-2); }
 .lab-label-row.is-pulled .lab-label-pick,
 .lab-quant-row.is-fake .lab-quant-pick,
 .lab-order-row.is-scrambled .lab-order-pick { color: var(--route-w); }
