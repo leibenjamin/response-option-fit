@@ -1627,7 +1627,7 @@ export const labelScaleDesigns: LabelScaleDesign[] = [
   },
   {
     id: "tilted",
-    label: "Every point labeled, positive-tilted",
+    label: "Every point labeled, Poor → Exceptional",
     stem: "How was your visit?",
     labels: ["Poor", "Fair", "Good", "Great", "Exceptional"],
     allPointsLabeled: true,
@@ -1637,7 +1637,7 @@ export const labelScaleDesigns: LabelScaleDesign[] = [
   },
   {
     id: "balanced",
-    label: "Fully labeled, balanced",
+    label: "Every point labeled, Very dissatisfied → Very satisfied",
     stem: "How satisfied were you with your visit?",
     labels: [
       "Very dissatisfied",
@@ -1751,7 +1751,7 @@ export const labelScaleTasks: LabelScaleTask[] = [
     id: "balance-words",
     title: "Make the labels a fair ruler",
     brief:
-      "A label on every point is not enough if the words are tilted. Choose the scale whose negative, middle, and positive labels are semantically balanced.",
+      "A word on every point is not enough if the words lean. Read the two fully-worded scales and keep the one where a genuinely middling visit can still land in the middle.",
     pass: (d) => d.allPointsLabeled && d.balanced,
     passText:
       "✓ The ruler is labeled and balanced. Now a middle visit can stay in the middle, mild dissatisfaction does not have to sound extreme, and positive answers still have room to be genuinely strong.",
@@ -1806,7 +1806,7 @@ export const quantifierDesigns: QuantifierDesign[] = [
   },
   {
     id: "anchored",
-    label: "Anchored ranges",
+    label: "Counts over the last 30 days",
     question: "In the past 30 days, about how many times did you visit Roast & Brew?",
     options: ["0", "1–2", "3–5", "6–10", "11 or more"],
     vagueWordsRemoved: true,
@@ -1912,7 +1912,7 @@ export const quantifierTasks: QuantifierTask[] = [
     id: "avoid-fake-precision",
     title: "Do not replace vague with fake precision",
     brief:
-      "A 0–100 score looks scientific, but it asks for precision the respondent cannot reliably supply. Choose the version with a real reference period and usable count ranges.",
+      "A 0–100 score looks scientific, but it asks for precision nobody can truthfully supply about their own habits. Find the format that drops the vague words and still only asks for something a visitor can actually answer.",
     pass: (d) => d.vagueWordsRemoved && d.precisionHonest,
     passText:
       "✓ The response options now have a time frame, a countable unit, and ranges that match the decision. You fixed the ruler without pretending it can measure decimals of habit.",
