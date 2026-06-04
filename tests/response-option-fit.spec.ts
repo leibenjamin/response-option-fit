@@ -157,16 +157,23 @@ async function solveAll12(page: Page) {
   await expect(page.getByTestId("lab-receipt-E7")).toBeVisible();
 
   // E10 — verbal labels
-  await page.getByTestId("lab-label-design-tilted").click();
-  await page.getByTestId("lab-label-design-balanced").click();
+  await page.getByTestId("lab-label-slot-slot2").click();
+  await page.getByTestId("lab-label-word-neither").click();
+  await page.getByTestId("lab-label-slot-slot3").click();
+  await page.getByTestId("lab-label-word-satisfied").click();
+  await page.getByTestId("lab-label-slot-slot4").click();
   await expect(page.getByTestId("lab-receipt-E10")).toBeVisible();
 
   // E11 — quantifiers
-  await page.getByTestId("lab-quant-design-score").click();
-  await page.getByTestId("lab-quant-design-anchored").click();
+  await page.getByTestId("lab-quant-visitor-ben").click();
+  await page.getByTestId("lab-quant-visitor-cleo").click();
+  await page.getByTestId("lab-quant-period-past30").click();
+  await page.getByTestId("lab-quant-unit-ranges").click();
   await expect(page.getByTestId("lab-receipt-E11")).toBeVisible();
 
   // E12 — order
+  await page.getByTestId("lab-order-kind-nominal-unordered").click();
+  await page.getByTestId("lab-order-kind-ordinal-continuum").click();
   await page.getByTestId("lab-order-nominal-rotated").click();
   await page.getByTestId("lab-order-ordinal-ordered").click();
   await expect(page.getByTestId("lab-receipt-E12")).toBeVisible();
@@ -394,37 +401,88 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("lab-bucket-fit-pat")).toContainText("65+");
   });
 
-  test("E10 verbal labels: endpoint-only and positive-tilted labels fail; a fully labeled balanced scale passes", async ({ page }) => {
+  test("E10 verbal labels: numeric slots and positive-skew words fail; the balanced built ruler passes", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    await page.getByTestId("lab-label-design-tilted").click();
+    /* Leaving any middle point as a number keeps Check 1 open. */
+    await page.getByTestId("lab-label-word-fair").click();
+    await page.getByTestId("lab-label-slot-slot2").click();
+    await page.getByTestId("lab-label-word-good").click();
+    await page.getByTestId("lab-label-slot-slot3").click();
     await expect(page.getByTestId("lab-label-pass")).toHaveCount(0);
+    await expect(page.locator('[data-testid="lab-label-task-label-points"].is-done')).toHaveCount(0);
+    /* Filling all three slots clears Check 1, but the positive-skew middle
+       still pulls the cast and blocks the final receipt. */
+    await page.getByTestId("lab-label-word-great").click();
+    await page.getByTestId("lab-label-slot-slot4").click();
+    await expect(page.getByTestId("lab-label-pass")).toHaveCount(0);
+    await expect(page.locator('[data-testid="lab-label-task-label-points"].is-done')).toHaveCount(1);
     await expect(page.getByTestId("lab-label-landing-cleo")).toContainText(
-      "neutral lands on"
+      "middle lands on"
     );
-    await page.getByTestId("lab-label-design-balanced").click();
+    /* The one balanced final solution: dissatisfied / neither / satisfied. */
+    await page.getByTestId("lab-label-word-dissatisfied").click();
+    await page.getByTestId("lab-label-slot-slot2").click();
+    await page.getByTestId("lab-label-word-neither").click();
+    await page.getByTestId("lab-label-slot-slot3").click();
+    await page.getByTestId("lab-label-word-satisfied").click();
+    await page.getByTestId("lab-label-slot-slot4").click();
     await expect(page.getByTestId("lab-label-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E10")).toBeVisible();
   });
 
-  test("E11 quantifiers: vague words and a 0–100 precision trap fail; anchored ranges pass", async ({ page }) => {
+  test("E11 quantifiers: invalid pair, no-period ranges, and fake precision fail; Ben/Cleo collision plus anchored ranges passes", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    await page.getByTestId("lab-quant-design-score").click();
-    await expect(page.getByTestId("lab-quant-pass")).toHaveCount(0);
-    await expect(page.locator('[data-testid="lab-quant-task-remove-vague-words"].is-done')).toHaveCount(1);
-    await expect(page.locator(".lab-exercise--quantifier")).toContainText(
-      "Vague words removed"
+    /* Ada/Cleo is not one of the two collisions the copy calls valid. */
+    await page.getByTestId("lab-quant-visitor-ada").click();
+    await page.getByTestId("lab-quant-visitor-cleo").click();
+    await expect(page.getByTestId("lab-quant-collision-note")).toContainText(
+      "does not expose"
     );
-    await expect(page.getByTestId("lab-quant-landing-ben")).toContainText(
+    await page.getByTestId("lab-quant-unit-ranges").click();
+    await expect(page.getByTestId("lab-quant-pass")).toHaveCount(0);
+    /* Ben/Cleo is valid: same count, different words. Count ranges still fail
+       until the reference period is named. */
+    await page.getByTestId("lab-quant-visitor-ben").click();
+    await expect(page.getByTestId("lab-quant-collision-note")).toContainText(
+      "both came 4 times"
+    );
+    await expect(page.locator('[data-testid="lab-quant-task-spot-collision"].is-done')).toHaveCount(1);
+    await expect(page.getByTestId("lab-quant-pass")).toHaveCount(0);
+    /* Naming the period but choosing a 0-100 score is still fake precision. */
+    await page.getByTestId("lab-quant-unit-score").click();
+    await page.getByTestId("lab-quant-period-past30").click();
+    await expect(page.getByTestId("lab-quant-pass")).toHaveCount(0);
+    await expect(page.getByTestId("lab-quant-visitor-ben")).toContainText(
       "/100"
     );
-    await page.getByTestId("lab-quant-design-anchored").click();
+    await page.getByTestId("lab-quant-unit-ranges").click();
     await expect(page.getByTestId("lab-quant-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E11")).toBeVisible();
   });
 
-  test("E12 order: rotate unordered options but keep the ordinal satisfaction ruler ordered", async ({ page }) => {
+  test("E11 quantifiers: the Ada/Ben same-word collision is also a valid path to anchored ranges", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    await page.getByTestId("lab-quant-visitor-ada").click();
+    await page.getByTestId("lab-quant-visitor-ben").click();
+    await expect(page.getByTestId("lab-quant-collision-note")).toContainText(
+      "both report Often"
+    );
+    await page.getByTestId("lab-quant-period-past30").click();
+    await page.getByTestId("lab-quant-unit-ranges").click();
+    await expect(page.getByTestId("lab-quant-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E11")).toBeVisible();
+  });
+
+  test("E12 order: wrong classifications fail before rotating unordered options and keeping the ordinal ruler ordered", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    await page.getByTestId("lab-order-kind-nominal-continuum").click();
+    await page.getByTestId("lab-order-kind-ordinal-unordered").click();
     await page.getByTestId("lab-order-nominal-rotated").click();
+    await expect(page.getByTestId("lab-order-pass")).toHaveCount(0);
+    await expect(page.locator('[data-testid="lab-order-task-classify-lists"].is-done')).toHaveCount(0);
+    await page.getByTestId("lab-order-kind-nominal-unordered").click();
+    await page.getByTestId("lab-order-kind-ordinal-continuum").click();
+    await expect(page.locator('[data-testid="lab-order-task-classify-lists"].is-done')).toHaveCount(1);
     await expect(page.getByTestId("lab-order-pass")).toHaveCount(0);
     await expect(page.getByTestId("lab-order-landing-eve")).toContainText(
       "scale order broken"
@@ -437,8 +495,11 @@ test.describe("Response Option Fit Lab - desktop", () => {
   test("E10-E12 source drawers expose conservative terms and evidence badges", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
 
-    await page.getByTestId("lab-label-design-tilted").click();
-    await page.getByTestId("lab-label-design-balanced").click();
+    await page.getByTestId("lab-label-slot-slot2").click();
+    await page.getByTestId("lab-label-word-neither").click();
+    await page.getByTestId("lab-label-slot-slot3").click();
+    await page.getByTestId("lab-label-word-satisfied").click();
+    await page.getByTestId("lab-label-slot-slot4").click();
     const labelDrawer = page.getByTestId("lab-source-E10");
     await expect(labelDrawer).toBeVisible();
     await expect(labelDrawer.locator(".lab-evidence-badge")).toHaveText(
@@ -449,8 +510,10 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(labelDrawer).toContainText("semantic balance");
     await expect(labelDrawer).toContainText("Do not claim every scale");
 
-    await page.getByTestId("lab-quant-design-score").click();
-    await page.getByTestId("lab-quant-design-anchored").click();
+    await page.getByTestId("lab-quant-visitor-ben").click();
+    await page.getByTestId("lab-quant-visitor-cleo").click();
+    await page.getByTestId("lab-quant-period-past30").click();
+    await page.getByTestId("lab-quant-unit-ranges").click();
     const quantDrawer = page.getByTestId("lab-source-E11");
     await expect(quantDrawer).toBeVisible();
     await expect(quantDrawer.locator(".lab-evidence-badge")).toHaveText(
@@ -461,6 +524,8 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(quantDrawer).toContainText("false precision");
     await expect(quantDrawer).toContainText("teaching contrast");
 
+    await page.getByTestId("lab-order-kind-nominal-unordered").click();
+    await page.getByTestId("lab-order-kind-ordinal-continuum").click();
     await page.getByTestId("lab-order-nominal-rotated").click();
     await page.getByTestId("lab-order-ordinal-ordered").click();
     const orderDrawer = page.getByTestId("lab-source-E12");
@@ -678,18 +743,18 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("lab-cert-count")).toHaveText("0");
     await expect(page.getByTestId("lab-cert-copy")).toHaveCount(0);
     await expect(page.getByTestId("lab-contents-progress")).toContainText(
-      "0 of 12"
+      "0 / 12"
     );
 
     await solveAll12(page);
 
     /* Unlocked: 12 of 12, completion wording, both take-buttons, rail ticks. */
     await expect(page.getByTestId("lab-cert-count")).toHaveText("12");
-    await expect(page.getByTestId("lab-cert")).toContainText("all twelve");
+    await expect(page.getByTestId("lab-cert")).toContainText("All twelve");
     await expect(page.getByTestId("lab-cert-copy")).toBeVisible();
     await expect(page.getByTestId("lab-cert-png")).toBeVisible();
     await expect(page.getByTestId("lab-contents-progress")).toContainText(
-      "12 of 12"
+      "12 / 12"
     );
     await expect(page.locator(".lab-contents-link.is-done")).toHaveCount(12);
 

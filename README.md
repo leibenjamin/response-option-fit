@@ -12,19 +12,20 @@ way a response-option set can fail.
 
 Each exercise is compact and hands-on: tinker with a control (build a rating
 scale, fix overlapping age buckets, choose an answer set, screen a false
-premise, compare question formats, label a scale, anchor vague frequency words,
-or set order rules), watch a fixed cast of authored respondents flow through,
-and read the consequence. Wrong moves are part of the practice —
+premise, compare question formats, build a verbal ruler, expose a vague-word
+collision, or classify lists before setting order rules), watch a fixed cast of
+authored respondents flow through, and read the consequence. Wrong moves are part of the practice —
 they show what would have shipped. A solved exercise opens a source drawer with
 the real field vocabulary for what you just did, an honest evidence-strength
 label, the boundary of what not to overclaim, and named sources. A closing
 knowledge map organizes the twelve exercises into four inspection passes (the
 lab's own SLOT / RULER / PUSH / BOUNDARY shorthand), marks what it did and did
 not cover, distinguishes the lab's shorthand from real terms of art, and lists
-further reading. A quiet progress count (and a check on each solved exercise in
-the contents rail) tracks how far you've gone; finishing all twelve unlocks a
-self-issued completion certificate — copy-as-Markdown or a downloadable PNG, with
-your coverage, takeaways, sources, and a content-checksum stamp — to keep.
+further reading. A quiet completion indicator (and a check on each solved
+exercise in the contents rail) keeps the endpoint visible; finishing all twelve
+unlocks a self-issued completion keepsake — copy-as-Markdown or a downloadable
+PNG, with your coverage, takeaways, sources, and a content-checksum stamp — to
+keep.
 
 The cast in each exercise is illustrative — a small authored set to reason
 about, not real respondents or survey statistics. The one honesty rule is that

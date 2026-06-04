@@ -27,9 +27,10 @@ buckets; assemble a "how did you hear about us" answer set against a cast that
 satisfices or skips when their channel is missing; compare agree/disagree,
 reverse-worded, and item-specific formats for acquiescence; trade off scale
 length; tell a true neutral from "Don't know" from "Not applicable"; label every
-point of a scale without positive-tilting the words; replace vague frequency
-words without falling into a fake 0-100 precision trap; decide when to rotate
-unordered options without scrambling an ordinal scale; and, as a capstone,
+point of a scale by building the middle labels and checking semantic balance;
+spot the collision created by vague frequency words, then replace them without
+falling into a fake 0-100 precision trap; classify option lists before deciding
+what to rotate so an ordinal scale does not get scrambled; and, as a capstone,
 review a draft survey and diagnose each part.
 
 All twelve are framed around a single running example — one coffee shop's
@@ -73,7 +74,7 @@ interactive module with:
 
 - a role for the visitor, such as mode mapper, form operator, sequence reviewer,
   rule finder, or counting-rule reviewer;
-- a small task with visible choices and no freeform input;
+- a small check or decision with visible choices and no freeform input;
 - immediate feedback after each move;
 - a ledger, trace, or before/after state that shows what the data kept and what
   it lost;
@@ -110,9 +111,9 @@ copy is describing a downstream data record.
 The lab should not feel like twelve repeated cards. Reusing primitives is fine
 when it keeps the implementation maintainable, but the user's job should vary:
 build a scale, find a rule, sort a label, repair an item, open a gate, refit an
-option set, set a threshold, or judge a format. Future work should prefer a
-distinct mechanic over a smaller but less useful surface when those goals
-conflict.
+option set, set a threshold, build a ruler, spot a collision, classify a list,
+or judge a format. Future work should prefer a distinct mechanic over a smaller
+but less useful surface when those goals conflict.
 
 Performance, page length, and test count are things to observe. They are not
 reasons to collapse the lab back into article-like exposition.

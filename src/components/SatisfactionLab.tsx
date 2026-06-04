@@ -55,12 +55,19 @@ import {
   fpScreeners,
   fpStartActive,
   fpTasks,
+  labelScaleAllMiddleVerbal,
+  labelScaleBalanced,
   labelScaleCast,
-  labelScaleDesigns,
+  labelScaleLabels,
   labelScaleInventedCount,
   labelScaleLandingFor,
+  labelScaleNote,
   labelScalePulledCount,
+  labelScaleSlotOrder,
+  labelScaleStartSlots,
   labelScaleTasks,
+  labelScaleWordBank,
+  labelScaleWordLabel,
   nominalOrderOptions,
   oatMilkCast,
   oatMilkConflation,
@@ -75,10 +82,16 @@ import {
   ordinalOrderedLabels,
   ordinalRandomizedLabels,
   quantifierCast,
-  quantifierDesigns,
+  quantifierCollisionFor,
+  quantifierHasCollision,
   quantifierLandingFor,
   quantifierMeters,
+  quantifierNote,
+  quantifierOptions,
+  quantifierPeriods,
+  quantifierQuestion,
   quantifierTasks,
+  quantifierUnits,
   responseOptionKnowledgeMap,
   reviewDiagnosisAsk,
   reviewDiagnosisLabel,
@@ -105,11 +118,14 @@ import {
   type ExerciseReceipt,
   type FpScreenerId,
   type KnowledgeBranch,
-  type LabelScaleDesignId,
+  type LabelScaleSlots,
+  type LabelScaleSlotId,
+  type LabelScaleWordId,
   type LedgerLevel,
   type NominalOrderMode,
+  type OrderListKind,
   type OrdinalOrderMode,
-  type QuantifierDesignId,
+  type QuantifierFormat,
   type ReviewDiagnosis,
   type SourceDrawer as SourceDrawerData
 } from "../data/lab-exercises";
@@ -247,7 +263,7 @@ function LabContents() {
       </span>
       <span className="lab-contents-label">
         {label}
-        {done && <span className="lab-contents-done-sr"> — practiced</span>}
+        {done && <span className="lab-contents-done-sr"> — complete</span>}
       </span>
       <span className="lab-contents-verb" aria-hidden="true">
         {verb}
@@ -269,7 +285,15 @@ function LabContents() {
             className="lab-contents-progress"
             data-testid="lab-contents-progress"
           >
-            {count} of {total} practiced
+            <span className="lab-contents-progress-text">
+              {count} / {total} complete
+            </span>
+            <span className="lab-contents-progress-track" aria-hidden="true">
+              <span
+                className="lab-contents-progress-fill"
+                style={{ width: `${Math.round((count / total) * 100)}%` }}
+              />
+            </span>
           </span>
         </summary>
         <ol className="lab-contents-list">
@@ -415,7 +439,7 @@ function TaskBand({
 }) {
   return (
     <div className="lab-taskband" aria-live="polite">
-      <p className="lab-taskband-key">Your tasks — work them top to bottom</p>
+      <p className="lab-taskband-key">What to settle</p>
       <ol className="lab-task-list">
         {items.map((t, i) => (
           <li
@@ -442,7 +466,7 @@ function TaskBand({
         <div className="lab-task-active" aria-live="polite">
           <p className="lab-task-brief">
             <span className="lab-task-brief-key">
-              Task {active.index} of {active.total}: {active.title}
+              Check {active.index} of {active.total}: {active.title}
             </span>
             {active.brief}
           </p>
@@ -2404,17 +2428,24 @@ function AcquiescenceExercise({ num }: { num: number }) {
    ─────────────────────────────────────────────────────────────────────── */
 
 function VerbalLabelsExercise({ num }: { num: number }) {
-  const [designId, setDesignId] = useState<LabelScaleDesignId>("endpoint");
+  const [slots, setSlots] = useState<LabelScaleSlots>(() => ({
+    ...labelScaleStartSlots
+  }));
+  const [selectedWord, setSelectedWord] =
+    useState<LabelScaleWordId>("dissatisfied");
   const [completed, setCompleted] = useState<string[]>([]);
-  const design = labelScaleDesigns.find((d) => d.id === designId)!;
 
   useEffect(() => {
     setCompleted((prev) => {
-      const active = labelScaleTasks.find((t) => !prev.includes(t.id));
-      if (active && active.pass(design)) return [...prev, active.id];
-      return prev;
+      let next = prev;
+      for (const task of labelScaleTasks) {
+        if (next.includes(task.id)) continue;
+        if (!task.pass(slots)) break;
+        next = [...next, task.id];
+      }
+      return next === prev ? prev : next;
     });
-  }, [design]);
+  }, [slots]);
 
   const activeTask =
     labelScaleTasks.find((t) => !completed.includes(t.id)) ?? null;
@@ -2426,13 +2457,20 @@ function VerbalLabelsExercise({ num }: { num: number }) {
     ? labelScaleTasks.find((t) => t.id === lastDoneId) ?? null
     : null;
   const allDone = completed.length === labelScaleTasks.length;
-  const invented = labelScaleInventedCount(design);
-  const pulled = labelScalePulledCount(design);
+  const labels = labelScaleLabels(slots);
+  const invented = labelScaleInventedCount(slots);
+  const pulled = labelScalePulledCount(slots);
+  const allMiddleVerbal = labelScaleAllMiddleVerbal(slots);
+  const balanced = labelScaleBalanced(slots);
+
+  const assignSlot = (slot: LabelScaleSlotId) => {
+    setSlots((prev) => ({ ...prev, [slot]: selectedWord }));
+  };
 
   return (
     <ExerciseFrame
       num={num}
-      title="Label the whole ruler, then make the words fair."
+      title="Build the ruler the numbers were hiding."
       issue="Verbal anchors · fully labeled scales · semantic balance"
       modifier="labels"
       verb="label"
@@ -2440,8 +2478,8 @@ function VerbalLabelsExercise({ num }: { num: number }) {
       <p className="lab-exercise-setup">
         Roast &amp; Brew wants a five-point visit rating. A numeric scale looks
         tidy in the export, but if the middle points are blank, each visitor has
-        to invent the ruler. Try the obvious repair — then check whether the
-        new words are actually balanced.
+        to invent the ruler. Fill the middle, then check whether the words you
+        chose form a fair satisfaction scale.
       </p>
 
       <TaskBand
@@ -2459,7 +2497,7 @@ function VerbalLabelsExercise({ num }: { num: number }) {
                 total: labelScaleTasks.length,
                 title: activeTask.title,
                 brief: activeTask.brief,
-                hint: activeTask.hint(design)
+                hint: activeTask.hint(slots)
               }
             : null
         }
@@ -2467,42 +2505,71 @@ function VerbalLabelsExercise({ num }: { num: number }) {
         allDoneText={null}
       />
 
-      <div className="lab-control">
-        <p className="lab-control-key">Pick the scale labels</p>
-        <div className="lab-label-designs" role="group" aria-label="Scale label designs">
-          {labelScaleDesigns.map((d) => (
-            <button
-              key={d.id}
-              type="button"
-              aria-pressed={designId === d.id}
-              className={`lab-label-design ${designId === d.id ? "is-on" : ""}`}
-              data-testid={`lab-label-design-${d.id}`}
-              onClick={() => setDesignId(d.id)}
-            >
-              {d.label}
-            </button>
-          ))}
-        </div>
+      <div className="lab-label-builder">
+        <section className="lab-label-bank" aria-label="Label word bank">
+          <p className="lab-control-key">Word bank</p>
+          <div className="lab-label-words" role="group" aria-label="Choose a label word">
+            {labelScaleWordBank.map((word) => (
+              <button
+                key={word.id}
+                type="button"
+                aria-pressed={selectedWord === word.id}
+                className={`lab-label-word lab-label-word--${word.kind} ${selectedWord === word.id ? "is-on" : ""}`}
+                data-testid={`lab-label-word-${word.id}`}
+                onClick={() => setSelectedWord(word.id)}
+              >
+                {word.label}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="lab-label-slots" aria-label="Middle scale slots">
+          <p className="lab-control-key">Middle slots</p>
+          <ol className="lab-label-slot-list">
+            {labelScaleSlotOrder.map((slot, i) => (
+              <li key={slot}>
+                <button
+                  type="button"
+                  className={`lab-label-slot ${slots[slot].startsWith("number") ? "is-number" : ""}`}
+                  data-testid={`lab-label-slot-${slot}`}
+                  onClick={() => assignSlot(slot)}
+                >
+                  <span className="lab-label-slot-num">{i + 2}</span>
+                  <span className="lab-label-slot-word">
+                    {labelScaleWordLabel(slots[slot])}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          <p className="lab-label-builder-note lab-selectable" aria-live="polite">
+            Selected word: <strong>{labelScaleWordLabel(selectedWord)}</strong>.
+            Press a middle slot to place it there.
+          </p>
+        </section>
       </div>
 
       <section className="lab-label-scale" aria-label="Candidate scale">
-        <p className="lab-label-stem lab-selectable">{design.stem}</p>
+        <p className="lab-label-stem lab-selectable">
+          How satisfied were you with your visit?
+        </p>
         <ol className="lab-label-points">
-          {design.labels.map((label, i) => (
-            <li key={`${design.id}-${label}`} className="lab-label-point">
+          {labels.map((label, i) => (
+            <li key={`${i}-${label}`} className="lab-label-point">
               <span className="lab-label-point-num">{i + 1}</span>
               <span className="lab-label-point-text lab-selectable">{label}</span>
             </li>
           ))}
         </ol>
         <p className="lab-label-note lab-selectable" aria-live="polite">
-          {design.note}
+          {labelScaleNote(slots)}
         </p>
       </section>
 
       <ul className="lab-label-cast" aria-label="Where each visitor lands">
         {labelScaleCast.map((v) => {
-          const land = labelScaleLandingFor(v, design);
+          const land = labelScaleLandingFor(v, slots);
           return (
             <li
               key={v.id}
@@ -2532,11 +2599,11 @@ function VerbalLabelsExercise({ num }: { num: number }) {
         <LedgerMeter
           label="Words balanced"
           hint={
-            design.allPointsLabeled
+            allMiddleVerbal
               ? `${pulled} visitor(s) are being nudged by positive label wording.`
               : "Balance cannot be judged until every point has words."
           }
-          level={pulled === 0 && design.balanced ? "high" : "low"}
+          level={pulled === 0 && balanced ? "high" : "low"}
         />
       </div>
 
@@ -2559,18 +2626,27 @@ function VerbalLabelsExercise({ num }: { num: number }) {
    ─────────────────────────────────────────────────────────────────────── */
 
 function QuantifierExercise({ num }: { num: number }) {
-  const [designId, setDesignId] = useState<QuantifierDesignId>("vague");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [format, setFormat] = useState<QuantifierFormat>({
+    period: "none",
+    unit: "vague"
+  });
   const [completed, setCompleted] = useState<string[]>([]);
-  const design = quantifierDesigns.find((d) => d.id === designId)!;
-  const meters = quantifierMeters(design);
+  const meters = quantifierMeters(format);
+  const collision = quantifierCollisionFor(selectedIds);
+  const collisionDone = quantifierHasCollision(selectedIds);
 
   useEffect(() => {
     setCompleted((prev) => {
-      const active = quantifierTasks.find((t) => !prev.includes(t.id));
-      if (active && active.pass(design)) return [...prev, active.id];
-      return prev;
+      let next = prev;
+      for (const task of quantifierTasks) {
+        if (next.includes(task.id)) continue;
+        if (!task.pass(selectedIds, format)) break;
+        next = [...next, task.id];
+      }
+      return next === prev ? prev : next;
     });
-  }, [design]);
+  }, [selectedIds, format]);
 
   const activeTask =
     quantifierTasks.find((t) => !completed.includes(t.id)) ?? null;
@@ -2583,10 +2659,18 @@ function QuantifierExercise({ num }: { num: number }) {
     : null;
   const allDone = completed.length === quantifierTasks.length;
 
+  const toggleVisitor = (id: string) => {
+    setSelectedIds((prev) => {
+      if (prev.includes(id)) return prev.filter((v) => v !== id);
+      if (prev.length >= 2) return [prev[1], id];
+      return [...prev, id];
+    });
+  };
+
   return (
     <ExerciseFrame
       num={num}
-      title="Turn vague frequency words into a defensible ruler."
+      title="Find the collision, then fix the unit."
       issue="Vague quantifiers · reference periods · fake precision"
       modifier="quantifier"
       verb="anchor"
@@ -2594,8 +2678,9 @@ function QuantifierExercise({ num }: { num: number }) {
       <p className="lab-exercise-setup">
         The owner wants to segment occasional versus regular visitors. The
         first draft uses &ldquo;Rarely / Sometimes / Often.&rdquo; That sounds
-        natural, but those words are not units. Your job is to anchor the
-        question without replacing vagueness with fake precision.
+        natural, but those words are not units. First prove the collision in
+        the cast; then anchor the answer without replacing vagueness with fake
+        precision.
       </p>
 
       <TaskBand
@@ -2613,7 +2698,7 @@ function QuantifierExercise({ num }: { num: number }) {
                 total: quantifierTasks.length,
                 title: activeTask.title,
                 brief: activeTask.brief,
-                hint: activeTask.hint(design)
+                hint: activeTask.hint(selectedIds, format)
               }
             : null
         }
@@ -2621,67 +2706,122 @@ function QuantifierExercise({ num }: { num: number }) {
         allDoneText={null}
       />
 
-      <div className="lab-control">
-        <p className="lab-control-key">Pick the answer format</p>
-        <div className="lab-quant-designs" role="group" aria-label="Frequency response designs">
-          {quantifierDesigns.map((d) => (
-            <button
-              key={d.id}
-              type="button"
-              aria-pressed={designId === d.id}
-              className={`lab-quant-design ${designId === d.id ? "is-on" : ""}`}
-              data-testid={`lab-quant-design-${d.id}`}
-              onClick={() => setDesignId(d.id)}
-            >
-              {d.label}
-            </button>
-          ))}
-        </div>
+      <div className="lab-quant-workbench">
+        <section className="lab-quant-collision-panel" aria-label="Collision finder">
+          <p className="lab-control-key">Tap two visitors</p>
+          <div className="lab-quant-cast" role="group" aria-label="Visitor frequency answers">
+            {quantifierCast.map((v) => {
+              const land = quantifierLandingFor(v, format);
+              const selected = selectedIds.includes(v.id);
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  aria-pressed={selected}
+                  className={`lab-quant-row is-${land.quality} ${selected ? "is-selected" : ""}`}
+                  data-testid={`lab-quant-visitor-${v.id}`}
+                  onClick={() => toggleVisitor(v.id)}
+                >
+                  <span className="lab-quant-who">
+                    <strong>{v.name}</strong>
+                    <span className="lab-quant-story lab-selectable"> {v.story}</span>
+                  </span>
+                  <span className="lab-quant-arrow" aria-hidden="true">→</span>
+                  <span className="lab-quant-pick">
+                    {land.label}
+                    <span className="lab-quant-tag">{land.note}</span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <p
+            className={`lab-quant-collision-note ${selectedIds.length === 2 && !collision ? "is-wrong" : ""}`}
+            data-testid="lab-quant-collision-note"
+            aria-live="polite"
+          >
+            {selectedIds.length < 2
+              ? "Choose two rows and compare count to word."
+              : collision
+                ? collision.explanation
+                : "That pair does not expose the unit problem. Try same count with different words, or same word with different counts."}
+          </p>
+        </section>
+
+        <section className="lab-quant-format" aria-label="Frequency format controls">
+          <div>
+            <p className="lab-control-key">Reference period</p>
+            <div className="lab-quant-designs" role="group" aria-label="Reference period">
+              {quantifierPeriods.map((period) => (
+                <button
+                  key={period.id}
+                  type="button"
+                  aria-pressed={format.period === period.id}
+                  className={`lab-quant-design ${format.period === period.id ? "is-on" : ""}`}
+                  data-testid={`lab-quant-period-${period.id}`}
+                  onClick={() =>
+                    setFormat((prev) => ({ ...prev, period: period.id }))
+                  }
+                >
+                  {period.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="lab-control-key">Answer unit</p>
+            <div className="lab-quant-designs" role="group" aria-label="Answer unit">
+              {quantifierUnits.map((unit) => (
+                <button
+                  key={unit.id}
+                  type="button"
+                  aria-pressed={format.unit === unit.id}
+                  className={`lab-quant-design ${format.unit === unit.id ? "is-on" : ""}`}
+                  data-testid={`lab-quant-unit-${unit.id}`}
+                  onClick={() =>
+                    setFormat((prev) => ({ ...prev, unit: unit.id }))
+                  }
+                >
+                  {unit.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
 
       <section className="lab-quant-card" aria-label="Candidate question">
-        <p className="lab-quant-question lab-selectable">{design.question}</p>
+        <p className="lab-quant-question lab-selectable">{quantifierQuestion(format)}</p>
         <ul className="lab-quant-options">
-          {design.options.map((o) => (
-            <li key={`${design.id}-${o}`} className="lab-selectable">{o}</li>
+          {quantifierOptions(format).map((o) => (
+            <li key={`${format.period}-${format.unit}-${o}`} className="lab-selectable">{o}</li>
           ))}
         </ul>
         <p className="lab-quant-note lab-selectable" aria-live="polite">
-          {design.note}
+          {quantifierNote(format)}
         </p>
       </section>
 
-      <ul className="lab-quant-cast" aria-label="Where each visitor lands">
-        {quantifierCast.map((v) => {
-          const land = quantifierLandingFor(v, design);
-          return (
-            <li
-              key={v.id}
-              className={`lab-quant-row is-${land.quality}`}
-              data-testid={`lab-quant-landing-${v.id}`}
-            >
-              <span className="lab-quant-who">
-                <strong>{v.name}</strong>
-                <span className="lab-quant-story lab-selectable"> {v.story}</span>
-              </span>
-              <span className="lab-quant-arrow" aria-hidden="true">→</span>
-              <span className="lab-quant-pick">
-                {land.label}
-                <span className="lab-quant-tag">{land.note}</span>
-              </span>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="lab-quant-format-readout" aria-live="polite">
+        <p className={`lab-quant-check ${collisionDone ? "is-good" : ""}`}>
+          Collision: {collisionDone ? "found" : "not yet proven"}
+        </p>
+        <p className={`lab-quant-check ${format.period === "past30" ? "is-good" : ""}`}>
+          Time frame: {format.period === "past30" ? "named" : "missing"}
+        </p>
+        <p className={`lab-quant-check ${format.unit === "ranges" ? "is-good" : format.unit === "score" ? "is-bad" : ""}`}>
+          Unit: {format.unit === "ranges" ? "countable ranges" : format.unit === "score" ? "fake precision" : "vague words"}
+        </p>
+      </div>
 
       <div className="lab-channel-ledger" aria-label="Readouts">
         <LedgerMeter
-          label="Vague words removed"
-          hint="Do the options stop asking respondents to translate counts into private frequency words?"
+          label="Reference period"
+          hint="Does the count have a named time frame?"
           level={meters.distinctions}
         />
         <LedgerMeter
-          label="Precision honest"
+          label="Unit honest"
           hint="Does the format ask only for distinctions people can supply and analysts can use?"
           level={meters.trustworthy}
         />
@@ -2690,11 +2830,11 @@ function QuantifierExercise({ num }: { num: number }) {
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-quant-pass">
           ✓ With &ldquo;Rarely / Sometimes / Often,&rdquo; the owner can&rsquo;t
-          tell an occasional visitor from a regular — everyone lands near
-          &ldquo;Sometimes&rdquo; and the segmentation the question was for does
-          not happen here. You did not just swap soft words for hard-looking numbers. The
-          repaired item names the reference period, asks for countable ranges,
-          and keeps the precision matched to the decision.
+          tell an occasional visitor from a regular — the same count can become
+          different words, and the same word can hide different counts. You did
+          not just swap soft words for hard-looking numbers. The repaired item
+          names the reference period, asks for countable ranges, and keeps the
+          precision matched to the decision.
         </p>
       )}
 
@@ -2711,6 +2851,10 @@ function QuantifierExercise({ num }: { num: number }) {
 function OrderExercise({ num }: { num: number }) {
   const [nominal, setNominal] = useState<NominalOrderMode>("fixed");
   const [ordinal, setOrdinal] = useState<OrdinalOrderMode>("randomized");
+  const [nominalKind, setNominalKind] =
+    useState<OrderListKind>("unclassified");
+  const [ordinalKind, setOrdinalKind] =
+    useState<OrderListKind>("unclassified");
   const [completed, setCompleted] = useState<string[]>([]);
   const meters = orderMeters(nominal, ordinal);
   const nominalList =
@@ -2727,11 +2871,15 @@ function OrderExercise({ num }: { num: number }) {
 
   useEffect(() => {
     setCompleted((prev) => {
-      const active = orderTasks.find((t) => !prev.includes(t.id));
-      if (active && active.pass(nominal, ordinal)) return [...prev, active.id];
-      return prev;
+      let next = prev;
+      for (const task of orderTasks) {
+        if (next.includes(task.id)) continue;
+        if (!task.pass(nominal, ordinal, nominalKind, ordinalKind)) break;
+        next = [...next, task.id];
+      }
+      return next === prev ? prev : next;
     });
-  }, [nominal, ordinal]);
+  }, [nominal, ordinal, nominalKind, ordinalKind]);
 
   const activeTask = orderTasks.find((t) => !completed.includes(t.id)) ?? null;
   const activeIndex = activeTask ? orderTasks.indexOf(activeTask) : orderTasks.length;
@@ -2740,6 +2888,33 @@ function OrderExercise({ num }: { num: number }) {
     ? orderTasks.find((t) => t.id === lastDoneId) ?? null
     : null;
   const allDone = completed.length === orderTasks.length;
+
+  const renderKindButtons = (
+    value: OrderListKind,
+    setValue: (value: OrderListKind) => void,
+    prefix: "nominal" | "ordinal"
+  ) => (
+    <div className="lab-order-kind-buttons" role="group" aria-label={`${prefix} list kind`}>
+      <button
+        type="button"
+        aria-pressed={value === "unordered"}
+        className={`lab-order-kind ${value === "unordered" ? "is-on" : ""}`}
+        data-testid={`lab-order-kind-${prefix}-unordered`}
+        onClick={() => setValue("unordered")}
+      >
+        Unordered categories
+      </button>
+      <button
+        type="button"
+        aria-pressed={value === "continuum"}
+        className={`lab-order-kind ${value === "continuum" ? "is-on" : ""}`}
+        data-testid={`lab-order-kind-${prefix}-continuum`}
+        onClick={() => setValue("continuum")}
+      >
+        Meaningful continuum
+      </button>
+    </div>
+  );
 
   return (
     <ExerciseFrame
@@ -2751,12 +2926,9 @@ function OrderExercise({ num }: { num: number }) {
     >
       <p className="lab-exercise-setup">
         Order is a real source of push, but the repair depends on what kind of
-        options you have. Two of Roast &amp; Brew&rsquo;s questions start broken:
-        its &ldquo;how did you hear about us&rdquo; channel list is fixed for
-        everyone, so one option always owns the first slot — and its satisfaction
-        labels have been scrambled. An unordered list can rotate so no option
-        owns the first read; a satisfaction scale is a ruler — scramble it and
-        you break the continuum. Fix each the right way.
+        options you have. Roast &amp; Brew has two broken lists: its channel
+        list always puts the same answer first, and its satisfaction labels are
+        scrambled. Classify the lists before you decide what to rotate.
       </p>
 
       <TaskBand
@@ -2774,7 +2946,7 @@ function OrderExercise({ num }: { num: number }) {
                 total: orderTasks.length,
                 title: activeTask.title,
                 brief: activeTask.brief,
-                hint: activeTask.hint(nominal, ordinal)
+                hint: activeTask.hint(nominal, ordinal, nominalKind, ordinalKind)
               }
             : null
         }
@@ -2784,10 +2956,11 @@ function OrderExercise({ num }: { num: number }) {
 
       <div className="lab-order-grid">
         <section className="lab-order-panel">
-          <p className="lab-order-key">Unordered nominal list</p>
+          <p className="lab-order-key">List A</p>
           <p className="lab-order-question lab-selectable">
             How did you hear about us?
           </p>
+          {renderKindButtons(nominalKind, setNominalKind, "nominal")}
           <div className="lab-order-buttons" role="group" aria-label="Nominal list order">
             <button
               type="button"
@@ -2821,10 +2994,11 @@ function OrderExercise({ num }: { num: number }) {
         </section>
 
         <section className="lab-order-panel">
-          <p className="lab-order-key">Ordered satisfaction scale</p>
+          <p className="lab-order-key">List B</p>
           <p className="lab-order-question lab-selectable">
             How satisfied were you?
           </p>
+          {renderKindButtons(ordinalKind, setOrdinalKind, "ordinal")}
           <div className="lab-order-buttons" role="group" aria-label="Ordinal scale order">
             <button
               type="button"

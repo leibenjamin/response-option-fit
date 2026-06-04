@@ -125,40 +125,41 @@ export function LabCertificate() {
       aria-labelledby="lab-cert-title"
       data-testid="lab-cert"
     >
-      <p className="lab-cert-eyebrow">The takeaway</p>
+      <p className="lab-cert-eyebrow">Completion keepsake</p>
       <h3 className="lab-cert-title" id="lab-cert-title">
         {allComplete
-          ? "You worked through all twelve. Take your certificate."
-          : "Finish the set to claim your certificate."}
+          ? "All twelve are complete. Take the keepsake."
+          : "Complete the set to unlock the keepsake."}
       </h3>
 
       <div className="lab-cert-progress" data-testid="lab-cert-progress">
         <div
           className="lab-cert-bar"
           role="progressbar"
-          aria-label="Exercises practiced"
+          aria-label="Exercises complete"
           aria-valuemin={0}
           aria-valuemax={total}
           aria-valuenow={count}
-          aria-valuetext={`${count} of ${total} exercises practiced`}
+          aria-valuetext={`${count} of ${total} exercises complete`}
         >
           <span className="lab-cert-bar-fill" style={{ width: `${pct}%` }} />
         </div>
         {/* aria-hidden: the progressbar above already conveys this to a screen
             reader, so the visible count would otherwise be read twice. */}
         <p className="lab-cert-count" aria-hidden="true">
-          <strong data-testid="lab-cert-count">{count}</strong> of {total}{" "}
-          exercises practiced
+          <strong data-testid="lab-cert-count">{count}</strong> / {total}{" "}
+          complete
         </p>
       </div>
 
       {allComplete ? (
         <>
           <p className="lab-cert-blurb lab-selectable">
-            A keepsake for finishing the lab — your coverage, the things you can
-            now say without bluffing, the sources, and the date. It is
-            self-issued, not an accredited credential; the code is a checksum of
-            the certificate's date and contents, not a cryptographic signature.
+            A personal artifact from finishing the lab — your coverage, the
+            things you can now say without bluffing, the sources, and the date.
+            It is self-issued, not an accredited credential; the code is a
+            checksum of the certificate's date and contents, not a cryptographic
+            signature.
           </p>
           <div className="lab-cert-actions">
             <button
@@ -181,9 +182,9 @@ export function LabCertificate() {
         </>
       ) : (
         <p className="lab-cert-blurb lab-cert-blurb--locked lab-selectable">
-          Solve each exercise above — every one you finish reveals its receipt
-          and counts here. Once all {total} are done, your certificate unlocks
-          with your coverage, takeaways, and sources.
+          Each completed exercise reveals its receipt and counts here. Once all{" "}
+          {total} are done, the certificate unlocks with your coverage,
+          takeaways, and sources.
         </p>
       )}
 

@@ -1090,6 +1090,23 @@ summary:focus-visible {
   text-transform: uppercase;
   color: var(--accent);
   white-space: nowrap;
+  display: inline-grid;
+  grid-template-columns: auto minmax(52px, 7vw);
+  gap: var(--s-2);
+  align-items: center;
+}
+.lab-contents-progress-track {
+  display: block;
+  height: 4px;
+  background: var(--paper-3);
+  border: 1px solid var(--line-soft);
+  overflow: hidden;
+}
+.lab-contents-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 180ms ease;
 }
 .lab-contents-link.is-done .lab-contents-num {
   color: var(--accent-2);
@@ -1106,6 +1123,17 @@ summary:focus-visible {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .lab-contents {
+    position: static;
+    z-index: auto;
+  }
+  .lab-exercise,
+  .lab-km {
+    scroll-margin-top: var(--s-4);
+  }
 }
 
 /* ─── Closing-map certificate: the completion payoff ─── */
@@ -1946,11 +1974,13 @@ summary:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: var(--s-3);
 }
 .lab-source-summary::-webkit-details-marker { display: none; }
 
 .lab-source-summary-text {
+  min-width: 0;
   font-family: var(--font-mono);
   font-size: 11.5px;
   letter-spacing: 0.08em;
@@ -1965,14 +1995,19 @@ summary:focus-visible {
 }
 
 .lab-evidence-badge {
+  display: inline-block;
+  max-width: 100%;
   font-family: var(--font-mono);
   font-size: 9.5px;
+  line-height: 1.25;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 1px var(--s-2);
   border: 1px solid currentColor;
   border-radius: 2px;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 .lab-evidence-badge--textbook-consensus { color: var(--route-r); }
 .lab-evidence-badge--directionally-supported { color: var(--route-w); }
@@ -3355,9 +3390,8 @@ summary:focus-visible {
 .lab-taskband {
   border: 1px solid var(--accent-soft);
   border-left: 3px solid var(--accent);
-  /* A light warm wash, not the saturated peach: the task band is hoisted to the
-     top of all twelve exercises, so a softer ground keeps it present and
-     task-first without becoming the dominant repeated module on the page. */
+  /* A light warm wash keeps the decision strip findable without making every
+     exercise feel like the same checklist module. */
   background: var(--accent-wash);
   padding: var(--s-3) var(--s-4);
   display: flex;
@@ -4214,7 +4248,124 @@ summary:focus-visible {
 
 /* ─── E10–E12: labels, quantifiers, and order ─── */
 
-.lab-label-designs,
+.lab-label-builder,
+.lab-quant-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+}
+
+.lab-label-bank,
+.lab-label-slots,
+.lab-quant-collision-panel,
+.lab-quant-format {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: var(--s-4) var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.lab-label-words {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+
+.lab-label-word,
+.lab-label-slot,
+.lab-order-kind {
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  color: var(--ink-2);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  line-height: 1.25;
+  min-height: 42px;
+  padding: var(--s-2) var(--s-3);
+  cursor: pointer;
+  transition:
+    background-color var(--mo-1) var(--mo-ease),
+    border-color var(--mo-1) var(--mo-ease),
+    color var(--mo-1) var(--mo-ease);
+}
+
+.lab-label-word {
+  text-align: left;
+}
+.lab-label-word--number {
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+}
+.lab-label-word:hover:not(:disabled),
+.lab-label-word:focus-visible:not(:disabled),
+.lab-label-slot:hover:not(:disabled),
+.lab-label-slot:focus-visible:not(:disabled),
+.lab-order-kind:hover:not(:disabled),
+.lab-order-kind:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-2);
+}
+.lab-label-word.is-on,
+.lab-order-kind.is-on {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper-card);
+}
+.lab-label-word.is-on:hover:not(:disabled),
+.lab-label-word.is-on:focus-visible:not(:disabled),
+.lab-order-kind.is-on:hover:not(:disabled),
+.lab-order-kind.is-on:focus-visible:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper-card);
+}
+
+.lab-label-slot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+.lab-label-slot {
+  width: 100%;
+  min-height: 76px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: start;
+  text-align: left;
+}
+.lab-label-slot.is-number {
+  border-style: dashed;
+  color: var(--ink-soft);
+}
+.lab-label-slot-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+.lab-label-slot-word {
+  align-self: center;
+}
+.lab-label-builder-note,
+.lab-quant-collision-note {
+  margin: 0;
+  border-left: 3px solid var(--accent-soft);
+  background: var(--paper-2);
+  padding: var(--s-2) var(--s-3);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.lab-quant-collision-note.is-wrong {
+  border-left-color: var(--accent);
+  color: var(--accent-2);
+}
+
 .lab-quant-designs,
 .lab-order-buttons {
   display: grid;
@@ -4223,7 +4374,6 @@ summary:focus-visible {
 }
 .lab-order-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-.lab-label-design,
 .lab-quant-design,
 .lab-order-btn {
   border: 1px solid var(--line-soft);
@@ -4241,8 +4391,6 @@ summary:focus-visible {
     border-color var(--mo-1) var(--mo-ease),
     color var(--mo-1) var(--mo-ease);
 }
-.lab-label-design:hover:not(:disabled),
-.lab-label-design:focus-visible:not(:disabled),
 .lab-quant-design:hover:not(:disabled),
 .lab-quant-design:focus-visible:not(:disabled),
 .lab-order-btn:hover:not(:disabled),
@@ -4250,12 +4398,57 @@ summary:focus-visible {
   border-color: var(--accent);
   color: var(--accent-2);
 }
-.lab-label-design.is-on,
 .lab-quant-design.is-on,
 .lab-order-btn.is-on {
   border-color: var(--ink);
   background: var(--ink);
   color: var(--paper-card);
+}
+.lab-quant-design.is-on:hover:not(:disabled),
+.lab-quant-design.is-on:focus-visible:not(:disabled),
+.lab-order-btn.is-on:hover:not(:disabled),
+.lab-order-btn.is-on:focus-visible:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper-card);
+}
+
+.lab-quant-format {
+  gap: var(--s-4);
+}
+.lab-quant-format > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.lab-quant-format .lab-quant-designs {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.lab-quant-format > div + div .lab-quant-designs {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lab-quant-format-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.lab-quant-check {
+  margin: 0;
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  padding: var(--s-2) var(--s-3);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+}
+.lab-quant-check.is-good {
+  border-color: rgba(93, 110, 68, 0.35);
+  color: var(--route-r);
+}
+.lab-quant-check.is-bad {
+  border-color: var(--accent-soft);
+  color: var(--accent-2);
 }
 
 .lab-label-scale,
@@ -4350,6 +4543,25 @@ summary:focus-visible {
   font-size: 13.5px;
   color: var(--ink-2);
 }
+.lab-quant-row {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line-faint);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.lab-quant-row:hover,
+.lab-quant-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  background: var(--accent-paper);
+}
+.lab-quant-row.is-selected {
+  box-shadow: inset 3px 0 0 var(--accent);
+  background: var(--accent-wash);
+}
 .lab-label-row:last-child,
 .lab-quant-row:last-child,
 .lab-order-row:last-child { border-bottom: 0; }
@@ -4400,6 +4612,14 @@ summary:focus-visible {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--s-4);
 }
+.lab-order-kind-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+.lab-order-kind {
+  text-align: left;
+}
 .lab-order-key {
   margin: 0;
   font-family: var(--font-mono);
@@ -4413,14 +4633,19 @@ summary:focus-visible {
   .lab-fp-screener,
   .lab-acq-judge-btn,
   .lab-acq-design,
-  .lab-label-design,
+  .lab-label-word,
+  .lab-label-slot,
   .lab-quant-design,
+  .lab-quant-row,
+  .lab-order-kind,
   .lab-order-btn { border: 1px solid CanvasText; }
   .lab-acq-judge-btn[aria-pressed="true"] { background: Highlight; color: HighlightText; }
   .lab-fp-screener.is-on,
   .lab-acq-design.is-on,
-  .lab-label-design.is-on,
+  .lab-label-word.is-on,
   .lab-quant-design.is-on,
+  .lab-quant-row.is-selected,
+  .lab-order-kind.is-on,
   .lab-order-btn.is-on { background: Highlight; color: HighlightText; }
 }
 
@@ -4452,9 +4677,10 @@ summary:focus-visible {
   .lab-scalelen-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+  .lab-label-builder,
+  .lab-quant-workbench,
   .lab-oat-designs,
   .lab-acq-designs,
-  .lab-label-designs,
   .lab-quant-designs,
   .lab-order-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -4465,8 +4691,21 @@ summary:focus-visible {
   .lab-exercise {
     padding: var(--s-5) var(--s-4);
   }
+  .lab-contents-progress {
+    grid-template-columns: auto;
+  }
+  .lab-contents-progress-track {
+    display: none;
+  }
   .lab-segmented--wide {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .lab-label-words,
+  .lab-label-slot-list,
+  .lab-quant-format .lab-quant-designs,
+  .lab-quant-format > div + div .lab-quant-designs,
+  .lab-order-kind-buttons {
+    grid-template-columns: minmax(0, 1fr);
   }
   /* Collapse the subgrid cast lists to a single stacked column on phones:
      the <ul> drops to one column and each row stacks name over value. */

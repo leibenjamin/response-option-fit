@@ -1590,68 +1590,97 @@ export const acqTasks: AcqTask[] = [
 
 /* ─── Exercise 10 — Full verbal labels / verbal anchors (RULER) ──────────
    Endpoint-only numeric scales make respondents invent what the middle points
-   mean. Fully labeling the points can make the scale easier to use, but the
-   words themselves must still be semantically balanced. This exercise has a
-   two-step productive failure:
-     1. endpoint-only → all middle points are undefined, so respondents invent
-        the ruler locally;
-     2. all-points-labeled-but-positive → looks finished, but the labels are
-        tilted ("Good" as the middle), so mildly negative / neutral people are
-        pulled upward;
-     3. fully labeled, balanced satisfaction scale → each point has a stable,
-        symmetric meaning.
-   The cast is authored; counts are only over the named visitors. */
+   mean. Fully labeling the points can help, but the words themselves must still
+   be semantically balanced. This version makes the visitor build the ruler
+   from word choices rather than choosing a pre-named design. */
 
-export type LabelScaleDesignId = "endpoint" | "tilted" | "balanced";
+export type LabelScaleSlotId = "slot2" | "slot3" | "slot4";
+export type LabelScaleWordId =
+  | "number-2"
+  | "number-3"
+  | "number-4"
+  | "dissatisfied"
+  | "neither"
+  | "satisfied"
+  | "fair"
+  | "good"
+  | "great";
 
-export type LabelScaleDesign = {
-  id: LabelScaleDesignId;
+export type LabelScaleSlots = Record<LabelScaleSlotId, LabelScaleWordId>;
+
+export type LabelScaleWord = {
+  id: LabelScaleWordId;
   label: string;
-  stem: string;
-  labels: string[];
-  allPointsLabeled: boolean;
-  balanced: boolean;
-  note: string;
+  kind: "number" | "balanced" | "trap";
 };
 
-export const labelScaleDesigns: LabelScaleDesign[] = [
-  {
-    id: "endpoint",
-    label: "1–5, endpoints only",
-    stem: "How was your visit?",
-    labels: ["1 (terrible)", "2", "3", "4", "5 (excellent)"],
-    allPointsLabeled: false,
-    balanced: false,
-    note:
-      "The endpoints are clear, but 2, 3, and 4 are private inventions. One visitor treats 3 as neutral, another treats it as “fine,” and another avoids it because it sounds like a grade. The dataset gets numbers, not shared meanings."
-  },
-  {
-    id: "tilted",
-    label: "Every point labeled, Poor → Exceptional",
-    stem: "How was your visit?",
-    labels: ["Poor", "Fair", "Good", "Great", "Exceptional"],
-    allPointsLabeled: true,
-    balanced: false,
-    note:
-      "Every point has words now, so the middle is no longer blank. But the ruler is tilted: “Good” sits in the middle, so a merely neutral visit reports as positive, and mild disappointment has to sound harsher than it felt."
-  },
-  {
-    id: "balanced",
-    label: "Every point labeled, Very dissatisfied → Very satisfied",
-    stem: "How satisfied were you with your visit?",
-    labels: [
-      "Very dissatisfied",
-      "Dissatisfied",
-      "Neither satisfied nor dissatisfied",
-      "Satisfied",
-      "Very satisfied"
-    ],
-    allPointsLabeled: true,
-    balanced: true,
-    note:
-      "Each point has a stable verbal meaning and the negative side has the same room as the positive side. The labels now act like tick marks on a ruler rather than decorations around a number."
-  }
+export const labelScaleSlotOrder: LabelScaleSlotId[] = ["slot2", "slot3", "slot4"];
+
+export const labelScaleStartSlots: LabelScaleSlots = {
+  slot2: "number-2",
+  slot3: "number-3",
+  slot4: "number-4"
+};
+
+export const labelScaleBalancedSlots: LabelScaleSlots = {
+  slot2: "dissatisfied",
+  slot3: "neither",
+  slot4: "satisfied"
+};
+
+export const labelScaleWordBank: LabelScaleWord[] = [
+  { id: "dissatisfied", label: "Dissatisfied", kind: "balanced" },
+  { id: "neither", label: "Neither satisfied nor dissatisfied", kind: "balanced" },
+  { id: "satisfied", label: "Satisfied", kind: "balanced" },
+  { id: "fair", label: "Fair", kind: "trap" },
+  { id: "good", label: "Good", kind: "trap" },
+  { id: "great", label: "Great", kind: "trap" },
+  { id: "number-2", label: "2", kind: "number" },
+  { id: "number-3", label: "3", kind: "number" },
+  { id: "number-4", label: "4", kind: "number" }
 ];
+
+const labelScaleWordsById: Record<LabelScaleWordId, LabelScaleWord> =
+  Object.fromEntries(labelScaleWordBank.map((w) => [w.id, w])) as Record<
+    LabelScaleWordId,
+    LabelScaleWord
+  >;
+
+export function labelScaleWordLabel(id: LabelScaleWordId): string {
+  return labelScaleWordsById[id].label;
+}
+
+export function labelScaleLabels(slots: LabelScaleSlots): string[] {
+  return [
+    "Very dissatisfied",
+    labelScaleWordLabel(slots.slot2),
+    labelScaleWordLabel(slots.slot3),
+    labelScaleWordLabel(slots.slot4),
+    "Very satisfied"
+  ];
+}
+
+export function labelScaleAllMiddleVerbal(slots: LabelScaleSlots): boolean {
+  return labelScaleSlotOrder.every(
+    (slot) => labelScaleWordsById[slots[slot]].kind !== "number"
+  );
+}
+
+export function labelScaleBalanced(slots: LabelScaleSlots): boolean {
+  return labelScaleSlotOrder.every(
+    (slot) => slots[slot] === labelScaleBalancedSlots[slot]
+  );
+}
+
+export function labelScaleNote(slots: LabelScaleSlots): string {
+  if (!labelScaleAllMiddleVerbal(slots)) {
+    return "The endpoints are clear, but a numbered middle still asks visitors to invent what that point means. The export gets digits, not shared meanings.";
+  }
+  if (!labelScaleBalanced(slots)) {
+    return "Every point has words now, so the ruler looks finished. But the middle words do not form a balanced satisfaction scale, so neutral or mildly disappointed visits get pulled into better-sounding labels.";
+  }
+  return "Each point has a stable verbal meaning and the negative side has the same room as the positive side. The labels now act like tick marks on a ruler rather than decorations around a number.";
+}
 
 export type LabelScaleVisitor = {
   id: string;
@@ -1676,51 +1705,49 @@ export type LabelScaleLanding = {
 
 export function labelScaleLandingFor(
   v: LabelScaleVisitor,
-  d: LabelScaleDesign
+  slots: LabelScaleSlots
 ): LabelScaleLanding {
-  if (d.id === "endpoint") {
+  const labels = labelScaleLabels(slots);
+  if (!labelScaleAllMiddleVerbal(slots)) {
     const inventedNote =
       v.trueSlot === 0 || v.trueSlot === 4
         ? "endpoint is clear"
         : "middle meaning invented";
     return {
-      label: d.labels[v.trueSlot],
+      label: labels[v.trueSlot],
       quality: v.trueSlot === 0 || v.trueSlot === 4 ? "clean" : "invented",
       note: inventedNote
     };
   }
-  if (d.id === "tilted") {
-    const pulled =
-      v.trueSlot === 1 || v.trueSlot === 2 || v.trueSlot === 3;
-    const tiltedIndex =
-      v.trueSlot === 2 ? 2 : v.trueSlot === 1 ? 1 : v.trueSlot;
+  if (!labelScaleBalanced(slots)) {
+    const pulled = v.trueSlot === 1 || v.trueSlot === 2 || v.trueSlot === 3;
     return {
-      label: d.labels[tiltedIndex],
+      label: labels[v.trueSlot],
       quality: pulled ? "pulled" : "clean",
       note:
         v.trueSlot === 2
-          ? "neutral lands on “Good”"
+          ? `middle lands on “${labels[v.trueSlot]}”`
           : pulled
             ? "wording nudges the report"
             : "endpoint is clear"
     };
   }
   return {
-    label: d.labels[v.trueSlot],
+    label: labels[v.trueSlot],
     quality: "clean",
     note: "label matches the true view"
   };
 }
 
-export function labelScaleInventedCount(d: LabelScaleDesign): number {
+export function labelScaleInventedCount(slots: LabelScaleSlots): number {
   return labelScaleCast.filter(
-    (v) => labelScaleLandingFor(v, d).quality === "invented"
+    (v) => labelScaleLandingFor(v, slots).quality === "invented"
   ).length;
 }
 
-export function labelScalePulledCount(d: LabelScaleDesign): number {
+export function labelScalePulledCount(slots: LabelScaleSlots): number {
   return labelScaleCast.filter(
-    (v) => labelScaleLandingFor(v, d).quality === "pulled"
+    (v) => labelScaleLandingFor(v, slots).quality === "pulled"
   ).length;
 }
 
@@ -1728,9 +1755,9 @@ export type LabelScaleTask = {
   id: "label-points" | "balance-words";
   title: string;
   brief: string;
-  pass: (d: LabelScaleDesign) => boolean;
+  pass: (slots: LabelScaleSlots) => boolean;
   passText: string;
-  hint: (d: LabelScaleDesign) => string;
+  hint: (slots: LabelScaleSlots) => string;
 };
 
 export const labelScaleTasks: LabelScaleTask[] = [
@@ -1738,82 +1765,55 @@ export const labelScaleTasks: LabelScaleTask[] = [
     id: "label-points",
     title: "Stop making people invent the middle",
     brief:
-      "The endpoints are named, but the middle points are just numbers. Pick a design where every point has an interpretable verbal label.",
-    pass: (d) => d.allPointsLabeled,
+      "The endpoints are named, but the middle points are just numbers. Fill all three middle slots with words a visitor can interpret.",
+    pass: labelScaleAllMiddleVerbal,
     passText:
-      "✓ The middle is no longer a private invention. Every point now says what it means. Task 2 checks whether those words are fair.",
-    hint: (d) =>
-      d.allPointsLabeled
+      "✓ The middle is no longer a private invention. Every point now says what it means. Check 2 asks whether those words are fair.",
+    hint: (slots) =>
+      labelScaleAllMiddleVerbal(slots)
         ? "Every point is labeled now — on to the wording balance."
-        : `${labelScaleInventedCount(d)} visitor(s) are using a number whose meaning the survey never defined.`
+        : `${labelScaleInventedCount(slots)} visitor(s) are using a number whose meaning the survey never defined.`
   },
   {
     id: "balance-words",
     title: "Make the labels a fair ruler",
     brief:
-      "A word on every point is not enough if the words lean. Read the two fully-worded scales and keep the one where a genuinely middling visit can still land in the middle.",
-    pass: (d) => d.allPointsLabeled && d.balanced,
+      "A word on every point is not enough if the words lean. Build the three middle labels so a genuinely middling visit can still land in the middle.",
+    pass: labelScaleBalanced,
     passText:
       "✓ The ruler is labeled and balanced. Now a middle visit can stay in the middle, mild dissatisfaction does not have to sound extreme, and positive answers still have room to be genuinely strong.",
-    hint: (d) => {
-      if (!d.allPointsLabeled)
+    hint: (slots) => {
+      if (!labelScaleAllMiddleVerbal(slots))
         return "First label every point; an unlabeled middle is still an invented middle.";
-      if (!d.balanced)
-        return `${labelScalePulledCount(d)} visitor(s) are being nudged by positive-tilted labels — “Good” is not a neutral midpoint.`;
+      if (!labelScaleBalanced(slots))
+        return `${labelScalePulledCount(slots)} visitor(s) are being nudged by the middle words. A balanced satisfaction ruler needs equal room around the midpoint.`;
       return "Every point is labeled and the words are balanced.";
     }
   }
 ];
 
 /* ─── Exercise 11 — Vague quantifiers / fake precision (RULER) ───────────
-   "Rarely / sometimes / often" are not units. Replacing them with a shiny
-   0–100 score looks more exact but still does not give respondents a stable
-   unit or the analyst a decision-ready category. The clean repair anchors a
-   reference period and uses ranges that match the decision. */
+   "Rarely / sometimes / often" are not units. This exercise first asks the
+   visitor to find the collision in the cast, then to repair the unit without
+   falling into 0–100 pseudo-precision or count ranges with no reference period. */
 
-export type QuantifierDesignId = "vague" | "score" | "anchored";
+export type QuantifierPeriod = "none" | "past30";
+export type QuantifierUnit = "vague" | "score" | "ranges";
 
-export type QuantifierDesign = {
-  id: QuantifierDesignId;
-  label: string;
-  question: string;
-  options: string[];
-  vagueWordsRemoved: boolean;
-  precisionHonest: boolean;
-  note: string;
+export type QuantifierFormat = {
+  period: QuantifierPeriod;
+  unit: QuantifierUnit;
 };
 
-export const quantifierDesigns: QuantifierDesign[] = [
-  {
-    id: "vague",
-    label: "Rarely / Sometimes / Often",
-    question: "How often do you visit Roast & Brew?",
-    options: ["Rarely", "Sometimes", "Often"],
-    vagueWordsRemoved: false,
-    precisionHonest: true,
-    note:
-      "The answer words sound familiar, but they are not units. For a daily commuter, four visits is “rarely”; for a weekend-only customer, four visits is “often.” The same real frequency can report differently."
-  },
-  {
-    id: "score",
-    label: "0–100 frequency score",
-    question: "On a 0–100 scale, how frequent are your visits?",
-    options: ["0 (never)", "1", "2", "…", "99", "100 (constantly)"],
-    vagueWordsRemoved: true,
-    precisionHonest: false,
-    note:
-      "The vague words are gone, but the precision is fake. A person can count visits; they cannot reliably translate “I came four times” into a private 0–100 frequency score that another analyst can interpret."
-  },
-  {
-    id: "anchored",
-    label: "Counts over the last 30 days",
-    question: "In the past 30 days, about how many times did you visit Roast & Brew?",
-    options: ["0", "1–2", "3–5", "6–10", "11 or more"],
-    vagueWordsRemoved: true,
-    precisionHonest: true,
-    note:
-      "The reference period is explicit and every option is a countable range. The categories are coarse enough to answer, but sharp enough for the owner’s decision about occasional versus regular visitors."
-  }
+export const quantifierPeriods: { id: QuantifierPeriod; label: string }[] = [
+  { id: "none", label: "No time frame" },
+  { id: "past30", label: "Past 30 days" }
+];
+
+export const quantifierUnits: { id: QuantifierUnit; label: string }[] = [
+  { id: "vague", label: "Rarely / Sometimes / Often" },
+  { id: "score", label: "0–100 frequency score" },
+  { id: "ranges", label: "Count ranges" }
 ];
 
 export type QuantifierVisitor = {
@@ -1849,20 +1849,27 @@ export function anchoredVisitRange(n: number): string {
 
 export function quantifierLandingFor(
   v: QuantifierVisitor,
-  d: QuantifierDesign
+  format: QuantifierFormat
 ): QuantifierLanding {
-  if (d.id === "vague") {
+  if (format.unit === "vague") {
     return {
       label: v.vagueWord,
       quality: "vague",
       note: `${v.visits30} visits, but their personal standard says “${v.vagueWord}”`
     };
   }
-  if (d.id === "score") {
+  if (format.unit === "score") {
     return {
       label: `${v.score}/100`,
       quality: "fake",
       note: `${v.visits30} visits became a private precision score`
+    };
+  }
+  if (format.period === "none") {
+    return {
+      label: anchoredVisitRange(v.visits30),
+      quality: "vague",
+      note: `${v.visits30} visits, but no time frame anchors the count`
     };
   }
   return {
@@ -1872,54 +1879,145 @@ export function quantifierLandingFor(
   };
 }
 
-export function quantifierBadCount(d: QuantifierDesign): number {
+export function quantifierBadCount(format: QuantifierFormat): number {
   return quantifierCast.filter(
-    (v) => quantifierLandingFor(v, d).quality !== "clean"
+    (v) => quantifierLandingFor(v, format).quality !== "clean"
   ).length;
 }
 
-export function quantifierMeters(d: QuantifierDesign): ScaleMeters {
+export function quantifierQuestion(format: QuantifierFormat): string {
+  if (format.unit === "score") {
+    return format.period === "past30"
+      ? "In the past 30 days, on a 0–100 scale, how frequent were your visits?"
+      : "On a 0–100 scale, how frequent are your visits?";
+  }
+  if (format.unit === "ranges") {
+    return format.period === "past30"
+      ? "In the past 30 days, about how many times did you visit Roast & Brew?"
+      : "About how many times do you visit Roast & Brew?";
+  }
+  return format.period === "past30"
+    ? "In the past 30 days, how often did you visit Roast & Brew?"
+    : "How often do you visit Roast & Brew?";
+}
+
+export function quantifierOptions(format: QuantifierFormat): string[] {
+  if (format.unit === "score") {
+    return ["0 (never)", "1", "2", "…", "99", "100 (constantly)"];
+  }
+  if (format.unit === "ranges") {
+    return ["0", "1–2", "3–5", "6–10", "11 or more"];
+  }
+  return ["Rarely", "Sometimes", "Often"];
+}
+
+export function quantifierNote(format: QuantifierFormat): string {
+  if (format.unit === "vague") {
+    return format.period === "past30"
+      ? "The time frame is now explicit, but the answer words still ask visitors to translate counts into private frequency standards."
+      : "The answer words sound familiar, but they are not units. The same real frequency can report differently.";
+  }
+  if (format.unit === "score") {
+    return "The vague words are gone, but the precision is fake. A person can count visits; they cannot reliably translate a habit into a private 0–100 score that another analyst can interpret.";
+  }
+  if (format.period === "none") {
+    return "The answers are count ranges, but the count has no clock. One visitor may count this week while another counts the whole season.";
+  }
+  return "The reference period is explicit and every option is a countable range. The categories are coarse enough to answer, but sharp enough for the owner’s decision about occasional versus regular visitors.";
+}
+
+export function quantifierMeters(format: QuantifierFormat): ScaleMeters {
   return {
-    distinctions: d.vagueWordsRemoved ? "high" : "low",
-    trustworthy: d.precisionHonest ? "high" : "low"
+    distinctions: format.period === "past30" ? "high" : "low",
+    trustworthy: format.unit === "ranges" && format.period === "past30" ? "high" : "low"
   };
 }
 
+export type QuantifierVisitorId = (typeof quantifierCast)[number]["id"];
+export type QuantifierCollisionKind = "same-count" | "same-word";
+
+export type QuantifierCollision = {
+  ids: readonly [QuantifierVisitorId, QuantifierVisitorId];
+  kind: QuantifierCollisionKind;
+  explanation: string;
+};
+
+export const quantifierCollisions: QuantifierCollision[] = [
+  {
+    ids: ["ben", "cleo"],
+    kind: "same-count",
+    explanation:
+      "Ben and Cleo both came 4 times, but one says Often and the other says Sometimes."
+  },
+  {
+    ids: ["ada", "ben"],
+    kind: "same-word",
+    explanation:
+      "Ada came 18 times and Ben came 4 times, but both report Often."
+  }
+];
+
+function sortedPair(ids: readonly string[]): string {
+  return [...ids].sort().join("|");
+}
+
+export function quantifierCollisionFor(
+  selectedIds: readonly string[]
+): QuantifierCollision | null {
+  if (selectedIds.length !== 2) return null;
+  const key = sortedPair(selectedIds);
+  return quantifierCollisions.find((c) => sortedPair(c.ids) === key) ?? null;
+}
+
+export function quantifierHasCollision(selectedIds: readonly string[]): boolean {
+  return quantifierCollisionFor(selectedIds) !== null;
+}
+
+export function quantifierFormatPasses(format: QuantifierFormat): boolean {
+  return format.period === "past30" && format.unit === "ranges";
+}
+
 export type QuantifierTask = {
-  id: "remove-vague-words" | "avoid-fake-precision";
+  id: "spot-collision" | "fix-unit";
   title: string;
   brief: string;
-  pass: (d: QuantifierDesign) => boolean;
+  pass: (selectedIds: readonly string[], format: QuantifierFormat) => boolean;
   passText: string;
-  hint: (d: QuantifierDesign) => string;
+  hint: (selectedIds: readonly string[], format: QuantifierFormat) => string;
 };
 
 export const quantifierTasks: QuantifierTask[] = [
   {
-    id: "remove-vague-words",
-    title: "Remove the vague frequency words",
+    id: "spot-collision",
+    title: "Find the collision in the answers",
     brief:
-      "Rarely, sometimes, and often sound useful until two people with the same count use different words. Pick a design that stops making respondents translate real counts into private words.",
-    pass: (d) => d.vagueWordsRemoved,
+      "Tap exactly two visitors whose vague-word answers prove that the words are not shared units.",
+    pass: quantifierHasCollision,
     passText:
-      "✓ The undefined words are gone. Now Task 2 checks whether the new precision is honest enough to use.",
-    hint: (d) =>
-      d.vagueWordsRemoved
-        ? "The vague words are gone — now check whether the replacement precision is honest."
-        : `${quantifierBadCount(d)} visitor(s) are translating real counts into private words.`
+      "✓ The cast exposes the problem: the words do not map cleanly to visit counts. Now fix the unit without pretending the ruler is more precise than it is.",
+    hint: (selectedIds) => {
+      if (selectedIds.length < 2) return "Select two visitors and compare their count with their word.";
+      const collision = quantifierCollisionFor(selectedIds);
+      return collision
+        ? collision.explanation
+        : "That pair is plausible to inspect, but it does not prove the word/count collision. Try matching same count to different words, or same word to different counts.";
+    }
   },
   {
-    id: "avoid-fake-precision",
-    title: "Do not replace vague with fake precision",
+    id: "fix-unit",
+    title: "Anchor the unit without fake precision",
     brief:
-      "A 0–100 score looks scientific, but it asks for precision nobody can truthfully supply about their own habits. Find the format that drops the vague words and still only asks for something a visitor can actually answer.",
-    pass: (d) => d.vagueWordsRemoved && d.precisionHonest,
+      "Set the answer format so visitors report a countable habit over a named time frame. Avoid both vague words and the 0–100 precision trap.",
+    pass: (selectedIds, format) =>
+      quantifierHasCollision(selectedIds) && quantifierFormatPasses(format),
     passText:
       "✓ The response options now have a time frame, a countable unit, and ranges that match the decision. You fixed the ruler without pretending it can measure decimals of habit.",
-    hint: (d) => {
-      if (!d.vagueWordsRemoved) return "First get out of vague words.";
-      if (!d.precisionHonest)
-        return `${quantifierBadCount(d)} private scores look precise, but the analyst cannot tell what they mean in visits.`;
+    hint: (selectedIds, format) => {
+      if (!quantifierHasCollision(selectedIds)) return "First prove the vague words collide in the cast.";
+      if (format.period !== "past30") return "The count still needs a clock; otherwise each visitor chooses the time frame privately.";
+      if (format.unit === "vague") return "The time frame helps, but Rarely / Sometimes / Often still are not shared units.";
+      if (format.unit === "score")
+        return `${quantifierBadCount(format)} private scores look precise, but the analyst cannot tell what they mean in visits.`;
       return "The reference period, count ranges, and precision are defensible.";
     }
   }
@@ -1934,6 +2032,7 @@ export const quantifierTasks: QuantifierTask[] = [
 
 export type NominalOrderMode = "fixed" | "rotated";
 export type OrdinalOrderMode = "randomized" | "ordered";
+export type OrderListKind = "unclassified" | "unordered" | "continuum";
 
 export type OrderRespondent = {
   id: string;
@@ -2015,38 +2114,61 @@ export function orderMeters(
 }
 
 export type OrderTask = {
-  id: "rotate-nominal" | "keep-ordinal";
+  id: "classify-lists" | "set-order";
   title: string;
   brief: string;
-  pass: (nominal: NominalOrderMode, ordinal: OrdinalOrderMode) => boolean;
+  pass: (
+    nominal: NominalOrderMode,
+    ordinal: OrdinalOrderMode,
+    nominalKind: OrderListKind,
+    ordinalKind: OrderListKind
+  ) => boolean;
   passText: string;
-  hint: (nominal: NominalOrderMode, ordinal: OrdinalOrderMode) => string;
+  hint: (
+    nominal: NominalOrderMode,
+    ordinal: OrdinalOrderMode,
+    nominalKind: OrderListKind,
+    ordinalKind: OrderListKind
+  ) => string;
 };
 
 export const orderTasks: OrderTask[] = [
   {
-    id: "rotate-nominal",
-    title: "Protect the unordered list from first-option pull",
+    id: "classify-lists",
+    title: "Name what kind of list each one is",
     brief:
-      "For the channel list, there is no natural order. In a self-administered visual survey, the first-read option can get extra attention. Choose the treatment that distributes that advantage.",
-    pass: (nominal) => nominal === "rotated",
+      "Before choosing a repair, classify the channel list and the satisfaction list. One is a set of named categories; one is a ruler.",
+    pass: (_nominal, _ordinal, nominalKind, ordinalKind) =>
+      nominalKind === "unordered" && ordinalKind === "continuum",
     passText:
-      "✓ The nominal list is rotated, so no single channel owns the first position for everyone. Now check the satisfaction scale below it.",
-    hint: (nominal) =>
-      nominal === "rotated"
-        ? "The unordered list is protected — now fix the ordered ruler."
-        : `${orderPrimacyCount(nominal)} uncertain visitor(s) are drifting to the first visible channel.`
+      "✓ Correct split. The channel choices are unordered categories; the satisfaction labels are a continuum. Now set the order treatment for each.",
+    hint: (_nominal, _ordinal, nominalKind, ordinalKind) => {
+      if (nominalKind === "unordered" && ordinalKind === "continuum") {
+        return "Now choose the order treatment that fits each kind of list.";
+      }
+      if (nominalKind === "unclassified" || ordinalKind === "unclassified") {
+        return "Classify both lists before you choose the treatment.";
+      }
+      return "Check whether the list names categories you can rearrange, or scale points whose sequence carries meaning.";
+    }
   },
   {
-    id: "keep-ordinal",
-    title: "Do not randomize a scale whose order carries meaning",
+    id: "set-order",
+    title: "Set the order treatment list by list",
     brief:
-      "Randomization is not a universal virtue. The satisfaction scale is ordinal: its sequence tells respondents how the points relate. Put it back in a meaningful order.",
-    pass: (nominal, ordinal) => nominal === "rotated" && ordinal === "ordered",
+      "Use rotation where a fixed first slot would steer attention, and preserve order where the sequence carries meaning.",
+    pass: (nominal, ordinal, nominalKind, ordinalKind) =>
+      nominalKind === "unordered" &&
+      ordinalKind === "continuum" &&
+      nominal === "rotated" &&
+      ordinal === "ordered",
     passText:
       "✓ Correct split. Rotate unordered nominal options; keep ordinal scales in a meaningful continuum. In production you may reverse an ordinal scale direction across respondents, but you do not scramble the middle.",
-    hint: (nominal, ordinal) => {
-      if (nominal !== "rotated") return "First rotate the unordered channel list.";
+    hint: (nominal, ordinal, nominalKind, ordinalKind) => {
+      if (nominalKind !== "unordered" || ordinalKind !== "continuum")
+        return "First classify the two lists correctly.";
+      if (nominal !== "rotated")
+        return `${orderPrimacyCount(nominal)} uncertain visitor(s) are drifting to the first visible channel.`;
       if (ordinal !== "ordered")
         return "The satisfaction scale is scrambled — randomization just broke the ruler.";
       return "The unordered list is rotated and the ordered scale is ordered.";
@@ -2375,7 +2497,7 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
   },
   E10: {
     teaches:
-      "Scale labels are part of the measurement instrument: endpoint-only numbers make respondents invent the middle, and unbalanced words can tilt the result.",
+      "Scale labels are part of the measurement instrument: endpoint-only numbers make respondents invent the middle, and built-out middle words still have to form a balanced ruler.",
     fieldTerms: [
       { term: "verbal labels / verbal anchors", gloss: "Words attached to response categories or scale points so respondents know what each point means." },
       { term: "fully labeled scale", gloss: "A response scale where every point has a verbal label, not only the endpoints." },
@@ -2384,7 +2506,7 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
     labShorthand: "RULER",
     evidence: "directionally-supported",
     supports:
-      "Survey-methodology guidance treats labels and anchors as part of scale design. Fully labeling points can reduce private interpretation of the middle, and balanced verbal labels help the scale measure both sides of the construct.",
+      "Survey-methodology guidance treats labels and anchors as part of scale design. Fully labeling points can reduce private interpretation of the middle, and balanced verbal labels help the scale measure both sides of the construct. The word-bank mechanic is an authored teaching contrast, not validated replacement wording.",
     boundary:
       "Do not claim every scale must always label every point. The best label strategy depends on mode, construct, population, screen space, and whether the words remain clear rather than overloaded.",
     sources: [
@@ -2397,7 +2519,7 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
   },
   E11: {
     teaches:
-      "Undefined frequency words and shiny numeric precision both make weak rulers; anchored ranges tied to a reference period are easier to defend.",
+      "Vague frequency words collide with actual counts, and shiny numeric precision can still be a weak ruler; anchored ranges tied to a reference period are easier to defend.",
     fieldTerms: [
       { term: "vague quantifiers", gloss: "Frequency or amount words such as often, sometimes, rarely, usually, many, or few." },
       { term: "reference period", gloss: "The time span the respondent is asked to report about." },
@@ -2407,7 +2529,7 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
     labShorthand: "RULER",
     evidence: "directionally-supported",
     supports:
-      "Vague quantifiers are a standard survey-design risk because respondents map them to different numeric realities. Reference periods and countable ranges make the answer task clearer. The 0–100 frequency score is a teaching contrast for false precision: it removes vague words, but still asks respondents to invent a private conversion.",
+      "Vague quantifiers are a standard survey-design risk because respondents map them to different numeric realities. Reference periods and countable ranges make the answer task clearer. The cast collision and 0–100 frequency score are teaching contrasts: they show why a shared unit matters without claiming a measured population effect.",
     boundary:
       "Anchored ranges are still design choices, not natural law. They must fit the analysis need, the expected distribution, and what respondents can reasonably recall. A 0–100 scale isn't automatically wrong either — it tips into false precision only when respondents don't share the unit, reference period, or reporting rule.",
     sources: [
@@ -2418,7 +2540,7 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
   },
   E12: {
     teaches:
-      "Order effects are real, but the repair depends on the list: rotate unordered options; preserve the meaningful order of ordinal scales.",
+      "Order effects are real, but the repair depends on first classifying the list: rotate unordered options; preserve the meaningful order of ordinal scales.",
     fieldTerms: [
       { term: "response-order effects", gloss: "Differences in answers caused by the order in which response options are presented." },
       { term: "primacy effect", gloss: "Earlier options receive extra selection in some visual/self-administered contexts." },
@@ -2429,7 +2551,7 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
     labShorthand: "PUSH",
     evidence: "directionally-supported",
     supports:
-      "Order can influence responses, and many unordered closed-ended lists are randomized or rotated to avoid a single option always appearing first or last. Ordinal scales are different: the order communicates the continuum, so they should remain meaningful even if direction is experimentally reversed or split-balanced.",
+      "Order can influence responses, and many unordered closed-ended lists are randomized or rotated to avoid a single option always appearing first or last. Ordinal scales are different: the order communicates the continuum, so they should remain meaningful even if direction is experimentally reversed or split-balanced. The exercise makes that classification step explicit before the repair.",
     boundary:
       "Randomization does not eliminate every context effect, and it is not always appropriate. Trend questions, ordinal scales, and mode-specific designs need deliberate order decisions.",
     sources: [
@@ -2742,7 +2864,7 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
         ask:
           "Do the options imply more precision than respondents can supply?",
         remember:
-          "A 1–100 slider can look scientific while collecting guesses dressed up in decimals — and “often / sometimes / rarely” are not stable units without a reference period and anchors.",
+          "A 0–100 frequency score can look scientific while collecting guesses dressed up in decimals — and “often / sometimes / rarely” are not stable units without a reference period and anchors.",
         exerciseIds: ["E11"],
         sourceCue: "Tourangeau; Fowler."
       }
@@ -2771,7 +2893,7 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
         ask:
           "Could the first-read or last-heard option be advantaged?",
         remember:
-          "Order effects are mode-sensitive — visual self-administered modes often invite primacy; interviewer-administered modes can invite recency. Rotate unordered lists; keep ordinal scales meaningful.",
+          "Order effects are mode-sensitive — visual self-administered modes often invite primacy; interviewer-administered modes can invite recency. First classify the list: rotate unordered categories; keep ordinal scales meaningful.",
         exerciseIds: ["E1", "E12"],
         sourceCue: "Krosnick & Presser on response-order effects."
       },
