@@ -294,7 +294,7 @@ export function SettingsDrawer({ open, onClose }: Props) {
                 Remember my progress on this device
               </span>
               <span className="settings-toggle-sub">
-                Saves which exercises you&rsquo;ve completed and your certificate
+                Saves which exercises you&rsquo;ve completed and your completion
                 count, so they&rsquo;re still here next visit. Turn it off to
                 clear that progress and stop saving — only your choice not to
                 remember is kept.

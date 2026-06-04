@@ -245,7 +245,7 @@ test.describe("Response Option Fit Lab - data contract", () => {
     );
 
     const complete = buildCertificateMarkdown(12, 12, "May 31, 2026", "ROF-AAAA-BBBB");
-    expect(complete).toContain("Certificate of Completion");
+    expect(complete).toContain("Completion keepsake");
     expect(complete).toContain("**SLOT**");
     expect(complete).toContain("Things I can now say without bluffing");
     expect(complete).toContain("Further reading");
@@ -253,7 +253,7 @@ test.describe("Response Option Fit Lab - data contract", () => {
     expect(complete).toContain("ROF-AAAA-BBBB");
     /* Partial coverage is honest: "Practice", not "Completion". */
     expect(buildCertificateMarkdown(8, 12, "May 31, 2026", "X")).toContain(
-      "Certificate of Practice"
+      "Practice keepsake"
     );
   });
 
@@ -794,7 +794,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.getByTestId("lab-cert-png").click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(
-      /^response-option-fit-certificate-ROF-[0-9A-Z]{4}-[0-9A-Z]{4}\.png$/
+      /^response-option-fit-keepsake-ROF-[0-9A-Z]{4}-[0-9A-Z]{4}\.png$/
     );
 
     /* Markdown copy reports success. */

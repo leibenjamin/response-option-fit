@@ -97,7 +97,7 @@ export function LabCertificate() {
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(md);
-        setStatus("Markdown certificate copied to your clipboard.");
+        setStatus("Markdown keepsake copied to your clipboard.");
         return;
       }
       throw new Error("no clipboard");
@@ -105,7 +105,7 @@ export function LabCertificate() {
       /* Fallback: hand the visitor a file they can keep, since copy failed. */
       const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
       const url = URL.createObjectURL(blob);
-      triggerDownload(url, `response-option-fit-certificate-${code}.md`);
+      triggerDownload(url, `response-option-fit-keepsake-${code}.md`);
       window.setTimeout(() => URL.revokeObjectURL(url), 0);
       setStatus("Clipboard was unavailable, so the Markdown was downloaded instead.");
     }
@@ -113,10 +113,10 @@ export function LabCertificate() {
 
   const handlePng = () => {
     const svg = buildCertificateSvg(count, total, dateLabel, code);
-    downloadPng(svg, `response-option-fit-certificate-${code}.png`, () =>
+    downloadPng(svg, `response-option-fit-keepsake-${code}.png`, () =>
       setStatus("Could not render the PNG in this browser; try Copy as Markdown.")
     );
-    setStatus("Certificate PNG downloaded.");
+    setStatus("Keepsake PNG downloaded.");
   };
 
   return (
@@ -158,7 +158,7 @@ export function LabCertificate() {
             A personal artifact from finishing the lab — your coverage, the
             things you can now say without bluffing, the sources, and the date.
             It is self-issued, not an accredited credential; the code is a
-            checksum of the certificate's date and contents, not a cryptographic
+            checksum of the keepsake's date and contents, not a cryptographic
             signature.
           </p>
           <div className="lab-cert-actions">
@@ -183,7 +183,7 @@ export function LabCertificate() {
       ) : (
         <p className="lab-cert-blurb lab-cert-blurb--locked lab-selectable">
           Each completed exercise reveals its receipt and counts here. Once all{" "}
-          {total} are done, the certificate unlocks with your coverage,
+          {total} are done, the keepsake unlocks with your coverage,
           takeaways, and sources.
         </p>
       )}

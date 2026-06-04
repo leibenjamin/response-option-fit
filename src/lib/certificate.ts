@@ -81,9 +81,9 @@ export function buildCertificateMarkdown(
     .map((r) => `- ${r.name} — ${r.what}`)
     .join("\n");
   const lenses = LENSES.map((l) => `- **${l.key}** — ${l.gloss}`).join("\n");
-  return `# Response Option Fit Lab — Certificate of ${
+  return `# Response Option Fit Lab — ${
     complete ? "Completion" : "Practice"
-  }
+  } keepsake
 
 Completed by: ______________________
 Date: ${dateLabel}
@@ -102,7 +102,7 @@ ${HABIT}
 ${reading}
 
 ---
-Code: ${code} — a checksum of this certificate's date, coverage, and contents, not a cryptographic signature.
+Code: ${code} — a checksum of this keepsake's date, coverage, and contents, not a cryptographic signature.
 A self-issued keepsake from the Response Option Fit Lab (benlei.org/response-option-fit/), not an accredited credential.
 `;
 }
@@ -154,7 +154,7 @@ export function buildCertificateSvg(
   code: string
 ): string {
   const complete = count >= total;
-  const kind = complete ? "Certificate of Completion" : "Certificate of Practice";
+  const kind = complete ? "Completion keepsake" : "Practice keepsake";
   const coverage = complete
     ? "practicing all twelve exercises in how survey answer choices"
     : `practicing ${count} of ${total} exercises in how survey answer choices`;
@@ -175,7 +175,7 @@ export function buildCertificateSvg(
     <text x="600" y="582" font-size="19" fill="#14161a">Before a question ships, check that the answer options can hold every real answer —</text>
     <text x="600" y="610" font-size="19" fill="#14161a">and that the scale, wording, and order are not quietly doing the choosing.</text>
     <text x="600" y="690" font-family="'JetBrains Mono','IBM Plex Mono',monospace" font-size="16" fill="#14161a">${esc(dateLabel)}      ·      ${esc(code)}</text>
-    <text x="600" y="724" font-family="'JetBrains Mono','IBM Plex Mono',monospace" font-size="12" fill="#6a6a6a">a checksum of this certificate's date and contents, not a cryptographic signature</text>
+    <text x="600" y="724" font-family="'JetBrains Mono','IBM Plex Mono',monospace" font-size="12" fill="#6a6a6a">a checksum of this keepsake's date and contents, not a cryptographic signature</text>
     <text x="600" y="780" font-family="'JetBrains Mono','IBM Plex Mono',monospace" font-size="12" letter-spacing="1" fill="#6a6a6a">benlei.org/response-option-fit  ·  a self-issued keepsake, not an accredited credential</text>
   </g>
   <g transform="translate(96,690)">
