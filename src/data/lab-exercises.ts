@@ -1954,6 +1954,12 @@ export const quantifierCollisions: QuantifierCollision[] = [
     kind: "same-word",
     explanation:
       "Ada came 18 times and Ben came 4 times, but both report Often."
+  },
+  {
+    ids: ["cleo", "eve"],
+    kind: "same-word",
+    explanation:
+      "Cleo came 4 times and Eve came 1 time, but both report Sometimes."
   }
 ];
 

@@ -432,7 +432,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E11 quantifiers: invalid pair, no-period ranges, and fake precision fail; Ben/Cleo collision plus anchored ranges passes", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    /* Ada/Cleo is not one of the two collisions the copy calls valid. */
+    /* Ada/Cleo collides on neither axis (different count and different word). */
     await page.getByTestId("lab-quant-visitor-ada").click();
     await page.getByTestId("lab-quant-visitor-cleo").click();
     await expect(page.getByTestId("lab-quant-collision-note")).toContainText(
@@ -466,6 +466,22 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.getByTestId("lab-quant-visitor-ben").click();
     await expect(page.getByTestId("lab-quant-collision-note")).toContainText(
       "both report Often"
+    );
+    await page.getByTestId("lab-quant-period-past30").click();
+    await page.getByTestId("lab-quant-unit-ranges").click();
+    await expect(page.getByTestId("lab-quant-pass")).toBeVisible();
+    await expect(page.getByTestId("lab-receipt-E11")).toBeVisible();
+  });
+
+  test("E11 quantifiers: the Cleo/Eve same-word collision is accepted (the copy invites same word, different counts)", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    /* Cleo came 4 times and Eve once, but both say "Sometimes" — a real
+       same-word/different-count collision the rejection note explicitly invites,
+       so it must pass rather than be turned away. */
+    await page.getByTestId("lab-quant-visitor-cleo").click();
+    await page.getByTestId("lab-quant-visitor-eve").click();
+    await expect(page.getByTestId("lab-quant-collision-note")).toContainText(
+      "both report Sometimes"
     );
     await page.getByTestId("lab-quant-period-past30").click();
     await page.getByTestId("lab-quant-unit-ranges").click();
