@@ -591,8 +591,8 @@ function ScaleBuilderExercise({ num }: { num: number }) {
           </div>
 
           <div className="lab-control">
-            <p className="lab-control-key">Option order</p>
-            <div className="lab-segmented" role="group" aria-label="Option order">
+            <p className="lab-control-key">Answer order — a source of pressure, not bias in the stem</p>
+            <div className="lab-segmented" role="group" aria-label="Answer order">
               {(["positive-first", "negative-first"] as const).map((o) => (
                 <button
                   key={o}
@@ -1300,6 +1300,20 @@ function ChannelTinkerExercise({ num }: { num: number }) {
         points at the wrong option.
       </p>
 
+      <div className="lab-channel-construct lab-selectable">
+        <p className="lab-channel-construct-key">First, the construct</p>
+        <p className="lab-channel-construct-body">
+          &ldquo;How did you hear about us?&rdquo; can mean four different
+          reports: <strong>first heard</strong>, <strong>most influential</strong>,{" "}
+          <strong>most recent touch</strong>, or <strong>every channel that
+          mattered</strong>. No option set is &ldquo;complete&rdquo; until you
+          pick one — completeness is downstream of the reporting task. Task 1
+          fixes the report as <em>which channel they first came through</em>;
+          Task 2 changes the decision and watches the right option set change
+          with it.
+        </p>
+      </div>
+
       <TaskBand
         testidPrefix="lab-channel-task"
         items={channelTasks.map((t) => ({
@@ -1730,10 +1744,14 @@ function ScaleLengthExercise({ num }: { num: number }) {
       nextTeaser="Next: Neutral is not a junk drawer. Give the non-answers their own homes."
     >
       <p className="lab-exercise-setup">
-        The same satisfaction question, six visitors with real but in-between
-        feelings. You choose how many points the answer scale offers. More
-        points <em>feels</em> more precise — so before the meters reveal, commit
-        a guess: which length reads well on both? Then tinker and find out.
+        Scale length is the <em>last</em> decision, not the first. You settle the
+        construct (what you’re measuring), then the poles (bipolar or unipolar),
+        then whether a midpoint is meaningful — and only then how many points.
+        Here those three are fixed (bipolar satisfaction, midpoint allowed), so
+        the one knob left is point count. The same question, six visitors with
+        real but in-between feelings. More points <em>feels</em> more precise —
+        so before the meters reveal, commit a guess: which length reads well on
+        both? Then tinker and find out.
       </p>
 
       <TaskBand
@@ -2037,13 +2055,33 @@ function OatMilkExercise({ num }: { num: number }) {
       <CastCountNote className="lab-cast-note--readout" />
 
       {allDone && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-oat-pass">
-          ✓ An opt-out didn&rsquo;t weaken the survey — it&rsquo;s what makes
-          the rest of the numbers trustworthy, by keeping people with no view
-          out of the average. And a true Neutral, a &ldquo;Don&rsquo;t
-          know,&rdquo; and a &ldquo;Not applicable&rdquo; are three different
-          states; don&rsquo;t let one quietly stand in for another.
-        </p>
+        <div className="lab-oat-done">
+          <p className="lab-exercise-pass lab-selectable" data-testid="lab-oat-pass">
+            ✓ An opt-out didn&rsquo;t weaken the survey — it&rsquo;s what makes
+            the rest of the numbers trustworthy, by keeping people with no view
+            out of the average. And a true Neutral, a &ldquo;Don&rsquo;t
+            know,&rdquo; and a &ldquo;Not applicable&rdquo; are three different
+            states; don&rsquo;t let one quietly stand in for another.
+          </p>
+          <dl className="lab-oat-rule lab-selectable" aria-label="Routing rule for non-answers">
+            <div className="lab-oat-rule-row">
+              <dt>Neutral</dt>
+              <dd>has an evaluation, centered on the scale — keep it on the scale.</dd>
+            </div>
+            <div className="lab-oat-rule-row">
+              <dt>Don&rsquo;t know</dt>
+              <dd>has no basis to judge — use only when knowledge is the issue.</dd>
+            </div>
+            <div className="lab-oat-rule-row">
+              <dt>Not applicable</dt>
+              <dd>the item doesn&rsquo;t apply to them at all.</dd>
+            </div>
+            <div className="lab-oat-rule-row">
+              <dt>No experience</dt>
+              <dd>never tried it — route or screen before asking for a rating.</dd>
+            </div>
+          </dl>
+        </div>
       )}
 
       <PostReceipt exerciseId="E7" visible={allDone} />
@@ -2432,9 +2470,10 @@ function AcquiescenceExercise({ num }: { num: number }) {
           all-friendly and the service problem never surfaces. Where you
           can, swap agree/disagree for item-specific wording: with nothing to nod
           along to, the acquiescence pull disappears and answers track real
-          views. A reverse-worded check is a detection patch — useful to flag the
-          easy agreers, but it doesn&rsquo;t measure them, and it taxes everyone
-          else.
+          views. The real fix isn&rsquo;t catching fakers — it&rsquo;s measuring
+          the intended dimension directly. A reverse-worded check is only a
+          detection patch — useful to flag the easy agreers, but it doesn&rsquo;t
+          measure them, and it taxes everyone else.
         </p>
       )}
 
@@ -2633,8 +2672,11 @@ function VerbalLabelsExercise({ num }: { num: number }) {
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-label-pass">
           ✓ The numbers now carry shared meanings, and the words no longer lean
-          positive. Full verbal labels are not decoration: they are the ruler’s
-          tick marks. But every tick mark still has to be fair.
+          positive. What did the work was <strong>semantic balance</strong> —
+          labels spaced evenly enough that respondents recover the same ruler.
+          Full verbal labels are one tool for that, not a law: a scale can anchor
+          only its ends and still be fair, as long as the middle isn’t quietly
+          tilted upward.
         </p>
       )}
 

@@ -1888,6 +1888,72 @@ summary:focus-visible {
   margin-top: var(--s-2);
 }
 
+/* The "no answer" routing rule — a compact reference that keeps Neutral / DK /
+   NA / no-experience distinct (output-04 E8 sharpening). */
+.lab-oat-done {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.lab-oat-rule {
+  margin: 0;
+  display: grid;
+  gap: var(--s-1);
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper-2);
+  border-left: 3px solid var(--accent-soft);
+}
+.lab-oat-rule-row {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, max-content) 1fr;
+  gap: var(--s-3);
+  align-items: baseline;
+}
+.lab-oat-rule dt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--accent-2);
+  text-transform: uppercase;
+}
+.lab-oat-rule dd {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+@media (max-width: 560px) {
+  .lab-oat-rule-row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* Construct-first framing for the option-set exercise: name the reporting task
+   before the option shelf so completeness reads as downstream of the construct
+   (output-04 E5, the strongest methodology fix). */
+.lab-channel-construct {
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  background: var(--accent-wash);
+  border-left: 3px solid var(--accent);
+}
+.lab-channel-construct-key {
+  margin: 0 0 var(--s-1);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+.lab-channel-construct-body {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 70ch;
+}
+
 .lab-exercise-actions {
   display: flex;
   flex-wrap: wrap;

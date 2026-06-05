@@ -693,7 +693,7 @@ export const channelTasks: ChannelTask[] = [
       "Forget per-channel for a moment. The owner is deciding ONE thing: should she shift her ad budget online? She needs online vs offline — nothing finer. Rebuild the answer choices for THAT question, with the least burden on respondents. (The two broad buckets you avoided in Task 1 are waiting on the shelf.)",
     pass: (offered) => channelOnlyBroad(offered) && channelAllLumped(offered),
     passText:
-      "✓ Same seven people, a different right answer. In Task 1 every channel had to earn its own option, because the question was per-channel. Here the only question is online vs offline — so the detail is burden, and the broad split you avoided before is now exactly right. There's no universally “complete” list: the right grain is the one the decision needs. (Watch the ledger — detail dropped on purpose; coverage, exclusivity, and burden all stayed healthy.)",
+      "✓ Same seven people, a different right answer. In Task 1 every channel had to earn its own option, because the report was per-channel. Here the only question is online vs offline — so the detail is burden, and the broad split you avoided before is now exactly right. Completeness is downstream of the reporting task: there's no universally “complete” list — the right grain is the one the decision needs. (Watch the ledger — detail dropped on purpose; coverage, exclusivity, and burden all stayed healthy.)",
     hint: (offered) => {
       if (channelAllLumped(offered) && channelOnlyBroad(offered)) return "Done.";
       if (channelAllClean(offered))
