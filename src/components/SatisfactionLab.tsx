@@ -522,8 +522,10 @@ function ScaleBuilderExercise({ num }: { num: number }) {
       num={num}
       title="Design the scale; see the lie; learn the tells."
       issue="Leading stems · missing strong-negatives · no neutral midpoint · primacy"
+      decision="whether leadership reads the shop as loved or merely tolerated."
       modifier="scale-builder"
       verb="tinker"
+      nextTeaser="Next: a clean-looking item can still ask two things at once. Don’t use “and” as your detector."
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew, a coffee shop, runs a post-visit feedback survey.
@@ -657,6 +659,7 @@ function ScaleBuilderExercise({ num }: { num: number }) {
             <p className="lab-tally-truth">
               only {trueSatisfiedCount} of them actually are
             </p>
+            <CastCountNote className="lab-cast-note--readout" />
             <ul className="lab-cast">
               {cast.map((c) => {
                 const p = landingFor(c, design);
@@ -788,8 +791,10 @@ function DoubleBarreledExercise({ num }: { num: number }) {
       num={num}
       title="Flag the bundled items; then fix the worst one."
       issue="Double-barreled · triple-barreled · why “and” isn't the test"
+      decision="which part of the service to fix when one score hides two judgments."
       modifier="double-barreled"
       verb="repair"
+      nextTeaser="Next: the question wording isn’t the problem. The wrong people are answering it."
     >
       <p className="lab-exercise-setup">
         A draft of the coffee-shop survey came back for review. Flag every item
@@ -1044,8 +1049,10 @@ function BucketTinkerExercise({ num }: { num: number }) {
       num={num}
       title="Edit the age buckets until everyone fits."
       issue="Mutually-exclusive boundaries · covering the whole range"
+      decision="whether the loyalty offer reaches young adults, mid-career visitors, or older regulars."
       modifier="bucket"
       verb="tinker"
+      nextTeaser="Next: completeness changes with the decision. The same audience needs a different option set."
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew&rsquo;s customer survey ends by asking age, in buckets,
@@ -1278,8 +1285,10 @@ function ChannelTinkerExercise({ num }: { num: number }) {
       num={num}
       title="Build the option set the whole audience can answer honestly."
       issue="Incomplete option sets · the “Other” trap · satisficing · fitting the list to the decision"
+      decision="where to spend the ad budget — and which channels look bigger or smaller than they really are."
       modifier="channel"
       verb="tinker"
+      nextTeaser="Next: try the standard fix, then catch why it still fails."
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew&rsquo;s onboarding form asks &ldquo;How did you hear
@@ -1367,6 +1376,7 @@ function ChannelTinkerExercise({ num }: { num: number }) {
               Other, and mis-filed all lose it; &ldquo;left blank&rdquo;
               vanishes from the data entirely.
             </p>
+            <CastCountNote className="lab-cast-note--readout" />
           </div>
 
           <ul className="lab-channel-cast">
@@ -1523,6 +1533,7 @@ function ShipReviewExercise({ num }: { num: number }) {
       num={num}
       title="Review the draft before it ships."
       issue="Putting the four lenses on a real survey · knowing where to stop"
+      decision="what’s safe to ship — and what to leave alone."
       modifier="ship-review"
       verb="review"
     >
@@ -1713,8 +1724,10 @@ function ScaleLengthExercise({ num }: { num: number }) {
       num={num}
       title="Pick how many points the scale offers."
       issue="Scale length / granularity · the 5–7 default · false precision"
+      decision="how finely you can rank satisfaction before the numbers stop being real."
       modifier="scale-length"
       verb="tinker"
+      nextTeaser="Next: Neutral is not a junk drawer. Give the non-answers their own homes."
     >
       <p className="lab-exercise-setup">
         The same satisfaction question, six visitors with real but in-between
@@ -1910,8 +1923,10 @@ function OatMilkExercise({ num }: { num: number }) {
       num={num}
       title="Give the “no answer” somewhere honest to go."
       issue="Don't-know · not-applicable · why a neutral is none of these"
+      decision="whether oat milk is disliked, unknown, or simply never tried."
       modifier="oat-milk"
       verb="compare"
+      nextTeaser="Next: the numbers look tidy in the export. The middle still has no shared meaning."
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew asks how satisfied you are with its new oat-milk
@@ -2019,6 +2034,7 @@ function OatMilkExercise({ num }: { num: number }) {
         {conflation === 1 ? "" : "s"} hidden inside &ldquo;Don&rsquo;t
         know.&rdquo;
       </p>
+      <CastCountNote className="lab-cast-note--readout" />
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-oat-pass">
@@ -2078,8 +2094,10 @@ function FalsePremiseExercise({ num }: { num: number }) {
       num={num}
       title="Don't ask people who were never there."
       issue="False-premise items · eligibility screening · the denominator"
+      decision="whether order-ahead actually saves time for the people who use it."
       modifier="false-premise"
       verb="gate"
+      nextTeaser="Next: make the export safe before analysis starts. One boundary value can put a person in two places."
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew asks one question about its app:{" "}
@@ -2268,8 +2286,10 @@ function AcquiescenceExercise({ num }: { num: number }) {
       num={num}
       title="When the format does the agreeing for them."
       issue="Acquiescence / yea-saying · agree-disagree vs item-specific wording"
+      decision="whether customers truly agree, or the format agreed for them."
       modifier="acquiescence"
       verb="compare"
+      nextTeaser="Next: commit before you peek. How many scale points are enough?"
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew wants to know how friendly its barista was, and asks
@@ -2473,8 +2493,10 @@ function VerbalLabelsExercise({ num }: { num: number }) {
       num={num}
       title="Build the ruler the numbers were hiding."
       issue="Verbal anchors · fully labeled scales · semantic balance"
+      decision="how many customers count as satisfied once the middle label does the nudging."
       modifier="labels"
       verb="label"
+      nextTeaser="Next: two people visit four times. The words still disagree."
     >
       <p className="lab-exercise-setup">
         Roast &amp; Brew wants a five-point visit rating. A numeric scale looks
@@ -2673,8 +2695,10 @@ function QuantifierExercise({ num }: { num: number }) {
       num={num}
       title="Find the collision, then fix the unit."
       issue="Vague quantifiers · reference periods · fake precision"
+      decision="who counts as an occasional visitor versus a regular."
       modifier="quantifier"
       verb="anchor"
+      nextTeaser="Next: keep the same list and change the mode. The favored answer moves."
     >
       <p className="lab-exercise-setup">
         The owner wants to segment occasional versus regular visitors. The
@@ -2747,6 +2771,7 @@ function QuantifierExercise({ num }: { num: number }) {
                 ? collision.explanation
                 : "That pair does not expose the unit problem. Try same count with different words, or same word with different counts."}
           </p>
+          <CastCountNote className="lab-cast-note--readout" />
         </section>
 
         <section className="lab-quant-format" aria-label="Frequency format controls">
@@ -2923,8 +2948,10 @@ function OrderExercise({ num }: { num: number }) {
       num={num}
       title="Randomize the right list, not every list."
       issue="Response-order effects · primacy / recency · nominal vs ordinal"
+      decision="which answer looks most popular when the list order does the choosing."
       modifier="order"
       verb="order"
+      nextTeaser="Final review: five draft questions, one clean item, and one real problem you must not over-flag."
     >
       <p className="lab-exercise-setup">
         Order is a real source of push, but the repair depends on what kind of
@@ -3063,6 +3090,7 @@ function OrderExercise({ num }: { num: number }) {
           );
         })}
       </ul>
+      <CastCountNote className="lab-cast-note--readout" />
 
       <div className="lab-order-mode">
         <span className="lab-order-mode-key">Survey mode for List A</span>
@@ -3130,15 +3158,24 @@ function ExerciseFrame({
   num,
   title,
   issue,
+  decision,
   modifier,
   verb,
+  nextTeaser,
   children
 }: {
   num: number;
   title: string;
   issue: string;
+  /* One line naming the real decision a botched answer choice here would
+     distort — manager/analyst relevance, not a new claim (output-04). */
+  decision?: string;
   modifier: string;
   verb: string;
+  /* Quiet editorial bridge into the next exercise's mystery — the
+     between-exercise forward pull (output-04 teaser table). Omitted on the
+     capstone, which flows into the closing map. */
+  nextTeaser?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -3155,9 +3192,34 @@ function ExerciseFrame({
           {title}
         </h2>
         <p className="lab-exercise-issue">{issue}</p>
+        {decision && (
+          <p className="lab-exercise-decision lab-selectable">
+            <span className="lab-exercise-decision-key">Decision this would distort</span>{" "}
+            {decision}
+          </p>
+        )}
       </header>
       {children}
+      {nextTeaser && (
+        <p className="lab-exercise-teaser lab-selectable" data-testid={`lab-teaser-${num}`}>
+          <span className="lab-exercise-teaser-arrow" aria-hidden="true">
+            ↓
+          </span>
+          {nextTeaser}
+        </p>
+      )}
     </section>
+  );
+}
+
+/* A persistent, small claim-safety label that sits beside any headline counting
+   the fixed fictional cast — so a fast reader never reads "4 of 5" as a survey
+   estimate (output-04: the tiny-n inoculation). */
+function CastCountNote({ className }: { className?: string }) {
+  return (
+    <span className={["lab-cast-note", className].filter(Boolean).join(" ")}>
+      Illustrative cast count · not a survey estimate
+    </span>
   );
 }
 

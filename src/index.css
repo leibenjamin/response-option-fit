@@ -1816,12 +1816,76 @@ summary:focus-visible {
   margin: 0;
 }
 
+/* "Decision this would distort" — the manager/analyst relevance line under
+   the title. Quietly tinted so it reads as a stake, not another tag. */
+.lab-exercise-decision {
+  margin: var(--s-1) 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 64ch;
+}
+.lab-exercise-decision-key {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  display: inline-block;
+  margin-right: var(--s-1);
+}
+.lab-exercise-decision-key::after {
+  content: " ·";
+  color: var(--line);
+}
+
 .lab-exercise-setup {
   margin: 0;
   font-size: 15px;
   line-height: 1.55;
   color: var(--ink-2);
   max-width: 72ch;
+}
+
+/* The between-exercise forward-pull bridge: a quiet editorial teaser into the
+   next exercise's mystery, set off by a hairline above and a soft-paper inset. */
+.lab-exercise-teaser {
+  margin: var(--s-2) 0 0;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-faint);
+  display: flex;
+  gap: var(--s-3);
+  align-items: baseline;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-style: italic;
+  max-width: 70ch;
+}
+.lab-exercise-teaser-arrow {
+  font-style: normal;
+  color: var(--accent);
+  font-size: 15px;
+  line-height: 1;
+  flex: none;
+}
+
+/* Persistent claim-safety micro-label beside any fictional-cast count, so a
+   fast reader never reads "4 of 5" as a survey estimate. */
+.lab-cast-note {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--ink-mute);
+}
+.lab-cast-note::before {
+  content: "◦ ";
+  color: var(--accent);
+}
+.lab-cast-note--readout {
+  margin-top: var(--s-2);
 }
 
 .lab-exercise-actions {
