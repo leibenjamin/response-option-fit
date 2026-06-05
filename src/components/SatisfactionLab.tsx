@@ -327,6 +327,96 @@ function LabContents() {
   );
 }
 
+/* The five-second hero proof: a glancer's first act is an interaction, not a
+   read. One toggle changes only the question's wording — "How was…" → "How
+   great…" — and the recorded "satisfied" count moves even though not one
+   visitor's true feeling changed. It reuses E1's real cast + landing engine on
+   a fixed two-point scale, so it invents no new numbers (output-04 §1). */
+const HERO_SCALE = ["sat", "dis"];
+
+function HeroProof() {
+  const [stem, setStem] = useState<"plain" | "leading">("plain");
+  const design: Design = { selected: HERO_SCALE, stem, order: "positive-first" };
+  const landings = cast.map((c) => ({ c, point: landingFor(c, design) }));
+  const recorded = landings.filter((l) => isSatisfied(l.point)).length;
+
+  const goToExercise = () => {
+    const el = document.getElementById("lab-exercise-1");
+    if (!el) return;
+    el.scrollIntoView({
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+      block: "start"
+    });
+    const heading = el.querySelector<HTMLElement>("h2") ?? el;
+    heading.setAttribute("tabindex", "-1");
+    heading.focus({ preventScroll: true });
+  };
+
+  return (
+    <div className="lab-hero" data-testid="lab-hero">
+      <p className="lab-hero-eyebrow">Try the lie in five seconds</p>
+      <div className="lab-hero-instrument">
+        <p className="lab-hero-stem lab-selectable" aria-live="polite">
+          {stemText[stem]}
+        </p>
+        <div
+          className="lab-hero-toggle"
+          role="group"
+          aria-label="Question wording"
+        >
+          {(["plain", "leading"] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              className={`lab-hero-seg ${stem === s ? "is-on" : ""}`}
+              aria-pressed={stem === s}
+              data-testid={`lab-hero-stem-${s}`}
+              onClick={() => setStem(s)}
+            >
+              {s === "plain" ? "Plain — “how was…”" : "Leading — “how great…”"}
+            </button>
+          ))}
+        </div>
+        <ul className="lab-hero-cast" aria-label="Where the five visitors land">
+          {landings.map(({ c, point }) => {
+            const sat = isSatisfied(point);
+            return (
+              <li
+                key={c.id}
+                className={`lab-hero-chip ${sat ? "is-sat" : "is-unsat"}`}
+                data-testid={`lab-hero-chip-${c.id}`}
+              >
+                <span className="lab-hero-chip-name">{c.name}</span>
+                <span className="lab-hero-chip-land">
+                  {point ? point.label : "—"}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <p className="lab-hero-headline" aria-live="polite" data-testid="lab-hero-headline">
+        <span className="lab-hero-recorded">
+          Recorded: <strong>{recorded} of 5</strong> satisfied
+        </span>
+        <span className="lab-hero-sep" aria-hidden="true">·</span>
+        <span className="lab-hero-true">
+          Truly satisfied: <strong>{trueSatisfiedCount} of 5</strong>
+        </span>
+      </p>
+      <CastCountNote className="lab-hero-note" />
+      <button
+        type="button"
+        className="lab-hero-cta"
+        data-testid="lab-hero-cta"
+        onClick={goToExercise}
+      >
+        Now fix the full scale →
+      </button>
+    </div>
+  );
+}
+
 export function SatisfactionLab() {
   return (
     <main id="survey-lab" className="lab-route" aria-labelledby="survey-lab-title">
@@ -335,6 +425,13 @@ export function SatisfactionLab() {
         <h1 className="lab-route-title" id="survey-lab-title" tabIndex={-1}>
           The quiet ways a survey lies.
         </h1>
+        <p className="lab-route-subtitle lab-selectable">
+          A hands-on lab about how answer choices can distort what gets recorded
+          — before analysis ever begins.
+        </p>
+
+        <HeroProof />
+
         <p className="lab-route-lede">
           Each exercise below is one real failure mode in how survey answer
           choices are written. They are all framed as surveys from one fictional

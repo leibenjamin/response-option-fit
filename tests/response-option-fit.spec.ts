@@ -306,6 +306,35 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.locator(".lab-km-node--outOfScope")).toHaveCount(4);
   });
 
+  test("the hero proof moves the recorded count with one word and links into Exercise 1", async ({
+    page
+  }) => {
+    await page.goto(`${BASE_URL}/`);
+    const hero = page.getByTestId("lab-hero");
+    await expect(hero).toBeVisible();
+    /* Plain wording: three of the five read as satisfied; the true count is two. */
+    await expect(page.getByTestId("lab-hero-headline")).toContainText(
+      "Recorded: 3 of 5"
+    );
+    await expect(page.getByTestId("lab-hero-headline")).toContainText(
+      "Truly satisfied: 2 of 5"
+    );
+    /* Changing only the wording to "how great" pushes the recorded count to 4
+       of 5 — the true count never moves. */
+    await page.getByTestId("lab-hero-stem-leading").click();
+    await expect(page.getByTestId("lab-hero-headline")).toContainText(
+      "Recorded: 4 of 5"
+    );
+    await expect(page.getByTestId("lab-hero-headline")).toContainText(
+      "Truly satisfied: 2 of 5"
+    );
+    /* The persistent claim-safety label is present. */
+    await expect(hero).toContainText("Illustrative cast count");
+    /* The CTA sends keyboard focus into Exercise 1. */
+    await page.getByTestId("lab-hero-cta").click();
+    await expect(page.locator("#lab-exercise-1-title")).toBeFocused();
+  });
+
   test("the lab's #lab and / hashes are equivalent", async ({ page }) => {
     await page.goto(`${BASE_URL}/#lab`);
     await expect(page.locator("#survey-lab-title")).toContainText(
