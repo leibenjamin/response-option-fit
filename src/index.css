@@ -4867,8 +4867,49 @@ summary:focus-visible {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--s-2);
+}
+
+/* List A carries a travelling edge-advantage marker in a left gutter: it lands
+   on the first option on screen (primacy) and the last when read aloud
+   (recency), and is hidden under rotation — so you watch the advantage move,
+   and watch it vanish when you randomize. */
+.lab-order-listwrap {
+  position: relative;
+  padding-left: 84px;
+}
+.lab-order-edge {
+  position: absolute;
+  left: 0;
+  width: 74px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  transform: translateY(-50%);
+  text-align: right;
+  line-height: 1.1;
+}
+.lab-order-edge-arrow {
+  color: var(--accent);
+  font-size: 14px;
+  flex: none;
+}
+.lab-order-list li.is-edge {
+  border-color: var(--accent);
+  background: var(--accent-paper);
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  .lab-order-edge {
+    transition: top var(--mo-causality) var(--mo-ease);
+  }
 }
 .lab-label-point,
 .lab-quant-options li,

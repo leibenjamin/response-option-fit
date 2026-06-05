@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AnimatedNumber } from "../lib/motion";
 import { useProgress } from "../lib/progress";
 import { LabCertificate } from "./LabCertificate";
@@ -3040,6 +3040,12 @@ function OrderExercise({ num }: { num: number }) {
     useState<OrderListKind>("unclassified");
   const [readMode, setReadMode] = useState<NominalReadMode>("screen");
   const [completed, setCompleted] = useState<string[]>([]);
+  /* The edge-advantage marker on List A travels to whichever END the mode
+     favors — first option on screen (primacy), last when read aloud (recency).
+     We measure the favored item's center so the marker lands on it even with
+     variable item heights; CSS eases the `top` change (no-preference only). */
+  const nominalListRef = useRef<HTMLOListElement>(null);
+  const [edgeTop, setEdgeTop] = useState<number | null>(null);
   const meters = orderMeters(nominal, ordinal);
   const nominalList =
     nominal === "fixed"
@@ -3064,6 +3070,20 @@ function OrderExercise({ num }: { num: number }) {
       return next === prev ? prev : next;
     });
   }, [nominal, ordinal, nominalKind, ordinalKind]);
+
+  /* Place the marker on the favored item whenever List A is a fixed order
+     (rotation neutralizes the edge, so the marker is hidden then). */
+  useLayoutEffect(() => {
+    if (nominal !== "fixed") return;
+    const ol = nominalListRef.current;
+    if (!ol) return;
+    const items = ol.querySelectorAll<HTMLLIElement>("li");
+    if (items.length === 0) return;
+    const favored = readMode === "screen" ? items[0] : items[items.length - 1];
+    const olTop = ol.getBoundingClientRect().top;
+    const fRect = favored.getBoundingClientRect();
+    setEdgeTop(fRect.top - olTop + fRect.height / 2);
+  }, [nominal, readMode, nominalList]);
 
   const activeTask = orderTasks.find((t) => !completed.includes(t.id)) ?? null;
   const activeIndex = activeTask ? orderTasks.indexOf(activeTask) : orderTasks.length;
@@ -3169,14 +3189,41 @@ function OrderExercise({ num }: { num: number }) {
               Rotate / randomize
             </button>
           </div>
-          <ol className="lab-order-list">
-            {nominalList.map((o) => (
-              <li key={o} className="lab-selectable">{o}</li>
-            ))}
-          </ol>
+          <div className="lab-order-listwrap">
+            {nominal === "fixed" && edgeTop != null && (
+              <span
+                className="lab-order-edge"
+                data-mode={readMode}
+                style={{ top: `${edgeTop}px` }}
+                aria-hidden="true"
+              >
+                <span className="lab-order-edge-label">
+                  {readMode === "screen" ? "primacy pull" : "recency pull"}
+                </span>
+                <span className="lab-order-edge-arrow">▸</span>
+              </span>
+            )}
+            <ol className="lab-order-list" ref={nominalListRef}>
+              {nominalList.map((o, i) => {
+                const favored =
+                  nominal === "fixed" &&
+                  ((readMode === "screen" && i === 0) ||
+                    (readMode === "phone" && i === nominalList.length - 1));
+                return (
+                  <li
+                    key={o}
+                    className={`lab-selectable ${favored ? "is-edge" : ""}`}
+                  >
+                    {o}
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
           {nominal === "rotated" && (
             <p className="lab-order-preview-note lab-selectable">
-              Rotation preview, not a respondent-facing answer list.
+              Rotation preview, not a respondent-facing answer list. With no
+              fixed first or last slot, neither end keeps an edge.
             </p>
           )}
         </section>
