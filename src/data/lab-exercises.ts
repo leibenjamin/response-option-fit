@@ -2758,6 +2758,10 @@ export type KnowledgeBranch = {
   id: BranchId;
   label: string;
   question: string;
+  /* The plain-language dual label shown beside the house shorthand, e.g.
+     "SLOT · every real answer has a true home" — so the memorable shorthand
+     never reads as a canonical field term (output-04 closing-map note). */
+  gloss: string;
   memorySentence: string;
   nodes: KnowledgeNode[];
 };
@@ -2767,6 +2771,7 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
     id: "slot",
     label: "Slot",
     question: "Can every real answer land somewhere true?",
+    gloss: "every real answer has a true home",
     memorySentence:
       "A response set first has to give reality a truthful place to land — no missing runway, no overlapping runway, no “pick one answer for two different things.”",
     nodes: [
@@ -2836,6 +2841,7 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
     id: "ruler",
     label: "Ruler",
     question: "Does the scale measure the intended distinction?",
+    gloss: "the scale measures the intended distinction",
     memorySentence:
       "A scale is a measuring instrument with tick marks, labels, a center, endpoints, and assumptions about how much precision a respondent can actually supply.",
     nodes: [
@@ -2907,6 +2913,7 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
     id: "push",
     label: "Push",
     question: "Does the option set steer the respondent?",
+    gloss: "the format doesn’t steer the answer",
     memorySentence:
       "Answer choices can nudge, tilt, prime, tire, flatter, or invite agreement before the respondent has fully reported their answer.",
     nodes: [
@@ -3000,6 +3007,7 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
     id: "boundary",
     label: "Boundary & proof",
     question: "What does this inspection not cover, and how would a professional test it?",
+    gloss: "what this inspection doesn’t cover",
     memorySentence:
       "Response-option fit is one inspection pass; professional credibility comes from knowing the pass and knowing where it stops.",
     nodes: [

@@ -3548,6 +3548,14 @@ function KnowledgeMap() {
       </header>
 
       <CoverageGauge branches={responseOptionKnowledgeMap} />
+      <p className="lab-km-earned lab-selectable" data-testid="lab-km-earned">
+        You practiced{" "}
+        <strong>
+          {countCoverage(responseOptionKnowledgeMap).practiced} inspection moves
+        </strong>{" "}
+        across twelve answer-choice failures. Run the four passes in order:{" "}
+        <em>find a slot, check the ruler, remove the push, name the boundary.</em>
+      </p>
       <p className="lab-km-gauge-caption lab-selectable">
         SLOT / RULER / PUSH / BOUNDARY are <strong>this lab&rsquo;s own
         shorthand</strong> — not field terms; the concepts inside
@@ -3700,7 +3708,10 @@ function KnowledgeBranchCard({
           {branch.label.charAt(0).toUpperCase()}
         </span>
         <div className="lab-km-branch-headtext">
-          <p className="lab-km-branch-eyebrow">{branch.label.toUpperCase()}</p>
+          <p className="lab-km-branch-eyebrow">
+            {branch.label.toUpperCase()}
+            <span className="lab-km-branch-gloss lab-selectable"> · {branch.gloss}</span>
+          </p>
           <h3
             id={`lab-km-branch-${branch.id}-title`}
             className="lab-km-branch-question lab-selectable"

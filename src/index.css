@@ -3173,6 +3173,32 @@ summary:focus-visible {
   max-width: 75ch;
 }
 
+/* The earned synthesis above the four lens cards — the "here's the habit you
+   built" beat before the taxonomy (output-04 closing recommendation). */
+.lab-km-earned {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  max-width: 70ch;
+}
+.lab-km-earned strong {
+  color: var(--accent-2);
+}
+.lab-km-earned em {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+/* The plain-language dual label beside the house shorthand on each lens card. */
+.lab-km-branch-gloss {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-mute);
+}
+
 /* Reveal-on-scroll, scoped to `screen` on purpose: the gauge and branch cards
    are load-bearing (they ARE the closing payoff), so they must never be hidden
    in a print or full-page capture that has not scrolled them into view. Under
