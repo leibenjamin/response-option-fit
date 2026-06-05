@@ -1307,13 +1307,54 @@ summary:focus-visible {
 }
 
 @media (max-width: 520px) {
+  /* Mobile keeps a persistent sense of place + progress, but as a compact
+     single-line pill rather than the full desktop bar: a chevron, the current
+     location (truncated), and the count. Tapping expands the full contents.
+     (Previously this went position:static, so phones lost all progress/nav
+     while scrolling the twelve exercises.) */
   .lab-contents {
-    position: static;
-    z-index: auto;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding-block: 6px;
+    box-shadow: 0 4px 12px rgba(70, 45, 30, 0.08);
+  }
+  .lab-contents-summary {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  /* Hide the toggle words but keep the chevron, so the pill stays short. */
+  .lab-contents-toggle {
+    font-size: 0;
+    flex: none;
+  }
+  .lab-contents-toggle::before {
+    font-size: 13px;
+  }
+  .lab-contents-here {
+    font-style: normal;
+    font-size: 12.5px;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .lab-contents-progress {
+    flex: none;
+    margin-left: auto;
+  }
+  .lab-contents-progress-text {
+    font-size: 10.5px;
+  }
+  .lab-contents-progress-track {
+    width: 36px;
   }
   .lab-exercise,
   .lab-km {
-    scroll-margin-top: var(--s-4);
+    scroll-margin-top: 52px;
   }
 }
 
