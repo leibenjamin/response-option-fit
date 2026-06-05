@@ -4981,6 +4981,67 @@ summary:focus-visible {
   grid-template-columns: minmax(0, max-content) auto minmax(0, 1fr);
   column-gap: var(--s-3);
 }
+
+/* The collision bracket lives in a left gutter on the quantifier cast and spans
+   whichever two rows collide, naming the thing the vague scale can't tell apart. */
+.lab-quant-cast {
+  position: relative;
+  padding-left: 72px;
+}
+.lab-quant-bracket {
+  position: absolute;
+  left: 0;
+  width: 58px;
+  border-right: 2px solid var(--accent);
+  pointer-events: none;
+}
+.lab-quant-bracket::before,
+.lab-quant-bracket::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  width: 8px;
+  height: 2px;
+  background: var(--accent);
+}
+.lab-quant-bracket::before {
+  top: 0;
+}
+.lab-quant-bracket::after {
+  bottom: 0;
+}
+.lab-quant-bracket-label {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 52px;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-align: right;
+  line-height: 1.15;
+  color: var(--accent-2);
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  .lab-quant-bracket {
+    transition:
+      top var(--mo-causality) var(--mo-ease),
+      height var(--mo-causality) var(--mo-ease);
+  }
+}
+@media (max-width: 560px) {
+  .lab-quant-cast {
+    padding-left: 60px;
+  }
+  .lab-quant-bracket {
+    width: 48px;
+  }
+  .lab-quant-bracket-label {
+    width: 44px;
+  }
+}
 .lab-label-row,
 .lab-quant-row,
 .lab-order-row {

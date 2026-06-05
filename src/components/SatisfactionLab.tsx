@@ -2815,6 +2815,35 @@ function QuantifierExercise({ num }: { num: number }) {
   const meters = quantifierMeters(format);
   const collision = quantifierCollisionFor(selectedIds);
   const collisionDone = quantifierHasCollision(selectedIds);
+  /* When the two selected rows actually collide, a bracket connects them and
+     names what the vague scale CAN'T tell apart — the thing they share (same
+     count, or same word). Measured so it spans whichever two rows are picked. */
+  const castRef = useRef<HTMLDivElement>(null);
+  const [bracket, setBracket] = useState<{ top: number; height: number } | null>(
+    null
+  );
+  useLayoutEffect(() => {
+    const container = castRef.current;
+    if (!container || !collision) {
+      setBracket(null);
+      return;
+    }
+    const sel = container.querySelectorAll<HTMLElement>(
+      ".lab-quant-row.is-selected"
+    );
+    if (sel.length !== 2) {
+      setBracket(null);
+      return;
+    }
+    const cTop = container.getBoundingClientRect().top;
+    const centers = Array.from(sel)
+      .map((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top - cTop + r.height / 2;
+      })
+      .sort((a, b) => a - b);
+    setBracket({ top: centers[0], height: centers[1] - centers[0] });
+  }, [collision, selectedIds, format]);
 
   useEffect(() => {
     setCompleted((prev) => {
@@ -2891,7 +2920,24 @@ function QuantifierExercise({ num }: { num: number }) {
       <div className="lab-quant-workbench">
         <section className="lab-quant-collision-panel" aria-label="Collision finder">
           <p className="lab-control-key">Tap two visitors</p>
-          <div className="lab-quant-cast" role="group" aria-label="Visitor frequency answers">
+          <div
+            className="lab-quant-cast"
+            role="group"
+            aria-label="Visitor frequency answers"
+            ref={castRef}
+          >
+            {collision && bracket && (
+              <span
+                className="lab-quant-bracket"
+                data-kind={collision.kind}
+                style={{ top: `${bracket.top}px`, height: `${bracket.height}px` }}
+                aria-hidden="true"
+              >
+                <span className="lab-quant-bracket-label">
+                  {collision.kind === "same-count" ? "same count" : "same word"}
+                </span>
+              </span>
+            )}
             {quantifierCast.map((v) => {
               const land = quantifierLandingFor(v, format);
               const selected = selectedIds.includes(v.id);
