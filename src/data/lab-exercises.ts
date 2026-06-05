@@ -3042,6 +3042,16 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
         exerciseIds: ["none"]
       },
       {
+        id: "boundary.standards",
+        label: "Standards-governed categories",
+        status: "outOfScope",
+        ask:
+          "Are the categories yours to design, or fixed by an external reporting standard?",
+        remember:
+          "Some answer choices aren't a local craft decision — demographic and identity categories used for official or comparable reporting are constrained by external standards, required disaggregation, and cross-survey comparability. That's a governance question this craft-level lab names but does not work through.",
+        exerciseIds: ["none"]
+      },
+      {
         id: "boundary.cognitiveTesting",
         label: "Cognitive testing",
         status: "didactic",

@@ -303,7 +303,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.locator(".lab-km-node--practiced")).toHaveCount(16);
     await expect(page.locator(".lab-km-node--planned")).toHaveCount(3);
     await expect(page.locator(".lab-km-node--didactic")).toHaveCount(3);
-    await expect(page.locator(".lab-km-node--outOfScope")).toHaveCount(3);
+    await expect(page.locator(".lab-km-node--outOfScope")).toHaveCount(4);
   });
 
   test("the lab's #lab and / hashes are equivalent", async ({ page }) => {
