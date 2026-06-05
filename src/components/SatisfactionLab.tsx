@@ -327,18 +327,109 @@ function LabContents() {
   );
 }
 
-/* The five-second hero proof: a glancer's first act is an interaction, not a
-   read. One toggle changes only the question's wording — "How was…" → "How
-   great…" — and the recorded "satisfied" count moves even though not one
-   visitor's true feeling changed. It reuses E1's real cast + landing engine on
-   a fixed two-point scale, so it invents no new numbers (output-04 §1). */
-const HERO_SCALE = ["sat", "dis"];
+/* The opening hook — "the catchment".
+
+   The first interactive beat on the page. The old version was a labeled
+   plain/leading toggle, which named its own control ("Leading") and its own
+   answer (the recorded count) — facile by our own taxonomy, and it implicated
+   only fictional chips. This replaces it with a self-implicating placement:
+   the visitor drops their own, honestly-felt day on a continuous strip and
+   watches the form's coarse answer-boxes swallow a whole band of feelings onto
+   one word. Adding options shrinks the catchment — the missing-middle lesson of
+   Exercise 1, felt in one tap. It is non-presumptuous (the visitor authors
+   their own feeling) and honest (the only datum is that single placement; the
+   catchment statement is a property of the OPTIONS, not a respondent
+   distribution). Design rationale: docs/design-passes/2026-06-05-opening-hook-redesign.md. */
+const HOOK_BOX_STEPS = [2, 3, 5] as const;
+const HOOK_BOX_LABELS: Record<number, string[]> = {
+  2: ["Rough day", "Great day"],
+  3: ["Rough", "Middling", "Great"],
+  5: ["Rough", "Meh", "Okay", "Good", "Great"]
+};
+
+/* A plain-language word for a placement on the 0..100 feeling strip — used in
+   the readout and, crucially, in the slider's aria-valuetext. */
+function feelWord(feel: number): string {
+  if (feel < 12) return "rough";
+  if (feel < 30) return "pretty low";
+  if (feel < 44) return "a little off";
+  if (feel < 56) return "honestly mixed";
+  if (feel < 72) return "decent";
+  if (feel < 88) return "good";
+  return "great";
+}
+
+/* Which of n even boxes a placement falls into, and that box's center. The
+   recorded answer is the box's center; the gap to the true placement is what
+   the instrument rounds away. */
+function hookBoxIndex(feel: number, n: number): number {
+  return Math.min(n - 1, Math.max(0, Math.floor((feel / 100) * n)));
+}
+function hookBoxCenter(i: number, n: number): number {
+  return ((i + 0.5) / n) * 100;
+}
 
 function HeroProof() {
-  const [stem, setStem] = useState<"plain" | "leading">("plain");
-  const design: Design = { selected: HERO_SCALE, stem, order: "positive-first" };
-  const landings = cast.map((c) => ({ c, point: landingFor(c, design) }));
-  const recorded = landings.filter((l) => isSatisfied(l.point)).length;
+  const [feel, setFeel] = useState(55);
+  const [stepIdx, setStepIdx] = useState(0);
+  const [touched, setTouched] = useState(false);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+
+  const n = HOOK_BOX_STEPS[stepIdx];
+  const labels = HOOK_BOX_LABELS[n];
+  const idx = hookBoxIndex(feel, n);
+  const center = hookBoxCenter(idx, n);
+  const recordedLabel = labels[idx];
+  const gap = Math.abs(feel - center);
+  const direction =
+    center > feel + 1.5 ? "up" : center < feel - 1.5 ? "down" : "level";
+
+  const placeFromClientX = (clientX: number) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const pct = ((clientX - rect.left) / rect.width) * 100;
+    setFeel(Math.max(0, Math.min(100, pct)));
+    setTouched(true);
+  };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    dragging.current = true;
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      /* setPointerCapture can throw on stale pointer ids; placement still works. */
+    }
+    placeFromClientX(e.clientX);
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (dragging.current) placeFromClientX(e.clientX);
+  };
+  const endDrag = () => {
+    dragging.current = false;
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 10 : 3;
+    let next = feel;
+    if (e.key === "ArrowLeft" || e.key === "ArrowDown") next = feel - step;
+    else if (e.key === "ArrowRight" || e.key === "ArrowUp") next = feel + step;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = 100;
+    else return;
+    e.preventDefault();
+    setFeel(Math.max(0, Math.min(100, next)));
+    setTouched(true);
+  };
+
+  const stepBoxes = () => setStepIdx((i) => (i + 1) % HOOK_BOX_STEPS.length);
+  const stepLabel =
+    n === 2
+      ? "Give people a middle →"
+      : n === 3
+        ? "Give them the full range →"
+        : "Back to two boxes ↺";
 
   const goToExercise = () => {
     const el = document.getElementById("lab-exercise-1");
@@ -352,70 +443,125 @@ function HeroProof() {
     heading.focus({ preventScroll: true });
   };
 
+  const valueText = `Your day feels ${feelWord(
+    feel
+  )}. The form would record this as ${recordedLabel}.`;
+
   return (
-    <div className="lab-hero" data-testid="lab-hero">
-      <p className="lab-hero-eyebrow">Try the lie in five seconds</p>
-      <div className="lab-hero-instrument">
-        <p className="lab-hero-stem lab-selectable" aria-live="polite">
-          {stemText[stem]}
-        </p>
-        <div
-          className="lab-hero-toggle"
-          role="group"
-          aria-label="Question wording"
-        >
-          {(["plain", "leading"] as const).map((s) => (
-            <button
-              key={s}
-              type="button"
-              className={`lab-hero-seg ${stem === s ? "is-on" : ""}`}
-              aria-pressed={stem === s}
-              data-testid={`lab-hero-stem-${s}`}
-              onClick={() => setStem(s)}
-            >
-              {s === "plain" ? "Plain — “how was…”" : "Leading — “how great…”"}
-            </button>
-          ))}
-        </div>
-        <ul className="lab-hero-cast" aria-label="Where the five visitors land">
-          {landings.map(({ c, point }) => {
-            const sat = isSatisfied(point);
-            return (
-              <li
-                key={c.id}
-                className={`lab-hero-chip ${sat ? "is-sat" : "is-unsat"}`}
-                data-testid={`lab-hero-chip-${c.id}`}
-              >
-                <span className="lab-hero-chip-name">{c.name}</span>
-                <span className="lab-hero-chip-land">
-                  {point ? point.label : "—"}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      <p className="lab-hero-headline" aria-live="polite" data-testid="lab-hero-headline">
-        <span className="lab-hero-recorded">
-          Recorded:{" "}
-          <strong>
-            <AnimatedNumber value={recorded} duration={420} ariaLabel={`${recorded}`} /> of 5
-          </strong>{" "}
-          satisfied
-        </span>
-        <span className="lab-hero-sep" aria-hidden="true">·</span>
-        <span className="lab-hero-true">
-          Truly satisfied: <strong>{trueSatisfiedCount} of 5</strong>
-        </span>
+    <div className="lab-hook" data-testid="lab-hero">
+      <p className="lab-hook-eyebrow">One tap · the whole idea</p>
+      <p className="lab-hook-stem lab-selectable">
+        How&rsquo;s your day going — really?
       </p>
-      <CastCountNote className="lab-hero-note" />
+
+      <div className="lab-hook-figure">
+        <div
+          ref={trackRef}
+          className={`lab-hook-track lab-hook-track--n${n}`}
+          role="slider"
+          tabIndex={0}
+          aria-label="Place how your day is going, then read what the form would record"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(feel)}
+          aria-valuetext={valueText}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+          onKeyDown={onKeyDown}
+          data-testid="lab-hook-track"
+        >
+          <div className="lab-hook-zones" aria-hidden="true">
+            {labels.map((label, i) => (
+              <div
+                key={label}
+                className={`lab-hook-zone ${i === idx ? "is-active" : ""}`}
+              >
+                <span className="lab-hook-zone-label">{label}</span>
+              </div>
+            ))}
+          </div>
+          <div
+            className={`lab-hook-gap dir-${direction}`}
+            aria-hidden="true"
+            style={{ left: `${Math.min(feel, center)}%`, width: `${gap}%` }}
+          />
+          <div
+            className="lab-hook-recorded"
+            aria-hidden="true"
+            style={{ left: `${center}%` }}
+          />
+          <div
+            className={`lab-hook-handle ${touched ? "" : "is-hint"}`}
+            aria-hidden="true"
+            style={{ left: `${feel}%` }}
+          />
+        </div>
+        <p className="lab-hook-axis" aria-hidden="true">
+          <span>Rough</span>
+          <span className="lab-hook-axis-hint">tap or drag to your honest spot</span>
+          <span>Great</span>
+        </p>
+        <p className="lab-hook-legend" aria-hidden="true">
+          <span className="lab-hook-key lab-hook-key--you">your honest spot</span>
+          <span className="lab-hook-key lab-hook-key--rec">what the form keeps</span>
+        </p>
+      </div>
+
+      <p
+        className="lab-hook-readout"
+        aria-live="polite"
+        data-testid="lab-hero-headline"
+      >
+        Your day&rsquo;s about <strong>{feelWord(feel)}</strong> — the form files
+        that as{" "}
+        <strong className="lab-hook-filed">&ldquo;{recordedLabel}.&rdquo;</strong>{" "}
+        {n === 2 ? (
+          <span className="lab-hook-twist">
+            Every feeling in the shaded stretch becomes that one word.
+          </span>
+        ) : direction === "level" ? (
+          <span className="lab-hook-twist">
+            With more room, your answer barely gets rounded.
+          </span>
+        ) : (
+          <span className="lab-hook-twist">
+            More room, less rounding — the record creeps back toward the truth.
+          </span>
+        )}
+      </p>
+
+      <div className="lab-hook-actions">
+        <button
+          type="button"
+          className="lab-hook-step"
+          onClick={stepBoxes}
+          data-testid="lab-hook-step"
+        >
+          {stepLabel}
+        </button>
+        <span className="lab-hook-count" aria-hidden="true">
+          {n} answer options
+        </span>
+      </div>
+
+      <p className="lab-hook-bridge">
+        That was one tap, about you. The lab does it on purpose — to a fixed cast
+        of five — then shows you how to stop it.
+      </p>
+
+      <span className="lab-hook-note lab-cast-note">
+        Your placement, on this device only · no survey data, no estimates
+      </span>
+
       <button
         type="button"
-        className="lab-hero-cta"
+        className="lab-hook-cta"
         data-testid="lab-hero-cta"
         onClick={goToExercise}
       >
-        Now fix the full scale →
+        Start the lab &rarr;
       </button>
     </div>
   );

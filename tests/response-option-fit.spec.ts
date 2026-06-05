@@ -306,31 +306,38 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.locator(".lab-km-node--outOfScope")).toHaveCount(4);
   });
 
-  test("the hero proof moves the recorded count with one word and links into Exercise 1", async ({
+  test("the opening hook rounds the visitor's placement and adding options narrows the catchment", async ({
     page
   }) => {
     await page.goto(`${BASE_URL}/`);
-    const hero = page.getByTestId("lab-hero");
-    await expect(hero).toBeVisible();
-    /* Plain wording: three of the five read as satisfied; the true count is two. */
-    await expect(page.getByTestId("lab-hero-headline")).toContainText(
-      "Recorded: 3 of 5"
-    );
-    await expect(page.getByTestId("lab-hero-headline")).toContainText(
-      "Truly satisfied: 2 of 5"
-    );
-    /* Changing only the wording to "how great" pushes the recorded count to 4
-       of 5 — the true count never moves. */
-    await page.getByTestId("lab-hero-stem-leading").click();
-    await expect(page.getByTestId("lab-hero-headline")).toContainText(
-      "Recorded: 4 of 5"
-    );
-    await expect(page.getByTestId("lab-hero-headline")).toContainText(
-      "Truly satisfied: 2 of 5"
-    );
-    /* The persistent claim-safety label is present. */
-    await expect(hero).toContainText("Illustrative cast count");
-    /* The CTA sends keyboard focus into Exercise 1. */
+    const hook = page.getByTestId("lab-hero");
+    await expect(hook).toBeVisible();
+    /* Reads correctly at zero clicks: the default mixed placement is filed onto
+       the upper of the two coarse boxes. */
+    const readout = page.getByTestId("lab-hero-headline");
+    await expect(readout).toContainText("honestly mixed");
+    await expect(readout).toContainText("Great day");
+    await expect(hook).toContainText("2 answer options");
+
+    /* The placement strip is a real slider with a spoken value, so it works for
+       keyboard and assistive tech. */
+    const track = page.getByTestId("lab-hook-track");
+    await expect(track).toHaveAttribute("role", "slider");
+    await expect(track).toHaveAttribute("aria-valuetext", /form would record/);
+    await track.focus();
+    await track.press("Home");
+    await expect(track).toHaveAttribute("aria-valuenow", "0");
+    await expect(readout).toContainText("rough");
+
+    /* Giving people a middle turns the same placement from a coarse box into a
+       finer one — the catchment shrinks. */
+    await track.press("End");
+    await page.getByTestId("lab-hook-step").click();
+    await expect(hook).toContainText("3 answer options");
+    await expect(readout).toContainText("Great");
+
+    /* The honesty label is present, and the CTA sends focus into Exercise 1. */
+    await expect(hook).toContainText("no survey data, no estimates");
     await page.getByTestId("lab-hero-cta").click();
     await expect(page.locator("#lab-exercise-1-title")).toBeFocused();
   });

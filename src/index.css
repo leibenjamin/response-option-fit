@@ -631,11 +631,13 @@ summary:focus-visible {
   max-width: 60ch;
 }
 
-/* ===================== HERO PROOF =====================
-   The five-second above-the-fold interaction. The conversion centerpiece: a
-   glancer's first act is to move a real number by changing one word. One
-   focal instrument surface, the watched count, one forward CTA. */
-.lab-hero {
+/* ===================== OPENING HOOK — "the catchment" =====================
+   The first interactive beat above the exercises. The visitor drops their own
+   honestly-felt day on a continuous strip; the form's coarse answer-boxes
+   swallow a band of feelings onto one word; adding options shrinks the
+   catchment. Self-implicating, non-presumptuous, honest. See
+   docs/design-passes/2026-06-05-opening-hook-redesign.md. */
+.lab-hook {
   margin: var(--s-3) 0 var(--s-2);
   padding: var(--s-5);
   background: var(--paper-card);
@@ -644,10 +646,10 @@ summary:focus-visible {
   box-shadow: 0 12px 30px rgba(70, 45, 30, 0.07);
   display: flex;
   flex-direction: column;
-  gap: var(--s-4);
-  max-width: 60ch;
+  gap: var(--s-3);
+  max-width: 62ch;
 }
-.lab-hero-eyebrow {
+.lab-hook-eyebrow {
   margin: 0;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -655,116 +657,232 @@ summary:focus-visible {
   text-transform: uppercase;
   color: var(--accent);
 }
-.lab-hero-instrument {
-  background: var(--paper-2);
-  border: 1px solid var(--line-faint);
-  border-radius: 10px;
-  padding: var(--s-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-}
-.lab-hero-stem {
+.lab-hook-stem {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: clamp(17px, 2vw, 21px);
-  line-height: 1.3;
+  font-size: clamp(19px, 2.4vw, 24px);
+  line-height: 1.25;
   color: var(--ink);
 }
-.lab-hero-toggle {
+.lab-hook-figure {
   display: flex;
-  gap: 0;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: var(--s-1);
+}
+.lab-hook-track {
+  position: relative;
+  height: 82px;
+  border-radius: 10px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    #dad3c3 0%,
+    var(--paper-2) 46%,
+    var(--accent-wash) 100%
+  );
+  cursor: pointer;
+  touch-action: none;
   overflow: hidden;
-  width: fit-content;
-  max-width: 100%;
+  user-select: none;
+}
+.lab-hook-track:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.lab-hook-zones {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+.lab-hook-zone {
+  flex: 1 1 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 4px 10px;
+  text-align: center;
+  transition: background-color var(--mo-causality, 240ms) ease;
+}
+.lab-hook-zone + .lab-hook-zone {
+  border-left: 1px dashed var(--line-soft);
+}
+.lab-hook-zone.is-active {
+  background: rgba(176, 74, 47, 0.12);
+}
+.lab-hook-zone-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  transition: color var(--mo-causality, 240ms) ease;
+}
+.lab-hook-zone.is-active .lab-hook-zone-label {
+  color: var(--accent-2);
+  font-weight: 600;
+}
+/* The dashed connector between the true placement and the recorded box centre:
+   the stretch the instrument rounds away. */
+.lab-hook-gap {
+  position: absolute;
+  top: 30px;
+  height: 0;
+  border-top: 2px dashed var(--accent-2);
+  transform: translateY(-50%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+/* The recorded answer — the active box's centre — as a small diamond on the
+   midline. */
+.lab-hook-recorded {
+  position: absolute;
+  top: 30px;
+  width: 11px;
+  height: 11px;
+  background: var(--accent-2);
+  border: 1px solid var(--paper-card);
+  transform: translate(-50%, -50%) rotate(45deg);
+  pointer-events: none;
+}
+/* The visitor's true feeling — the prominent knob they place. */
+.lab-hook-handle {
+  position: absolute;
+  top: 30px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--accent);
+  border: 3px solid var(--paper-card);
+  box-shadow: 0 2px 7px rgba(70, 45, 30, 0.28);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  .lab-hook-handle.is-hint {
+    animation: hook-nudge 2.4s ease-in-out 0.6s 3;
+  }
+}
+@keyframes hook-nudge {
+  0%,
+  100% {
+    box-shadow: 0 2px 7px rgba(70, 45, 30, 0.28);
+  }
+  50% {
+    box-shadow:
+      0 2px 7px rgba(70, 45, 30, 0.28),
+      0 0 0 7px rgba(176, 74, 47, 0.16);
+  }
+}
+.lab-hook-axis {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.lab-hook-axis-hint {
+  text-transform: none;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+}
+.lab-hook-legend {
+  margin: 2px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  font-size: 11.5px;
+  color: var(--ink-mute);
+}
+.lab-hook-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.lab-hook-key::before {
+  content: "";
+  display: inline-block;
+  flex: none;
+}
+.lab-hook-key--you::before {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--accent);
+  border: 2px solid var(--paper-card);
+  box-shadow: 0 1px 3px rgba(70, 45, 30, 0.3);
+}
+.lab-hook-key--rec::before {
+  width: 9px;
+  height: 9px;
+  background: var(--accent-2);
+  transform: rotate(45deg);
+}
+.lab-hook-readout {
+  margin: var(--s-1) 0 0;
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.lab-hook-readout strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.lab-hook-filed {
+  color: var(--accent-2);
+}
+.lab-hook-twist {
+  color: var(--ink-soft);
+}
+.lab-hook-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
   flex-wrap: wrap;
 }
-.lab-hero-seg {
+.lab-hook-step {
   appearance: none;
-  border: 0;
-  background: var(--paper-card);
-  color: var(--ink-soft);
+  border: 1px solid var(--accent-soft);
+  background: var(--accent-wash);
+  color: var(--accent-2);
   font-family: var(--font-mono);
   font-size: 11.5px;
   letter-spacing: 0.02em;
   padding: 0 var(--s-4);
   min-height: 44px;
+  border-radius: 8px;
   cursor: pointer;
 }
-.lab-hero-seg + .lab-hero-seg {
-  border-left: 1px solid var(--line);
+.lab-hook-step:hover,
+.lab-hook-step:focus-visible {
+  background: var(--accent-paper);
+  border-color: var(--accent);
 }
-.lab-hero-seg.is-on {
-  background: var(--accent);
-  color: var(--paper-card);
-}
-.lab-hero-seg:focus-visible {
+.lab-hook-step:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: -2px;
+  outline-offset: 2px;
 }
-.lab-hero-cast {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-2);
-}
-.lab-hero-chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid var(--line-soft);
-  background: var(--paper-card);
-  font-size: 12px;
-  min-height: 26px;
-}
-.lab-hero-chip-name {
-  font-weight: 600;
-  color: var(--ink);
-}
-.lab-hero-chip-land {
+.lab-hook-count {
   font-family: var(--font-mono);
   font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--ink-mute);
 }
-.lab-hero-chip.is-sat {
-  border-color: var(--accent-soft);
-  background: var(--accent-paper);
-}
-.lab-hero-chip.is-sat .lab-hero-chip-land {
-  color: var(--accent-2);
-}
-.lab-hero-headline {
+.lab-hook-bridge {
   margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--s-2);
-  font-family: var(--font-serif);
-  font-size: clamp(18px, 2.4vw, 23px);
-  line-height: 1.25;
-  color: var(--ink-2);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
 }
-.lab-hero-recorded strong {
-  color: var(--accent-2);
-  font-weight: 600;
-}
-.lab-hero-true strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-.lab-hero-sep {
-  color: var(--line);
-}
-.lab-hero-note {
+.lab-hook-note {
   margin: 0;
 }
-.lab-hero-cta {
+.lab-hook-cta {
   appearance: none;
   align-self: flex-start;
   border: 1px solid var(--accent);
@@ -779,25 +897,53 @@ summary:focus-visible {
   border-radius: 8px;
   cursor: pointer;
 }
-.lab-hero-cta:hover,
-.lab-hero-cta:focus-visible {
+.lab-hook-cta:hover,
+.lab-hook-cta:focus-visible {
   background: var(--accent-2);
   border-color: var(--accent-2);
 }
-.lab-hero-cta:focus-visible {
+.lab-hook-cta:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .lab-hook-handle,
+  .lab-hook-recorded,
+  .lab-hook-gap {
+    transition:
+      left var(--mo-causality, 240ms) var(--mo-ease, ease),
+      width var(--mo-causality, 240ms) var(--mo-ease, ease);
+  }
+}
+@media (forced-colors: active) {
+  /* The catchment shading and accent fills drop out in forced-colors, so carry
+     the same signals with system-color borders and an active-zone outline. */
+  .lab-hook-zone.is-active {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+  .lab-hook-handle,
+  .lab-hook-recorded,
+  .lab-hook-key--you::before,
+  .lab-hook-key--rec::before {
+    background: Canvas;
+    border: 1px solid CanvasText;
+  }
+}
 @media (max-width: 560px) {
-  .lab-hero {
+  .lab-hook {
     padding: var(--s-4);
   }
-  .lab-hero-seg {
-    flex: 1 1 auto;
-    text-align: center;
+  .lab-hook-zone-label {
+    font-size: 10px;
   }
-  .lab-hero-cta {
+  .lab-hook-axis-hint {
+    display: none;
+  }
+  .lab-hook-step,
+  .lab-hook-cta {
     align-self: stretch;
+    width: 100%;
     text-align: center;
   }
 }
@@ -5498,7 +5644,6 @@ summary:focus-visible {
   .lab-cast-row,
   .lab-channel-cast-row,
   .lab-fp-row,
-  .lab-hero-chip,
   .lab-label-row,
   .lab-oat-row,
   .lab-order-row,
