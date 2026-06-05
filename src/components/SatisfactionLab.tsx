@@ -955,6 +955,20 @@ function DoubleBarreledExercise({ num }: { num: number }) {
                   {revealed && (
                     <span className="lab-bundled-note">{item.note}</span>
                   )}
+                  {revealed && shouldFlag && item.ideas && (
+                    <span className="lab-bundled-split" aria-hidden="true">
+                      <span className="lab-bundled-split-key">
+                        one slot, {item.ideas.length} judgments
+                      </span>
+                      <span className="lab-bundled-split-pills">
+                        {item.ideas.map((idea) => (
+                          <span key={idea} className="lab-bundled-split-pill">
+                            {idea}
+                          </span>
+                        ))}
+                      </span>
+                    </span>
+                  )}
                 </span>
               </button>
             </li>
