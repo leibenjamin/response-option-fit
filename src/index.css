@@ -2958,6 +2958,214 @@ summary:focus-visible {
 
 /* ─── Exercise 3 — Bucket tinker ─── */
 
+/* The age ruler: draggable bucket bands over a 0–100 timeline, with the ten
+   respondents as dots that land in a gap or under an overlap. Pointer-driven
+   enhancement, aria-hidden; the inputs + list below are the AT path. */
+.lab-bucket-axis {
+  margin: var(--s-3) 0 var(--s-2);
+  padding: var(--s-4) var(--s-4) var(--s-2);
+  background: var(--paper-2);
+  border: 1px solid var(--line-faint);
+  border-radius: 10px;
+}
+.lab-bucket-axis-track {
+  position: relative;
+  height: 42px;
+  border-radius: 7px;
+  background: var(--paper-card);
+  border: 1px solid var(--line-soft);
+  touch-action: none;
+}
+.lab-bucket-axis-gap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(176, 74, 47, 0.13),
+    rgba(176, 74, 47, 0.13) 5px,
+    transparent 5px,
+    transparent 10px
+  );
+  border-left: 1px dashed var(--accent-soft);
+  border-right: 1px dashed var(--accent-soft);
+}
+.lab-bucket-axis-band {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-wash);
+  border: 1px solid var(--accent-soft);
+  border-radius: 6px;
+  min-width: 2px;
+  box-sizing: border-box;
+}
+.lab-bucket-axis-band-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--accent-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 12px;
+  pointer-events: none;
+}
+.lab-bucket-axis-handle {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  width: 18px;
+  transform: translateX(-50%);
+  cursor: ew-resize;
+  touch-action: none;
+  z-index: 4;
+}
+.lab-bucket-axis-handle::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 50%;
+  width: 4px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 1px 3px rgba(70, 45, 30, 0.3);
+}
+.lab-bucket-axis-handle--end.is-open::before {
+  background: var(--accent-soft);
+}
+.lab-bucket-axis-handle.is-dragging::before {
+  background: var(--accent-2);
+  box-shadow: 0 0 0 4px rgba(176, 74, 47, 0.16);
+}
+.lab-bucket-axis-overlap {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(138, 58, 38, 0.5),
+    rgba(138, 58, 38, 0.5) 4px,
+    rgba(243, 223, 214, 0.6) 4px,
+    rgba(243, 223, 214, 0.6) 8px
+  );
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  pointer-events: none;
+}
+.lab-bucket-axis-dots {
+  position: relative;
+  height: 44px;
+  margin-top: 4px;
+}
+.lab-bucket-axis-dot {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.lab-bucket-axis-dot.row-a {
+  top: 0;
+}
+.lab-bucket-axis-dot.row-b {
+  top: 22px;
+}
+.lab-bucket-axis-dot-mark {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--ink-soft);
+  border: 1px solid var(--paper-card);
+}
+.lab-bucket-axis-dot-name {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.lab-bucket-axis-dot.is-clean .lab-bucket-axis-dot-mark {
+  background: #3f7d54;
+}
+.lab-bucket-axis-dot.is-uncovered .lab-bucket-axis-dot-mark {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(176, 74, 47, 0.2);
+}
+.lab-bucket-axis-dot.is-uncovered .lab-bucket-axis-dot-name {
+  color: var(--accent-2);
+  font-weight: 600;
+}
+.lab-bucket-axis-dot.is-double .lab-bucket-axis-dot-mark {
+  background: #b8851f;
+  box-shadow: 0 0 0 3px rgba(184, 133, 31, 0.22);
+}
+.lab-bucket-axis-dot.is-double .lab-bucket-axis-dot-name {
+  color: #6e4d0b;
+  font-weight: 600;
+}
+.lab-bucket-axis-ticks {
+  position: relative;
+  height: 14px;
+  margin-top: 2px;
+  border-top: 1px solid var(--line-faint);
+}
+.lab-bucket-axis-tick {
+  position: absolute;
+  transform: translateX(-50%);
+  top: 2px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+}
+@media (forced-colors: active) {
+  .lab-bucket-axis-band {
+    border: 1px solid CanvasText;
+  }
+  .lab-bucket-axis-overlap {
+    border: 2px solid Highlight;
+  }
+  .lab-bucket-axis-handle::before {
+    background: CanvasText;
+  }
+  .lab-bucket-axis-dot-mark {
+    background: CanvasText;
+    border: 1px solid Canvas;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lab-bucket-axis-band,
+  .lab-bucket-axis-gap,
+  .lab-bucket-axis-overlap,
+  .lab-bucket-axis-dot {
+    transition:
+      left var(--mo-causality, 220ms) var(--mo-ease, ease),
+      width var(--mo-causality, 220ms) var(--mo-ease, ease);
+  }
+}
+@media (max-width: 600px) {
+  /* Names would collide on a narrow ruler; the dots keep the gap/overlap
+     geometry and the named respondent list below carries the detail. */
+  .lab-bucket-axis-dot-name {
+    display: none;
+  }
+  .lab-bucket-axis-dots {
+    height: 26px;
+  }
+  .lab-bucket-axis-dot.row-b {
+    top: 13px;
+  }
+  .lab-bucket-axis-dot-mark {
+    width: 11px;
+    height: 11px;
+  }
+}
+
 .lab-bucket-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

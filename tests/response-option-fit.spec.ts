@@ -420,13 +420,27 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E3 bucket tinker: fixes overlaps, covers under-18, and splits the 45+ lump", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    /* The age ruler mirrors the edit: four bands, ten dots, and — on the broken
+       starter set — at least one uncovered (under-18) gap and the boundary
+       overlaps. It is decorative (the inputs/list are the AT path), so it is
+       aria-hidden. */
+    await expect(page.locator(".lab-bucket-axis-band")).toHaveCount(4);
+    await expect(page.locator(".lab-bucket-axis-dot")).toHaveCount(10);
+    await expect(page.locator(".lab-bucket-axis-gap").first()).toBeVisible();
+    await expect(page.locator(".lab-bucket-axis-overlap").first()).toBeVisible();
+    await expect(page.locator(".lab-bucket-axis")).toHaveAttribute("aria-hidden", "true");
+
     await page.getByTestId("lab-bucket-end-b1").fill("24");
     await page.getByTestId("lab-bucket-end-b2").fill("34");
     await page.getByTestId("lab-bucket-end-b3").fill("44");
     await expect(page.locator('[data-testid="lab-bucket-task-fix-overlap"].is-done')).toHaveCount(1);
+    /* With the overlaps gone, no double-covered stretch remains on the ruler. */
+    await expect(page.locator(".lab-bucket-axis-overlap")).toHaveCount(0);
 
     await page.getByTestId("lab-bucket-start-b1").fill("0");
     await expect(page.locator('[data-testid="lab-bucket-task-extend-low"].is-done')).toHaveCount(1);
+    /* And once the under-18s are covered, the ruler shows no gap. */
+    await expect(page.locator(".lab-bucket-axis-gap")).toHaveCount(0);
 
     await page.getByTestId("lab-bucket-end-b4").fill("64");
     await page.getByTestId("lab-bucket-add").click();

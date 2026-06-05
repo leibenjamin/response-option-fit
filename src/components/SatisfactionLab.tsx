@@ -1281,6 +1281,220 @@ function DoubleBarreledExercise({ num }: { num: number }) {
    Exercise 3 — MECE bucket tinker  (verb: TINKER)
    ─────────────────────────────────────────────────────────────────────── */
 
+/* The age ruler that turns the bucket edit into a picture. Age is a real number
+   line, so the buckets are bands you can drag along it and the ten respondents
+   are dots that fall into a GAP (no band over them) or under an OVERLAP (two
+   bands) — the two failures you otherwise read off a list. Inclusive integer
+   buckets cover [start, end], so a band visually spans [start, end+1) and the
+   …24 / 25… pair sits flush with no false gap; an overlap appears exactly where
+   two buckets share a boundary number. This layer is a pointer-driven
+   enhancement and is aria-hidden: the number inputs and the respondent list
+   below stay the keyboard/assistive-tech path and the tested source of truth. */
+const AXIS_MIN = 0;
+const AXIS_MAX = 100;
+function axisPct(age: number): number {
+  return ((age - AXIS_MIN) / (AXIS_MAX - AXIS_MIN)) * 100;
+}
+function bandRightAge(b: AgeBucket): number {
+  return b.end == null ? AXIS_MAX : Math.min(AXIS_MAX, b.end + 1);
+}
+type AxisInterval = { lo: number; hi: number };
+function mergeIntervals(ivs: AxisInterval[]): AxisInterval[] {
+  const sorted = ivs.filter((i) => i.hi > i.lo).sort((a, b) => a.lo - b.lo);
+  const out: AxisInterval[] = [];
+  for (const iv of sorted) {
+    const last = out[out.length - 1];
+    if (last && iv.lo <= last.hi) last.hi = Math.max(last.hi, iv.hi);
+    else out.push({ ...iv });
+  }
+  return out;
+}
+function coverageGaps(buckets: AgeBucket[]): AxisInterval[] {
+  const covered = mergeIntervals(
+    buckets.map((b) => ({ lo: b.start, hi: bandRightAge(b) }))
+  );
+  const gaps: AxisInterval[] = [];
+  let cursor = AXIS_MIN;
+  for (const iv of covered) {
+    if (iv.lo > cursor) gaps.push({ lo: cursor, hi: iv.lo });
+    cursor = Math.max(cursor, iv.hi);
+  }
+  if (cursor < AXIS_MAX) gaps.push({ lo: cursor, hi: AXIS_MAX });
+  return gaps;
+}
+function bucketOverlaps(buckets: AgeBucket[]): AxisInterval[] {
+  const out: AxisInterval[] = [];
+  for (let i = 0; i < buckets.length; i++) {
+    for (let j = i + 1; j < buckets.length; j++) {
+      const lo = Math.max(buckets[i].start, buckets[j].start);
+      const hi = Math.min(bandRightAge(buckets[i]), bandRightAge(buckets[j]));
+      if (hi > lo) out.push({ lo, hi });
+    }
+  }
+  return out;
+}
+
+const AXIS_TICKS = [0, 18, 25, 35, 45, 65, 100];
+
+function BucketAxis({
+  buckets,
+  onEdit
+}: {
+  buckets: AgeBucket[];
+  onEdit: (id: string, patch: Partial<AgeBucket>) => void;
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [dragTarget, setDragTarget] = useState<{
+    id: string;
+    edge: "start" | "end";
+  } | null>(null);
+  /* Read the latest props inside the window-level drag listeners without
+     re-subscribing on every keystroke/edit. */
+  const bucketsRef = useRef(buckets);
+  bucketsRef.current = buckets;
+  const onEditRef = useRef(onEdit);
+  onEditRef.current = onEdit;
+
+  const ageFromClientX = (clientX: number): number => {
+    const el = trackRef.current;
+    if (!el) return AXIS_MIN;
+    const rect = el.getBoundingClientRect();
+    const pct = (clientX - rect.left) / rect.width;
+    return clampInt(AXIS_MIN + pct * (AXIS_MAX - AXIS_MIN), AXIS_MIN, AXIS_MAX);
+  };
+
+  /* Drag is tracked on window (not via pointer capture on the handle) because
+     the handle re-renders mid-gesture, which can drop capture. */
+  useEffect(() => {
+    if (!dragTarget) return;
+    const move = (e: PointerEvent) => {
+      const b = bucketsRef.current.find((x) => x.id === dragTarget.id);
+      if (!b) return;
+      const age = ageFromClientX(e.clientX);
+      if (dragTarget.edge === "start") {
+        const cap = b.end == null ? AXIS_MAX : b.end;
+        onEditRef.current(dragTarget.id, { start: Math.min(age, cap) });
+      } else {
+        /* The right edge sits one past the inclusive end, so end = age − 1. */
+        onEditRef.current(dragTarget.id, {
+          end: clampInt(age - 1, b.start, AXIS_MAX)
+        });
+      }
+    };
+    const up = () => setDragTarget(null);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+    };
+  }, [dragTarget]);
+
+  const onHandleDown = (
+    e: React.PointerEvent,
+    id: string,
+    edge: "start" | "end"
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragTarget({ id, edge });
+  };
+
+  const gaps = coverageGaps(buckets);
+  const overlaps = bucketOverlaps(buckets);
+
+  return (
+    <div className="lab-bucket-axis" aria-hidden="true">
+      <div className="lab-bucket-axis-track" ref={trackRef}>
+        {/* uncovered stretches */}
+        {gaps.map((g, i) => (
+          <span
+            key={`gap-${i}`}
+            className="lab-bucket-axis-gap"
+            style={{ left: `${axisPct(g.lo)}%`, width: `${axisPct(g.hi) - axisPct(g.lo)}%` }}
+          />
+        ))}
+        {/* the bucket bands (visual) */}
+        {buckets.map((b, i) => {
+          const left = axisPct(b.start);
+          const width = axisPct(bandRightAge(b)) - left;
+          return (
+            <div
+              key={b.id}
+              className="lab-bucket-axis-band"
+              style={{ left: `${left}%`, width: `${width}%` }}
+              data-band-index={i}
+            >
+              <span className="lab-bucket-axis-band-label">
+                {i + 1}&nbsp;·&nbsp;{formatBucket(b)}
+              </span>
+            </div>
+          );
+        })}
+        {/* double-covered stretches, drawn on top of the bands */}
+        {overlaps.map((o, i) => (
+          <span
+            key={`ov-${i}`}
+            className="lab-bucket-axis-overlap"
+            style={{ left: `${axisPct(o.lo)}%`, width: `${axisPct(o.hi) - axisPct(o.lo)}%` }}
+          />
+        ))}
+        {/* drag handles in their own top layer, so a band's edge handle is never
+            buried under an adjacent (overlapping) band */}
+        {buckets.map((b) => {
+          const open = b.end == null;
+          return (
+            <span key={`h-${b.id}`}>
+              <span
+                className={`lab-bucket-axis-handle lab-bucket-axis-handle--start ${dragTarget?.id === b.id && dragTarget.edge === "start" ? "is-dragging" : ""}`}
+                style={{ left: `${axisPct(b.start)}%` }}
+                onPointerDown={(e) => onHandleDown(e, b.id, "start")}
+              />
+              <span
+                className={`lab-bucket-axis-handle lab-bucket-axis-handle--end ${open ? "is-open" : ""} ${dragTarget?.id === b.id && dragTarget.edge === "end" ? "is-dragging" : ""}`}
+                style={{ left: `${axisPct(bandRightAge(b))}%` }}
+                onPointerDown={(e) => onHandleDown(e, b.id, "end")}
+              />
+            </span>
+          );
+        })}
+      </div>
+
+      {/* the ten respondents as dots that fall into gaps / overlaps */}
+      <div className="lab-bucket-axis-dots">
+        {ageRespondents.map((r, i) => {
+          const fits = bucketsContainingAge(r.age, buckets);
+          const state =
+            fits.length === 0 ? "uncovered" : fits.length === 1 ? "clean" : "double";
+          return (
+            <span
+              key={r.id}
+              className={`lab-bucket-axis-dot is-${state} ${i % 2 === 0 ? "row-a" : "row-b"}`}
+              style={{ left: `${axisPct(r.age + 0.5)}%` }}
+              title={`${r.name}, ${r.age}`}
+            >
+              <span className="lab-bucket-axis-dot-mark" />
+              <span className="lab-bucket-axis-dot-name">
+                {r.name} {r.age}
+              </span>
+            </span>
+          );
+        })}
+      </div>
+
+      <div className="lab-bucket-axis-ticks">
+        {AXIS_TICKS.map((t) => (
+          <span key={t} className="lab-bucket-axis-tick" style={{ left: `${axisPct(t)}%` }}>
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function BucketTinkerExercise({ num }: { num: number }) {
   const [buckets, setBuckets] = useState<AgeBucket[]>(() =>
     startingAgeBuckets.map((b) => ({ ...b }))
@@ -1335,10 +1549,13 @@ function BucketTinkerExercise({ num }: { num: number }) {
         Roast &amp; Brew&rsquo;s customer survey ends by asking age, in buckets,
         for its demographic breakdown. The starter set has overlapping
         boundaries, no under-18 coverage, and lumps everyone over 45 together.
-        Edit the endpoints, add or remove buckets, and watch the dashboard tell
-        you who&rsquo;s stuck in two buckets, who&rsquo;s in none, and
-        who&rsquo;s lumped. A wrong move is informative — try one.
+        Drag the band edges on the timeline (or type exact ages below), and
+        watch the ten visitors fall into a <strong>gap</strong> nobody covers or
+        an <strong>overlap</strong> two buckets share. A wrong move is
+        informative — try one.
       </p>
+
+      <BucketAxis buckets={buckets} onEdit={updateBucket} />
 
       <TaskBand
         testidPrefix="lab-bucket-task"
