@@ -1444,9 +1444,10 @@ summary:focus-visible {
 
 .lab-builder,
 .lab-readout {
-  border: 1px solid var(--line);
-  background: var(--paper-card);
+  border: 1px solid var(--line-faint);
+  background: var(--paper-2);
   padding: var(--s-6);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: var(--s-5);
@@ -1948,10 +1949,16 @@ summary:focus-visible {
   margin: 0;
 }
 
+/* The one primary container per exercise: a single raised paper sheet. Nested
+   instrument/readout panels are recessed insets (below), not equal-weight
+   boxes — so the screen reads as one surface with depth, not a stack of peer
+   rectangles (output-04 de-card). */
 .lab-exercise {
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-soft);
   background: var(--paper-card);
   padding: var(--s-6);
+  border-radius: 16px;
+  box-shadow: 0 14px 34px rgba(70, 45, 30, 0.06);
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
@@ -2957,9 +2964,10 @@ summary:focus-visible {
 
 .lab-channel-shelf,
 .lab-channel-readout {
-  border: 1px solid var(--line);
-  background: var(--paper);
+  border: 1px solid var(--line-faint);
+  background: var(--paper-2);
   padding: var(--s-4) var(--s-5);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
