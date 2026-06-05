@@ -539,6 +539,14 @@ function TaskBand({
   allDoneText: string | null;
   testidPrefix: string;
 }) {
+  /* The dormant next step, previewed under the active one so the stepper reads
+     forward like an app flow rather than a flat checklist. */
+  const activeIdx = items.findIndex((t) => t.active);
+  const nextItem =
+    activeIdx >= 0
+      ? items.slice(activeIdx + 1).find((t) => !t.done) ?? null
+      : null;
+
   return (
     <div className="lab-taskband" aria-live="polite">
       <p className="lab-taskband-key">What to settle</p>
@@ -573,6 +581,14 @@ function TaskBand({
             {active.brief}
           </p>
           <p className="lab-task-hint">{active.hint}</p>
+          {nextItem && (
+            <p className="lab-task-next">
+              <span className="lab-task-next-key" aria-hidden="true">
+                Then
+              </span>
+              {nextItem.title}
+            </p>
+          )}
         </div>
       ) : allDoneText ? (
         <p className="lab-task-pass">{allDoneText}</p>
