@@ -1657,6 +1657,18 @@ function ShipReviewExercise({ num }: { num: number }) {
   const setDiagnosis = (id: string, d: ReviewDiagnosis) =>
     setAnswers((prev) => ({ ...prev, [id]: d }));
 
+  /* A live review tray: how the reviewer has currently triaged the draft. It
+     fills as you classify and makes restraint visible — a real review ends with
+     a clean item and an out-of-scope one, not everything flagged. */
+  const tray = { problem: 0, clean: 0, scope: 0, pending: 0 };
+  for (const el of reviewElements) {
+    const a = answers[el.id];
+    if (a === null) tray.pending += 1;
+    else if (a === "fine") tray.clean += 1;
+    else if (a === "boundary") tray.scope += 1;
+    else tray.problem += 1;
+  }
+
   return (
     <ExerciseFrame
       num={num}
@@ -1755,6 +1767,25 @@ function ShipReviewExercise({ num }: { num: number }) {
           );
         })}
       </ol>
+
+      <div className="lab-review-tray" aria-live="polite" data-testid="lab-review-tray">
+        <span className="lab-review-tray-key">Review tray</span>
+        <span className="lab-review-tray-chip lab-review-tray-chip--problem">
+          <strong>{tray.problem}</strong> answer-choice problem
+          {tray.problem === 1 ? "" : "s"}
+        </span>
+        <span className="lab-review-tray-chip lab-review-tray-chip--clean">
+          <strong>{tray.clean}</strong> clean
+        </span>
+        <span className="lab-review-tray-chip lab-review-tray-chip--scope">
+          <strong>{tray.scope}</strong> out of scope
+        </span>
+        {tray.pending > 0 && (
+          <span className="lab-review-tray-chip lab-review-tray-chip--pending">
+            <strong>{tray.pending}</strong> still to read
+          </span>
+        )}
+      </div>
 
       <div className="lab-exercise-actions">
         <button

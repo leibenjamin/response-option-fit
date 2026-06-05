@@ -3918,6 +3918,52 @@ summary:focus-visible {
   gap: var(--s-3);
   counter-reset: none;
 }
+
+/* The live review tray: a running triage of the draft that makes the review
+   feel like a professional pass and keeps restraint visible. */
+.lab-review-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper-2);
+  border: 1px solid var(--line-faint);
+  border-radius: 12px;
+}
+.lab-review-tray-key {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-right: var(--s-1);
+}
+.lab-review-tray-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.lab-review-tray-chip strong {
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+.lab-review-tray-chip--problem {
+  border-color: var(--accent-soft);
+  background: var(--accent-paper);
+}
+.lab-review-tray-chip--problem strong {
+  color: var(--accent-2);
+}
+.lab-review-tray-chip--pending {
+  color: var(--ink-mute);
+}
 .lab-review-item {
   border: 1px solid var(--line);
   background: var(--paper);

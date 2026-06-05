@@ -729,6 +729,13 @@ test.describe("Response Option Fit Lab - desktop", () => {
     for (const [el, d] of calls) {
       await page.getByTestId(`lab-review-choice-${el}-${d}`).click();
     }
+    /* The live review tray triages the draft as it is classified: four
+       answer-choice problems, one clean, one out of scope — restraint made
+       visible (a good review does not flag everything). */
+    const tray = page.getByTestId("lab-review-tray");
+    await expect(tray).toContainText("4 answer-choice problems");
+    await expect(tray).toContainText("1 clean");
+    await expect(tray).toContainText("1 out of scope");
     await page.getByTestId("lab-review-check").click();
     await expect(page.getByTestId("lab-review-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E5")).toBeVisible();
