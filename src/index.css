@@ -5219,6 +5219,33 @@ summary:focus-visible {
   --mo-2: 220ms;
   --mo-3: 340ms;
   --mo-4: 460ms;
+  /* Consequence-motion aliases (output-04 §4): a confirm beat, a causality
+     beat, and a reveal beat. Mapped onto the existing durations so the whole
+     app shares one motion grammar. */
+  --mo-confirm: var(--mo-1);
+  --mo-causality: var(--mo-2);
+  --mo-reveal: var(--mo-3);
+}
+
+/* Consequence easing: when a visitor's recorded landing changes, the row's
+   state colours should ease in rather than snap, so the reader WATCHES the
+   answer move instead of just re-reading it (the diagnosis's most uniform
+   delight gap). CSS-only and guarded by no-preference, so reduced-motion users
+   get the instant state change with no travel. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .lab-cast-row,
+  .lab-channel-cast-row,
+  .lab-fp-row,
+  .lab-hero-chip,
+  .lab-label-row,
+  .lab-oat-row,
+  .lab-order-row,
+  .lab-quant-row {
+    transition:
+      background-color var(--mo-causality) var(--mo-ease),
+      border-color var(--mo-causality) var(--mo-ease),
+      color var(--mo-causality) var(--mo-ease);
+  }
 }
 
 @keyframes mo-fade-up {

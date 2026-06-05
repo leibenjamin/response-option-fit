@@ -397,7 +397,11 @@ function HeroProof() {
       </div>
       <p className="lab-hero-headline" aria-live="polite" data-testid="lab-hero-headline">
         <span className="lab-hero-recorded">
-          Recorded: <strong>{recorded} of 5</strong> satisfied
+          Recorded:{" "}
+          <strong>
+            <AnimatedNumber value={recorded} duration={420} ariaLabel={`${recorded}`} /> of 5
+          </strong>{" "}
+          satisfied
         </span>
         <span className="lab-hero-sep" aria-hidden="true">·</span>
         <span className="lab-hero-true">
