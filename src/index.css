@@ -596,13 +596,103 @@ summary:focus-visible {
 
 /* Exit artifact — the closing role-arc payoff at the end of #walk/done. */
 
-/* First-screen byline: who made this and the proof trail, kept deliberately
-   quiet (small mono, muted) so it informs a cold hirer without turning the hero
-   into a resume. */
+/* ===================== LAB ROUTE HEAD (intro + opening hook) =====================
+   The first screen is a two-column hero on desktop — a verbal identity column
+   (eyebrow, serif title, subtitle, orientation, byline) beside the live
+   "catchment" hook card — collapsing to one column (hook kept high) on
+   tablet/phone. The flat three-group DOM (lead / hook / rest) keeps tab and
+   screen-reader order correct at every width; CSS grid handles the desktop
+   visual. This restores the route-head scaffold that was dropped in the
+   a74284f old-exhibit retirement prune (the H1/eyebrow/lede/meta had been
+   falling back to browser defaults) and rebuilds it as the two-up hero. */
+.lab-route {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+
+.lab-route-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(360px, 38%, 480px);
+  grid-template-areas:
+    "lead hook"
+    "rest hook";
+  align-items: start;
+  column-gap: var(--s-7);
+  row-gap: var(--s-5);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: var(--s-6);
+}
+.lab-route-lead {
+  grid-area: lead;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.lab-route-rest {
+  grid-area: rest;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.lab-route-eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.lab-route-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(33px, 3.2vw, 50px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+/* The de-heating subtitle under the title — clarifies the hot headline for
+   literal/official-statistics readers without dulling it. Kept sans on
+   purpose (the serif title + serif hook stem carry the editorial voice). */
+.lab-route-subtitle {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 46ch;
+}
+
+/* Orientation paragraph: denser/darker than the subtitle so the two sans
+   paragraphs read as a hierarchy, not a blur. */
+.lab-route-lede {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 56ch;
+}
+
+.lab-route-meta {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 60ch;
+}
+
+/* First-screen byline: who made this + the proof trail, kept deliberately
+   quiet (small mono, muted) so it informs a cold hirer without turning the
+   hero into a resume. */
 .lab-route-proofline {
-  /* Bottom margin clears the sticky contents rail below: without it the rail's
-     solid background (z-index 20) painted over this byline's last line. */
-  margin: var(--s-3) 0 var(--s-4);
+  margin: var(--s-1) 0 0;
   font-family: var(--font-mono);
   font-size: 11.5px;
   line-height: 1.55;
@@ -613,7 +703,6 @@ summary:focus-visible {
   color: var(--ink-2);
   font-weight: 600;
 }
-
 .lab-route-proofline a {
   display: inline-flex;
   align-items: center;
@@ -621,14 +710,28 @@ summary:focus-visible {
   vertical-align: middle;
 }
 
-/* The de-heating subtitle under the title — clarifies the hot headline for
-   literal/official-statistics readers without dulling it. */
-.lab-route-subtitle {
-  margin: calc(var(--s-2) * -1) 0 0;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  max-width: 60ch;
+/* The hook is the hero's right column: fill the column and drop the
+   stand-alone margin/measure it carries when it lays out on its own. */
+.lab-route-head .lab-hook {
+  grid-area: hook;
+  margin: 0;
+  max-width: none;
+  width: 100%;
+  align-self: start;
+}
+
+/* Tablet / phone: one column, hook kept high via the flat DOM order. */
+@media (max-width: 880px) {
+  .lab-route-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    padding-bottom: var(--s-5);
+  }
+  .lab-route-title {
+    font-size: clamp(30px, 7vw, 44px);
+    max-width: 18ch;
+  }
 }
 
 /* ===================== OPENING HOOK — "the catchment" =====================

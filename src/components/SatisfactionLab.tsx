@@ -547,8 +547,8 @@ function HeroProof() {
       </div>
 
       <p className="lab-hook-bridge">
-        That was one tap, about you. The lab does it on purpose — to a fixed cast
-        of five — then shows you how to stop it.
+        That was one tap, about you. The lab does it on purpose — then shows you
+        how to stop it.
       </p>
 
       <span className="lab-hook-note lab-cast-note">
@@ -571,45 +571,51 @@ export function SatisfactionLab() {
   return (
     <main id="survey-lab" className="lab-route" aria-labelledby="survey-lab-title">
       <header className="lab-route-head">
-        <p className="lab-route-eyebrow">Response options · practice · preview</p>
-        <h1 className="lab-route-title" id="survey-lab-title" tabIndex={-1}>
-          The quiet ways a survey lies.
-        </h1>
-        <p className="lab-route-subtitle lab-selectable">
-          A hands-on lab about how answer choices can distort what gets recorded
-          — before analysis ever begins.
-        </p>
+        <div className="lab-route-lead">
+          <p className="lab-route-eyebrow">
+            Survey design · response-option fit
+          </p>
+          <h1 className="lab-route-title" id="survey-lab-title" tabIndex={-1}>
+            The quiet ways a survey lies.
+          </h1>
+          <p className="lab-route-subtitle lab-selectable">
+            A hands-on lab about how answer choices can distort what gets
+            recorded — before analysis ever begins.
+          </p>
+        </div>
 
         <HeroProof />
 
-        <p className="lab-route-lede">
-          Each exercise below is one real failure mode in how survey answer
-          choices are written. They are all framed as surveys from one fictional
-          coffee shop, Roast &amp; Brew, so the only thing changing from exercise
-          to exercise is the response-option design, not the domain. Tinker with the
-          controls, watch a fixed cast of people flow through, and read the
-          consequence. Wrong moves are part of the practice — they show what
-          would have shipped. The closing map shows what you covered (and
-          what&rsquo;s still out there).
-        </p>
-        <p className="lab-route-meta">
-          Twelve hands-on exercises · ≈35 minutes · any order. The people in
-          each one are authored, illustrative cases — a fixed cast to reason
-          about, not real respondents or survey statistics.
-        </p>
-        <p className="lab-route-proofline">
-          Built by <strong>Ben Lei</strong> — a static React + TypeScript exhibit
-          with authored interactions, source-bounded claims, and Playwright +
-          accessibility checks.{" "}
-          <a href="#colophon">Colophon</a> ·{" "}
-          <a
-            href="https://github.com/leibenjamin/response-option-fit"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-        </p>
+        <div className="lab-route-rest">
+          <p className="lab-route-lede">
+            Each exercise below is one real failure mode in how survey answer
+            choices are written. They are all framed as surveys from one
+            fictional coffee shop, Roast &amp; Brew, so the only thing changing
+            from exercise to exercise is the response-option design, not the
+            domain. Tinker with the controls, watch a fixed cast of people flow
+            through, and read the consequence. Wrong moves are part of the
+            practice — they show what would have shipped. The closing map shows
+            what you covered (and what&rsquo;s still out there).
+          </p>
+          <p className="lab-route-meta">
+            Twelve hands-on exercises · ≈35 minutes · any order. The people in
+            each one are authored, illustrative cases — a fixed cast to reason
+            about, not real respondents or survey statistics.
+          </p>
+          <p className="lab-route-proofline">
+            Built by <strong>Ben Lei</strong> — a static React + TypeScript
+            exhibit with authored interactions, source-bounded claims, and
+            Playwright + accessibility checks.{" "}
+            <a href="#colophon">Colophon</a> ·{" "}
+            <a
+              href="https://github.com/leibenjamin/response-option-fit"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+          </p>
+        </div>
       </header>
 
       <LabContents />
