@@ -613,7 +613,13 @@ summary:focus-visible {
 
 .lab-route-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(360px, 38%, 480px);
+  /* The TEXT column is capped to hug its measure and the HOOK column is the
+     greedy one that fills to the right edge. (The reverse — greedy text, capped
+     hook — pooled the text's leftover slack against the gutter, making the
+     inter-column gap read far wider than the outer page margins.) Now the gap is
+     just the column-gap, the hook still lines up with the exercise cards below,
+     and both hero edges stay flush with the content column. */
+  grid-template-columns: minmax(0, 560px) minmax(400px, 1fr);
   grid-template-areas:
     "lead hook"
     "rest hook";
@@ -622,7 +628,7 @@ summary:focus-visible {
      stays put instead of ballooning. */
   grid-template-rows: auto 1fr;
   align-items: start;
-  column-gap: var(--s-7);
+  column-gap: var(--s-6);
   row-gap: var(--s-5);
   border-bottom: 1px solid var(--line);
   padding-bottom: var(--s-5);
@@ -684,14 +690,15 @@ summary:focus-visible {
 }
 
 /* Orientation paragraph: serif so the left "body" shares the warm editorial
-   voice of the hook's serif readout across the gutter. */
+   voice of the hook's serif readout across the gutter. ~64ch fills the text
+   column so the channel to the hook stays as tight as the page margins. */
 .lab-route-lede {
   margin: 0;
   font-family: var(--font-serif);
   font-size: 17px;
   line-height: 1.55;
   color: var(--ink-2);
-  max-width: 54ch;
+  max-width: 64ch;
 }
 
 .lab-route-meta {
@@ -727,22 +734,29 @@ summary:focus-visible {
 }
 
 /* The hook is the hero's right column: fill the column and drop the
-   stand-alone margin/measure it carries when it lays out on its own. */
+   stand-alone measure it carries when it lays out on its own. The top margin
+   drops the card to the headline's baseline so it clears the absolutely
+   positioned Settings button in the top-right corner. */
 .lab-route-head .lab-hook {
   grid-area: hook;
-  margin: 0;
+  margin: var(--s-5) 0 0;
   max-width: none;
   width: 100%;
   align-self: start;
 }
 
-/* Tablet / phone: one column, hook kept high via the flat DOM order. */
+/* Tablet / phone: one column, hook kept high via the flat DOM order. The
+   single-column flow already clears the Settings button, so drop the desktop
+   top-margin and let the flex gap space the hook. */
 @media (max-width: 880px) {
   .lab-route-head {
     display: flex;
     flex-direction: column;
     gap: var(--s-5);
     padding-bottom: var(--s-5);
+  }
+  .lab-route-head .lab-hook {
+    margin-top: 0;
   }
   .lab-route-title {
     font-size: clamp(30px, 7vw, 44px);
