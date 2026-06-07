@@ -617,23 +617,37 @@ summary:focus-visible {
   grid-template-areas:
     "lead hook"
     "rest hook";
+  /* Row 1 hugs the lead; row 2 (1fr) absorbs any slack at the bottom — so when
+     the hook spans both rows and runs taller than the text, the lead↔rest gap
+     stays put instead of ballooning. */
+  grid-template-rows: auto 1fr;
   align-items: start;
   column-gap: var(--s-7);
   row-gap: var(--s-5);
   border-bottom: 1px solid var(--line);
-  padding-bottom: var(--s-6);
+  padding-bottom: var(--s-5);
 }
 .lab-route-lead {
   grid-area: lead;
   display: flex;
   flex-direction: column;
-  gap: var(--s-3);
+  gap: var(--s-2);
 }
 .lab-route-rest {
   grid-area: rest;
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
+}
+/* Quiet metadata footer for the left column: logistics + byline, set off from
+   the orientation by a hairline so the fine print reads as deliberate
+   metadata, not more body copy. */
+.lab-route-foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-faint);
 }
 
 .lab-route-eyebrow {
@@ -649,8 +663,8 @@ summary:focus-visible {
   margin: 0;
   font-family: var(--font-serif);
   font-weight: 500;
-  font-size: clamp(33px, 3.2vw, 50px);
-  line-height: 1.05;
+  font-size: clamp(34px, 3.5vw, 54px);
+  line-height: 1.04;
   letter-spacing: -0.01em;
   color: var(--ink);
   max-width: 15ch;
@@ -659,23 +673,25 @@ summary:focus-visible {
 
 /* The de-heating subtitle under the title — clarifies the hot headline for
    literal/official-statistics readers without dulling it. Kept sans on
-   purpose (the serif title + serif hook stem carry the editorial voice). */
+   purpose (the serif title + serif lede/hook stem carry the editorial voice).
+   A touch more air under the big title than the eyebrow-to-title hug above. */
 .lab-route-subtitle {
-  margin: 0;
+  margin: var(--s-1) 0 0;
   font-size: 17px;
   line-height: 1.5;
   color: var(--ink-soft);
   max-width: 46ch;
 }
 
-/* Orientation paragraph: denser/darker than the subtitle so the two sans
-   paragraphs read as a hierarchy, not a blur. */
+/* Orientation paragraph: serif so the left "body" shares the warm editorial
+   voice of the hook's serif readout across the gutter. */
 .lab-route-lede {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.6;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.55;
   color: var(--ink-2);
-  max-width: 56ch;
+  max-width: 54ch;
 }
 
 .lab-route-meta {
@@ -692,7 +708,7 @@ summary:focus-visible {
    quiet (small mono, muted) so it informs a cold hirer without turning the
    hero into a resume. */
 .lab-route-proofline {
-  margin: var(--s-1) 0 0;
+  margin: 0;
   font-family: var(--font-mono);
   font-size: 11.5px;
   line-height: 1.55;
@@ -745,7 +761,7 @@ summary:focus-visible {
   padding: var(--s-5);
   background: var(--paper-card);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   box-shadow: 0 12px 30px rgba(70, 45, 30, 0.07);
   display: flex;
   flex-direction: column;

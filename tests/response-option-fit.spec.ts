@@ -818,6 +818,11 @@ test.describe("Response Option Fit Lab - desktop", () => {
     page,
     context
   }) => {
+    /* By far the heaviest test: it solves all twelve exercises, scrolls the whole
+       page, runs two full axe scans, and exercises the PNG/Markdown export. On
+       WebKit under load that lands ~27–30s against the 30s default and flakes on
+       a timeout. Mark it slow (triples the budget) — coverage is unchanged. */
+    test.slow();
     /* Clipboard permissions are a Chromium-only grant — Firefox throws on it and
        WebKit poisons the context (its later newPage rejects the unknown
        permission, which breaks the axe scan). Grant only in Chromium; the app's
