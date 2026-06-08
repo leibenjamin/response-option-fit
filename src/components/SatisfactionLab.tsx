@@ -503,10 +503,6 @@ function HeroProof() {
           <span className="lab-hook-axis-hint">tap or drag to your honest spot</span>
           <span>Great</span>
         </p>
-        <p className="lab-hook-legend" aria-hidden="true">
-          <span className="lab-hook-key lab-hook-key--you">your honest spot</span>
-          <span className="lab-hook-key lab-hook-key--rec">what the form keeps</span>
-        </p>
       </div>
 
       <p
@@ -546,11 +542,6 @@ function HeroProof() {
         </span>
       </div>
 
-      <p className="lab-hook-bridge">
-        That was one tap, about you. The lab does it on purpose — then shows you
-        how to stop it.
-      </p>
-
       <span className="lab-hook-note lab-cast-note">
         Your placement, on this device only · no survey data, no estimates
       </span>
@@ -572,51 +563,35 @@ export function SatisfactionLab() {
     <main id="survey-lab" className="lab-route" aria-labelledby="survey-lab-title">
       <header className="lab-route-head">
         <div className="lab-route-lead">
-          <p className="lab-route-eyebrow">
-            Survey design · response-option fit
-          </p>
+          <p className="lab-route-eyebrow">An interactive survey-design lab</p>
           <h1 className="lab-route-title" id="survey-lab-title" tabIndex={-1}>
             The quiet ways a survey lies.
           </h1>
           <p className="lab-route-subtitle lab-selectable">
-            A hands-on lab about how answer choices can distort what gets
-            recorded — before analysis ever begins.
+            See how a survey&rsquo;s answer choices quietly distort what gets
+            recorded — then learn to catch it.
           </p>
+          <details className="lab-route-more">
+            <summary className="lab-route-more-summary">How this works</summary>
+            <div className="lab-route-more-body lab-selectable">
+              <p>
+                Twelve short exercises, each a different way answer choices bend
+                what a survey records. Every one is a survey from the same
+                fictional coffee shop, so only the answer design changes — never
+                the topic. Move the controls, watch a small fixed cast answer,
+                and read the consequence. A closing map tracks what you covered.
+              </p>
+              <p>
+                About 35 minutes, in any order. The people in each exercise are
+                authored, illustrative cases — a fixed cast to reason about, not
+                real respondents or survey statistics. Nothing you do is
+                uploaded or analyzed.
+              </p>
+            </div>
+          </details>
         </div>
 
         <HeroProof />
-
-        <div className="lab-route-rest">
-          <p className="lab-route-lede">
-            Each exercise is one real way answer choices bend what a survey
-            records. They are all framed as surveys from one fictional coffee
-            shop, Roast &amp; Brew, so only the response-option design changes —
-            never the topic. Tinker with the controls, watch a fixed cast flow
-            through, and read the consequence; wrong moves are part of the
-            practice, and show what would have shipped. A closing map tracks
-            what you covered.
-          </p>
-          <div className="lab-route-foot">
-            <p className="lab-route-meta">
-              Twelve hands-on exercises · ≈35 minutes · any order. The people in
-              each one are authored, illustrative cases — a fixed cast to reason
-              about, not real respondents or survey statistics.
-            </p>
-            <p className="lab-route-proofline">
-              Built by <strong>Ben Lei</strong> — a static React + TypeScript
-              exhibit with authored interactions, source-bounded claims, and
-              Playwright + accessibility checks.{" "}
-              <a href="#colophon">Colophon</a> ·{" "}
-              <a
-                href="https://github.com/leibenjamin/response-option-fit"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub
-              </a>
-            </p>
-          </div>
-        </div>
       </header>
 
       <LabContents />

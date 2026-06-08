@@ -613,23 +613,16 @@ summary:focus-visible {
 
 .lab-route-head {
   display: grid;
-  /* The TEXT column is capped to hug its measure and the HOOK column is the
-     greedy one that fills to the right edge. (The reverse — greedy text, capped
-     hook — pooled the text's leftover slack against the gutter, making the
-     inter-column gap read far wider than the outer page margins.) Now the gap is
-     just the column-gap, the hook still lines up with the exercise cards below,
-     and both hero edges stay flush with the content column. */
-  grid-template-columns: minmax(0, 560px) minmax(400px, 1fr);
-  grid-template-areas:
-    "lead hook"
-    "rest hook";
-  /* Row 1 hugs the lead; row 2 (1fr) absorbs any slack at the bottom — so when
-     the hook spans both rows and runs taller than the text, the lead↔rest gap
-     stays put instead of ballooning. */
-  grid-template-rows: auto 1fr;
+  /* Two-up hero: a capped verbal column (title + one clarifier + a collapsed
+     "how this works") beside the live catchment hook, which fills to the right
+     edge and stays flush with the exercise cards below. The orientation prose,
+     metadata, and byline that used to stack a second row under the lead have
+     moved into the disclosure (depth on demand) and the corner masthead, so the
+     hero is now a single clean row. */
+  grid-template-columns: minmax(0, 480px) minmax(400px, 1fr);
+  grid-template-areas: "lead hook";
   align-items: start;
   column-gap: var(--s-6);
-  row-gap: var(--s-5);
   border-bottom: 1px solid var(--line);
   padding-bottom: var(--s-5);
 }
@@ -639,21 +632,57 @@ summary:focus-visible {
   flex-direction: column;
   gap: var(--s-2);
 }
-.lab-route-rest {
-  grid-area: rest;
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
+
+/* Progressive disclosure for the orientation that used to be a 6-block text
+   wall: the default first screen is title + one clarifier; the curious open
+   "How this works" for the coffee-shop framing, logistics, and honesty caveat.
+   Keeps the intro to ~2 lines so attention does not wander before the hook. */
+.lab-route-more {
+  margin-top: var(--s-2);
+  max-width: 46ch;
 }
-/* Quiet metadata footer for the left column: logistics + byline, set off from
-   the orientation by a hairline so the fine print reads as deliberate
-   metadata, not more body copy. */
-.lab-route-foot {
+.lab-route-more-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 28px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  cursor: pointer;
+  list-style: none;
+  width: fit-content;
+}
+.lab-route-more-summary::-webkit-details-marker {
+  display: none;
+}
+.lab-route-more-summary::before {
+  content: "▸";
+  font-size: 10px;
+  transition: transform var(--mo-confirm, 140ms) ease;
+}
+.lab-route-more[open] .lab-route-more-summary::before {
+  transform: rotate(90deg);
+}
+.lab-route-more-summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.lab-route-more-body {
+  margin-top: var(--s-3);
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
-  padding-top: var(--s-4);
-  border-top: 1px solid var(--line-faint);
+  gap: var(--s-3);
+}
+.lab-route-more-body p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 60ch;
 }
 
 .lab-route-eyebrow {
@@ -686,57 +715,13 @@ summary:focus-visible {
   font-size: 17px;
   line-height: 1.5;
   color: var(--ink-soft);
-  max-width: 46ch;
-}
-
-/* Orientation paragraph: serif so the left "body" shares the warm editorial
-   voice of the hook's serif readout across the gutter. ~64ch fills the text
-   column so the channel to the hook stays as tight as the page margins. */
-.lab-route-lede {
-  margin: 0;
-  font-family: var(--font-serif);
-  font-size: 17px;
-  line-height: 1.55;
-  color: var(--ink-2);
-  max-width: 64ch;
-}
-
-.lab-route-meta {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.03em;
-  line-height: 1.6;
-  color: var(--ink-soft);
-  max-width: 60ch;
-}
-
-/* First-screen byline: who made this + the proof trail, kept deliberately
-   quiet (small mono, muted) so it informs a cold hirer without turning the
-   hero into a resume. */
-.lab-route-proofline {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  line-height: 1.55;
-  color: var(--ink-mute);
-  max-width: 72ch;
-}
-.lab-route-proofline strong {
-  color: var(--ink-2);
-  font-weight: 600;
-}
-.lab-route-proofline a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  vertical-align: middle;
+  max-width: 44ch;
 }
 
 /* The hook is the hero's right column: fill the column and drop the
    stand-alone measure it carries when it lays out on its own. The top margin
    drops the card to the headline's baseline so it clears the absolutely
-   positioned Settings button in the top-right corner. */
+   positioned corner masthead. */
 .lab-route-head .lab-hook {
   grid-area: hook;
   margin: var(--s-5) 0 0;
@@ -922,38 +907,6 @@ summary:focus-visible {
   letter-spacing: 0.01em;
   color: var(--ink-soft);
 }
-.lab-hook-legend {
-  margin: 2px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-3);
-  font-size: 11.5px;
-  color: var(--ink-mute);
-}
-.lab-hook-key {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-.lab-hook-key::before {
-  content: "";
-  display: inline-block;
-  flex: none;
-}
-.lab-hook-key--you::before {
-  width: 13px;
-  height: 13px;
-  border-radius: 999px;
-  background: var(--accent);
-  border: 2px solid var(--paper-card);
-  box-shadow: 0 1px 3px rgba(70, 45, 30, 0.3);
-}
-.lab-hook-key--rec::before {
-  width: 9px;
-  height: 9px;
-  background: var(--accent-2);
-  transform: rotate(45deg);
-}
 .lab-hook-readout {
   margin: var(--s-1) 0 0;
   font-family: var(--font-serif);
@@ -1006,12 +959,6 @@ summary:focus-visible {
   text-transform: uppercase;
   color: var(--ink-mute);
 }
-.lab-hook-bridge {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-}
 .lab-hook-note {
   margin: 0;
 }
@@ -1056,9 +1003,7 @@ summary:focus-visible {
     outline-offset: -2px;
   }
   .lab-hook-handle,
-  .lab-hook-recorded,
-  .lab-hook-key--you::before,
-  .lab-hook-key--rec::before {
+  .lab-hook-recorded {
     background: Canvas;
     border: 1px solid CanvasText;
   }
@@ -1087,6 +1032,68 @@ summary:focus-visible {
    export / import / clear and a read-only view of exactly what is stored.
    (This styling was lost when the old multi-route exhibit was retired — the
    button and drawer had rendered unstyled since; restored and refreshed.) */
+/* Corner masthead: the byline + project links + the settings gear, tucked into
+   the top-right corner so they stay out of the top-to-bottom / left-to-right
+   reading flow but a cold reviewer finds "who made this" in one glance. On
+   narrow screens it collapses to the gear and the footer carries the byline +
+   links instead (so nothing is lost and the corner never overlaps the title). */
+.lab-masthead {
+  position: absolute;
+  top: var(--s-4);
+  right: var(--gutter);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+}
+.lab-masthead-by {
+  white-space: nowrap;
+}
+.lab-masthead-by strong {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.lab-masthead-links {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.lab-masthead-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.lab-masthead-link:hover,
+.lab-masthead-link:focus-visible {
+  color: var(--accent);
+  border-bottom-color: var(--accent-soft);
+}
+.lab-masthead-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+/* Inside the masthead the gear is a normal flex child, not its own absolute
+   corner element. */
+.lab-masthead .settings-button {
+  position: static;
+  top: auto;
+  right: auto;
+}
+@media (max-width: 880px) {
+  .lab-masthead-by,
+  .lab-masthead-links {
+    display: none;
+  }
+}
+
 .settings-button {
   position: absolute;
   top: var(--s-4);

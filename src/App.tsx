@@ -35,7 +35,32 @@ function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
       <a href="#survey-lab" className="skip-link" data-testid="skip-link">
         Skip to the survey lab
       </a>
-      <SettingsButton onClick={onSettingsOpen} />
+      {/* Utility masthead, tucked in the top-right corner so the byline + links
+          stay out of the top-to-bottom reading flow but a cold reviewer can find
+          who made this in one glance. On narrow screens it collapses to the gear
+          and the footer carries the byline + links instead. */}
+      <div className="lab-masthead">
+        <span className="lab-masthead-by">
+          Built by <strong>Ben Lei</strong>
+        </span>
+        <nav className="lab-masthead-links" aria-label="About this project">
+          <a
+            className="lab-masthead-link"
+            href="https://github.com/leibenjamin/response-option-fit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+          <a
+            className="lab-masthead-link"
+            href={routeToHash({ kind: "colophon" })}
+          >
+            Colophon
+          </a>
+        </nav>
+        <SettingsButton onClick={onSettingsOpen} />
+      </div>
       <Suspense
         fallback={
           <main
@@ -61,9 +86,18 @@ function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
           analyzer.
         </p>
         <p className="foot-line foot-line--quiet">
-          Built for editorial study of response-option fit.
+          Built by Ben Lei for editorial study of survey answer choices.
         </p>
         <p className="foot-line foot-line--quiet hub-foot-links">
+          <a
+            className="foot-link"
+            href="https://github.com/leibenjamin/response-option-fit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+          {" · "}
           <a className="foot-link" href={routeToHash({ kind: "colophon" })}>
             Colophon
           </a>
