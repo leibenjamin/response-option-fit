@@ -216,18 +216,20 @@ function LabContents() {
   const jumpTo = (anchor: string) => {
     const el = document.getElementById(anchor);
     if (!el) return;
-    el.scrollIntoView({
+    const liveLoop = el.querySelector<HTMLElement>(".lab-console");
+    const heading = el.querySelector<HTMLElement>("h2");
+    const target = liveLoop ?? heading ?? el;
+    if (detailsRef.current) detailsRef.current.open = false;
+    target.scrollIntoView({
       behavior: prefersReducedMotion() ? "auto" : "smooth",
       block: "start"
     });
-    /* Move focus to the heading so keyboard / screen-reader users land where
-       the scroll did, without yanking the viewport a second time. */
-    const heading = el.querySelector<HTMLElement>("h2");
-    const target = heading ?? el;
+    /* Move focus to the live loop when one exists, so jump links land on the
+       usable surface. The loop is labelled by the exercise title, so screen
+       readers still announce the exercise context. */
     target.setAttribute("tabindex", "-1");
     target.focus({ preventScroll: true });
     setActiveAnchor(anchor);
-    if (detailsRef.current) detailsRef.current.open = false;
   };
 
   const activeItem = LAB_NAV.find((n) => n.anchor === activeAnchor) ?? null;
@@ -497,6 +499,12 @@ function HeroProof() {
             aria-hidden="true"
             style={{ left: `${feel}%` }}
           />
+          <span
+            className={`lab-hook-tap-cue ${touched ? "is-touched" : ""}`}
+            aria-hidden="true"
+            data-testid="lab-hook-tap-cue"
+            style={{ left: `${feel}%` }}
+          />
         </div>
         <p className="lab-hook-axis" aria-hidden="true">
           <span>Rough</span>
@@ -656,6 +664,14 @@ type LadderActive = {
   hint: string;
 };
 
+function liveLoopProps(num: number) {
+  return {
+    "aria-labelledby": `lab-exercise-${num}-title`,
+    "data-testid": `lab-live-loop-${num}`,
+    tabIndex: -1
+  };
+}
+
 function TaskBand({
   items,
   active,
@@ -711,14 +727,25 @@ function TaskBand({
             {active.brief}
           </p>
           <p className="lab-task-hint">{active.hint}</p>
-          {nextItem && (
-            <p className="lab-task-next">
-              <span className="lab-task-next-key" aria-hidden="true">
-                Then
-              </span>
-              {nextItem.title}
-            </p>
-          )}
+          <details className="lab-task-details">
+            <summary>More guidance</summary>
+            <div className="lab-task-details-body">
+              <p>
+                <strong>Full check:</strong> {active.brief}
+              </p>
+              <p>
+                <strong>Live hint:</strong> {active.hint}
+              </p>
+              {nextItem && (
+                <p className="lab-task-next">
+                  <span className="lab-task-next-key" aria-hidden="true">
+                    Then
+                  </span>
+                  {nextItem.title}
+                </p>
+              )}
+            </div>
+          </details>
         </div>
       ) : allDoneText ? (
         <p className="lab-task-pass">{allDoneText}</p>
@@ -774,14 +801,13 @@ function ScaleBuilderExercise({ num }: { num: number }) {
       verb="tinker"
       nextTeaser="Next: a clean-looking item can still ask two things at once. Don’t use “and” as your detector."
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
-            You design the answer scale for one question; five visitors answer
-            and their true feelings never change — only your options and wording
-            do. It ships today as a bare Satisfied / Dissatisfied choice with a
-            leading question, already reading <strong>4 of 5 satisfied</strong>{" "}
-            when only two truly are.
+            Five visitors answer one visit question. Their feelings never
+            change — only your wording and answer options do. The shipped draft
+            already reads <strong>4 of 5 satisfied</strong> when only two truly
+            are.
           </p>
 
       <TaskBand
@@ -1534,7 +1560,7 @@ function BucketTinkerExercise({ num }: { num: number }) {
     >
       <BucketAxis buckets={buckets} onEdit={updateBucket} />
 
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             Age is asked in buckets. The starter set overlaps, skips under-18,
@@ -1773,18 +1799,16 @@ function ChannelTinkerExercise({ num }: { num: number }) {
       verb="tinker"
       nextTeaser="Next: try the standard fix, then catch why it still fails."
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             Toggle the options for &ldquo;How did you hear about us?&rdquo; Seven
-            visitors flow through — each lands on their true channel if it&rsquo;s
-            offered, else the closest wrong option, &ldquo;Other,&rdquo; or
-            nothing. The obvious keyword often points the wrong way.
+            visitors flow through. Each lands on a true channel if it exists;
+            otherwise they mis-file, write &ldquo;Other,&rdquo; or leave blank.
           </p>
           <p className="lab-console-aside lab-selectable">
-            First decide what the question <em>means</em> — first touch, most
-            influential, or every channel. A &ldquo;complete&rdquo; list is
-            downstream of that.
+            A &ldquo;complete&rdquo; list depends on the decision: per-channel
+            detail first, then online vs offline.
           </p>
 
       <TaskBand
@@ -1848,31 +1872,34 @@ function ChannelTinkerExercise({ num }: { num: number }) {
           </button>
         </section>
 
-          <div className="lab-channel-ledger" aria-label="Consequence ledger">
-            <LedgerMeter
-              label="Answer-space coverage"
-              hint="Does everyone have an option to pick? Visitors who give up hurt this. (Distinct from “coverage error” in sampling.)"
-              level={ledger.coverage}
-            />
-            <LedgerMeter
-              label="Analyst detail"
-              hint="How many answers keep the TRUE channel. Only Clean counts."
-              level={ledger.analystDetail}
-            />
-            <LedgerMeter
-              label="Mutual exclusivity"
-              hint="Could a visitor have two valid homes? A broad bucket overlapping a specific channel it covers kills it — two non-overlapping buckets don't."
-              level={ledger.exclusivity}
-            />
-            <LedgerMeter
-              label="Respondent burden"
-              hint="How long the list is to read. More options costs attention."
-              level={ledger.respondentBurden}
-            />
-          </div>
-          <p className="lab-channel-ledger-note">
-            A teaching readout, not a validated survey-quality score.
-          </p>
+          <details className="lab-disclosure-shelf lab-channel-meter-shelf">
+            <summary>Show the four meter readout</summary>
+            <div className="lab-channel-ledger" aria-label="Consequence ledger">
+              <LedgerMeter
+                label="Answer-space coverage"
+                hint="Does everyone have an option to pick? Visitors who give up hurt this. (Distinct from “coverage error” in sampling.)"
+                level={ledger.coverage}
+              />
+              <LedgerMeter
+                label="Analyst detail"
+                hint="How many answers keep the TRUE channel. Only Clean counts."
+                level={ledger.analystDetail}
+              />
+              <LedgerMeter
+                label="Mutual exclusivity"
+                hint="Could a visitor have two valid homes? A broad bucket overlapping a specific channel it covers kills it — two non-overlapping buckets don't."
+                level={ledger.exclusivity}
+              />
+              <LedgerMeter
+                label="Respondent burden"
+                hint="How long the list is to read. More options costs attention."
+                level={ledger.respondentBurden}
+              />
+            </div>
+            <p className="lab-channel-ledger-note">
+              A teaching readout, not a validated survey-quality score.
+            </p>
+          </details>
         </div>
 
         <div className="lab-console-results">
@@ -1926,9 +1953,12 @@ function ChannelTinkerExercise({ num }: { num: number }) {
                       {channelStateText[landing.state]}
                     </span>
                     {landing.state !== "clean" && (
-                      <span className="lab-channel-cast-why lab-selectable">
-                        {r.satisficeNote}
-                      </span>
+                      <details className="lab-mini-row-shelf">
+                        <summary>why</summary>
+                        <span className="lab-channel-cast-why lab-selectable">
+                          {r.satisficeNote}
+                        </span>
+                      </details>
                     )}
                   </span>
                 </li>
@@ -2009,6 +2039,7 @@ function ShipReviewExercise({ num }: { num: number }) {
       return init;
     }
   );
+  const [activeReviewId, setActiveReviewId] = useState(reviewElements[0].id);
   const [revealed, setRevealed] = useState(false);
 
   const allDiagnosed = reviewElements.every((el) => answers[el.id] !== null);
@@ -2018,8 +2049,17 @@ function ShipReviewExercise({ num }: { num: number }) {
   const exercisePassed = revealed && allPassed;
   const hasError = revealed && !allPassed;
 
-  const setDiagnosis = (id: string, d: ReviewDiagnosis) =>
+  const setDiagnosis = (id: string, d: ReviewDiagnosis) => {
     setAnswers((prev) => ({ ...prev, [id]: d }));
+    setRevealed(false);
+    const currentIndex = reviewElements.findIndex((el) => el.id === id);
+    const next =
+      reviewElements
+        .slice(currentIndex + 1)
+        .find((el) => answers[el.id] === null) ??
+      reviewElements.find((el) => el.id !== id && answers[el.id] === null);
+    if (next) setActiveReviewId(next.id);
+  };
 
   /* A live review tray: how the reviewer has currently triaged the draft. It
      fills as you classify and makes restraint visible — a real review ends with
@@ -2032,6 +2072,14 @@ function ShipReviewExercise({ num }: { num: number }) {
     else if (a === "boundary") tray.scope += 1;
     else tray.problem += 1;
   }
+  const firstWrong = reviewElements.find((el) => answers[el.id] !== el.correct);
+  const activeReview =
+    reviewElements.find((el) => el.id === activeReviewId) ??
+    firstWrong ??
+    reviewElements[0];
+  const activePicked = answers[activeReview.id];
+  const activePass = perPassed[activeReview.id];
+  const activeCardClass = !revealed ? "" : activePass ? "is-correct" : "is-wrong";
 
   return (
     <ExerciseFrame
@@ -2042,13 +2090,12 @@ function ShipReviewExercise({ num }: { num: number }) {
       modifier="ship-review"
       verb="review"
     >
-      <div className="lab-console lab-console--review">
+      <div className="lab-console lab-console--review" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             You&rsquo;re the last reviewer before this &ldquo;improved&rdquo;
-            survey ships. Diagnose each draft part with one of the four lenses —
-            or wave it through if it&rsquo;s fine. One part is a real problem
-            that isn&rsquo;t about answer choices at all.
+            survey ships. Diagnose one draft part at a time: answer-choice
+            problem, clean, or real but out of scope.
           </p>
           <p className="lab-console-rubric-key">The four lenses</p>
 
@@ -2065,96 +2112,127 @@ function ShipReviewExercise({ num }: { num: number }) {
         </div>
 
         <div className="lab-console-work lab-console-work--stack">
-      <ol className="lab-review-draft" aria-label="The draft survey">
-        {reviewElements.map((el) => {
-          const picked = answers[el.id];
-          const pass = perPassed[el.id];
-          const cardClass = !revealed
-            ? ""
-            : pass
-              ? "is-correct"
-              : "is-wrong";
-          return (
-            <li
-              key={el.id}
-              className={`lab-review-item lab-review-item--${el.kind} ${cardClass}`}
-              data-testid={`lab-review-${el.id}`}
-            >
-              <p className="lab-review-item-label">{el.label}</p>
-              <p className="lab-review-item-text lab-selectable">{el.text}</p>
-              {el.options && (
-                <ol className="lab-review-item-options lab-selectable">
-                  {el.options.map((o, i) => (
-                    <li key={i}>{o}</li>
-                  ))}
-                </ol>
-              )}
-
-              <div
-                className="lab-review-diagnose"
-                role="group"
-                aria-label={`Diagnose ${el.label}`}
-              >
-                {reviewDiagnoses.map((d) => {
-                  const isPicked = picked === d;
-                  return (
-                    <button
-                      key={d}
-                      type="button"
-                      aria-pressed={isPicked}
-                      className={`lab-review-choice lab-review-choice--${d} ${isPicked ? "is-picked" : ""}`}
-                      data-testid={`lab-review-choice-${el.id}-${d}`}
-                      onClick={() => {
-                        if (!exercisePassed) setDiagnosis(el.id, d);
-                      }}
-                      disabled={exercisePassed}
-                    >
-                      {reviewDiagnosisLabel[d]}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {revealed && (
-                <p
-                  className={`lab-review-feedback is-${pass ? "correct" : "wrong"} lab-selectable`}
-                  aria-live="polite"
-                  data-testid={`lab-review-feedback-${el.id}`}
+      <div className="lab-review-queue" data-testid="lab-review-queue">
+        <ol className="lab-review-index" aria-label="Draft parts">
+          {reviewElements.map((el) => {
+            const picked = answers[el.id];
+            const status =
+              picked == null
+                ? "pending"
+                : revealed
+                  ? perPassed[el.id]
+                    ? "correct"
+                    : "wrong"
+                  : "picked";
+            return (
+              <li key={el.id}>
+                <button
+                  type="button"
+                  className={`lab-review-index-item is-${status} ${el.id === activeReview.id ? "is-active" : ""}`}
+                  data-testid={`lab-review-index-${el.id}`}
+                  onClick={() => setActiveReviewId(el.id)}
+                  aria-current={el.id === activeReview.id ? "step" : undefined}
                 >
-                  {pass ? (
-                    el.whenRight
-                  ) : (
-                    <>
-                      <strong>Not quite.</strong> {el.hint}
-                    </>
-                  )}
-                </p>
-              )}
-            </li>
-          );
-        })}
-      </ol>
+                  <span>{el.label}</span>
+                  <strong>
+                    {picked == null ? "Unread" : reviewDiagnosisLabel[picked]}
+                  </strong>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
 
+        <section
+          className={`lab-review-item lab-review-item--${activeReview.kind} ${activeCardClass}`}
+          data-testid={`lab-review-${activeReview.id}`}
+          aria-label={`Focused review item: ${activeReview.label}`}
+        >
+          <p className="lab-review-item-label">{activeReview.label}</p>
+          <p className="lab-review-item-text lab-selectable">{activeReview.text}</p>
+          {activeReview.options && (
+            <ol className="lab-review-item-options lab-selectable">
+              {activeReview.options.map((o, i) => (
+                <li key={i}>{o}</li>
+              ))}
+            </ol>
+          )}
+
+          <div
+            className="lab-review-diagnose"
+            role="group"
+            aria-label={`Diagnose ${activeReview.label}`}
+          >
+            {reviewDiagnoses.map((d) => {
+              const isPicked = activePicked === d;
+              return (
+                <button
+                  key={d}
+                  type="button"
+                  aria-pressed={isPicked}
+                  className={`lab-review-choice lab-review-choice--${d} ${isPicked ? "is-picked" : ""}`}
+                  data-testid={`lab-review-choice-${activeReview.id}-${d}`}
+                  onClick={() => {
+                    if (!exercisePassed) setDiagnosis(activeReview.id, d);
+                  }}
+                  disabled={exercisePassed}
+                >
+                  {reviewDiagnosisLabel[d]}
+                </button>
+              );
+            })}
+          </div>
+
+          {revealed && (
+            <p
+              className={`lab-review-feedback is-${activePass ? "correct" : "wrong"} lab-selectable`}
+              aria-live="polite"
+              data-testid={`lab-review-feedback-${activeReview.id}`}
+            >
+              {activePass ? (
+                activeReview.whenRight
+              ) : (
+                <>
+                  <strong>Not quite.</strong> {activeReview.hint}
+                </>
+              )}
+            </p>
+          )}
+        </section>
+
+        <div className="lab-review-tray" aria-live="polite" data-testid="lab-review-tray">
+          <span className="lab-review-tray-key">Review tray</span>
+          <span className="lab-review-tray-chip lab-review-tray-chip--problem">
+            <strong>{tray.problem}</strong> answer-choice problem
+            {tray.problem === 1 ? "" : "s"}
+          </span>
+          <span className="lab-review-tray-chip lab-review-tray-chip--clean">
+            <strong>{tray.clean}</strong> clean
+          </span>
+          <span className="lab-review-tray-chip lab-review-tray-chip--scope">
+            <strong>{tray.scope}</strong> out of scope
+          </span>
+          {tray.pending > 0 && (
+            <span className="lab-review-tray-chip lab-review-tray-chip--pending">
+              <strong>{tray.pending}</strong> still to read
+            </span>
+          )}
         </div>
+
+        <details className="lab-disclosure-shelf lab-review-full-draft">
+          <summary>Show the whole draft</summary>
+          <ol className="lab-review-full-list">
+            {reviewElements.map((el) => (
+              <li key={el.id}>
+                <strong>{el.label}</strong>
+                <span>{el.text}</span>
+              </li>
+            ))}
+          </ol>
+        </details>
       </div>
 
-      <div className="lab-review-tray" aria-live="polite" data-testid="lab-review-tray">
-        <span className="lab-review-tray-key">Review tray</span>
-        <span className="lab-review-tray-chip lab-review-tray-chip--problem">
-          <strong>{tray.problem}</strong> answer-choice problem
-          {tray.problem === 1 ? "" : "s"}
-        </span>
-        <span className="lab-review-tray-chip lab-review-tray-chip--clean">
-          <strong>{tray.clean}</strong> clean
-        </span>
-        <span className="lab-review-tray-chip lab-review-tray-chip--scope">
-          <strong>{tray.scope}</strong> out of scope
-        </span>
-        {tray.pending > 0 && (
-          <span className="lab-review-tray-chip lab-review-tray-chip--pending">
-            <strong>{tray.pending}</strong> still to read
-          </span>
-        )}
+        </div>
       </div>
 
       <div className="lab-exercise-actions">
@@ -2162,7 +2240,10 @@ function ShipReviewExercise({ num }: { num: number }) {
           type="button"
           className="lab-action-button"
           data-testid="lab-review-check"
-          onClick={() => setRevealed(true)}
+          onClick={() => {
+            setRevealed(true);
+            if (!allPassed && firstWrong) setActiveReviewId(firstWrong.id);
+          }}
           disabled={!allDiagnosed || exercisePassed}
         >
           {exercisePassed
@@ -2259,14 +2340,12 @@ function ScaleLengthExercise({ num }: { num: number }) {
       verb="tinker"
       nextTeaser="Next: Neutral is not a junk drawer. Give the non-answers their own homes."
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
-            Length is the <em>last</em> scale decision — what you&rsquo;re
-            measuring, the endpoints, and whether there&rsquo;s a midpoint are
-            already settled, so the only knob left is how many points. Six
-            visitors with real in-between feelings. More points <em>feels</em>{" "}
-            more precise — commit a guess before the meters reveal, then tinker.
+            The construct, endpoints, and midpoint are settled. Only the number
+            of scale points is left. Six visitors have in-between feelings; more
+            points feels more precise, but may not be.
           </p>
 
       <TaskBand
@@ -2465,7 +2544,7 @@ function OatMilkExercise({ num }: { num: number }) {
       verb="compare"
       nextTeaser="Next: the numbers look tidy in the export. The middle still has no shared meaning."
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             Satisfaction with the new oat-milk drinks, on a five-point scale.
@@ -2536,9 +2615,12 @@ function OatMilkExercise({ num }: { num: number }) {
       </div>
 
         <div className="lab-console-results">
-      <p className="lab-oat-note lab-selectable" aria-live="polite">
-        {design.note}
-      </p>
+      <details className="lab-disclosure-shelf lab-oat-note" data-testid="lab-oat-note-shelf">
+        <summary>Read the routing consequence</summary>
+        <p className="lab-selectable" aria-live="polite">
+          {design.note}
+        </p>
+      </details>
 
       <ul className="lab-oat-cast" aria-label="Where each visitor lands">
         {oatMilkCast.map((v) => {
@@ -2663,7 +2745,7 @@ function FalsePremiseExercise({ num }: { num: number }) {
       verb="gate"
       nextTeaser="Next: make the export safe before analysis starts. One boundary value can put a person in two places."
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             The app asks{" "}
@@ -2862,7 +2944,7 @@ function AcquiescenceExercise({ num }: { num: number }) {
       verb="compare"
       nextTeaser="Next: commit before you peek. How many scale points are enough?"
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             &ldquo;The barista was friendly&rdquo; — agree or disagree? Six
@@ -3077,7 +3159,7 @@ function VerbalLabelsExercise({ num }: { num: number }) {
       verb="label"
       nextTeaser="Next: two people visit four times. The words still disagree."
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             A five-point visit rating. A bare numeric scale looks tidy, but with
@@ -3168,9 +3250,12 @@ function VerbalLabelsExercise({ num }: { num: number }) {
             </li>
           ))}
         </ol>
-        <p className="lab-label-note lab-selectable" aria-live="polite">
-          {labelScaleNote(slots)}
-        </p>
+        <details className="lab-disclosure-shelf lab-label-note" data-testid="lab-label-note-shelf">
+          <summary>Read what the ruler is doing</summary>
+          <p className="lab-selectable" aria-live="polite">
+            {labelScaleNote(slots)}
+          </p>
+        </details>
       </section>
 
       <ul className="lab-label-cast" aria-label="Where each visitor lands">
@@ -3196,22 +3281,25 @@ function VerbalLabelsExercise({ num }: { num: number }) {
         })}
       </ul>
 
-      <div className="lab-channel-ledger" aria-label="Readouts">
-        <LedgerMeter
-          label="Middle defined"
-          hint={`${invented} visitor(s) still have to invent an unlabeled point.`}
-          level={invented === 0 ? "high" : "low"}
-        />
-        <LedgerMeter
-          label="Words balanced"
-          hint={
-            allMiddleVerbal
-              ? `${pulled} visitor(s) are being nudged by positive label wording.`
-              : "Balance cannot be judged until every point has words."
-          }
-          level={pulled === 0 && balanced ? "high" : "low"}
-        />
-      </div>
+      <details className="lab-disclosure-shelf lab-label-meter-shelf">
+        <summary>Show meter readout</summary>
+        <div className="lab-channel-ledger" aria-label="Readouts">
+          <LedgerMeter
+            label="Middle defined"
+            hint={`${invented} visitor(s) still have to invent an unlabeled point.`}
+            level={invented === 0 ? "high" : "low"}
+          />
+          <LedgerMeter
+            label="Words balanced"
+            hint={
+              allMiddleVerbal
+                ? `${pulled} visitor(s) are being nudged by positive label wording.`
+                : "Balance cannot be judged until every point has words."
+            }
+            level={pulled === 0 && balanced ? "high" : "low"}
+          />
+        </div>
+      </details>
         </div>
         </div>
       </div>
@@ -3318,14 +3406,12 @@ function QuantifierExercise({ num }: { num: number }) {
       verb="anchor"
       nextTeaser="Next: keep the same list and change the mode. The favored answer moves."
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
-            Segment occasional vs. regular visitors. The draft uses &ldquo;Rarely
-            / Sometimes / Often&rdquo; — natural-sounding, but those words
-            aren&rsquo;t units. First find two visitors whose vague answers
-            don&rsquo;t match their real visit counts, then anchor the answer
-            without swapping vagueness for fake precision.
+            Segment occasional vs. regular visitors. The draft uses
+            &ldquo;Rarely / Sometimes / Often&rdquo; — familiar words, not shared
+            units. Prove the collision, then choose a countable repair.
           </p>
 
       <TaskBand
@@ -3413,6 +3499,7 @@ function QuantifierExercise({ num }: { num: number }) {
           <CastCountNote className="lab-cast-note--readout" />
         </section>
 
+        <div className="lab-quant-sidecar">
         <section className="lab-quant-format" aria-label="Frequency format controls">
           <div>
             <p className="lab-control-key">Reference period</p>
@@ -3453,7 +3540,6 @@ function QuantifierExercise({ num }: { num: number }) {
             </div>
           </div>
         </section>
-      </div>
 
       <section className="lab-quant-card" aria-label="Candidate question">
         <p className="lab-quant-question lab-selectable">{quantifierQuestion(format)}</p>
@@ -3479,17 +3565,22 @@ function QuantifierExercise({ num }: { num: number }) {
         </p>
       </div>
 
-      <div className="lab-channel-ledger" aria-label="Readouts">
-        <LedgerMeter
-          label="Reference period"
-          hint="Does the count have a named time frame?"
-          level={meters.distinctions}
-        />
-        <LedgerMeter
-          label="Unit honest"
-          hint="Does the format ask only for distinctions people can supply and analysts can use?"
-          level={meters.trustworthy}
-        />
+      <details className="lab-disclosure-shelf lab-quant-meter-shelf">
+        <summary>Show meter readout</summary>
+        <div className="lab-channel-ledger" aria-label="Readouts">
+          <LedgerMeter
+            label="Reference period"
+            hint="Does the count have a named time frame?"
+            level={meters.distinctions}
+          />
+          <LedgerMeter
+            label="Unit honest"
+            hint="Does the format ask only for distinctions people can supply and analysts can use?"
+            level={meters.trustworthy}
+          />
+        </div>
+      </details>
+        </div>
       </div>
         </div>
       </div>
@@ -3614,14 +3705,12 @@ function OrderExercise({ num }: { num: number }) {
       verb="order"
       nextTeaser="Final review: five draft questions, one clean item, and one real problem you must not over-flag."
     >
-      <div className="lab-console">
+      <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
-            The repair depends on the kind of list — and the survey mode. Two
-            broken lists: a channel list where one answer gets an unfair edge
-            just from its position (and which end wins depends on the mode), and
-            scrambled satisfaction labels. Classify them, watch the mode shift
-            that edge, then decide what to rotate.
+            Two lists need different treatments: unordered channels get a
+            position edge, while satisfaction labels need their sequence.
+            Classify each list, then decide what to rotate.
           </p>
 
       <TaskBand
@@ -3649,6 +3738,7 @@ function OrderExercise({ num }: { num: number }) {
         </div>
 
         <div className="lab-console-work lab-console-work--stack">
+      <div className="lab-order-workbench">
       <div className="lab-order-grid">
         <section className="lab-order-panel">
           <p className="lab-order-key">List A</p>
@@ -3749,6 +3839,7 @@ function OrderExercise({ num }: { num: number }) {
         </section>
       </div>
 
+      <div className="lab-order-sidecar">
       <ul className="lab-order-cast" aria-label="Where each visitor lands">
         {orderCast.map((r) => {
           const land = orderLandingFor(r, nominal, ordinal, readMode);
@@ -3814,17 +3905,22 @@ function OrderExercise({ num }: { num: number }) {
         </p>
       </div>
 
-      <div className="lab-channel-ledger" aria-label="Readouts">
-        <LedgerMeter
-          label="Nominal order fair"
-          hint="Does any single channel always get the first-read advantage?"
-          level={meters.nominalFairness}
-        />
-        <LedgerMeter
-          label="Ordinal meaning intact"
-          hint="Does the satisfaction scale still read as a continuum?"
-          level={meters.ordinalMeaning}
-        />
+      <details className="lab-disclosure-shelf lab-order-meter-shelf">
+        <summary>Show meter readout</summary>
+        <div className="lab-channel-ledger" aria-label="Readouts">
+          <LedgerMeter
+            label="Nominal order fair"
+            hint="Does any single channel always get the first-read advantage?"
+            level={meters.nominalFairness}
+          />
+          <LedgerMeter
+            label="Ordinal meaning intact"
+            hint="Does the satisfaction scale still read as a continuum?"
+            level={meters.ordinalMeaning}
+          />
+        </div>
+      </details>
+      </div>
       </div>
         </div>
       </div>

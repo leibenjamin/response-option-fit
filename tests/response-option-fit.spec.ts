@@ -96,7 +96,7 @@ async function solveAll12(page: Page) {
     await page.getByTestId(`lab-bundled-${id}`).click();
   }
   await page.getByTestId("lab-bundled-check").click();
-  await page.getByTestId("lab-repair-three").click();
+  await clickRepairThree(page);
   await expect(page.getByTestId("lab-receipt-E2")).toBeVisible();
 
   // E8 — false premise
@@ -192,6 +192,84 @@ async function solveAll12(page: Page) {
   }
   await page.getByTestId("lab-review-check").click();
   await expect(page.getByTestId("lab-receipt-E5")).toBeVisible();
+}
+
+async function openContentsRail(page: Page) {
+  const contents = page.getByTestId("lab-contents");
+  const isOpen = await contents.evaluate(
+    (el) => (el as HTMLDetailsElement).open
+  );
+  if (!isOpen) {
+    await contents.getByText("Jump to exercise").click();
+  }
+}
+
+async function jumpToExerciseFromRail(page: Page, num: number) {
+  await openContentsRail(page);
+  await page.getByTestId(`lab-contents-link-${num}`).click();
+  await expect(page.getByTestId(`lab-live-loop-${num}`)).toBeFocused();
+}
+
+async function clickRepairThree(page: Page) {
+  const repair = page.getByTestId("lab-repair-three");
+  await expect(repair).toBeVisible();
+  await expect(repair).toBeEnabled();
+  /* WebKit can intermittently wait forever for this newly inserted button to
+     become "stable" after the pass panel expands. The element is already
+     visible and enabled; force only bypasses that false actionability wait. */
+  await repair.click({ force: true });
+}
+
+async function expectLiveLoopEntryFramed(page: Page, num: number) {
+  const frame = await page.getByTestId(`lab-live-loop-${num}`).evaluate((el) => {
+    const rect = el.getBoundingClientRect();
+    const rail = document.querySelector<HTMLElement>(".lab-contents");
+    const railBottom = rail?.getBoundingClientRect().bottom ?? 0;
+    return {
+      bottom: rect.bottom,
+      height: rect.height,
+      railBottom,
+      top: rect.top,
+      viewportHeight: window.innerHeight
+    };
+  });
+  expect(frame.top, `Exercise ${num} loop starts below the contents rail`).toBeGreaterThanOrEqual(
+    frame.railBottom - 2
+  );
+  expect(frame.bottom, `Exercise ${num} loop fits after a contents jump`).toBeLessThanOrEqual(
+    frame.viewportHeight + 2
+  );
+}
+
+async function expectExerciseRowsEntryFramed(
+  page: Page,
+  num: number,
+  rowSelector: string
+) {
+  const offenders = await page.evaluate(
+    ({ rowSelector, num }) => {
+      const root = document.getElementById(`lab-exercise-${num}`);
+      const rail = document.querySelector<HTMLElement>(".lab-contents");
+      const railBottom = rail?.getBoundingClientRect().bottom ?? 0;
+      if (!root) return [`Exercise ${num} missing`];
+      return Array.from(root.querySelectorAll<HTMLElement>(rowSelector))
+        .map((row) => {
+          const rect = row.getBoundingClientRect();
+          return {
+            bottom: rect.bottom,
+            text: (row.textContent ?? "").trim().slice(0, 80),
+            top: rect.top
+          };
+        })
+        .filter((row) => row.top < railBottom - 1 || row.bottom > window.innerHeight + 1)
+        .map(
+          (row) =>
+            `${row.text} [${Math.round(row.top)}, ${Math.round(row.bottom)}]`
+        );
+    },
+    { rowSelector, num }
+  );
+  expect(offenders, `Exercise ${num} visible consequence rows`).toEqual([]);
 }
 
 test.describe("Response Option Fit Lab - data contract", () => {
@@ -324,6 +402,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
     const track = page.getByTestId("lab-hook-track");
     await expect(track).toHaveAttribute("role", "slider");
     await expect(track).toHaveAttribute("aria-valuetext", /form would record/);
+    await expect(page.getByTestId("lab-hook-tap-cue")).toBeVisible();
     await track.focus();
     await track.press("Home");
     await expect(track).toHaveAttribute("aria-valuenow", "0");
@@ -340,6 +419,121 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(hook).toContainText("Nothing here is saved or sent");
     await page.getByTestId("lab-hero-cta").click();
     await expect(page.locator("#lab-exercise-1-title")).toBeFocused();
+  });
+
+  test("active solving loops fit a reduced 1280x720 desktop viewport", async ({
+    page
+  }, testInfo) => {
+    testInfo.skip(
+      testInfo.project.name !== "desktop",
+      "pixel viewport guard runs once in Chromium"
+    );
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto(`${BASE_URL}/`);
+    await expect(page.locator(".lab-exercise")).toHaveCount(12);
+
+    const loops = await page.evaluate(() => {
+      const viewportHeight = window.innerHeight;
+      return Array.from(document.querySelectorAll<HTMLElement>(".lab-exercise"))
+        .map((exercise) => {
+          let selector = ".lab-console";
+          let first = exercise.querySelector<HTMLElement>(".lab-console");
+          let last = first;
+
+          if (!first && exercise.classList.contains("lab-exercise--double-barreled")) {
+            selector = ".lab-exercise-setup to .lab-exercise-actions";
+            first = exercise.querySelector<HTMLElement>(".lab-exercise-setup");
+            last = exercise.querySelector<HTMLElement>(".lab-exercise-actions");
+          }
+
+          if (!first || !last) return null;
+          const firstRect = first.getBoundingClientRect();
+          const lastRect = last.getBoundingClientRect();
+          return {
+            id: exercise.id,
+            selector,
+            height: Math.round((lastRect.bottom - firstRect.top) * 10) / 10,
+            viewportHeight
+          };
+        })
+        .filter(Boolean);
+    });
+
+    expect(loops.length).toBe(12);
+    expect(
+      loops.filter((loop) => loop.height > loop.viewportHeight + 1)
+    ).toEqual([]);
+  });
+
+  test("zoomed desktop exercises do not create page or viewport overflow", async ({
+    page
+  }, testInfo) => {
+    testInfo.skip(
+      testInfo.project.name !== "desktop",
+      "zoom containment guard runs once in Chromium"
+    );
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto(`${BASE_URL}/`);
+    await expect(page.locator(".lab-exercise")).toHaveCount(12);
+    await page.evaluate(() => {
+      document.body.style.zoom = "1.1";
+    });
+
+    const pageOverflow = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      bodyScrollWidth: document.body.scrollWidth,
+      clientWidth: document.documentElement.clientWidth
+    }));
+    expect(pageOverflow.scrollWidth).toBeLessThanOrEqual(pageOverflow.clientWidth + 1);
+    expect(pageOverflow.bodyScrollWidth).toBeLessThanOrEqual(
+      pageOverflow.clientWidth + 1
+    );
+
+    const exerciseIds = await page.locator(".lab-exercise").evaluateAll((els) =>
+      els.map((el) => el.id)
+    );
+    const crossers: string[] = [];
+    for (const id of exerciseIds) {
+      await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+      await page.waitForTimeout(20);
+      const found = await page.evaluate((exerciseId) => {
+        const root = document.getElementById(exerciseId);
+        if (!root) return [];
+        const viewportWidth = document.documentElement.clientWidth;
+        return Array.from(root.querySelectorAll<HTMLElement>("*"))
+          .map((el) => {
+            const style = getComputedStyle(el);
+            const rect = el.getBoundingClientRect();
+            return {
+              testid: el.getAttribute("data-testid") ?? "",
+              className: el.className.toString(),
+              text: (el.textContent ?? "").trim().slice(0, 60),
+              left: rect.left,
+              right: rect.right,
+              width: rect.width,
+              height: rect.height,
+              visible:
+                style.display !== "none" &&
+                style.visibility !== "hidden" &&
+                rect.width > 0 &&
+                rect.height > 0 &&
+                rect.bottom > 0 &&
+                rect.top < window.innerHeight
+            };
+          })
+          .filter((item) => item.visible)
+          .filter((item) => item.left < -1 || item.right > viewportWidth + 1)
+          .slice(0, 8)
+          .map(
+            (item) =>
+              `${exerciseId} ${item.testid || item.className || item.text} ` +
+              `[${Math.round(item.left)}, ${Math.round(item.right)}]`
+          );
+      }, id);
+      crossers.push(...found);
+    }
+
+    expect(crossers).toEqual([]);
   });
 
   test("the lab's #lab and / hashes are equivalent", async ({ page }) => {
@@ -361,17 +555,43 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(
       page.locator('[data-testid^="lab-contents-link-"]')
     ).toHaveCount(13);
-    /* Jumping moves keyboard focus to the target heading (so it isn't just a
-       silent scroll for screen-reader users). */
+    /* Jumping moves keyboard focus to the live loop, which is labelled by the
+       exercise title, so it is not just a silent scroll. */
     await page.getByTestId("lab-contents-link-10").click();
-    await expect(page.locator("#lab-exercise-10 h2")).toBeFocused();
+    await expect(page.getByTestId("lab-live-loop-10")).toBeFocused();
     /* Re-open (jumping auto-closes the rail) and jump to the closing map. */
     await contents.getByText("Jump to exercise").click();
     await page.getByTestId("lab-contents-link-map").click();
     await expect(page.locator("#lab-km-title")).toBeFocused();
   });
 
-  test("E2 double-barreled: flag the six bundles (incl. the two with no \"and\"), skip the two \"and\" decoys, then repair the triple", async ({ page }) => {
+  test("contents jumps frame the active solving loop at 1280x720", async ({
+    page
+  }, testInfo) => {
+    testInfo.skip(
+      testInfo.project.name !== "desktop",
+      "pixel viewport guard runs once in Chromium"
+    );
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`${BASE_URL}/`);
+    await expect(page.locator(".lab-exercise")).toHaveCount(12);
+
+    for (const num of [1, 5, 6, 9, 10, 11, 12]) {
+      await jumpToExerciseFromRail(page, num);
+      await expectLiveLoopEntryFramed(page, num);
+    }
+
+    await jumpToExerciseFromRail(page, 5);
+    await expectExerciseRowsEntryFramed(page, 5, ".lab-channel-cast-row");
+    await jumpToExerciseFromRail(page, 6);
+    await expectExerciseRowsEntryFramed(page, 6, ".lab-acq-row");
+    await jumpToExerciseFromRail(page, 9);
+    await expectExerciseRowsEntryFramed(page, 9, ".lab-label-row");
+  });
+
+  test("E2 double-barreled: flag the six bundles (incl. the two with no \"and\"), skip the two \"and\" decoys, then repair the triple", async ({ page }, testInfo) => {
+    if (testInfo.project.name === "webkit") testInfo.setTimeout(45_000);
     await page.goto(`${BASE_URL}/`);
     /* No pre-reveal spoiler tag should point at the no-"and" items. */
     await expect(page.locator(".lab-bundled-tag")).toHaveCount(0);
@@ -390,7 +610,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.getByTestId("lab-bundled-check").click();
     await expect(page.getByTestId("lab-bundled-pass")).toBeVisible();
     /* Repair sub-task: the clean three-question split is the right move. */
-    await page.getByTestId("lab-repair-three").click();
+    await clickRepairThree(page);
     await expect(page.getByTestId("lab-receipt-E2")).toBeVisible();
   });
 
@@ -453,6 +673,8 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E10 verbal labels: numeric slots and positive-skew words fail; the balanced built ruler passes", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    await expect(page.locator(".lab-label-builder")).toBeVisible();
+    await expect(page.getByTestId("lab-label-note-shelf")).toBeVisible();
     /* Leaving any middle point as a number keeps Check 1 open. */
     await page.getByTestId("lab-label-word-fair").click();
     await page.getByTestId("lab-label-slot-slot2").click();
@@ -482,6 +704,11 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E11 quantifiers: invalid pair, no-period ranges, and fake precision fail; Ben/Cleo collision plus anchored ranges passes", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    await expect(page.locator(".lab-quant-workbench")).toBeVisible();
+    await expect(page.locator(".lab-quant-sidecar")).toBeVisible();
+    await expect(page.locator(".lab-quant-meter-shelf summary")).toContainText(
+      "Show meter readout"
+    );
     /* Ada/Cleo collides on neither axis (different count and different word). */
     await page.getByTestId("lab-quant-visitor-ada").click();
     await page.getByTestId("lab-quant-visitor-cleo").click();
@@ -541,6 +768,11 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E12 order: wrong classifications fail before rotating unordered options and keeping the ordinal ruler ordered", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    await expect(page.locator(".lab-order-workbench")).toBeVisible();
+    await expect(page.locator(".lab-order-sidecar")).toBeVisible();
+    await expect(page.locator(".lab-order-meter-shelf summary")).toContainText(
+      "Show meter readout"
+    );
     await page.getByTestId("lab-order-kind-nominal-continuum").click();
     await page.getByTestId("lab-order-kind-ordinal-unordered").click();
     await page.getByTestId("lab-order-nominal-rotated").click();
@@ -739,6 +971,12 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E5 ship-review passes only when each draft part gets the right lens", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    await expect(page.getByTestId("lab-review-queue")).toBeVisible();
+    await expect(page.locator(".lab-review-index-item")).toHaveCount(6);
+    await expect(page.getByTestId("lab-review-index-q-delightful")).toHaveAttribute(
+      "aria-current",
+      "step"
+    );
     const calls: [string, string][] = [
       ["q-delightful", "push"],
       ["q-barista", "slot"],
@@ -747,7 +985,13 @@ test.describe("Response Option Fit Lab - desktop", () => {
       ["q-visits", "fine"],
       ["footnote-sample", "boundary"]
     ];
-    for (const [el, d] of calls) {
+    const [[firstEl, firstDiagnosis], ...remainingCalls] = calls;
+    await page.getByTestId(`lab-review-choice-${firstEl}-${firstDiagnosis}`).click();
+    await expect(page.getByTestId("lab-review-index-q-barista")).toHaveAttribute(
+      "aria-current",
+      "step"
+    );
+    for (const [el, d] of remainingCalls) {
       await page.getByTestId(`lab-review-choice-${el}-${d}`).click();
     }
     /* The live review tray triages the draft as it is classified: four
@@ -930,11 +1174,11 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.keyboard.press("Escape");
     await expect(page.getByTestId("settings-button")).toBeFocused();
 
-    /* Activating a contents-rail link by keyboard moves focus to the target
-       heading (not just a silent scroll). */
+    /* Activating a contents-rail link by keyboard moves focus to the labelled
+       live loop, not just a silent scroll. */
     await page.getByText("Jump to exercise").click();
     await page.getByTestId("lab-contents-link-7").press("Enter");
-    await expect(page.locator("#lab-exercise-7-title")).toBeFocused();
+    await expect(page.getByTestId("lab-live-loop-7")).toBeFocused();
 
     /* An exercise is fully operable from the keyboard. */
     await page.getByTestId("lab-scale-points-11").press("Enter");

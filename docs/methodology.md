@@ -83,6 +83,12 @@ interactive module with:
 - a reveal that names the pattern only after the visitor has touched the
   problem.
 
+The active work loop is intentionally short enough for a reduced desktop
+viewport: the task, controls, and primary cast consequence are meant to stay in
+view together at 1280x720. Longer explanation, secondary meter readouts, and
+whole-draft context move into shelves or solved-state drawers so the visitor
+does not have to scroll back and forth while deciding.
+
 ## Voice And Terminology
 
 The app separates five voices:

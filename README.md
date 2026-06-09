@@ -14,10 +14,13 @@ Each exercise is compact and hands-on: tinker with a control (build a rating
 scale, fix overlapping age buckets, choose an answer set, screen a false
 premise, compare question formats, build a verbal ruler, expose a vague-word
 collision, or classify lists before setting order rules), watch a fixed cast of
-authored respondents flow through, and read the consequence. Wrong moves are part of the practice —
-they show what would have shipped. A solved exercise opens a source drawer with
-the real field vocabulary for what you just did, an honest evidence-strength
-label, the boundary of what not to overclaim, and named sources. A closing
+authored respondents flow through, and read the consequence. The active solving
+loop keeps the current task, controls, and primary consequence together, while
+longer guidance and secondary readouts open as shelves. Wrong moves are part of
+the practice — they show what would have shipped. A solved exercise opens a
+source drawer with the real field vocabulary for what you just did, an honest
+evidence-strength label, the boundary of what not to overclaim, and named
+sources. A closing
 knowledge map organizes the twelve exercises into four inspection passes (the
 lab's own SLOT / RULER / PUSH / BOUNDARY shorthand), marks what it did and did
 not cover, distinguishes the lab's shorthand from real terms of art, and lists
@@ -113,8 +116,11 @@ landmark best-practices) on the lab, the colophon, and the fully-solved
 keepsake state; verifies keyboard operation (skip link, the Settings dialog's
 focus trap, contents-rail focus moves, and solving an exercise by keyboard); and
 confirms reduced-motion and forced-colors modes stay readable with no horizontal
-overflow on desktop, mobile, or a 320px reflow viewport. Every browser-driven
-test runs in Chromium, Firefox, and WebKit (Safari's engine).
+overflow on desktop, mobile, or a 320px reflow viewport. The suite also guards
+the reduced desktop workbench target at 1280x720 and a 1.1 large-text/zoom proxy,
+so task, controls, and primary consequence do not regress into a scroll-heavy
+loop. Every browser-driven test runs in Chromium, Firefox, and WebKit (Safari's
+engine).
 
 ## Limitations
 
@@ -136,10 +142,9 @@ interaction, motion, and visual feedback when those make the lab meaningfully
 better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
-Current measured production build (2026-05-31, after retiring the old exhibit):
-entry JavaScript `51.45 KB gzip` plus the lab home route chunk `52.70 KB gzip`,
-CSS `10.97 KB gzip` (after pruning the retired exhibit's dead styles). The lab
-home route is code-split and loads on demand. All
+Current measured production build (2026-06-09):
+entry JavaScript `51.68 KB gzip` plus the lab home route chunk `60.71 KB gzip`,
+CSS `17.09 KB gzip`. The lab home route is code-split and loads on demand. All
 interaction is client-side. The only third-party runtime request is a
 privacy-friendly, cookieless analytics beacon (Cloudflare Web Analytics); see
 [docs/deployment.md](docs/deployment.md).

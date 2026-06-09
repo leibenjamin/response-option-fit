@@ -803,6 +803,15 @@ summary:focus-visible {
   touch-action: none;
   overflow: hidden;
   user-select: none;
+  isolation: isolate;
+  transition:
+    border-color var(--mo-1) var(--mo-ease),
+    box-shadow var(--mo-1) var(--mo-ease),
+    transform var(--mo-1) var(--mo-ease);
+}
+.lab-hook-track:hover {
+  border-color: var(--accent);
+  box-shadow: 0 10px 28px rgba(138, 58, 38, 0.12);
 }
 .lab-hook-track:focus-visible {
   outline: 2px solid var(--accent);
@@ -874,9 +883,39 @@ summary:focus-visible {
   box-shadow: 0 2px 7px rgba(70, 45, 30, 0.28);
   transform: translate(-50%, -50%);
   pointer-events: none;
+  z-index: 3;
+}
+.lab-hook-tap-cue {
+  position: absolute;
+  top: 30px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+  border: 1px solid rgba(176, 74, 47, 0.42);
+  box-shadow:
+    0 0 0 7px rgba(176, 74, 47, 0.08),
+    0 0 0 15px rgba(176, 74, 47, 0.04);
+  opacity: 0.9;
+}
+.lab-hook-track:hover .lab-hook-tap-cue,
+.lab-hook-track:focus-visible .lab-hook-tap-cue {
+  opacity: 1;
+  box-shadow:
+    0 0 0 8px rgba(176, 74, 47, 0.12),
+    0 0 0 18px rgba(176, 74, 47, 0.06);
+}
+.lab-hook-tap-cue.is-touched {
+  opacity: 0.38;
+  box-shadow: 0 0 0 8px rgba(176, 74, 47, 0.05);
 }
 @media screen and (prefers-reduced-motion: no-preference) {
   .lab-hook-handle.is-hint {
+    animation: hook-nudge 2.4s ease-in-out 0.6s 3;
+  }
+  .lab-hook-tap-cue:not(.is-touched) {
     animation: hook-nudge 2.4s ease-in-out 0.6s 3;
   }
 }
@@ -1784,8 +1823,16 @@ summary:focus-visible {
 .lab-console {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--s-4);
+  gap: var(--s-3);
   align-items: start;
+  scroll-margin-top: 4.25rem;
+}
+.lab-console:focus {
+  outline: none;
+}
+.lab-console:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 .lab-console-task {
   display: flex;
@@ -1824,8 +1871,8 @@ summary:focus-visible {
      keep the room to render on one line — three cramped columns at 1024 wrap
      the rows and run TALLER than a clean stack, the opposite of the goal. */
   .lab-console {
-    grid-template-columns: minmax(190px, 0.7fr) minmax(0, 2fr);
-    gap: var(--s-5);
+    grid-template-columns: minmax(172px, 0.52fr) minmax(0, 2.35fr);
+    gap: var(--s-4);
   }
   /* Exception: the scale builder is control-heavy (a tall vertical scale vs a
      short readout), so stacking its work runs taller than splitting it. It
@@ -1835,7 +1882,7 @@ summary:focus-visible {
     grid-template-columns:
       minmax(0, var(--work-left, 1fr))
       minmax(0, var(--work-right, 0.95fr));
-    gap: var(--s-5);
+    gap: var(--s-4);
   }
 }
 @media (min-width: 1150px) {
@@ -1845,7 +1892,7 @@ summary:focus-visible {
     grid-template-columns:
       minmax(0, var(--work-left, 1fr))
       minmax(0, var(--work-right, 1.05fr));
-    gap: var(--s-5);
+    gap: var(--s-4);
   }
   /* Some exercises already carry their own controls|results split inside a
      workbench/grid; for those the work column stays a single stack (the inner
@@ -1863,9 +1910,9 @@ summary:focus-visible {
   --work-right: 1.25fr;
 }
 
-/* The capstone review: the four lenses are a rubric reference rail on the left
-   (stacked), the whole draft stays in the work column — a "rubric on the left,
-   draft on the right" review desk that keeps the holistic whole-draft view. */
+/* The capstone review: the four lenses are a rubric reference rail on the left;
+   the work column is a focused review queue, with whole-draft context in an
+   optional shelf so the active loop stays entry-framed. */
 .lab-console-rubric-key {
   margin: var(--s-2) 0 0;
   font-family: var(--font-mono);
@@ -1888,6 +1935,37 @@ summary:focus-visible {
   color: var(--ink-2);
 }
 
+.lab-disclosure-shelf {
+  border: 1px solid var(--line-faint);
+  background: var(--paper-2);
+  padding: var(--s-2) var(--s-3);
+  border-radius: 8px;
+}
+.lab-disclosure-shelf summary {
+  cursor: pointer;
+  width: fit-content;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  list-style: none;
+}
+.lab-disclosure-shelf summary::-webkit-details-marker { display: none; }
+.lab-disclosure-shelf summary::after {
+  content: " +";
+  color: var(--ink-mute);
+}
+.lab-disclosure-shelf[open] summary::after {
+  content: " -";
+}
+.lab-disclosure-shelf p {
+  margin: var(--s-2) 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
 /* Compact ledger meters laid in a tidy 2-up grid so 4 readouts cost ~2 rows,
    not ~4 — used in the result column where cast + meters would otherwise tower. */
 .lab-console-meters {
@@ -1897,6 +1975,12 @@ summary:focus-visible {
 }
 .lab-console-meters--single {
   grid-template-columns: minmax(0, 1fr);
+}
+.lab-channel-meter-shelf .lab-channel-ledger,
+.lab-label-meter-shelf .lab-channel-ledger,
+.lab-quant-meter-shelf .lab-channel-ledger,
+.lab-order-meter-shelf .lab-channel-ledger {
+  margin-top: var(--s-3);
 }
 @media (max-width: 520px) {
   .lab-console-meters {
@@ -1915,11 +1999,11 @@ summary:focus-visible {
 .lab-readout {
   border: 1px solid var(--line-faint);
   background: var(--paper-2);
-  padding: var(--s-6);
+  padding: var(--s-4);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: var(--s-5);
+  gap: var(--s-3);
   position: relative;
 }
 
@@ -2010,6 +2094,22 @@ summary:focus-visible {
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
+}
+
+.lab-exercise--scale-builder .lab-scale {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+.lab-exercise--scale-builder .lab-point {
+  min-height: 42px;
+  padding: var(--s-2) var(--s-3);
+  gap: var(--s-2);
+  font-size: 13.5px;
+  line-height: 1.2;
+}
+.lab-exercise--scale-builder .lab-point span:last-child {
+  min-width: 0;
 }
 
 .lab-scale > li {
@@ -2128,7 +2228,7 @@ summary:focus-visible {
   padding: var(--s-4) 0 0;
   border-top: 1px solid var(--line-faint);
   display: grid;
-  grid-template-columns: minmax(0, max-content) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) auto minmax(7rem, 0.85fr);
   column-gap: var(--s-3);
 }
 
@@ -2162,6 +2262,7 @@ summary:focus-visible {
   font-size: 12.5px;
   color: var(--ink-soft);
   line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .lab-cast-arrow {
@@ -2173,6 +2274,8 @@ summary:focus-visible {
   font-size: 12px;
   color: var(--ink-soft);
   text-align: left;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .lab-cast-row.is-sat .lab-cast-landing {
@@ -2214,6 +2317,7 @@ summary:focus-visible {
   font-family: var(--font-serif);
   font-size: 14.5px;
   line-height: 1.25;
+  min-width: 0;
 }
 
 .lab-task.is-active {
@@ -2281,6 +2385,41 @@ summary:focus-visible {
   font-size: 12.5px;
   line-height: 1.45;
   color: var(--ink-soft);
+}
+.lab-task-details {
+  margin-top: var(--s-1);
+}
+.lab-task-details summary {
+  cursor: pointer;
+  width: fit-content;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  list-style: none;
+}
+.lab-task-details summary::-webkit-details-marker { display: none; }
+.lab-task-details summary::after {
+  content: " +";
+  color: var(--ink-mute);
+}
+.lab-task-details[open] summary::after {
+  content: " -";
+}
+.lab-task-details-body {
+  margin-top: var(--s-2);
+  padding-top: var(--s-2);
+  border-top: 1px dashed var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.lab-task-details-body p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
 }
 
 /* Dormant next-step preview: the upcoming rung, quietly shown so the stepper
@@ -3258,6 +3397,7 @@ summary:focus-visible {
   background: var(--paper-card);
   border: 1px solid var(--line-soft);
   touch-action: none;
+  overflow: hidden;
 }
 .lab-bucket-axis-gap {
   position: absolute;
@@ -3294,7 +3434,9 @@ summary:focus-visible {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 12px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0 8px;
   pointer-events: none;
 }
 .lab-bucket-axis-handle {
@@ -3397,6 +3539,7 @@ summary:focus-visible {
   height: 14px;
   margin-top: 2px;
   border-top: 1px solid var(--line-faint);
+  overflow: hidden;
 }
 .lab-bucket-axis-tick {
   position: absolute;
@@ -3405,6 +3548,12 @@ summary:focus-visible {
   font-family: var(--font-mono);
   font-size: 9.5px;
   color: var(--ink-mute);
+}
+.lab-bucket-axis-tick:first-child {
+  transform: translateX(0);
+}
+.lab-bucket-axis-tick:last-child {
+  transform: translateX(-100%);
 }
 @media (forced-colors: active) {
   .lab-bucket-axis-band {
@@ -3670,6 +3819,10 @@ summary:focus-visible {
   flex-direction: column;
   gap: var(--s-3);
 }
+.lab-exercise--channel .lab-channel-readout {
+  padding: var(--s-3) var(--s-4);
+  gap: var(--s-2);
+}
 
 .lab-channel-shelf-key,
 .lab-channel-question-key,
@@ -3686,7 +3839,8 @@ summary:focus-visible {
   letter-spacing: 0.04em;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 12.5px;
+  font-size: 12px;
+  line-height: 1.25;
   color: var(--ink-soft);
 }
 
@@ -3694,8 +3848,8 @@ summary:focus-visible {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--s-2);
 }
 
@@ -3704,27 +3858,27 @@ summary:focus-visible {
   border: 1px solid var(--line-soft);
   background: var(--paper-card);
   color: var(--ink-2);
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-3);
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
-  gap: var(--s-3);
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: var(--s-2);
   align-items: center;
   text-align: left;
   font-family: var(--font-serif);
-  font-size: 14.5px;
-  line-height: 1.3;
+  font-size: 13px;
+  line-height: 1.2;
   cursor: pointer;
 }
 
 .lab-channel-chip-mark {
   display: inline-grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   border: 1px solid currentColor;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .lab-channel-chip:hover:not(:disabled),
@@ -3802,8 +3956,8 @@ summary:focus-visible {
 .lab-channel-tallies {
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
-  padding: var(--s-2) 0;
+  gap: 5px;
+  padding: 5px 0;
   border-top: 1px solid var(--line-faint);
   border-bottom: 1px solid var(--line-faint);
 }
@@ -3838,7 +3992,7 @@ summary:focus-visible {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: fit-content(52%) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.35fr) auto minmax(7rem, 0.85fr);
   column-gap: var(--s-3);
 }
 
@@ -3846,10 +4000,10 @@ summary:focus-visible {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
-  padding: var(--s-2) 0;
+  padding: 4px 0;
   align-items: baseline;
   border-bottom: 1px solid var(--line-faint);
-  font-size: 13.5px;
+  font-size: 12.8px;
   color: var(--ink-2);
 }
 .lab-channel-cast-row:last-child { border-bottom: 0; }
@@ -4478,11 +4632,11 @@ summary:focus-visible {
   /* A light warm wash keeps the decision strip findable without making every
      exercise feel like the same checklist module. */
   background: var(--accent-wash);
-  padding: var(--s-2) var(--s-3);
+  padding: var(--s-2);
   border-radius: 0 10px 10px 0;
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  gap: 6px;
 }
 
 .lab-taskband-key {
@@ -4498,9 +4652,27 @@ summary:focus-visible {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-1);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(5.4rem, 1fr));
+  gap: 4px;
+}
+.lab-taskband .lab-task {
+  padding: 3px 5px;
+  gap: 5px;
+  min-width: 0;
+}
+.lab-taskband .lab-task-mark {
+  width: 17px;
+  height: 17px;
+  font-size: 9.5px;
+}
+.lab-taskband .lab-task-title {
+  font-size: 12.5px;
+  line-height: 1.15;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .lab-taskband .lab-task.is-active {
@@ -4514,7 +4686,19 @@ summary:focus-visible {
 .lab-taskband .lab-task-active {
   background: var(--paper-card);
   border: 1px solid var(--accent-soft);
-  padding: var(--s-2) var(--s-3);
+  padding: var(--s-2);
+}
+.lab-taskband .lab-task-brief,
+.lab-taskband .lab-task-hint {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.lab-taskband .lab-task-brief {
+  -webkit-line-clamp: 2;
+}
+.lab-taskband .lab-task-hint {
+  -webkit-line-clamp: 2;
 }
 
 .lab-taskband .lab-task-pass {
@@ -4545,12 +4729,12 @@ summary:focus-visible {
 .lab-channel-cast-pick {
   display: block;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11.5px;
 }
 .lab-channel-cast-state {
   display: block;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 10px;
   letter-spacing: 0.04em;
   color: var(--ink-mute);
 }
@@ -4562,6 +4746,26 @@ summary:focus-visible {
   font-size: 12px;
   line-height: 1.45;
   color: var(--ink-soft);
+}
+.lab-mini-row-shelf {
+  margin-top: 2px;
+}
+.lab-mini-row-shelf summary {
+  cursor: pointer;
+  width: fit-content;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  list-style: none;
+}
+.lab-mini-row-shelf summary::-webkit-details-marker { display: none; }
+.lab-mini-row-shelf summary::after {
+  content: " +";
+}
+.lab-mini-row-shelf[open] summary::after {
+  content: " -";
 }
 .lab-channel-ledger-note {
   margin: var(--s-2) 0 0;
@@ -4606,14 +4810,91 @@ summary:focus-visible {
   color: var(--ink-soft);
 }
 
-.lab-review-draft {
+.lab-review-draft,
+.lab-review-full-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.lab-review-queue {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.62fr) minmax(0, 1.38fr);
+  gap: var(--s-3);
+  align-items: start;
+}
+.lab-review-index {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--s-3);
-  counter-reset: none;
+  gap: var(--s-2);
+}
+@media (min-width: 760px) {
+  .lab-review-index {
+    grid-row: span 3;
+  }
+  .lab-review-queue > .lab-review-tray {
+    grid-column: 2;
+  }
+}
+.lab-review-index-item {
+  width: 100%;
+  border: 1px solid var(--line-soft);
+  background: var(--paper-card);
+  color: var(--ink-2);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px;
+  padding: var(--s-2) var(--s-3);
+  text-align: left;
+}
+.lab-review-index-item span {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.lab-review-index-item strong {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.lab-review-index-item.is-active {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+.lab-review-index-item.is-correct {
+  border-color: rgba(93, 110, 68, 0.45);
+}
+.lab-review-index-item.is-wrong {
+  border-color: var(--accent);
+}
+.lab-review-full-draft {
+  grid-column: 1 / -1;
+}
+.lab-review-full-list {
+  margin-top: var(--s-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.lab-review-full-list li {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: var(--s-2);
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+.lab-review-full-list strong {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
 }
 
 /* The live review tray: a running triage of the draft that makes the review
@@ -4664,7 +4945,7 @@ summary:focus-visible {
 .lab-review-item {
   border: 1px solid var(--line);
   background: var(--paper);
-  padding: var(--s-4) var(--s-5);
+  padding: var(--s-3) var(--s-4);
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
@@ -4692,8 +4973,8 @@ summary:focus-visible {
 .lab-review-item-text {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: 17px;
-  line-height: 1.35;
+  font-size: 15.5px;
+  line-height: 1.3;
   color: var(--ink);
 }
 .lab-review-item--footnote .lab-review-item-text {
@@ -4727,9 +5008,9 @@ summary:focus-visible {
   background: var(--paper-card);
   color: var(--ink-2);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.04em;
-  padding: var(--s-2) var(--s-3);
+  padding: 6px var(--s-2);
   cursor: pointer;
   transition:
     transform var(--mo-1) var(--mo-ease),
@@ -4751,8 +5032,8 @@ summary:focus-visible {
   margin: 0;
   border-left: 3px solid var(--line);
   padding: var(--s-2) var(--s-3);
-  font-size: 13.5px;
-  line-height: 1.5;
+  font-size: 12.5px;
+  line-height: 1.4;
   color: var(--ink-2);
 }
 .lab-review-feedback.is-correct {
@@ -5265,9 +5546,9 @@ summary:focus-visible {
   margin: 0;
   border-left: 3px solid var(--accent-soft);
   background: var(--paper-2);
-  padding: var(--s-3) var(--s-4);
-  font-size: 14px;
-  line-height: 1.55;
+  padding: var(--s-2) var(--s-3);
+  font-size: 13px;
+  line-height: 1.4;
   color: var(--ink-2);
 }
 .lab-acq-cast {
@@ -5312,6 +5593,36 @@ summary:focus-visible {
 }
 .lab-acq-row.is-match .lab-acq-rec { color: var(--route-r); }
 .lab-acq-row.is-mismatch .lab-acq-rec { color: var(--accent-2); }
+@media (min-width: 1150px) {
+  .lab-exercise--acquiescence .lab-acq-cast {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .lab-exercise--acquiescence .lab-acq-row {
+    grid-template-columns: minmax(0, 1fr);
+    grid-column: auto;
+    align-items: start;
+    padding: 6px var(--s-2);
+    border: 1px solid var(--line-faint);
+    background: var(--paper-card);
+    font-size: 12.5px;
+  }
+  .lab-exercise--acquiescence .lab-acq-arrow {
+    display: none;
+  }
+  .lab-exercise--acquiescence .lab-acq-who strong {
+    font-size: 13.5px;
+  }
+  .lab-exercise--acquiescence .lab-acq-rec {
+    padding-top: 3px;
+    font-size: 11.5px;
+  }
+  .lab-exercise--acquiescence .lab-acq-tag {
+    font-size: 9.8px;
+    line-height: 1.2;
+  }
+}
 
 /* The detection-vs-measurement judgment (the productive-failure beat) */
 .lab-acq-judge {
@@ -5387,6 +5698,15 @@ summary:focus-visible {
   gap: var(--s-4);
   align-items: start;
 }
+.lab-quant-workbench {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+}
+.lab-quant-sidecar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
+}
 
 .lab-label-bank,
 .lab-label-slots,
@@ -5394,7 +5714,7 @@ summary:focus-visible {
 .lab-quant-format {
   border: 1px solid var(--line-faint);
   background: var(--paper-2);
-  padding: var(--s-4) var(--s-5);
+  padding: var(--s-3) var(--s-4);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -5403,7 +5723,7 @@ summary:focus-visible {
 
 .lab-label-words {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--s-2);
 }
 
@@ -5417,8 +5737,9 @@ summary:focus-visible {
   font-size: 14px;
   line-height: 1.25;
   min-height: 42px;
-  padding: var(--s-2) var(--s-3);
+  padding: var(--s-2);
   cursor: pointer;
+  overflow-wrap: anywhere;
   transition:
     background-color var(--mo-1) var(--mo-ease),
     border-color var(--mo-1) var(--mo-ease),
@@ -5513,9 +5834,9 @@ summary:focus-visible {
   background: var(--paper-card);
   color: var(--ink-2);
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: 12.5px;
   line-height: 1.25;
-  padding: var(--s-3);
+  padding: var(--s-2);
   text-align: left;
   cursor: pointer;
   transition:
@@ -5547,7 +5868,7 @@ summary:focus-visible {
 }
 
 .lab-quant-format {
-  gap: var(--s-4);
+  gap: var(--s-3);
 }
 .lab-quant-format > div {
   display: flex;
@@ -5558,7 +5879,7 @@ summary:focus-visible {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .lab-quant-format > div + div .lab-quant-designs {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .lab-quant-format-readout {
@@ -5589,11 +5910,14 @@ summary:focus-visible {
 .lab-order-panel {
   border: 1px solid var(--line-faint);
   background: var(--paper-2);
-  padding: var(--s-4) var(--s-5);
+  padding: var(--s-3) var(--s-4);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
+}
+.lab-exercise--labels .lab-label-scale {
+  gap: var(--s-2);
 }
 .lab-label-stem,
 .lab-quant-question,
@@ -5616,6 +5940,10 @@ summary:focus-visible {
   align-items: stretch;
   gap: var(--s-2);
 }
+.lab-quant-options {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 
 /* List A carries a travelling edge-advantage marker in a left gutter: it lands
    on the first option on screen (primacy) and the last when read aloud
@@ -5623,18 +5951,18 @@ summary:focus-visible {
    and watch it vanish when you randomize. */
 .lab-order-listwrap {
   position: relative;
-  padding-left: 84px;
+  padding-left: 64px;
 }
 .lab-order-edge {
   position: absolute;
   left: 0;
-  width: 74px;
+  width: 56px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
   gap: 4px;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 8.5px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--accent-2);
@@ -5644,7 +5972,7 @@ summary:focus-visible {
 }
 .lab-order-edge-arrow {
   color: var(--accent);
-  font-size: 14px;
+  font-size: 12px;
   flex: none;
 }
 .lab-order-list li.is-edge {
@@ -5666,6 +5994,9 @@ summary:focus-visible {
   line-height: 1.25;
   color: var(--ink-2);
 }
+.lab-quant-options li {
+  flex: 1 1 7rem;
+}
 .lab-label-point {
   display: flex;
   align-items: baseline;
@@ -5683,11 +6014,18 @@ summary:focus-visible {
   margin: 0;
   border-left: 3px solid var(--accent-soft);
   background: var(--paper-2);
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-3);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--s-2) var(--s-3);
+}
+.lab-label-note.lab-disclosure-shelf,
+.lab-oat-note.lab-disclosure-shelf {
+  display: block;
+  margin: 0;
+  border-left: 3px solid var(--accent-soft);
+  background: var(--paper-2);
 }
 .lab-order-mode-key {
   font-family: var(--font-mono);
@@ -5704,8 +6042,8 @@ summary:focus-visible {
 .lab-order-mode-note {
   flex-basis: 100%;
   margin: 0;
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 12.5px;
+  line-height: 1.4;
   color: var(--ink-2);
 }
 
@@ -5794,10 +6132,21 @@ summary:focus-visible {
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
   align-items: baseline;
-  padding: var(--s-2) 0;
+  padding: 6px 0;
   border-bottom: 1px solid var(--line-faint);
   font-size: 13.5px;
   color: var(--ink-2);
+}
+.lab-exercise--labels .lab-label-row {
+  padding: 4px 0;
+  font-size: 12.8px;
+}
+.lab-exercise--labels .lab-label-pick {
+  font-size: 11.5px;
+}
+.lab-exercise--labels .lab-label-tag {
+  font-size: 10.5px;
+  line-height: 1.2;
 }
 .lab-quant-row {
   width: 100%;
@@ -5849,8 +6198,8 @@ summary:focus-visible {
   margin-top: 2px;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 11.5px;
-  line-height: 1.35;
+  font-size: 11px;
+  line-height: 1.25;
   color: var(--ink-soft);
 }
 .lab-label-row.is-clean .lab-label-pick,
@@ -5867,7 +6216,19 @@ summary:focus-visible {
 .lab-order-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-3);
+}
+.lab-order-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
   gap: var(--s-4);
+  align-items: start;
+}
+.lab-order-sidecar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
 }
 .lab-order-kind-buttons {
   display: grid;
@@ -5884,6 +6245,50 @@ summary:focus-visible {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-soft);
+}
+
+/* Shared containment for named-cast rows. At 1280px or under mild browser zoom,
+   max-content name columns can starve the recorded-answer column and make the
+   right side spill. Keep both sides flexible and allow controlled wrapping. */
+.lab-scalelen-rows,
+.lab-oat-cast,
+.lab-fp-cast,
+.lab-acq-cast,
+.lab-label-cast,
+.lab-quant-cast,
+.lab-order-cast {
+  grid-template-columns: minmax(0, 1.35fr) auto minmax(7rem, 0.85fr);
+}
+.lab-scalelen-who,
+.lab-oat-who,
+.lab-fp-who,
+.lab-acq-who,
+.lab-label-who,
+.lab-quant-who,
+.lab-order-who,
+.lab-channel-cast-who {
+  min-width: 0;
+}
+.lab-scalelen-feeling,
+.lab-oat-story,
+.lab-fp-story,
+.lab-acq-story,
+.lab-label-story,
+.lab-quant-story,
+.lab-order-story,
+.lab-channel-cast-story {
+  overflow-wrap: anywhere;
+}
+.lab-scalelen-pick,
+.lab-oat-pick,
+.lab-fp-where,
+.lab-acq-rec,
+.lab-label-pick,
+.lab-quant-pick,
+.lab-order-pick,
+.lab-channel-cast-landing {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 @media (forced-colors: active) {
@@ -5936,6 +6341,8 @@ summary:focus-visible {
   }
   .lab-label-builder,
   .lab-quant-workbench,
+  .lab-order-workbench,
+  .lab-review-queue,
   .lab-oat-designs,
   .lab-acq-designs,
   .lab-quant-designs,
@@ -5959,6 +6366,7 @@ summary:focus-visible {
   }
   .lab-label-words,
   .lab-label-slot-list,
+  .lab-channel-shelf-list,
   .lab-quant-format .lab-quant-designs,
   .lab-quant-format > div + div .lab-quant-designs,
   .lab-order-kind-buttons {
