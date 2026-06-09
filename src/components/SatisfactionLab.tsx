@@ -1,4 +1,11 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties
+} from "react";
 import { AnimatedNumber } from "../lib/motion";
 import { useProgress } from "../lib/progress";
 import { LabCertificate } from "./LabCertificate";
@@ -1348,12 +1355,150 @@ function bucketOverlaps(buckets: AgeBucket[]): AxisInterval[] {
 }
 
 const AXIS_TICKS = [0, 18, 25, 35, 45, 65, 100];
+const MAX_AGE_BUCKETS = 8;
+
+type BucketTone = {
+  fill: string;
+  border: string;
+  ink: string;
+  soft: string;
+};
+
+const BUCKET_TONES: BucketTone[] = [
+  {
+    fill: "#fae4dc",
+    border: "#a64f37",
+    ink: "#7f321f",
+    soft: "rgba(166, 79, 55, 0.18)"
+  },
+  {
+    fill: "#e8f0df",
+    border: "#5f7f3f",
+    ink: "#3f5f2b",
+    soft: "rgba(95, 127, 63, 0.18)"
+  },
+  {
+    fill: "#e4edf6",
+    border: "#4d759b",
+    ink: "#2f5678",
+    soft: "rgba(77, 117, 155, 0.18)"
+  },
+  {
+    fill: "#f6edcf",
+    border: "#9a7224",
+    ink: "#6f5015",
+    soft: "rgba(154, 114, 36, 0.2)"
+  },
+  {
+    fill: "#ece6f4",
+    border: "#7d669d",
+    ink: "#57446f",
+    soft: "rgba(125, 102, 157, 0.18)"
+  },
+  {
+    fill: "#dff0ee",
+    border: "#4c857e",
+    ink: "#30615b",
+    soft: "rgba(76, 133, 126, 0.18)"
+  },
+  {
+    fill: "#f4e0e7",
+    border: "#9b5870",
+    ink: "#71364a",
+    soft: "rgba(155, 88, 112, 0.18)"
+  },
+  {
+    fill: "#e5e9ec",
+    border: "#667783",
+    ink: "#46555f",
+    soft: "rgba(102, 119, 131, 0.18)"
+  }
+];
+
+type BucketCSSVars = {
+  "--bucket-fill": string;
+  "--bucket-border": string;
+  "--bucket-ink": string;
+  "--bucket-soft": string;
+};
+
+type BucketStyle = CSSProperties & BucketCSSVars;
+
+type BucketViewModel = {
+  bucket: AgeBucket;
+  index: number;
+  label: string;
+  shortLabel: string;
+  rangeLabel: string;
+  style: BucketStyle;
+};
+
+function bucketSortEnd(b: AgeBucket): number {
+  return b.end == null ? Number.POSITIVE_INFINITY : b.end;
+}
+
+function bucketNumericId(id: string): number {
+  const match = /^b(\d+)$/.exec(id);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+function bucketStyle(tone: BucketTone): BucketStyle {
+  return {
+    "--bucket-fill": tone.fill,
+    "--bucket-border": tone.border,
+    "--bucket-ink": tone.ink,
+    "--bucket-soft": tone.soft
+  };
+}
+
+function buildBucketViewModels(buckets: AgeBucket[]): BucketViewModel[] {
+  return [...buckets]
+    .sort(
+      (a, b) =>
+        a.start - b.start ||
+        bucketSortEnd(a) - bucketSortEnd(b) ||
+        bucketNumericId(a.id) - bucketNumericId(b.id) ||
+        a.id.localeCompare(b.id)
+    )
+    .map((bucket, index) => ({
+      bucket,
+      index,
+      label: `Bucket ${index + 1}`,
+      shortLabel: `B${index + 1}`,
+      rangeLabel: formatBucket(bucket),
+      style: bucketStyle(BUCKET_TONES[index % BUCKET_TONES.length])
+    }));
+}
+
+function nextBucketId(buckets: AgeBucket[]): string {
+  const next = buckets.reduce((max, b) => Math.max(max, bucketNumericId(b.id)), 0) + 1;
+  return `b${next}`;
+}
+
+function bucketLandingText(
+  fits: AgeBucket[],
+  bucketViewById: Map<string, BucketViewModel>
+): string {
+  const fitViews = fits
+    .map((b) => bucketViewById.get(b.id))
+    .filter((v): v is BucketViewModel => v != null)
+    .sort((a, b) => a.index - b.index);
+  if (fitViews.length === 0) return "fits no bucket";
+  if (fitViews.length === 1) {
+    return `→ ${fitViews[0].shortLabel}: ${fitViews[0].rangeLabel}`;
+  }
+  return `${fitViews.map((v) => v.shortLabel).join(" + ")} overlap`;
+}
 
 function BucketAxis({
-  buckets,
+  activeBucketId,
+  bucketViews,
+  onActiveBucket,
   onEdit
 }: {
-  buckets: AgeBucket[];
+  activeBucketId: string | null;
+  bucketViews: BucketViewModel[];
+  onActiveBucket: (id: string | null) => void;
   onEdit: (id: string, patch: Partial<AgeBucket>) => void;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -1363,6 +1508,7 @@ function BucketAxis({
   } | null>(null);
   /* Read the latest props inside the window-level drag listeners without
      re-subscribing on every keystroke/edit. */
+  const buckets = bucketViews.map((v) => v.bucket);
   const bucketsRef = useRef(buckets);
   bucketsRef.current = buckets;
   const onEditRef = useRef(onEdit);
@@ -1394,7 +1540,10 @@ function BucketAxis({
         });
       }
     };
-    const up = () => setDragTarget(null);
+    const up = () => {
+      setDragTarget(null);
+      onActiveBucket(null);
+    };
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
     window.addEventListener("pointercancel", up);
@@ -1412,6 +1561,7 @@ function BucketAxis({
   ) => {
     e.preventDefault();
     e.stopPropagation();
+    onActiveBucket(id);
     setDragTarget({ id, edge });
   };
 
@@ -1420,7 +1570,13 @@ function BucketAxis({
 
   return (
     <div className="lab-bucket-axis" aria-hidden="true">
-      <div className="lab-bucket-axis-track" ref={trackRef}>
+      <div
+        className="lab-bucket-axis-track"
+        ref={trackRef}
+        onPointerLeave={() => {
+          if (!dragTarget) onActiveBucket(null);
+        }}
+      >
         {/* uncovered stretches */}
         {gaps.map((g, i) => (
           <span
@@ -1430,18 +1586,22 @@ function BucketAxis({
           />
         ))}
         {/* the bucket bands (visual) */}
-        {buckets.map((b, i) => {
+        {bucketViews.map((view) => {
+          const b = view.bucket;
           const left = axisPct(b.start);
           const width = axisPct(bandRightAge(b)) - left;
           return (
             <div
               key={b.id}
-              className="lab-bucket-axis-band"
-              style={{ left: `${left}%`, width: `${width}%` }}
-              data-band-index={i}
+              className={`lab-bucket-axis-band ${activeBucketId === b.id ? "is-active" : ""}`}
+              style={{ ...view.style, left: `${left}%`, width: `${width}%` }}
+              data-band-index={view.index + 1}
+              data-bucket-id={b.id}
+              data-testid={`lab-bucket-band-${b.id}`}
+              onPointerEnter={() => onActiveBucket(b.id)}
             >
               <span className="lab-bucket-axis-band-label">
-                {i + 1}&nbsp;·&nbsp;{formatBucket(b)}
+                {view.shortLabel}&nbsp;·&nbsp;{view.rangeLabel}
               </span>
             </div>
           );
@@ -1456,18 +1616,24 @@ function BucketAxis({
         ))}
         {/* drag handles in their own top layer, so a band's edge handle is never
             buried under an adjacent (overlapping) band */}
-        {buckets.map((b) => {
+        {bucketViews.map((view) => {
+          const b = view.bucket;
           const open = b.end == null;
+          const active = activeBucketId === b.id || dragTarget?.id === b.id;
           return (
             <span key={`h-${b.id}`}>
               <span
-                className={`lab-bucket-axis-handle lab-bucket-axis-handle--start ${dragTarget?.id === b.id && dragTarget.edge === "start" ? "is-dragging" : ""}`}
-                style={{ left: `${axisPct(b.start)}%` }}
+                className={`lab-bucket-axis-handle lab-bucket-axis-handle--start ${active ? "is-active" : ""} ${dragTarget?.id === b.id && dragTarget.edge === "start" ? "is-dragging" : ""}`}
+                style={{ ...view.style, left: `${axisPct(b.start)}%` }}
+                data-bucket-id={b.id}
+                onPointerEnter={() => onActiveBucket(b.id)}
                 onPointerDown={(e) => onHandleDown(e, b.id, "start")}
               />
               <span
-                className={`lab-bucket-axis-handle lab-bucket-axis-handle--end ${open ? "is-open" : ""} ${dragTarget?.id === b.id && dragTarget.edge === "end" ? "is-dragging" : ""}`}
-                style={{ left: `${axisPct(bandRightAge(b))}%` }}
+                className={`lab-bucket-axis-handle lab-bucket-axis-handle--end ${open ? "is-open" : ""} ${active ? "is-active" : ""} ${dragTarget?.id === b.id && dragTarget.edge === "end" ? "is-dragging" : ""}`}
+                style={{ ...view.style, left: `${axisPct(bandRightAge(b))}%` }}
+                data-bucket-id={b.id}
+                onPointerEnter={() => onActiveBucket(b.id)}
                 onPointerDown={(e) => onHandleDown(e, b.id, "end")}
               />
             </span>
@@ -1513,6 +1679,14 @@ function BucketTinkerExercise({ num }: { num: number }) {
     startingAgeBuckets.map((b) => ({ ...b }))
   );
   const [completed, setCompleted] = useState<string[]>([]);
+  const [focusedBucketId, setFocusedBucketId] = useState<string | null>(null);
+  const [pointerBucketId, setPointerBucketId] = useState<string | null>(null);
+  const bucketViews = useMemo(() => buildBucketViewModels(buckets), [buckets]);
+  const bucketViewById = useMemo(
+    () => new Map(bucketViews.map((view) => [view.bucket.id, view])),
+    [bucketViews]
+  );
+  const activeBucketId = focusedBucketId ?? pointerBucketId;
 
   useEffect(() => {
     setCompleted((prev) => {
@@ -1529,14 +1703,19 @@ function BucketTinkerExercise({ num }: { num: number }) {
     ? bucketTasks.find((t) => t.id === lastDoneId) ?? null
     : null;
   const allDone = completed.length === bucketTasks.length;
+  const canAddBucket = buckets.length < MAX_AGE_BUCKETS;
 
   const updateBucket = (id: string, patch: Partial<AgeBucket>) =>
     setBuckets((bs) => bs.map((b) => (b.id === id ? { ...b, ...patch } : b)));
-  const removeBucket = (id: string) =>
+  const removeBucket = (id: string) => {
+    setFocusedBucketId((current) => (current === id ? null : current));
+    setPointerBucketId((current) => (current === id ? null : current));
     setBuckets((bs) => bs.filter((b) => b.id !== id));
+  };
   const addBucket = () => {
     setBuckets((bs) => {
-      const id = `b${Date.now()}`;
+      if (bs.length >= MAX_AGE_BUCKETS) return bs;
+      const id = nextBucketId(bs);
       const lastEnd = bs.reduce(
         (max, b) => (b.end != null && b.end > max ? b.end : max),
         ageEditMin
@@ -1546,7 +1725,11 @@ function BucketTinkerExercise({ num }: { num: number }) {
       return [...bs, { id, start, end }];
     });
   };
-  const reset = () => setBuckets(startingAgeBuckets.map((b) => ({ ...b })));
+  const reset = () => {
+    setFocusedBucketId(null);
+    setPointerBucketId(null);
+    setBuckets(startingAgeBuckets.map((b) => ({ ...b })));
+  };
 
   return (
     <ExerciseFrame
@@ -1558,14 +1741,20 @@ function BucketTinkerExercise({ num }: { num: number }) {
       verb="tinker"
       nextTeaser="Next: completeness changes with the decision. The same audience needs a different option set."
     >
-      <BucketAxis buckets={buckets} onEdit={updateBucket} />
+      <BucketAxis
+        activeBucketId={activeBucketId}
+        bucketViews={bucketViews}
+        onActiveBucket={setPointerBucketId}
+        onEdit={updateBucket}
+      />
 
       <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             Age is asked in buckets. The starter set overlaps, skips under-18,
-            and lumps everyone 45+. Edit the bands (drag on the timeline or type
-            ages) until all ten visitors land in exactly one — no{" "}
+            and lumps everyone 45+. Edit the matching B-number bands and rows
+            (drag on the timeline or type ages) until all ten visitors land in
+            exactly one — no{" "}
             <strong>gap</strong> nobody covers, no <strong>overlap</strong> two
             buckets share.
           </p>
@@ -1604,65 +1793,84 @@ function BucketTinkerExercise({ num }: { num: number }) {
         <section className="lab-bucket-editor" aria-label="Edit the buckets">
           <p className="lab-bucket-editor-key">Buckets (start–end, inclusive)</p>
           <ul className="lab-bucket-rows">
-            {buckets.map((b, i) => (
-              <li key={b.id} className="lab-bucket-row">
-                <span className="lab-bucket-row-num" aria-hidden="true">
-                  {i + 1}
-                </span>
-                <label className="lab-bucket-stepper">
-                  <span className="lab-bucket-stepper-key">Start</span>
-                  <input
-                    type="number"
-                    min={ageEditMin}
-                    max={ageEditMax}
-                    value={b.start}
-                    data-testid={`lab-bucket-start-${b.id}`}
-                    onChange={(e) =>
-                      updateBucket(b.id, {
-                        start: clampInt(
-                          parseInt(e.target.value, 10),
-                          ageEditMin,
-                          ageEditMax
-                        )
-                      })
-                    }
-                  />
-                </label>
-                <span className="lab-bucket-row-sep" aria-hidden="true">
-                  to
-                </span>
-                <label className="lab-bucket-stepper">
-                  <span className="lab-bucket-stepper-key">End</span>
-                  <input
-                    type="number"
-                    min={ageEditMin}
-                    max={ageEditMax}
-                    value={b.end ?? ""}
-                    placeholder="(open)"
-                    data-testid={`lab-bucket-end-${b.id}`}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      updateBucket(b.id, {
-                        end:
-                          v === ""
-                            ? null
-                            : clampInt(parseInt(v, 10), ageEditMin, ageEditMax)
-                      });
-                    }}
-                  />
-                </label>
-                <button
-                  type="button"
-                  className="lab-bucket-row-remove"
-                  data-testid={`lab-bucket-remove-${b.id}`}
-                  onClick={() => removeBucket(b.id)}
-                  aria-label={`Remove bucket ${i + 1}`}
-                  disabled={buckets.length <= 1}
+            {bucketViews.map((view) => {
+              const b = view.bucket;
+              return (
+                <li
+                  key={b.id}
+                  className={`lab-bucket-row ${activeBucketId === b.id ? "is-active" : ""}`}
+                  style={view.style}
+                  data-bucket-id={b.id}
+                  data-bucket-label={view.label}
+                  data-testid={`lab-bucket-row-${b.id}`}
+                  onPointerEnter={() => setPointerBucketId(b.id)}
+                  onPointerLeave={() => setPointerBucketId(null)}
+                  onFocus={() => setFocusedBucketId(b.id)}
+                  onBlur={() => setFocusedBucketId(null)}
                 >
-                  ×
-                </button>
-              </li>
-            ))}
+                  <span className="lab-bucket-row-id">
+                    <span className="lab-bucket-row-swatch" aria-hidden="true" />
+                    <span className="lab-bucket-row-num" aria-hidden="true">
+                      {view.shortLabel}
+                    </span>
+                  </span>
+                  <label className="lab-bucket-stepper">
+                    <span className="lab-bucket-stepper-key">Start</span>
+                    <input
+                      type="number"
+                      min={ageEditMin}
+                      max={ageEditMax}
+                      aria-label={`${view.label} start age`}
+                      value={b.start}
+                      data-testid={`lab-bucket-start-${b.id}`}
+                      onChange={(e) =>
+                        updateBucket(b.id, {
+                          start: clampInt(
+                            parseInt(e.target.value, 10),
+                            ageEditMin,
+                            ageEditMax
+                          )
+                        })
+                      }
+                    />
+                  </label>
+                  <span className="lab-bucket-row-sep" aria-hidden="true">
+                    to
+                  </span>
+                  <label className="lab-bucket-stepper">
+                    <span className="lab-bucket-stepper-key">End</span>
+                    <input
+                      type="number"
+                      min={ageEditMin}
+                      max={ageEditMax}
+                      aria-label={`${view.label} end age`}
+                      value={b.end ?? ""}
+                      placeholder="(open)"
+                      data-testid={`lab-bucket-end-${b.id}`}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        updateBucket(b.id, {
+                          end:
+                            v === ""
+                              ? null
+                              : clampInt(parseInt(v, 10), ageEditMin, ageEditMax)
+                        });
+                      }}
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    className="lab-bucket-row-remove"
+                    data-testid={`lab-bucket-remove-${b.id}`}
+                    onClick={() => removeBucket(b.id)}
+                    aria-label={`Remove ${view.label}`}
+                    disabled={buckets.length <= 1}
+                  >
+                    ×
+                  </button>
+                </li>
+              );
+            })}
           </ul>
           <div className="lab-bucket-editor-actions">
             <button
@@ -1670,6 +1878,8 @@ function BucketTinkerExercise({ num }: { num: number }) {
               className="lab-action-button lab-action-button--ghost"
               data-testid="lab-bucket-add"
               onClick={addBucket}
+              disabled={!canAddBucket}
+              aria-describedby={!canAddBucket ? "lab-bucket-limit" : undefined}
             >
               + Add bucket
             </button>
@@ -1682,10 +1892,21 @@ function BucketTinkerExercise({ num }: { num: number }) {
               Reset
             </button>
           </div>
+          {!canAddBucket && (
+            <p
+              className="lab-bucket-limit"
+              data-testid="lab-bucket-limit"
+              id="lab-bucket-limit"
+            >
+              Eight buckets is the limit for this lab surface; remove one to
+              keep tinkering.
+            </p>
+          )}
           <p className="lab-bucket-editor-hint">
             Leave &ldquo;End&rdquo; blank for an open-ended bucket
-            (&ldquo;65+&rdquo;). The starter set&rsquo;s overlaps live where two
-            buckets share a number — fix those first.
+            (&ldquo;65+&rdquo;). Each row&rsquo;s B-number and swatch match the
+            band above; the starter overlaps live where two buckets share a
+            number.
           </p>
         </section>
 
@@ -1722,9 +1943,7 @@ function BucketTinkerExercise({ num }: { num: number }) {
                   <span className="lab-bucket-fit-state">
                     {state === "uncovered"
                       ? "fits no bucket"
-                      : state === "clean"
-                        ? `→ ${formatBucket(fits[0])}`
-                        : `${fits.length} buckets`}
+                      : bucketLandingText(fits, bucketViewById)}
                   </span>
                 </li>
               );

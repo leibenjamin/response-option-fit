@@ -3420,17 +3420,25 @@ summary:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-wash);
-  border: 1px solid var(--accent-soft);
+  background: var(--bucket-fill, var(--accent-wash));
+  border: 1px solid var(--bucket-border, var(--accent-soft));
   border-radius: 6px;
   min-width: 2px;
   box-sizing: border-box;
+  box-shadow: inset 0 0 0 1px rgba(255, 250, 242, 0.42);
+  z-index: 1;
+}
+.lab-bucket-axis-band.is-active {
+  border-color: var(--bucket-ink, var(--accent-2));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 242, 0.56),
+    0 0 0 2px var(--bucket-soft, rgba(176, 74, 47, 0.16));
 }
 .lab-bucket-axis-band-label {
   font-family: var(--font-mono);
   font-size: 10.5px;
   letter-spacing: 0.02em;
-  color: var(--accent-2);
+  color: var(--bucket-ink, var(--accent-2));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3441,9 +3449,9 @@ summary:focus-visible {
 }
 .lab-bucket-axis-handle {
   position: absolute;
-  top: 1px;
-  bottom: 1px;
-  width: 18px;
+  top: 0;
+  bottom: 0;
+  width: 28px;
   transform: translateX(-50%);
   cursor: ew-resize;
   touch-action: none;
@@ -3455,18 +3463,22 @@ summary:focus-visible {
   top: 8px;
   bottom: 8px;
   left: 50%;
-  width: 4px;
+  width: 5px;
   transform: translateX(-50%);
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--bucket-border, var(--accent));
+  border: 1px solid var(--paper-card);
   box-shadow: 0 1px 3px rgba(70, 45, 30, 0.3);
 }
 .lab-bucket-axis-handle--end.is-open::before {
-  background: var(--accent-soft);
+  background: var(--bucket-ink, var(--accent-soft));
+  opacity: 0.66;
 }
+.lab-bucket-axis-handle.is-active::before,
 .lab-bucket-axis-handle.is-dragging::before {
-  background: var(--accent-2);
-  box-shadow: 0 0 0 4px rgba(176, 74, 47, 0.16);
+  background: var(--bucket-ink, var(--accent-2));
+  opacity: 1;
+  box-shadow: 0 0 0 4px var(--bucket-soft, rgba(176, 74, 47, 0.16));
 }
 .lab-bucket-axis-overlap {
   position: absolute;
@@ -3482,6 +3494,7 @@ summary:focus-visible {
   border: 1px solid var(--accent-2);
   border-radius: 4px;
   pointer-events: none;
+  z-index: 2;
 }
 .lab-bucket-axis-dots {
   position: relative;
@@ -3558,6 +3571,11 @@ summary:focus-visible {
 @media (forced-colors: active) {
   .lab-bucket-axis-band {
     border: 1px solid CanvasText;
+    background: Canvas;
+  }
+  .lab-bucket-axis-band.is-active {
+    outline: 2px solid Highlight;
+    outline-offset: 1px;
   }
   .lab-bucket-axis-overlap {
     border: 2px solid Highlight;
@@ -3568,6 +3586,14 @@ summary:focus-visible {
   .lab-bucket-axis-dot-mark {
     background: CanvasText;
     border: 1px solid Canvas;
+  }
+  .lab-bucket-row,
+  .lab-bucket-row.is-active,
+  .lab-bucket-row-swatch {
+    border-color: CanvasText;
+  }
+  .lab-bucket-row-swatch {
+    background: Canvas;
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -3636,19 +3662,45 @@ summary:focus-visible {
 
 .lab-bucket-row {
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr) auto minmax(0, 1fr) 28px;
+  grid-template-columns: 44px minmax(0, 1fr) auto minmax(0, 1fr) 28px;
   gap: var(--s-2);
   align-items: center;
   padding: var(--s-2) var(--s-3);
   border: 1px solid var(--line-faint);
+  border-left: 4px solid var(--bucket-border, var(--line-faint));
   background: var(--paper-card);
+}
+
+.lab-bucket-row.is-active {
+  border-color: var(--bucket-border, var(--accent-soft));
+  background:
+    linear-gradient(90deg, var(--bucket-soft, rgba(176, 74, 47, 0.1)), transparent 64%),
+    var(--paper-card);
+  box-shadow: 0 0 0 2px var(--bucket-soft, rgba(176, 74, 47, 0.12));
+}
+
+.lab-bucket-row-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.lab-bucket-row-swatch {
+  width: 12px;
+  height: 22px;
+  flex: 0 0 auto;
+  border-radius: 3px;
+  border: 1px solid var(--bucket-border, var(--line-soft));
+  background: var(--bucket-fill, var(--accent-wash));
 }
 
 .lab-bucket-row-num {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--ink-mute);
+  color: var(--bucket-ink, var(--ink-mute));
   text-align: center;
+  white-space: nowrap;
 }
 
 .lab-bucket-stepper {
@@ -3713,6 +3765,14 @@ summary:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-2);
+}
+
+.lab-bucket-limit {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--accent-2);
 }
 
 .lab-bucket-editor-hint {

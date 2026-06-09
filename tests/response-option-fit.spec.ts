@@ -671,6 +671,79 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(page.getByTestId("lab-bucket-fit-pat")).toContainText("65+");
   });
 
+  test("E3 bucket tinker: bucket identities stay ordered and capped while tinkering", async ({ page }) => {
+    await page.goto(`${BASE_URL}/`);
+    await expect(page.locator(".lab-bucket-axis-band")).toHaveCount(4);
+    await expect(page.locator(".lab-bucket-axis-handle")).toHaveCount(8);
+
+    const bucketLabels = async () =>
+      (await page.locator(".lab-bucket-axis-band-label").allTextContents()).map(
+        (text) => text.replace(/\s+/g, " ").trim()
+      );
+
+    const tooSmallHandles = await page
+      .locator(".lab-bucket-axis-handle")
+      .evaluateAll((els) =>
+        els
+          .map((el) => {
+            const rect = el.getBoundingClientRect();
+            return {
+              height: Math.round(rect.height * 10) / 10,
+              width: Math.round(rect.width * 10) / 10
+            };
+          })
+          .filter((rect) => Math.min(rect.width, rect.height) < 24)
+      );
+    expect(tooSmallHandles).toEqual([]);
+
+    expect(await bucketLabels()).toEqual([
+      "B1 · 18–25",
+      "B2 · 25–35",
+      "B3 · 35–45",
+      "B4 · 45+"
+    ]);
+
+    for (let i = 0; i < 4; i++) {
+      await page.getByTestId("lab-bucket-add").click();
+    }
+    await expect(page.locator(".lab-bucket-row")).toHaveCount(8);
+    await expect(page.locator(".lab-bucket-axis-band")).toHaveCount(8);
+    await expect(page.getByTestId("lab-bucket-add")).toBeDisabled();
+    await expect(page.getByTestId("lab-bucket-limit")).toContainText(
+      "Eight buckets"
+    );
+    expect(await bucketLabels()).toEqual([
+      "B1 · 18–25",
+      "B2 · 25–35",
+      "B3 · 35–45",
+      "B4 · 45+",
+      "B5 · 46–50",
+      "B6 · 51–55",
+      "B7 · 56–60",
+      "B8 · 61–65"
+    ]);
+    expect((await bucketLabels()).filter((label) => /· 100$/.test(label))).toEqual([]);
+
+    await page.getByTestId("lab-bucket-remove-b2").click();
+    await expect(page.locator(".lab-bucket-row")).toHaveCount(7);
+    await expect(page.getByTestId("lab-bucket-add")).toBeEnabled();
+    await page.getByTestId("lab-bucket-add").click();
+    await page.getByTestId("lab-bucket-start-b9").fill("10");
+    await page.getByTestId("lab-bucket-end-b9").fill("12");
+
+    await expect(page.locator(".lab-bucket-row").first()).toHaveAttribute(
+      "data-bucket-id",
+      "b9"
+    );
+    expect((await bucketLabels()).slice(0, 2)).toEqual([
+      "B1 · 10–12",
+      "B2 · 18–25"
+    ]);
+    expect(
+      (await page.locator(".lab-bucket-row-id").allTextContents()).slice(0, 2)
+    ).toEqual(["B1", "B2"]);
+  });
+
   test("E10 verbal labels: numeric slots and positive-skew words fail; the balanced built ruler passes", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
     await expect(page.locator(".lab-label-builder")).toBeVisible();

@@ -11,7 +11,7 @@ that walks the visitor through twelve hands-on exercises — each one a differen
 way a response-option set can fail.
 
 Each exercise is compact and hands-on: tinker with a control (build a rating
-scale, fix overlapping age buckets, choose an answer set, screen a false
+scale, repair keyed age-bucket bands, choose an answer set, screen a false
 premise, compare question formats, build a verbal ruler, expose a vague-word
 collision, or classify lists before setting order rules), watch a fixed cast of
 authored respondents flow through, and read the consequence. The active solving

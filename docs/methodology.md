@@ -22,11 +22,11 @@ visitor a distinct mechanic, so the page does not feel like one puzzle
 reskinned: build a rating scale and watch a leading stem, a missing
 strong-negative, a dropped midpoint, and option order each move the result;
 flag and repair double-barreled items; screen a false-premise question so
-ineligible respondents do not inflate the denominator; fix overlapping age
-buckets; assemble a "how did you hear about us" answer set against a cast that
-satisfices or skips when their channel is missing; compare agree/disagree,
-reverse-worded, and item-specific formats for acquiescence; trade off scale
-length; tell a true neutral from "Don't know" from "Not applicable"; label every
+ineligible respondents do not inflate the denominator; repair keyed
+age-bucket bands on a ruler; assemble a "how did you hear about us" answer set
+against a cast that satisfices or skips when their channel is missing; compare
+agree/disagree, reverse-worded, and item-specific formats for acquiescence;
+trade off scale length; tell a true neutral from "Don't know" from "Not applicable"; label every
 point of a scale by building the middle labels and checking semantic balance;
 spot the collision created by vague frequency words, then replace them without
 falling into a fake 0-100 precision trap; classify option lists before deciding
