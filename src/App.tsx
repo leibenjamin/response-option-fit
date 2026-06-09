@@ -37,13 +37,16 @@ function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
       </a>
       {/* Utility masthead, tucked in the top-right corner so the byline + links
           stay out of the top-to-bottom reading flow but a cold reviewer can find
-          who made this in one glance. On narrow screens it collapses to the gear
-          and the footer carries the byline + links instead. */}
-      <div className="lab-masthead">
+          who made this in one glance. A landmark <header> (banner) so its byline
+          text is contained for the axe region rule; the hero's own <header> is
+          scoped inside <main>, so this is the page's only banner. On narrow
+          screens it collapses to the gear and the footer carries the byline +
+          links instead. */}
+      <header className="lab-masthead" aria-label="About this project">
         <span className="lab-masthead-by">
           Built by <strong>Ben Lei</strong>
         </span>
-        <nav className="lab-masthead-links" aria-label="About this project">
+        <nav className="lab-masthead-links" aria-label="Project links">
           <a
             className="lab-masthead-link"
             href="https://github.com/leibenjamin/response-option-fit"
@@ -60,7 +63,7 @@ function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
           </a>
         </nav>
         <SettingsButton onClick={onSettingsOpen} />
-      </div>
+      </header>
       <Suspense
         fallback={
           <main

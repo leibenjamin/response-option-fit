@@ -772,14 +772,15 @@ function ScaleBuilderExercise({ num }: { num: number }) {
       verb="tinker"
       nextTeaser="Next: a clean-looking item can still ask two things at once. Don’t use “and” as your detector."
     >
-      <p className="lab-exercise-setup">
-        Roast &amp; Brew, a coffee shop, runs a post-visit feedback survey.
-        You design the answer scale for one question. Five visitors answer —
-        and their true feelings never change. Only your options and wording
-        do. The scale ships today as a bare Satisfied / Dissatisfied choice
-        with a leading stem, and it already reads <strong>4 of 5 satisfied</strong>{" "}
-        when only two truly are.
-      </p>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            You design the answer scale for one question; five visitors answer
+            and their true feelings never change — only your options and wording
+            do. It ships today as a bare Satisfied / Dissatisfied choice with a
+            leading stem, already reading <strong>4 of 5 satisfied</strong> when
+            only two truly are.
+          </p>
 
       <TaskBand
         testidPrefix="lab-task"
@@ -807,9 +808,10 @@ function ScaleBuilderExercise({ num }: { num: number }) {
         }
         allDoneText={null}
       />
+        </div>
 
-      <div className="lab-grid">
-        <section className="lab-builder" aria-label="Design the answer scale">
+        <div className="lab-console-work">
+      <section className="lab-builder" aria-label="Design the answer scale">
           <div className="lab-question">
             <p className="lab-question-key">The survey asks</p>
             <p className="lab-question-stem lab-selectable">{stemText[design.stem]}</p>
@@ -931,6 +933,7 @@ function ScaleBuilderExercise({ num }: { num: number }) {
             </ul>
           </div>
         </section>
+        </div>
       </div>
 
       {hostileDone && (
@@ -1527,17 +1530,17 @@ function BucketTinkerExercise({ num }: { num: number }) {
       verb="tinker"
       nextTeaser="Next: completeness changes with the decision. The same audience needs a different option set."
     >
-      <p className="lab-exercise-setup">
-        Roast &amp; Brew&rsquo;s customer survey ends by asking age, in buckets,
-        for its demographic breakdown. The starter set has overlapping
-        boundaries, no under-18 coverage, and lumps everyone over 45 together.
-        Drag the band edges on the timeline (or type exact ages below), and
-        watch the ten visitors fall into a <strong>gap</strong> nobody covers or
-        an <strong>overlap</strong> two buckets share. A wrong move is
-        informative — try one.
-      </p>
-
       <BucketAxis buckets={buckets} onEdit={updateBucket} />
+
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            Age is asked in buckets. The starter set overlaps, skips under-18,
+            and lumps everyone 45+. Edit the bands (drag on the timeline or type
+            ages) until all ten visitors land in exactly one — no{" "}
+            <strong>gap</strong> nobody covers, no <strong>overlap</strong> two
+            buckets share.
+          </p>
 
       <TaskBand
         testidPrefix="lab-bucket-task"
@@ -1567,8 +1570,9 @@ function BucketTinkerExercise({ num }: { num: number }) {
             : null
         }
       />
+        </div>
 
-      <div className="lab-bucket-grid">
+        <div className="lab-console-work">
         <section className="lab-bucket-editor" aria-label="Edit the buckets">
           <p className="lab-bucket-editor-key">Buckets (start–end, inclusive)</p>
           <ul className="lab-bucket-rows">
@@ -1699,6 +1703,7 @@ function BucketTinkerExercise({ num }: { num: number }) {
             })}
           </ul>
         </section>
+        </div>
       </div>
 
       <PostReceipt exerciseId="E3" visible={allDone} />
@@ -1766,29 +1771,19 @@ function ChannelTinkerExercise({ num }: { num: number }) {
       verb="tinker"
       nextTeaser="Next: try the standard fix, then catch why it still fails."
     >
-      <p className="lab-exercise-setup">
-        Roast &amp; Brew&rsquo;s onboarding form asks &ldquo;How did you hear
-        about us?&rdquo; Toggle options on and off; seven visitors flow through
-        and the ledger shows the four consequences of every move. Each lands on
-        their true channel when it&rsquo;s offered — otherwise the closest wrong
-        option, &ldquo;Other,&rdquo; or nothing, depending on how much effort
-        they&rsquo;ll spend. Read the stories closely: the obvious keyword often
-        points at the wrong option.
-      </p>
-
-      <div className="lab-channel-construct lab-selectable">
-        <p className="lab-channel-construct-key">First, the construct</p>
-        <p className="lab-channel-construct-body">
-          &ldquo;How did you hear about us?&rdquo; can mean four different
-          reports: <strong>first heard</strong>, <strong>most influential</strong>,{" "}
-          <strong>most recent touch</strong>, or <strong>every channel that
-          mattered</strong>. No option set is &ldquo;complete&rdquo; until you
-          pick one — completeness is downstream of the reporting task. Task 1
-          fixes the report as <em>which channel they first came through</em>;
-          Task 2 changes the decision and watches the right option set change
-          with it.
-        </p>
-      </div>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            Toggle the options for &ldquo;How did you hear about us?&rdquo; Seven
+            visitors flow through — each lands on their true channel if it&rsquo;s
+            offered, else the closest wrong option, &ldquo;Other,&rdquo; or
+            nothing. The obvious keyword often points the wrong way.
+          </p>
+          <p className="lab-console-aside lab-selectable">
+            First decide what the question <em>means</em> — first touch, most
+            influential, or every channel. A &ldquo;complete&rdquo; list is
+            downstream of that.
+          </p>
 
       <TaskBand
         testidPrefix="lab-channel-task"
@@ -1812,8 +1807,9 @@ function ChannelTinkerExercise({ num }: { num: number }) {
         passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
         allDoneText={null}
       />
+        </div>
 
-      <div className="lab-channel-grid">
+        <div className="lab-console-work">
         <section className="lab-channel-shelf" aria-label="Toggle options">
           <p className="lab-channel-shelf-key">The option shelf — tap to offer or remove</p>
           <ul className="lab-channel-shelf-list">
@@ -1935,6 +1931,7 @@ function ChannelTinkerExercise({ num }: { num: number }) {
             A teaching readout, not a validated survey-quality score.
           </p>
         </section>
+        </div>
       </div>
 
       {allClean && !allDone && (
@@ -2039,14 +2036,15 @@ function ShipReviewExercise({ num }: { num: number }) {
       modifier="ship-review"
       verb="review"
     >
-      <p className="lab-exercise-setup">
-        Roast &amp; Brew is about to email an &ldquo;improved&rdquo; feedback
-        survey, and you&rsquo;re the last reviewer. Read the actual draft and
-        diagnose each part with one of four inspection lenses — or wave it
-        through if it&rsquo;s fine. You&rsquo;ve met every one of these traps in
-        the earlier exercises; here they are in one real draft, plus one part
-        that&rsquo;s a real problem but not an answer-choice one.
-      </p>
+      <div className="lab-console lab-console--review">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            You&rsquo;re the last reviewer before this &ldquo;improved&rdquo;
+            survey ships. Diagnose each draft part with one of the four lenses —
+            or wave it through if it&rsquo;s fine. One part is a real problem
+            that isn&rsquo;t about answer choices at all.
+          </p>
+          <p className="lab-console-rubric-key">The four lenses</p>
 
       <ul className="lab-review-lenses" aria-label="The four lenses">
         {(["slot", "ruler", "push", "boundary"] as const).map((d) => (
@@ -2058,7 +2056,9 @@ function ShipReviewExercise({ num }: { num: number }) {
           </li>
         ))}
       </ul>
+        </div>
 
+        <div className="lab-console-work lab-console-work--stack">
       <ol className="lab-review-draft" aria-label="The draft survey">
         {reviewElements.map((el) => {
           const picked = answers[el.id];
@@ -2128,6 +2128,9 @@ function ShipReviewExercise({ num }: { num: number }) {
           );
         })}
       </ol>
+
+        </div>
+      </div>
 
       <div className="lab-review-tray" aria-live="polite" data-testid="lab-review-tray">
         <span className="lab-review-tray-key">Review tray</span>
@@ -2250,16 +2253,14 @@ function ScaleLengthExercise({ num }: { num: number }) {
       verb="tinker"
       nextTeaser="Next: Neutral is not a junk drawer. Give the non-answers their own homes."
     >
-      <p className="lab-exercise-setup">
-        Scale length is the <em>last</em> decision, not the first. You settle the
-        construct (what you’re measuring), then the poles (bipolar or unipolar),
-        then whether a midpoint is meaningful — and only then how many points.
-        Here those three are fixed (bipolar satisfaction, midpoint allowed), so
-        the one knob left is point count. The same question, six visitors with
-        real but in-between feelings. More points <em>feels</em> more precise —
-        so before the meters reveal, commit a guess: which length reads well on
-        both? Then tinker and find out.
-      </p>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            Length is the <em>last</em> scale decision — construct, poles, and
+            midpoint are already fixed, so the one knob is point count. Six
+            visitors with real in-between feelings. More points <em>feels</em>{" "}
+            more precise — commit a guess before the meters reveal, then tinker.
+          </p>
 
       <TaskBand
         testidPrefix="lab-scale-task"
@@ -2287,7 +2288,9 @@ function ScaleLengthExercise({ num }: { num: number }) {
             : null
         }
       />
+        </div>
 
+        <div className="lab-console-work lab-console-work--stack">
       <div className="lab-control">
         <p className="lab-control-key">
           {hasPredicted
@@ -2394,6 +2397,8 @@ function ScaleLengthExercise({ num }: { num: number }) {
       </div>
         </>
       )}
+        </div>
+      </div>
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-scale-pass">
@@ -2453,13 +2458,14 @@ function OatMilkExercise({ num }: { num: number }) {
       verb="compare"
       nextTeaser="Next: the numbers look tidy in the export. The middle still has no shared meaning."
     >
-      <p className="lab-exercise-setup">
-        Roast &amp; Brew asks how satisfied you are with its new oat-milk
-        drinks, on a five-point scale. Seven visitors answer — but three have no
-        real view to give (one has no opinion, two never tried it). Decide which
-        opt-outs to add, and watch where everyone lands. Careful: the obvious
-        first fix isn&rsquo;t the whole fix.
-      </p>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            Satisfaction with the new oat-milk drinks, on a five-point scale.
+            Seven answer — but three have no real view (one no opinion, two
+            never tried it). Add the opt-outs that give them somewhere honest to
+            go. The obvious first fix isn&rsquo;t the whole fix.
+          </p>
 
       <TaskBand
         testidPrefix="lab-oat-task"
@@ -2483,7 +2489,9 @@ function OatMilkExercise({ num }: { num: number }) {
         passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
         allDoneText={null}
       />
+        </div>
 
+        <div className="lab-console-work">
       <div className="lab-control">
         <p className="lab-control-key">
           The five-point scale is always there. Add opt-outs:
@@ -2520,6 +2528,7 @@ function OatMilkExercise({ num }: { num: number }) {
         </div>
       </div>
 
+        <div className="lab-console-results">
       <p className="lab-oat-note lab-selectable" aria-live="polite">
         {design.note}
       </p>
@@ -2560,6 +2569,9 @@ function OatMilkExercise({ num }: { num: number }) {
         know.&rdquo;
       </p>
       <CastCountNote className="lab-cast-note--readout" />
+        </div>
+        </div>
+      </div>
 
       {allDone && (
         <div className="lab-oat-done">
@@ -2644,14 +2656,15 @@ function FalsePremiseExercise({ num }: { num: number }) {
       verb="gate"
       nextTeaser="Next: make the export safe before analysis starts. One boundary value can put a person in two places."
     >
-      <p className="lab-exercise-setup">
-        Roast &amp; Brew asks one question about its app:{" "}
-        <strong>&ldquo;Did order-ahead save you time?&rdquo;</strong> — Yes / No.
-        Six customers answer, but only three have ever used order-ahead. You can
-        add a screening question before it — but the right screen is the one
-        that keeps everyone with a real basis and drops everyone without one.
-        Two of the four below are traps.
-      </p>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            The app asks{" "}
+            <strong>&ldquo;Did order-ahead save you time?&rdquo;</strong> (Yes /
+            No). Six answer; only three have ever used it. Add the screener that
+            keeps everyone with a real basis and drops everyone without one —
+            two of the four are traps.
+          </p>
 
       <TaskBand
         testidPrefix="lab-fp-task"
@@ -2675,7 +2688,9 @@ function FalsePremiseExercise({ num }: { num: number }) {
         passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
         allDoneText={null}
       />
+        </div>
 
+        <div className="lab-console-work">
       <div className="lab-control">
         <p className="lab-control-key">
           Candidate screeners — add one before the outcome question
@@ -2710,6 +2725,7 @@ function FalsePremiseExercise({ num }: { num: number }) {
         </ul>
       </div>
 
+        <div className="lab-console-results">
       <p className="lab-fp-headline lab-selectable" aria-live="polite">
         Reads: <strong>{f.outcomeNo} of {f.outcomeTotal}</strong> who reached
         the question say order-ahead didn&rsquo;t save them time
@@ -2772,6 +2788,9 @@ function FalsePremiseExercise({ num }: { num: number }) {
           );
         })}
       </ul>
+        </div>
+        </div>
+      </div>
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-fp-pass">
@@ -2836,13 +2855,14 @@ function AcquiescenceExercise({ num }: { num: number }) {
       verb="compare"
       nextTeaser="Next: commit before you peek. How many scale points are enough?"
     >
-      <p className="lab-exercise-setup">
-        Roast &amp; Brew wants to know how friendly its barista was, and asks
-        customers to agree or disagree: &ldquo;The barista was friendly.&rdquo;
-        Six answer. Read each row — a recorded &ldquo;Agree&rdquo; next to
-        someone who felt brushed off is the tell. Your job is to make the survey
-        measure friendliness, not agreeableness.
-      </p>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            &ldquo;The barista was friendly&rdquo; — agree or disagree? Six
+            answer. A recorded &ldquo;Agree&rdquo; next to someone who felt
+            brushed off is the tell. Make the survey measure friendliness, not
+            agreeableness.
+          </p>
 
       <TaskBand
         testidPrefix="lab-acq-task"
@@ -2866,7 +2886,9 @@ function AcquiescenceExercise({ num }: { num: number }) {
         passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
         allDoneText={null}
       />
+        </div>
 
+        <div className="lab-console-work">
       <div className="lab-control">
         <p className="lab-control-key">How to ask it — tap to compare</p>
         <div className="lab-acq-designs" role="group" aria-label="Question formats">
@@ -2885,6 +2907,7 @@ function AcquiescenceExercise({ num }: { num: number }) {
         </div>
       </div>
 
+        <div className="lab-console-results">
       <p className="lab-acq-stem lab-selectable">{acqDesignStem[designId]}</p>
       <p className="lab-acq-note lab-selectable" aria-live="polite">
         {acqDesignNote[designId]}
@@ -2924,6 +2947,9 @@ function AcquiescenceExercise({ num }: { num: number }) {
           hint="How many recorded answers match what the person actually felt."
           level={level}
         />
+      </div>
+        </div>
+        </div>
       </div>
 
       {showJudgment && (
@@ -3044,12 +3070,13 @@ function VerbalLabelsExercise({ num }: { num: number }) {
       verb="label"
       nextTeaser="Next: two people visit four times. The words still disagree."
     >
-      <p className="lab-exercise-setup">
-        Roast &amp; Brew wants a five-point visit rating. A numeric scale looks
-        tidy in the export, but if the middle points are blank, each visitor has
-        to invent the ruler. Fill the middle, then check whether the words you
-        chose form a fair satisfaction scale.
-      </p>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            A five-point visit rating. A bare numeric scale looks tidy, but with
+            blank middle points each visitor invents their own ruler. Fill the
+            middle, then check whether the words form a fair scale.
+          </p>
 
       <TaskBand
         testidPrefix="lab-label-task"
@@ -3073,7 +3100,9 @@ function VerbalLabelsExercise({ num }: { num: number }) {
         passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
         allDoneText={null}
       />
+        </div>
 
+        <div className="lab-console-work">
       <div className="lab-label-builder">
         <section className="lab-label-bank" aria-label="Label word bank">
           <p className="lab-control-key">Word bank</p>
@@ -3119,6 +3148,7 @@ function VerbalLabelsExercise({ num }: { num: number }) {
         </section>
       </div>
 
+        <div className="lab-console-results">
       <section className="lab-label-scale" aria-label="Candidate scale">
         <p className="lab-label-stem lab-selectable">
           How satisfied were you with your visit?
@@ -3174,6 +3204,9 @@ function VerbalLabelsExercise({ num }: { num: number }) {
           }
           level={pulled === 0 && balanced ? "high" : "low"}
         />
+      </div>
+        </div>
+        </div>
       </div>
 
       {allDone && (
@@ -3278,13 +3311,14 @@ function QuantifierExercise({ num }: { num: number }) {
       verb="anchor"
       nextTeaser="Next: keep the same list and change the mode. The favored answer moves."
     >
-      <p className="lab-exercise-setup">
-        The owner wants to segment occasional versus regular visitors. The
-        first draft uses &ldquo;Rarely / Sometimes / Often.&rdquo; That sounds
-        natural, but those words are not units. First prove the collision in
-        the cast; then anchor the answer without replacing vagueness with fake
-        precision.
-      </p>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            Segment occasional vs. regular visitors. The draft uses &ldquo;Rarely
+            / Sometimes / Often&rdquo; — natural-sounding, but those words
+            aren&rsquo;t units. First prove the collision in the cast, then anchor
+            the answer without swapping vagueness for fake precision.
+          </p>
 
       <TaskBand
         testidPrefix="lab-quant-task"
@@ -3308,7 +3342,9 @@ function QuantifierExercise({ num }: { num: number }) {
         passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
         allDoneText={null}
       />
+        </div>
 
+        <div className="lab-console-work lab-console-work--stack">
       <div className="lab-quant-workbench">
         <section className="lab-quant-collision-panel" aria-label="Collision finder">
           <p className="lab-control-key">Tap two visitors</p>
@@ -3447,6 +3483,8 @@ function QuantifierExercise({ num }: { num: number }) {
           level={meters.trustworthy}
         />
       </div>
+        </div>
+      </div>
 
       {allDone && (
         <p className="lab-exercise-pass lab-selectable" data-testid="lab-quant-pass">
@@ -3568,14 +3606,15 @@ function OrderExercise({ num }: { num: number }) {
       verb="order"
       nextTeaser="Final review: five draft questions, one clean item, and one real problem you must not over-flag."
     >
-      <p className="lab-exercise-setup">
-        Order is a real source of push, but the repair depends on what kind of
-        options you have — and on how the survey is taken. Roast &amp; Brew has
-        two broken lists: its channel list lets one answer own the favored slot
-        (and which end wins depends on the mode), and its satisfaction labels
-        are scrambled. Classify the lists, watch the mode move the drift, then
-        decide what to rotate.
-      </p>
+      <div className="lab-console">
+        <div className="lab-console-task">
+          <p className="lab-console-scenario">
+            The repair depends on the kind of list — and the survey mode. Two
+            broken lists: a channel list where one answer owns the favored slot
+            (which end wins depends on the mode), and scrambled satisfaction
+            labels. Classify them, watch the mode move the drift, then decide
+            what to rotate.
+          </p>
 
       <TaskBand
         testidPrefix="lab-order-task"
@@ -3599,7 +3638,9 @@ function OrderExercise({ num }: { num: number }) {
         passText={lastDoneTask && !allDone ? lastDoneTask.passText : null}
         allDoneText={null}
       />
+        </div>
 
+        <div className="lab-console-work lab-console-work--stack">
       <div className="lab-order-grid">
         <section className="lab-order-panel">
           <p className="lab-order-key">List A</p>
@@ -3776,6 +3817,8 @@ function OrderExercise({ num }: { num: number }) {
           hint="Does the satisfaction scale still read as a continuum?"
           level={meters.ordinalMeaning}
         />
+      </div>
+        </div>
       </div>
 
       {allDone && (

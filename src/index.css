@@ -1762,6 +1762,148 @@ summary:focus-visible {
   font-size: clamp(18px, 2vw, 22px);
 }
 
+/* ===================== SINGLE-SCREEN EXERCISE CONSOLE =====================
+   Each exercise is a dashboard with three zones, so the visitor sees the TASK,
+   changes a CONTROL (independent variable), and watches the RESULT (the effect
+   on the fixed cast) all at once, without scrolling:
+
+     [ task rail | controls | results ]
+
+   The task ("what to settle") is a narrow reference rail on the left, so its
+   height never ADDS to the work's height (the bug in a stacked task+controls
+   column); controls and results are the live loop on the right. The reveal /
+   pass / receipt / source-drawer live BELOW the console (they appear only after
+   completion — the payoff you read once, not the loop). Source order is
+   task→controls→results so mobile + AT read in the right order.
+
+   Responsive: full 3-zone at ≥900; below that everything stacks to one column
+   (the work column's controls|results split also collapses), so narrow screens
+   and heavy zoom get a clean single column instead of three cramped ones. The
+   work split ratio is a per-exercise variable (some have heavier controls, some
+   heavier results). */
+.lab-console {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+}
+.lab-console-task {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
+}
+.lab-console-work {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-4);
+  align-items: start;
+  min-width: 0;
+}
+.lab-console-controls,
+.lab-console-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  min-width: 0;
+}
+/* The trimmed scenario lead at the top of the task rail — 1–2 sentences, the
+   minimum framing before the task. (Replaces the old 3–6 line setup wall.) */
+.lab-console-scenario {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.lab-console-scenario strong {
+  color: var(--ink);
+}
+@media (min-width: 900px) {
+  /* ≥900: the task rail sits beside the work area. Below ~1150 the work itself
+     stays a single full-width stack (controls over results) so the cast rows
+     keep the room to render on one line — three cramped columns at 1024 wrap
+     the rows and run TALLER than a clean stack, the opposite of the goal. */
+  .lab-console {
+    grid-template-columns: minmax(190px, 0.7fr) minmax(0, 2fr);
+    gap: var(--s-5);
+  }
+  /* Exception: the scale builder is control-heavy (a tall vertical scale vs a
+     short readout), so stacking its work runs taller than splitting it. It
+     splits already at 900 — the short readout fits beside the builder even at
+     1024, where a stacked builder+readout would tower. */
+  .lab-exercise--scale-builder .lab-console-work {
+    grid-template-columns:
+      minmax(0, var(--work-left, 1fr))
+      minmax(0, var(--work-right, 0.95fr));
+    gap: var(--s-5);
+  }
+}
+@media (min-width: 1150px) {
+  /* ≥1150: enough width for the full 3-zone — split the work into
+     controls | results so the live loop is fully side-by-side. */
+  .lab-console-work {
+    grid-template-columns:
+      minmax(0, var(--work-left, 1fr))
+      minmax(0, var(--work-right, 1.05fr));
+    gap: var(--s-5);
+  }
+  /* Some exercises already carry their own controls|results split inside a
+     workbench/grid; for those the work column stays a single stack (the inner
+     grid does the side-by-side) so we don't nest a 2-col grid in a 2-col grid. */
+  .lab-console-work--stack {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Per-exercise work-column ratios. Cast-heavy exercises (a list of named people
+   + their landings is the result) get a wider results column so the rows don't
+   wrap; control-heavy ones keep them even. Tuned by screenshot at 1280/1440. */
+.lab-exercise--false-premise {
+  --work-left: 0.78fr;
+  --work-right: 1.25fr;
+}
+
+/* The capstone review: the four lenses are a rubric reference rail on the left
+   (stacked), the whole draft stays in the work column — a "rubric on the left,
+   draft on the right" review desk that keeps the holistic whole-draft view. */
+.lab-console-rubric-key {
+  margin: var(--s-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+.lab-console--review .lab-review-lenses {
+  grid-template-columns: minmax(0, 1fr);
+}
+/* A small aside note in a task rail (e.g. the option-set construct framing). */
+.lab-console-aside {
+  margin: 0;
+  padding: var(--s-2) var(--s-3);
+  border-left: 2px solid var(--accent-soft);
+  background: var(--accent-wash);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+/* Compact ledger meters laid in a tidy 2-up grid so 4 readouts cost ~2 rows,
+   not ~4 — used in the result column where cast + meters would otherwise tower. */
+.lab-console-meters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2) var(--s-4);
+}
+.lab-console-meters--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (max-width: 520px) {
+  .lab-console-meters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .lab-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2044,33 +2186,34 @@ summary:focus-visible {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  gap: var(--s-1);
 }
 
 .lab-task {
   display: flex;
   align-items: center;
-  gap: var(--s-3);
-  padding: var(--s-2) var(--s-3);
+  gap: var(--s-2);
+  padding: var(--s-1) var(--s-2);
   border: 1px solid transparent;
   color: var(--ink-mute);
 }
 
 .lab-task-mark {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border: 1px solid var(--line);
   display: grid;
   place-items: center;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   flex: none;
 }
 
 .lab-task-title {
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-size: 14.5px;
+  line-height: 1.25;
 }
 
 .lab-task.is-active {
@@ -2111,32 +2254,32 @@ summary:focus-visible {
 .lab-task-active {
   display: flex;
   flex-direction: column;
-  gap: var(--s-2);
+  gap: var(--s-1);
 }
 
 .lab-task-brief {
   margin: 0;
-  font-size: 14.5px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.45;
   color: var(--ink-2);
 }
 
 .lab-task-brief-key {
   display: block;
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: var(--s-1);
+  margin-bottom: 2px;
 }
 
 .lab-task-hint {
   margin: 0;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 12.5px;
+  line-height: 1.45;
   color: var(--ink-soft);
 }
 
@@ -2316,7 +2459,7 @@ summary:focus-visible {
   flex-direction: column;
   gap: var(--s-1);
   border-bottom: 1px solid var(--line-faint);
-  padding-bottom: var(--s-3);
+  padding-bottom: var(--s-2);
 }
 
 .lab-exercise-num {
@@ -2335,11 +2478,11 @@ summary:focus-visible {
 .lab-exercise-title {
   font-family: var(--font-serif);
   font-weight: 500;
-  font-size: clamp(22px, 2.4vw, 30px);
-  line-height: 1.18;
+  font-size: clamp(20px, 2vw, 25px);
+  line-height: 1.16;
   color: var(--ink);
   margin: 0;
-  max-width: 36ch;
+  max-width: 40ch;
 }
 
 .lab-exercise-issue {
@@ -3803,8 +3946,8 @@ summary:focus-visible {
 .lab-ledger-meter-hint {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 12px;
-  line-height: 1.4;
+  font-size: 11px;
+  line-height: 1.35;
   color: var(--ink-soft);
 }
 
@@ -4335,11 +4478,11 @@ summary:focus-visible {
   /* A light warm wash keeps the decision strip findable without making every
      exercise feel like the same checklist module. */
   background: var(--accent-wash);
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-3);
   border-radius: 0 10px 10px 0;
   display: flex;
   flex-direction: column;
-  gap: var(--s-3);
+  gap: var(--s-2);
 }
 
 .lab-taskband-key {
@@ -4371,7 +4514,7 @@ summary:focus-visible {
 .lab-taskband .lab-task-active {
   background: var(--paper-card);
   border: 1px solid var(--accent-soft);
-  padding: var(--s-3) var(--s-4);
+  padding: var(--s-2) var(--s-3);
 }
 
 .lab-taskband .lab-task-pass {
@@ -4984,10 +5127,10 @@ summary:focus-visible {
   background: var(--paper-card);
   color: var(--ink-2);
   font-family: var(--font-serif);
-  font-size: 15px;
-  padding: var(--s-3) var(--s-4);
+  font-size: 14px;
+  padding: var(--s-2) var(--s-3);
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-columns: 20px minmax(0, 1fr);
   gap: var(--s-3);
   align-items: center;
   text-align: left;
@@ -5240,7 +5383,7 @@ summary:focus-visible {
 .lab-label-builder,
 .lab-quant-workbench {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
   gap: var(--s-4);
   align-items: start;
 }
@@ -5580,7 +5723,7 @@ summary:focus-visible {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: minmax(0, max-content) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   column-gap: var(--s-3);
 }
 

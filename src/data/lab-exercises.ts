@@ -1405,19 +1405,19 @@ export const fpTasks: FpTask[] = [
     id: "clean",
     title: "Get the denominator honest",
     brief:
-      "As written, the Yes/No is answered by people who never installed the app and people who have it but never used order-ahead — no experience to report, yet they all land in “No.” Add a screener so only people with a real basis reach the question. Two of the four are traps: one screens out no one, one screens out too much. Find the one that fits.",
+      "Add the one screener that lets only real order-ahead users reach the question. Two of the four are traps — one screens no one out, one screens too many.",
     pass: (a) => {
       const f = fpFunnel(a);
       return f.merged === 0 && f.wronglyScreened === 0;
     },
     passText:
-      "✓ The denominator just got honest. The bare question read “4 of 6 — 67% — say order-ahead didn't save time”; now it's “1 of 3 people who actually used it.” Same world, a completely different headline — because three of those four “No”s came from people with no basis to answer.",
+      "✓ The denominator just got honest. The bare question read “4 of 6 say order-ahead didn't save time”; now it's “1 of 3 who actually used it” — same world, a completely different headline.",
     hint: (a) => {
       const f = fpFunnel(a);
       if (f.wronglyScreened > 0)
-        return `You're screening too hard — ${f.wronglyScreened} real user (Cleo, who tried it and found it slower) just dropped out. Her “No” is valid signal. Use a screener that keeps everyone who has a basis.`;
+        return `Too hard — ${f.wronglyScreened} real user (Cleo, who tried it and found it slower) just dropped out. Her “No” is valid; keep everyone with a basis.`;
       if (f.merged > 0)
-        return `${f.merged} people are still answering who never used order-ahead. “Owns a smartphone” or “uses the app” isn't enough — only “have you used order-ahead?” establishes a basis.`;
+        return `Still ${f.merged} answering with no basis. “Owns a smartphone” or “uses the app” isn't enough — only actual order-ahead use is.`;
       return "Only real users reach the question now — on to Task 2.";
     }
   },
@@ -1425,20 +1425,20 @@ export const fpTasks: FpTask[] = [
     id: "informative",
     title: "Make the drop-outs tell you why",
     brief:
-      "The denominator is clean, but everyone who didn't qualify is lumped into one “didn't use it” pile. The owner wants to know WHY: is it a discovery problem (never installed the app) or an adoption one (has it, never tried the feature)? Add the screener that separates those two — and notice the funnel only splits them when it asks about the app first.",
+      "Now split the drop-outs: never installed the app (a discovery problem) vs. has it but never tried order-ahead (adoption)? Add the screener that separates them — order matters.",
     pass: (a) => {
       const f = fpFunnel(a);
       return f.merged === 0 && f.wronglyScreened === 0 && a.includes("app") && a.includes("feature");
     },
     passText:
-      "✓ Now the drop-outs aren't one undifferentiated non-response. Two never installed the app; one has it but hasn't tried order-ahead — so you know whether to fix discovery or adoption instead of guessing. A screener doesn't only clean the outcome; an ordered one turns who-fell-out into data.",
+      "✓ Now the drop-outs aren't one undifferentiated pile: two never installed the app; one has it but hasn't tried order-ahead — so you know whether to fix discovery or adoption. An ordered screener turns who-fell-out into data.",
     hint: (a) => {
       const f = fpFunnel(a);
       if (f.merged > 0 || f.wronglyScreened > 0)
-        return "First get Task 1's clean denominator back (the feature screener, and not the over-tight weekly one).";
+        return "First get Task 1's clean denominator back (the feature screener, not the over-tight weekly one).";
       return a.includes("app")
         ? "Both the app and feature screeners are on — the funnel now splits the drop-outs."
-        : "Add the “do you use the app?” screener too, so the never-installed people separate from the has-app-never-used one.";
+        : "Add the “do you use the app?” screener too, so never-installed separates from has-app-never-used.";
     }
   }
 ];
