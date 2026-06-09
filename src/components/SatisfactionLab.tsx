@@ -460,7 +460,7 @@ function HeroProof() {
           className={`lab-hook-track lab-hook-track--n${n}`}
           role="slider"
           tabIndex={0}
-          aria-label="Place how your day is going, then read what the form would record"
+          aria-label="Set how your day is going; the readout shows what the form would record"
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(feel)}
@@ -510,20 +510,22 @@ function HeroProof() {
         aria-live="polite"
         data-testid="lab-hero-headline"
       >
-        Your day&rsquo;s about <strong>{feelWord(feel)}</strong> — the form files
-        that as{" "}
+        Your day feels <strong>{feelWord(feel)}</strong> — the form records it
+        as{" "}
         <strong className="lab-hook-filed">&ldquo;{recordedLabel}.&rdquo;</strong>{" "}
         {n === 2 ? (
           <span className="lab-hook-twist">
-            Every feeling in the shaded stretch becomes that one word.
+            With only two boxes, a wide range of real feelings all land on the
+            same answer.
           </span>
         ) : direction === "level" ? (
           <span className="lab-hook-twist">
-            With more room, your answer barely gets rounded.
+            With more options, your answer barely gets rounded.
           </span>
         ) : (
           <span className="lab-hook-twist">
-            More room, less rounding — the record creeps back toward the truth.
+            More options, less rounding — the record creeps back toward the
+            truth.
           </span>
         )}
       </p>
@@ -543,7 +545,7 @@ function HeroProof() {
       </div>
 
       <span className="lab-hook-note lab-cast-note">
-        Your placement, on this device only · no survey data, no estimates
+        Nothing here is saved or sent.
       </span>
 
       <button
@@ -778,8 +780,8 @@ function ScaleBuilderExercise({ num }: { num: number }) {
             You design the answer scale for one question; five visitors answer
             and their true feelings never change — only your options and wording
             do. It ships today as a bare Satisfied / Dissatisfied choice with a
-            leading stem, already reading <strong>4 of 5 satisfied</strong> when
-            only two truly are.
+            leading question, already reading <strong>4 of 5 satisfied</strong>{" "}
+            when only two truly are.
           </p>
 
       <TaskBand
@@ -2260,8 +2262,9 @@ function ScaleLengthExercise({ num }: { num: number }) {
       <div className="lab-console">
         <div className="lab-console-task">
           <p className="lab-console-scenario">
-            Length is the <em>last</em> scale decision — construct, poles, and
-            midpoint are already fixed, so the one knob is point count. Six
+            Length is the <em>last</em> scale decision — what you&rsquo;re
+            measuring, the endpoints, and whether there&rsquo;s a midpoint are
+            already settled, so the only knob left is how many points. Six
             visitors with real in-between feelings. More points <em>feels</em>{" "}
             more precise — commit a guess before the meters reveal, then tinker.
           </p>
@@ -3320,8 +3323,9 @@ function QuantifierExercise({ num }: { num: number }) {
           <p className="lab-console-scenario">
             Segment occasional vs. regular visitors. The draft uses &ldquo;Rarely
             / Sometimes / Often&rdquo; — natural-sounding, but those words
-            aren&rsquo;t units. First prove the collision in the cast, then anchor
-            the answer without swapping vagueness for fake precision.
+            aren&rsquo;t units. First find two visitors whose vague answers
+            don&rsquo;t match their real visit counts, then anchor the answer
+            without swapping vagueness for fake precision.
           </p>
 
       <TaskBand
@@ -3614,10 +3618,10 @@ function OrderExercise({ num }: { num: number }) {
         <div className="lab-console-task">
           <p className="lab-console-scenario">
             The repair depends on the kind of list — and the survey mode. Two
-            broken lists: a channel list where one answer owns the favored slot
-            (which end wins depends on the mode), and scrambled satisfaction
-            labels. Classify them, watch the mode move the drift, then decide
-            what to rotate.
+            broken lists: a channel list where one answer gets an unfair edge
+            just from its position (and which end wins depends on the mode), and
+            scrambled satisfaction labels. Classify them, watch the mode shift
+            that edge, then decide what to rotate.
           </p>
 
       <TaskBand

@@ -336,8 +336,8 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(hook).toContainText("3 answer options");
     await expect(readout).toContainText("Great");
 
-    /* The honesty label is present, and the CTA sends focus into Exercise 1. */
-    await expect(hook).toContainText("no survey data, no estimates");
+    /* The privacy reassurance is present, and the CTA sends focus into Exercise 1. */
+    await expect(hook).toContainText("Nothing here is saved or sent");
     await page.getByTestId("lab-hero-cta").click();
     await expect(page.locator("#lab-exercise-1-title")).toBeFocused();
   });
