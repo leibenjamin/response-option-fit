@@ -1810,6 +1810,7 @@ function ChannelTinkerExercise({ num }: { num: number }) {
         </div>
 
         <div className="lab-console-work">
+        <div className="lab-console-controls">
         <section className="lab-channel-shelf" aria-label="Toggle options">
           <p className="lab-channel-shelf-key">The option shelf — tap to offer or remove</p>
           <ul className="lab-channel-shelf-list">
@@ -1845,6 +1846,34 @@ function ChannelTinkerExercise({ num }: { num: number }) {
           </button>
         </section>
 
+          <div className="lab-channel-ledger" aria-label="Consequence ledger">
+            <LedgerMeter
+              label="Answer-space coverage"
+              hint="Does everyone have an option to pick? Visitors who give up hurt this. (Distinct from “coverage error” in sampling.)"
+              level={ledger.coverage}
+            />
+            <LedgerMeter
+              label="Analyst detail"
+              hint="How many answers keep the TRUE channel. Only Clean counts."
+              level={ledger.analystDetail}
+            />
+            <LedgerMeter
+              label="Mutual exclusivity"
+              hint="Could a visitor have two valid homes? A broad bucket overlapping a specific channel it covers kills it — two non-overlapping buckets don't."
+              level={ledger.exclusivity}
+            />
+            <LedgerMeter
+              label="Respondent burden"
+              hint="How long the list is to read. More options costs attention."
+              level={ledger.respondentBurden}
+            />
+          </div>
+          <p className="lab-channel-ledger-note">
+            A teaching readout, not a validated survey-quality score.
+          </p>
+        </div>
+
+        <div className="lab-console-results">
         <section className="lab-channel-readout" aria-label="Live readout">
           <div className="lab-channel-tallies" aria-live="polite">
             <p className="lab-channel-tally-line">
@@ -1904,33 +1933,8 @@ function ChannelTinkerExercise({ num }: { num: number }) {
               );
             })}
           </ul>
-
-          <div className="lab-channel-ledger" aria-label="Consequence ledger">
-            <LedgerMeter
-              label="Answer-space coverage"
-              hint="Does everyone have an option to pick? Visitors who give up hurt this. (Distinct from “coverage error” in sampling.)"
-              level={ledger.coverage}
-            />
-            <LedgerMeter
-              label="Analyst detail"
-              hint="How many answers keep the TRUE channel. Only Clean counts."
-              level={ledger.analystDetail}
-            />
-            <LedgerMeter
-              label="Mutual exclusivity"
-              hint="Could a visitor have two valid homes? A broad bucket overlapping a specific channel it covers kills it — two non-overlapping buckets don't."
-              level={ledger.exclusivity}
-            />
-            <LedgerMeter
-              label="Respondent burden"
-              hint="How long the list is to read. More options costs attention."
-              level={ledger.respondentBurden}
-            />
-          </div>
-          <p className="lab-channel-ledger-note">
-            A teaching readout, not a validated survey-quality score.
-          </p>
         </section>
+        </div>
         </div>
       </div>
 
