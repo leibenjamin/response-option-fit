@@ -2967,11 +2967,13 @@ function OatMilkExercise({ num }: { num: number }) {
    Exercise 3 (data id E8) — False premise / eligibility  (verb: GATE)
    ─────────────────────────────────────────────────────────────────────── */
 
+/* The reason a screened-out customer fell at the gate — shown on the row,
+   under the stage header that already says "screened out". */
 const fpScreenedWhere: Record<FpScreenerId, string> = {
-  app: "Screened out — never installed the app",
-  feature: "Screened out — has the app, never used order-ahead",
-  smartphone: "Screened out — no smartphone",
-  weekly: "Screened out — not a weekly user"
+  app: "never installed the app",
+  feature: "has the app, never used order-ahead",
+  smartphone: "no smartphone",
+  weekly: "not a weekly user"
 };
 
 function FalsePremiseExercise({ num }: { num: number }) {
@@ -3106,9 +3108,15 @@ function FalsePremiseExercise({ num }: { num: number }) {
         </span>
       </p>
 
-      <ul className="lab-fp-cast" aria-label="Where each customer lands">
-        {fpCast.map((c) => {
-          const l = fpLandingFor(c, active);
+      {(() => {
+        /* The funnel, made spatial: who reaches the question vs who the
+           active screeners stop. A customer's row physically drops into the
+           dimmer screened pen when a gate excludes them, so the denominator
+           is a visible group size, not just a headline number. */
+        const staged = fpCast.map((c) => ({ c, l: fpLandingFor(c, active) }));
+        const reached = staged.filter((x) => x.l.stage === "outcome");
+        const screened = staged.filter((x) => x.l.stage === "screened");
+        const renderRow = ({ c, l }: (typeof staged)[number]) => {
           const where =
             l.stage === "outcome"
               ? `Answers “${l.answer === "yes" ? "Yes" : "No"}”`
@@ -3148,8 +3156,53 @@ function FalsePremiseExercise({ num }: { num: number }) {
               </span>
             </li>
           );
-        })}
-      </ul>
+        };
+        return (
+          <div className="lab-fp-funnel">
+            <div className="lab-fp-stage lab-fp-stage--outcome">
+              <p className="lab-fp-stage-head" id="lab-fp-stage-outcome-head">
+                <span
+                  key={reached.length}
+                  className="lab-fp-stage-count lab-landing-swap"
+                >
+                  {reached.length} of {fpCast.length}
+                </span>
+                <span className="lab-fp-stage-title">reach the question</span>
+              </p>
+              <ul
+                className="lab-fp-cast"
+                aria-labelledby="lab-fp-stage-outcome-head"
+              >
+                {reached.map(renderRow)}
+              </ul>
+            </div>
+            {screened.length > 0 && (
+              <div className="lab-fp-stage lab-fp-stage--screened">
+                <p
+                  className="lab-fp-stage-head"
+                  id="lab-fp-stage-screened-head"
+                >
+                  <span
+                    key={screened.length}
+                    className="lab-fp-stage-count lab-landing-swap"
+                  >
+                    {screened.length}
+                  </span>
+                  <span className="lab-fp-stage-title">
+                    screened out before it
+                  </span>
+                </p>
+                <ul
+                  className="lab-fp-cast"
+                  aria-labelledby="lab-fp-stage-screened-head"
+                >
+                  {screened.map(renderRow)}
+                </ul>
+              </div>
+            )}
+          </div>
+        );
+      })()}
         </div>
         </div>
       </div>

@@ -988,11 +988,14 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E8 false premise: the loose and over-tight screeners are traps; only the basis screener cleans the denominator; the app screener then splits the drop-outs", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    /* With no screeners there is no screened-out pen — all six reach. */
+    await expect(page.locator(".lab-fp-stage--screened")).toHaveCount(0);
     /* Decoy 1 — "owns a smartphone" screens out no one, denominator stays
-       dirty (Dev, a non-user, still answers). */
+       dirty (Dev, a non-user, still answers) and the pen still never appears. */
     await page.getByTestId("lab-fp-screener-smartphone").click();
     await expect(page.getByTestId("lab-fp-pass")).toHaveCount(0);
     await expect(page.getByTestId("lab-fp-landing-dev")).toContainText("Answers");
+    await expect(page.locator(".lab-fp-stage--screened")).toHaveCount(0);
     await page.getByTestId("lab-fp-screener-smartphone").click();
     /* Decoy 2 — "weekly" over-screens, dropping Cleo, a valid occasional user. */
     await page.getByTestId("lab-fp-screener-weekly").click();
@@ -1001,9 +1004,11 @@ test.describe("Response Option Fit Lab - desktop", () => {
       "wrongly dropped"
     );
     await page.getByTestId("lab-fp-screener-weekly").click();
-    /* Correct feature screener cleans the denominator (Task 1) — but Task 2
-       (split the drop-outs) is still pending, so no full pass yet. */
+    /* Correct feature screener cleans the denominator (Task 1) — the three
+       no-basis customers drop into the screened-out pen — but Task 2 (split
+       the drop-outs) is still pending, so no full pass yet. */
     await page.getByTestId("lab-fp-screener-feature").click();
+    await expect(page.locator(".lab-fp-stage--screened")).toBeVisible();
     await expect(page.getByTestId("lab-fp-pass")).toHaveCount(0);
     /* Adding the app screener splits never-installed from has-app-never-used. */
     await page.getByTestId("lab-fp-screener-app").click();

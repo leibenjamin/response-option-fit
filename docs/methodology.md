@@ -97,6 +97,12 @@ control label, its option labels, and the immediately visible consequence.
 Exercise exposition can frame the stakes, but it should not be the only place
 where the two sides of a distinction are defined.
 
+Consequences should announce themselves. When a control changes someone's
+recorded answer, the changed value arrives with a brief one-shot mark rather
+than a silent text swap, so the eye is drawn to exactly the rows that moved
+and only those. Motion is short, never loops, and collapses to an instant
+final state under a reduced-motion preference.
+
 ## Voice And Terminology
 
 The app separates five voices:
