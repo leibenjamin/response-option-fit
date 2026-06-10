@@ -2,7 +2,7 @@
 
 **Live → [benlei.org/response-option-fit](https://benlei.org/response-option-fit/)**
 
-![The Response Option Fit Lab: the title "The quiet ways a survey lies" beside the interactive opening hook (place your day on a feeling strip; watch the form's coarse boxes round it off), above a jump-to-exercise contents rail and the first exercise beginning below.](docs/lab-screenshot.png)
+![The Response Option Fit Lab: the title "The quiet ways a survey lies" beside the interactive opening hook, where a feeling strip labels your spot, the recorded answer, and the rounded-away gap, above a jump-to-exercise contents rail and the first exercise beginning below.](docs/lab-screenshot.png)
 
 Response Option Fit Lab is a static, interactive teaching lab about how survey
 answer choices can quietly distort what a survey measures. The deployed home is

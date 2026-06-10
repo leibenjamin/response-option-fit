@@ -44,7 +44,8 @@ function LabRoute({ onSettingsOpen }: { onSettingsOpen: () => void }) {
           links instead. */}
       <header className="lab-masthead" aria-label="About this project">
         <span className="lab-masthead-by">
-          Built by <strong>Ben Lei</strong>
+          <span>Built by</span>
+          <strong>Ben Lei</strong>
         </span>
         <nav className="lab-masthead-links" aria-label="Project links">
           <a

@@ -275,11 +275,13 @@ function LabContents() {
         {done ? "✓" : num}
       </span>
       <span className="lab-contents-label">
-        {label}
-        {done && <span className="lab-contents-done-sr"> — complete</span>}
-      </span>
-      <span className="lab-contents-verb" aria-hidden="true">
-        {verb}
+        <span className="lab-contents-title">
+          {label}
+          {done && <span className="lab-contents-done-sr"> — complete</span>}
+        </span>
+        <span className="lab-contents-verb" aria-hidden="true">
+          {verb}
+        </span>
       </span>
     </a>
   );
@@ -441,10 +443,10 @@ function HeroProof() {
   const stepBoxes = () => setStepIdx((i) => (i + 1) % HOOK_BOX_STEPS.length);
   const stepLabel =
     n === 2
-      ? "Give people a middle →"
+      ? "Add a middle answer →"
       : n === 3
-        ? "Give them the full range →"
-        : "Back to two boxes ↺";
+        ? "Add finer answers →"
+        : "Return to two answers ↺";
 
   const goToExercise = () => {
     const el = document.getElementById("lab-exercise-1");
@@ -464,9 +466,12 @@ function HeroProof() {
 
   return (
     <div className="lab-hook" data-testid="lab-hero">
-      <p className="lab-hook-eyebrow">One tap · the whole idea</p>
+      <p className="lab-hook-eyebrow">Watch a form round your answer</p>
       <p className="lab-hook-stem lab-selectable">
         How&rsquo;s your day going — really?
+      </p>
+      <p className="lab-hook-guide lab-selectable">
+        Tap or drag to your exact spot. The shaded box is what the form keeps.
       </p>
 
       <div className="lab-hook-figure">
@@ -520,10 +525,33 @@ function HeroProof() {
           />
         </div>
         <p className="lab-hook-axis" aria-hidden="true">
-          <span>Rough</span>
-          <span className="lab-hook-axis-hint">tap or drag to your honest spot</span>
-          <span>Great</span>
+          <span>rough day</span>
+          <span className="lab-hook-axis-hint">feeling scale</span>
+          <span>great day</span>
         </p>
+        <div className="lab-hook-legend" aria-label="Diagram legend">
+          <span className="lab-hook-legend-item">
+            <span
+              className="lab-hook-legend-mark lab-hook-legend-mark--spot"
+              aria-hidden="true"
+            />
+            your spot
+          </span>
+          <span className="lab-hook-legend-item">
+            <span
+              className="lab-hook-legend-mark lab-hook-legend-mark--record"
+              aria-hidden="true"
+            />
+            recorded answer
+          </span>
+          <span className="lab-hook-legend-item">
+            <span
+              className="lab-hook-legend-mark lab-hook-legend-mark--gap"
+              aria-hidden="true"
+            />
+            rounded away
+          </span>
+        </div>
       </div>
 
       <p
@@ -531,22 +559,20 @@ function HeroProof() {
         aria-live="polite"
         data-testid="lab-hero-headline"
       >
-        Your day feels <strong>{feelWord(feel)}</strong> — the form records it
-        as{" "}
+        Your exact spot feels <strong>{feelWord(feel)}</strong>; the form
+        records it as{" "}
         <strong className="lab-hook-filed">&ldquo;{recordedLabel}.&rdquo;</strong>{" "}
         {n === 2 ? (
           <span className="lab-hook-twist">
-            With only two boxes, a wide range of real feelings all land on the
-            same answer.
+            With two boxes, many days get the same record.
           </span>
         ) : direction === "level" ? (
           <span className="lab-hook-twist">
-            With more options, your answer barely gets rounded.
+            This answer set keeps your spot close to what you meant.
           </span>
         ) : (
           <span className="lab-hook-twist">
-            More options, less rounding — the record creeps back toward the
-            truth.
+            More answer boxes shrink the part that gets rounded away.
           </span>
         )}
       </p>
@@ -561,22 +587,23 @@ function HeroProof() {
           {stepLabel}
         </button>
         <span className="lab-hook-count" aria-hidden="true">
-          {n} answer options
+          {n} answer boxes
         </span>
       </div>
 
-      <span className="lab-hook-note lab-cast-note">
-        Nothing here is saved or sent.
-      </span>
-
-      <button
-        type="button"
-        className="lab-hook-cta"
-        data-testid="lab-hero-cta"
-        onClick={goToExercise}
-      >
-        Start the lab &rarr;
-      </button>
+      <div className="lab-hook-footer">
+        <button
+          type="button"
+          className="lab-hook-cta"
+          data-testid="lab-hero-cta"
+          onClick={goToExercise}
+        >
+          Start the lab &rarr;
+        </button>
+        <span className="lab-hook-privacy" data-testid="lab-hook-privacy">
+          In-browser only; nothing here is saved or sent.
+        </span>
+      </div>
     </div>
   );
 }

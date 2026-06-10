@@ -393,9 +393,14 @@ test.describe("Response Option Fit Lab - desktop", () => {
     /* Reads correctly at zero clicks: the default mixed placement is filed onto
        the upper of the two coarse boxes. */
     const readout = page.getByTestId("lab-hero-headline");
+    await expect(hook).toContainText("Watch a form round your answer");
+    await expect(hook).toContainText("Tap or drag to your exact spot");
+    await expect(hook).toContainText("your exact spot");
+    await expect(hook).toContainText("recorded answer");
+    await expect(hook).toContainText("rounded away");
     await expect(readout).toContainText("honestly mixed");
     await expect(readout).toContainText("Great day");
-    await expect(hook).toContainText("2 answer options");
+    await expect(hook).toContainText("2 answer boxes");
 
     /* The placement strip is a real slider with a spoken value, so it works for
        keyboard and assistive tech. */
@@ -412,11 +417,16 @@ test.describe("Response Option Fit Lab - desktop", () => {
        finer one — the catchment shrinks. */
     await track.press("End");
     await page.getByTestId("lab-hook-step").click();
-    await expect(hook).toContainText("3 answer options");
+    await expect(hook).toContainText("3 answer boxes");
     await expect(readout).toContainText("Great");
 
     /* The privacy reassurance is present, and the CTA sends focus into Exercise 1. */
-    await expect(hook).toContainText("Nothing here is saved or sent");
+    await expect(page.getByTestId("lab-hook-privacy")).toContainText(
+      "In-browser only"
+    );
+    await expect(page.getByTestId("lab-hook-privacy")).toContainText(
+      "nothing here is saved or sent"
+    );
     await page.getByTestId("lab-hero-cta").click();
     await expect(page.locator("#lab-exercise-1-title")).toBeFocused();
   });
@@ -616,6 +626,44 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(
       page.locator('[data-testid^="lab-contents-link-"]')
     ).toHaveCount(13);
+    const railGeometry = await page.evaluate(() =>
+      Array.from(
+        document.querySelectorAll<HTMLElement>('[data-testid^="lab-contents-link-"]')
+      ).map((link) => {
+        const title = link.querySelector<HTMLElement>(".lab-contents-title");
+        const verb = link.querySelector<HTMLElement>(".lab-contents-verb");
+        const num = link.querySelector<HTMLElement>(".lab-contents-num");
+        const linkRect = link.getBoundingClientRect();
+        const titleRect = title?.getBoundingClientRect();
+        const verbRect = verb?.getBoundingClientRect();
+        const numRect = num?.getBoundingClientRect();
+        return {
+          display: getComputedStyle(link).display,
+          height: linkRect.height,
+          sameLineGap:
+            titleRect && verbRect && Math.abs(titleRect.top - verbRect.top) < 4
+              ? verbRect.left - titleRect.right
+              : null,
+          text: link.textContent?.trim() ?? "",
+          titleHeight: titleRect?.height ?? 0,
+          titleTop: titleRect?.top ?? 0,
+          numTop: numRect?.top ?? 0
+        };
+      })
+    );
+    expect(railGeometry.every((item) => item.display === "grid")).toBe(true);
+    expect(railGeometry.every((item) => item.height >= 32)).toBe(true);
+    for (const item of railGeometry) {
+      expect(
+        Math.abs(item.numTop - item.titleTop),
+        `${item.text} number aligns with title start`
+      ).toBeLessThanOrEqual(4);
+    }
+    const sameLineGaps = railGeometry
+      .map((item) => item.sameLineGap)
+      .filter((gap): gap is number => gap !== null);
+    expect(sameLineGaps.length).toBeGreaterThan(0);
+    expect(Math.max(...sameLineGaps)).toBeLessThanOrEqual(18);
     /* Jumping moves keyboard focus to the live loop, which is labelled by the
        exercise title, so it is not just a silent scroll. */
     await page.getByTestId("lab-contents-link-10").click();

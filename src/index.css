@@ -804,6 +804,13 @@ summary:focus-visible {
   line-height: 1.25;
   color: var(--ink);
 }
+.lab-hook-guide {
+  margin: calc(-1 * var(--s-2)) 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  max-width: 64ch;
+}
 .lab-hook-figure {
   display: flex;
   flex-direction: column;
@@ -968,6 +975,48 @@ summary:focus-visible {
   letter-spacing: 0.01em;
   color: var(--ink-soft);
 }
+.lab-hook-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+  margin-top: 1px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+.lab-hook-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 20px;
+  white-space: nowrap;
+}
+.lab-hook-legend-mark {
+  display: inline-block;
+  flex: none;
+}
+.lab-hook-legend-mark--spot {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--accent);
+  border: 2px solid var(--paper-card);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+}
+.lab-hook-legend-mark--record {
+  width: 10px;
+  height: 10px;
+  background: var(--accent-2);
+  border: 1px solid var(--paper-card);
+  transform: rotate(45deg);
+}
+.lab-hook-legend-mark--gap {
+  width: 24px;
+  border-top: 2px dashed var(--accent-2);
+  opacity: 0.72;
+}
 .lab-hook-readout {
   margin: var(--s-1) 0 0;
   font-family: var(--font-serif);
@@ -1020,8 +1069,11 @@ summary:focus-visible {
   text-transform: uppercase;
   color: var(--ink-mute);
 }
-.lab-hook-note {
-  margin: 0;
+.lab-hook-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
 }
 .lab-hook-cta {
   appearance: none;
@@ -1037,6 +1089,14 @@ summary:focus-visible {
   min-height: 44px;
   border-radius: 8px;
   cursor: pointer;
+}
+.lab-hook-privacy {
+  max-width: 34ch;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  color: var(--ink-mute);
 }
 .lab-hook-cta:hover,
 .lab-hook-cta:focus-visible {
@@ -1068,10 +1128,23 @@ summary:focus-visible {
     background: Canvas;
     border: 1px solid CanvasText;
   }
+  .lab-hook-legend-mark--spot,
+  .lab-hook-legend-mark--record {
+    background: Canvas;
+    border: 1px solid CanvasText;
+    box-shadow: none;
+  }
+  .lab-hook-legend-mark--gap {
+    border-top-color: CanvasText;
+  }
 }
 @media (max-width: 560px) {
   .lab-hook {
-    padding: var(--s-4);
+    padding: var(--s-3);
+    gap: var(--s-2);
+  }
+  .lab-hook-guide {
+    max-width: none;
   }
   .lab-hook-zone-label {
     font-size: 10px;
@@ -1079,11 +1152,20 @@ summary:focus-visible {
   .lab-hook-axis-hint {
     display: none;
   }
-  .lab-hook-step,
+  .lab-hook-step {
+    flex: 1 1 188px;
+    text-align: center;
+  }
   .lab-hook-cta {
     align-self: stretch;
     width: 100%;
     text-align: center;
+  }
+  .lab-hook-footer {
+    align-items: stretch;
+  }
+  .lab-hook-privacy {
+    max-width: none;
   }
 }
 
@@ -1105,13 +1187,19 @@ summary:focus-visible {
   z-index: 10;
   display: flex;
   align-items: center;
-  gap: var(--s-3);
+  gap: var(--s-2);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.04em;
   color: var(--ink-mute);
 }
 .lab-masthead-by {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  padding-right: var(--s-2);
+  border-right: 1px solid var(--line);
   white-space: nowrap;
 }
 .lab-masthead-by strong {
@@ -1121,12 +1209,13 @@ summary:focus-visible {
 .lab-masthead-links {
   display: inline-flex;
   align-items: center;
-  gap: var(--s-3);
+  gap: var(--s-2);
 }
 .lab-masthead-link {
   display: inline-flex;
   align-items: center;
   min-height: 24px;
+  padding-inline: 2px;
   color: var(--ink-soft);
   text-decoration: none;
   border-bottom: 1px solid transparent;
@@ -1549,14 +1638,16 @@ summary:focus-visible {
   margin: var(--s-3) 0 var(--s-2);
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: var(--s-1) var(--s-3);
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  gap: var(--s-2) var(--s-3);
 }
 .lab-contents-link {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1.8em minmax(0, 1fr);
+  align-items: start;
   gap: var(--s-2);
   padding: var(--s-1) var(--s-2);
+  min-height: 36px;
   border: 1px solid transparent;
   text-decoration: none;
   color: var(--ink-mute);
@@ -1569,18 +1660,25 @@ summary:focus-visible {
 .lab-contents-num {
   font-family: var(--font-mono);
   font-size: 11px;
-  width: 1.6em;
+  width: auto;
+  padding-top: 1px;
   text-align: right;
-  flex: none;
   color: var(--ink-soft);
 }
 .lab-contents-label {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1px var(--s-2);
+}
+.lab-contents-title {
   font-family: var(--font-serif);
   font-size: 14px;
   line-height: 1.2;
+  min-width: 0;
 }
 .lab-contents-verb {
-  margin-left: auto;
   font-family: var(--font-mono);
   font-size: 9.5px;
   letter-spacing: 0.08em;
