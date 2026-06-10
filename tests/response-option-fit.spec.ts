@@ -1037,9 +1037,16 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E1 scale builder runs honest → round-up → order-flip → hostile and reveals the flip", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
-    /* Ships as a 2-point leading scale reading 4 of 5. */
+    /* Ships as a 2-point forced-choice scale reading 4 of 5. The biased
+       frame is a trust warning, not a cast-routing shortcut. */
     await expect(page.locator(".lab-tally").first()).toContainText("4 of 5");
-    /* Make it honest: plain stem + a balanced 5-point scale. */
+    await expect(page.getByTestId("lab-stem-risk")).toContainText("Stem risk");
+    await page.getByTestId("lab-stem-plain").click();
+    await expect(page.locator(".lab-tally").first()).toContainText("4 of 5");
+    await expect(page.getByTestId("lab-stem-risk")).toContainText("Stem: balanced");
+    await page.getByTestId("lab-stem-leading").click();
+    await expect(page.locator(".lab-tally").first()).toContainText("4 of 5");
+    /* Make it honest: balanced stem + a balanced 5-point scale. */
     await page.getByTestId("lab-stem-plain").click();
     await page.getByTestId("lab-point-vsat").click();
     await page.getByTestId("lab-point-neutral").click();
@@ -1049,7 +1056,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
     /* Flip her back with nothing but order. */
     await page.getByTestId("lab-order-negative-first").click();
     await expect(page.locator('[data-testid="lab-task-order"].is-done')).toHaveCount(1);
-    /* Now play the shop: leading + drop strong negatives + add a soft positive. */
+    /* Now play the shop: biased frame + drop strong negatives + add a soft positive. */
     await page.getByTestId("lab-stem-leading").click();
     await page.getByTestId("lab-point-dis").click();
     await page.getByTestId("lab-point-vdis").click();

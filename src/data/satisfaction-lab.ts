@@ -2,7 +2,7 @@
    SQLBolt-style multi-exercise practice lab.
 
    The lab itself carries the analyst-level depth across multiple exercises.
-   This first scenario stays intentionally concrete and non-loaded: a coffee-shop
+   This first scenario stays intentionally concrete and familiar: a coffee-shop
    visit feedback survey. The scenario is only the vehicle for the response-scale
    lesson, not a domain story the visitor needs to learn.
 
@@ -48,14 +48,33 @@ export const cast: Respondent[] = [
   { id: "ada", name: "Ada", feeling: "loved it — perfect latte, already told three friends", truth: 2 },
   { id: "ben", name: "Ben", feeling: "good coffee, friendly staff — a little slow today", truth: 1 },
   { id: "cleo", name: "Cleo", feeling: "drink was fine; the music was too loud", truth: 0 },
-  { id: "dev", name: "Dev", feeling: "wrong order; manager fixed it but it was awkward", truth: -1 },
+  { id: "dev", name: "Dev", feeling: "wrong order; manager fixed it well, but the visit still felt awkward", truth: 0.25 },
   { id: "eve", name: "Eve", feeling: "espresso machine broke mid-order; she left without coffee", truth: -2 }
 ];
 
 export type Stem = "plain" | "leading";
 export const stemText: Record<Stem, string> = {
-  plain: "How was your visit to Roast & Brew?",
-  leading: "How great was your visit to Roast & Brew?"
+  plain:
+    "Overall, how satisfied or dissatisfied were you with your visit to Roast & Brew?",
+  leading:
+    "We work hard to make every visit welcoming. How satisfied were you with your visit?"
+};
+
+export const stemChoiceMeta: Record<Stem, { label: string; cue: string }> = {
+  plain: {
+    label: "Balanced stem",
+    cue: "asks satisfied or dissatisfied"
+  },
+  leading: {
+    label: "Biased frame",
+    cue: "favorable setup first"
+  }
+};
+
+export const stemRiskText: Record<Stem, string> = {
+  plain: "Stem: balanced",
+  leading:
+    "Stem risk: favorable setup before the rating; direction and size would need testing."
 };
 
 export type Order = "positive-first" | "negative-first";
@@ -79,14 +98,14 @@ export function orderedPoints(design: Design): ScalePoint[] {
 }
 
 /* Where one respondent lands: the offered option whose value is closest to their
-   feeling — nudged one notch toward positive if the stem is leading ("how
-   great…"). Ties break toward whichever option they read FIRST (primacy), so the
-   order toggle matters. Deterministic; returns null only if no options exist. */
+   feeling. The stem is a trust-risk flag, not a simulated effect: this authored
+   cast only routes through the offered answers and their order. Ties break
+   toward whichever option they read FIRST (primacy), so the order toggle
+   matters. Deterministic; returns null only if no options exist. */
 export function landingFor(respondent: Respondent, design: Design): ScalePoint | null {
   const points = orderedPoints(design);
   if (points.length === 0) return null;
-  const nudge = design.stem === "leading" ? 1 : 0;
-  const eff = Math.max(-2, Math.min(2, respondent.truth + nudge));
+  const eff = respondent.truth;
   let best = points[0];
   let bestDist = Math.abs(points[0].value - eff);
   for (const p of points) {
@@ -100,12 +119,13 @@ export function landingFor(respondent: Respondent, design: Design): ScalePoint |
 }
 
 /* The scale the exercise opens on — a bare two-point forced choice with a
-   leading stem. It over-reads as satisfied (4 of 5) before the visitor
-   touches anything, so the lie is visible on arrival and Task 1 is about
-   BUILDING a real scale rather than trimming one. (Trace: leading stem
-   nudges everyone +1; the only options are Satisfied/Dissatisfied, so Dev
-   at −1 ties and primacy sends him to Satisfied, and only furious Eve
-   stays Dissatisfied.) */
+   biased frame. It over-reads as satisfied (4 of 5) before the visitor touches
+   anything, so the lie is visible on arrival and Task 1 is about BUILDING a real
+   scale rather than trimming one. Trace: the only options are
+   Satisfied/Dissatisfied; Cleo ties and primacy sends her to Satisfied; Dev is
+   just below the satisfaction threshold but closer to Satisfied than
+   Dissatisfied; only furious Eve stays Dissatisfied. The stem is a separate
+   wording-risk flag, not part of the cast-routing math. */
 export const shippedDesign: Design = {
   selected: ["sat", "dis"],
   stem: "leading",
@@ -129,7 +149,7 @@ export function satisfiedCount(design: Design): number {
 }
 
 /* True iff every respondent has an option that actually fits their feeling
-   (within half a notch) and the question is not leading — i.e. an honest scale. */
+   (within half a notch) and the stem is the balanced/trustworthy version. */
 export function everyoneFits(design: Design): boolean {
   if (design.stem !== "plain") return false;
   return cast.every((c) => {
@@ -166,7 +186,8 @@ export function biasTells(design: Design): BiasTell[] {
     {
       id: "leading",
       present: design.stem === "leading",
-      tell: "A leading stem (“how great…?”) nudges every answer up before a single option is read."
+      tell:
+        "A biased frame gives a favorable setup before the rating — a wording risk whose direction and size would need testing."
     },
     {
       id: "no-strong-neg",
@@ -209,18 +230,18 @@ export const tasks: LabTask[] = [
     id: "honest",
     title: "Make it honest",
     brief:
-      "Redesign the scale so every visitor — even Eve, who left without coffee — has an option that truly fits, and the question doesn't lead.",
+      "Give every visitor — even Eve, who left without coffee — a fitting option, and use a stem that doesn't steer them.",
     pass: everyoneFits,
     passText:
-      "Balanced and complete, with a plain stem. Notice the “satisfied” count just fell to the truth — honest design looks worse for the shop, and that is the point.",
+      "Balanced stem, complete scale. Notice the “satisfied” count just fell to the truth — honest design looks worse for the shop, and that is the point.",
     hint: (design) => {
       if (design.stem === "leading") {
-        return "The stem is leading (“how great…?”) — it tilts every answer upward before a single option is read. Try the plain wording.";
+        return "The stem adds a favorable setup before the rating. It does not move this cast, but it makes the report harder to trust. Try the balanced wording.";
       }
       const m = worstMisfit(design);
       return m
         ? `${m.name} (${m.feeling}) has no option that fits — the scale needs more room on that side.`
-        : "Almost — give every feeling a fitting option and use the plain stem.";
+        : "Almost — give every feeling a fitting option and use the balanced stem.";
     }
   },
   {
@@ -231,9 +252,9 @@ export const tasks: LabTask[] = [
     pass: (design) =>
       isSatisfied(landingFor(cast.find((c) => c.id === "cleo")!, design)),
     passText:
-      "Cleo never said she was satisfied. You took away her honest middle (or tilted the question), and with no neutral to land on she got rounded up. That is how dropping a true neutral quietly inflates the positive side.",
+      "Cleo never said she was satisfied. You took away her honest middle, and with no neutral to land on she got rounded up. That is how dropping a true neutral quietly inflates the positive side.",
     hint: () =>
-      "Right now Cleo can land on a true middle option. What if the scale didn't offer one — or the stem nudged everyone up?"
+      "Right now Cleo can land on a true middle option. What if the scale didn't offer one?"
   },
   {
     id: "order",
@@ -268,6 +289,6 @@ export const tasks: LabTask[] = [
     pass: (design) => satisfiedCount(design) >= 4,
     passText: "",
     hint: (design) =>
-      `You're at ${satisfiedCount(design)} of 5. You can't change how they feel — only the options and how you ask. What makes complaining hard?`
+      `You're at ${satisfiedCount(design)} of 5. The stem is a trust risk, not a cast-routing shortcut — use the options and order to make complaining hard.`
   }
 ];

@@ -19,8 +19,9 @@ focused lab and remains in the project's git history.
 
 The twelve exercises each isolate one response-option failure mode and give the
 visitor a distinct mechanic, so the page does not feel like one puzzle
-reskinned: build a rating scale and watch a leading stem, a missing
-strong-negative, a dropped midpoint, and option order each move the result;
+reskinned: build a rating scale and see a biased frame flagged as a wording risk
+while a missing strong-negative, a dropped midpoint, and option order move the
+result;
 flag and repair double-barreled items; screen a false-premise question so
 ineligible respondents do not inflate the denominator; repair keyed
 age-bucket bands on a ruler; assemble a "how did you hear about us" answer set
@@ -89,6 +90,12 @@ meant to stay in view together at 1280x720. The visible task rail should wrap
 rather than truncate essential check text. Secondary meter readouts,
 whole-draft context, and solved-state source depth move into shelves or drawers
 so the visitor does not have to scroll back and forth while deciding.
+
+Controls should be locally intelligible. A visitor who skims or misses the setup
+paragraph should still be able to infer what the next control changes from the
+control label, its option labels, and the immediately visible consequence.
+Exercise exposition can frame the stakes, but it should not be the only place
+where the two sides of a distinction are defined.
 
 ## Voice And Terminology
 

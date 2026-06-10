@@ -714,7 +714,7 @@ export const channelTasks: ChannelTask[] = [
 
    This replaces the old "six disconnected finding cards" (which read like
    a pop quiz on unrelated topics). It is deliberately coherent: one shop,
-   one survey, problems the visitor already practiced (a leading stem from
+   one survey, problems the visitor already practiced (a biased frame from
    E1, a double-barreled item from E2, overlapping age buckets from E3, a
    narrow channel list from E4), plus a clean decoy (don't flag what's
    fine) and a sampling note that is a real problem but NOT a
@@ -767,7 +767,7 @@ export const reviewElements: ReviewElement[] = [
     id: "q-delightful",
     kind: "question",
     label: "Question 1",
-    text: "Roast & Brew is famous for its delightful service. How satisfied were you with your visit?",
+    text: "We work hard to make every visit welcoming. How satisfied were you with your visit?",
     options: [
       "Very satisfied",
       "Satisfied",
@@ -777,7 +777,7 @@ export const reviewElements: ReviewElement[] = [
     ],
     correct: "push",
     whenRight:
-      "PUSH. The five points are a balanced satisfaction scale, and they match the question — that part's fine. The problem is the lead-in, “famous for its delightful service,” which primes a positive answer before anyone reads an option. That's the leading-stem move from Exercise 1. Fix: drop the praise — just “How satisfied were you with your visit?”",
+      "PUSH. The five points are a balanced satisfaction scale, and they match the question — that part's fine. The problem is the lead-in, “We work hard to make every visit welcoming,” which frames the rating before anyone reads an option. That's the biased-frame move from Exercise 1. Fix: drop the setup and name both sides — “Overall, how satisfied or dissatisfied were you with your visit?”",
     hint:
       "The scale and the question agree (both about satisfaction), and the five points are balanced. So what's tilting the answer before the options are even read — and which lens is about wording that steers?"
   },
@@ -2208,7 +2208,7 @@ export const exerciseReceipts: Record<string, ExerciseReceipt> = {
   E1: {
     marks: [
       { branchId: "ruler", concepts: ["balance", "neutral midpoint"] },
-      { branchId: "push", concepts: ["leading frame", "option order (primacy)"] }
+      { branchId: "push", concepts: ["biased frame", "option order (primacy)"] }
     ]
   },
   E2: {
@@ -2228,7 +2228,7 @@ export const exerciseReceipts: Record<string, ExerciseReceipt> = {
     marks: [
       { branchId: "slot", concepts: ["spotting bundles + bad buckets in a real draft"] },
       { branchId: "ruler", concepts: ["spotting an undefined scale"] },
-      { branchId: "push", concepts: ["spotting a leading stem"] },
+      { branchId: "push", concepts: ["spotting biased / leading wording"] },
       { branchId: "boundary", concepts: ["telling an answer-choice problem from a sampling one"] }
     ],
     caveat:
@@ -2335,9 +2335,9 @@ export type SourceDrawer = {
 export const sourceDrawers: Record<string, SourceDrawer> = {
   E1: {
     teaches:
-      "A scale's wording, balance, options, and order are all part of the measurement — change them and the same feelings can report differently.",
+      "A scale's wording, balance, options, and order are all part of the measurement — some choices mis-file this authored cast, and some make the report need wording tests before you trust it.",
     fieldTerms: [
-      { term: "leading / biased wording", gloss: "A stem that nudges the answer in one direction before options are read." },
+      { term: "leading / biased wording", gloss: "A stem or lead-in that frames a desired answer before options are read." },
       { term: "balanced scale", gloss: "Symmetric positive and negative categories around a center — semantically, not just numerically." },
       { term: "midpoint / neutral category", gloss: "The middle position; a midpoint is not automatically psychologically neutral." },
       { term: "response-order effects (primacy / recency)", gloss: "Answers shift with the order options appear in." }
@@ -2345,9 +2345,9 @@ export const sourceDrawers: Record<string, SourceDrawer> = {
     labShorthand: "SLOT · RULER · PUSH",
     evidence: "directionally-supported",
     supports:
-      "Leading wording can shift answers toward the favored side; removing a midpoint changes the task for middle-position respondents; missing strong-negative categories push some dissatisfied people onto a weaker option, a skip, or “Other”; and option order can become part of the measurement. Primacy and recency in particular are textbook response-order effects.",
+      "Wording and context can influence answers, so a favorable setup before a rating is a design risk that should be pretested rather than assumed away. In this exercise, the live cast routing is driven only by answer options and order: removing a midpoint changes the task for middle-position respondents; missing strong-negative categories push some dissatisfied people onto a weaker option, a skip, or “Other”; and option order can become part of the measurement. Primacy and recency in particular are textbook response-order effects.",
     boundary:
-      "The fixed cast shows direction, not magnitude. A uniform “+1” shift for every respondent is a teaching animation, not an empirical effect size — real sizes depend on topic, mode, and wording.",
+      "The fixed cast shows direction for option-fit mechanisms, not magnitude. The stem badge is a warning about wording risk; it is not simulated as a uniform positive shift, because real wording effects depend on topic, mode, respondents, and exact phrasing.",
     sources: [
       "Pew Research Center, “Writing Survey Questions”",
       "Krosnick & Presser, “Question and Questionnaire Design” (2010)",
@@ -2680,7 +2680,7 @@ export const termGlossary: GlossaryTerm[] = [
   {
     term: "Leading question",
     status: "established",
-    note: "Standard term: wording that nudges the respondent toward a particular answer before they read the options."
+    note: "Standard term: wording that frames or nudges the respondent toward a particular answer before they read the options; a positive lead-in is a risk to test, not an automatic one-notch effect."
   },
   {
     term: "Primacy & recency effects",
@@ -2919,11 +2919,11 @@ export const responseOptionKnowledgeMap: KnowledgeBranch[] = [
     nodes: [
       {
         id: "push.leadingFrame",
-        label: "Leading frame",
+        label: "Biased frame",
         status: "practiced",
-        ask: "Does the wording pre-commit to a desired answer?",
+        ask: "Does the wording frame or pre-commit to a desired answer?",
         remember:
-          "A response set can look neutral while the stem has already tilted the floor.",
+          "A response set can look neutral while the stem has already made the report harder to trust.",
         exerciseIds: ["E1", "E5"]
       },
       {

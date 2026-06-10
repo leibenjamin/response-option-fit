@@ -18,6 +18,8 @@ import {
   satisfiedCount,
   scaleBank,
   shippedDesign,
+  stemChoiceMeta,
+  stemRiskText,
   stemText,
   tasks,
   trueSatisfiedCount,
@@ -793,7 +795,7 @@ function ScaleBuilderExercise({ num }: { num: number }) {
     <ExerciseFrame
       num={num}
       title="Design the scale; see the lie; learn the tells."
-      issue="Leading stems · missing strong-negatives · no neutral midpoint · primacy"
+      issue="Biased frames · missing strong-negatives · no neutral midpoint · primacy"
       decision="whether leadership reads the shop as loved or merely tolerated."
       modifier="scale-builder"
       verb="tinker"
@@ -802,10 +804,9 @@ function ScaleBuilderExercise({ num }: { num: number }) {
       <div className="lab-console" {...liveLoopProps(num)}>
         <div className="lab-console-task">
           <p className="lab-console-scenario">
-            Five visitors answer one visit question. Their feelings never
-            change — only your wording and answer options do. The shipped draft
-            already reads <strong>4 of 5 satisfied</strong> when only two truly
-            are.
+            Same five visitors, same feelings. You can change only the question
+            stem, answer options, and order; the shipped draft already reports{" "}
+            <strong>4 of 5 satisfied</strong> while only two actually are.
           </p>
 
       <TaskBand
@@ -844,7 +845,11 @@ function ScaleBuilderExercise({ num }: { num: number }) {
           </div>
 
           <div className="lab-control">
-            <p className="lab-control-key">The question wording</p>
+            <p className="lab-control-key">Question stem before the answer list</p>
+            <p className="lab-control-note lab-selectable">
+              Balanced names both sides; biased adds a favorable setup before
+              the rating.
+            </p>
             <div className="lab-segmented" role="group" aria-label="Question wording">
               {(["plain", "leading"] as const).map((s) => (
                 <button
@@ -855,9 +860,8 @@ function ScaleBuilderExercise({ num }: { num: number }) {
                   data-testid={`lab-stem-${s}`}
                   onClick={() => setDesign((d) => ({ ...d, stem: s }))}
                 >
-                  {s === "plain"
-                    ? "Plain — “how was…”"
-                    : "Leading — “how great…”"}
+                  <span className="lab-seg-main">{stemChoiceMeta[s].label}</span>
+                  <span className="lab-seg-note">{stemChoiceMeta[s].cue}</span>
                 </button>
               ))}
             </div>
@@ -932,6 +936,13 @@ function ScaleBuilderExercise({ num }: { num: number }) {
             <p className="lab-tally-truth">
               only {trueSatisfiedCount} of them actually are
             </p>
+            <p
+              className={`lab-stem-risk ${design.stem === "leading" ? "is-risk" : "is-balanced"}`}
+              data-testid="lab-stem-risk"
+              aria-live="polite"
+            >
+              {stemRiskText[design.stem]}
+            </p>
             <CastCountNote className="lab-cast-note--readout" />
             <ul className="lab-cast">
               {cast.map((c) => {
@@ -968,7 +979,7 @@ function ScaleBuilderExercise({ num }: { num: number }) {
           <h3 id="lab-flip-title">Look at what you just did.</h3>
           <p className="lab-selectable">
             You didn&rsquo;t change a single visitor&rsquo;s feeling — you
-            changed the options and the wording, and the report now reads{" "}
+            changed the answer design around them, and the report now reads{" "}
             <strong>{satCount} of 5 satisfied</strong>. That&rsquo;s the kind of
             number an owner may act on: read it as &ldquo;people are happy&rdquo;
             and the problem the unhappy ones saw can stay hidden, because they
@@ -999,11 +1010,11 @@ function ScaleBuilderExercise({ num }: { num: number }) {
             to see the stem, the scale, and the order before you believe it.
           </p>
           <p className="lab-claim-caveat lab-selectable">
-            This cast is illustrative. The <em>direction</em> of each effect —
-            a leading stem pulling answers up, missing strong-negatives,
-            primacy on a long list — is well documented; the exact{" "}
-            <em>size</em> in any real survey depends on the topic, the mode,
-            and the wording.
+            This cast is illustrative. The option effects shown here — missing
+            strong-negatives, a missing midpoint, and primacy on a list — are
+            teaching contrasts over five named visitors, not effect-size
+            estimates. A favorable stem can also bias a real survey, but its
+            direction and size would need pretesting or an experiment.
           </p>
         </section>
       )}
