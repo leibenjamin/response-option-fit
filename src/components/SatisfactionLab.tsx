@@ -590,6 +590,10 @@ export function SatisfactionLab() {
             See how a survey&rsquo;s answer choices quietly distort what gets
             recorded — then learn to catch it.
           </p>
+          <p className="lab-route-promise lab-selectable">
+            You leave with four inspection passes you can run on any draft —
+            and a review checklist to copy into your notes.
+          </p>
           <details className="lab-route-more">
             <summary className="lab-route-more-summary">How this works</summary>
             <div className="lab-route-more-body lab-selectable">
@@ -868,7 +872,7 @@ function ScaleBuilderExercise({ num }: { num: number }) {
           </div>
 
           <div className="lab-control">
-            <p className="lab-control-key">Answer order — a source of pressure, not bias in the stem</p>
+            <p className="lab-control-key">Answer order — position pushes, even when wording doesn&rsquo;t</p>
             <div className="lab-segmented" role="group" aria-label="Answer order">
               {(["positive-first", "negative-first"] as const).map((o) => (
                 <button
@@ -941,7 +945,9 @@ function ScaleBuilderExercise({ num }: { num: number }) {
               data-testid="lab-stem-risk"
               aria-live="polite"
             >
-              {stemRiskText[design.stem]}
+              <span key={design.stem} className="lab-landing-swap--still">
+                {stemRiskText[design.stem]}
+              </span>
             </p>
             <CastCountNote className="lab-cast-note--readout" />
             <ul className="lab-cast">
@@ -961,7 +967,10 @@ function ScaleBuilderExercise({ num }: { num: number }) {
                       </span>
                     </span>
                     <span className="lab-cast-arrow" aria-hidden="true">→</span>
-                    <span className="lab-cast-landing">
+                    <span
+                      key={p ? p.label : "none"}
+                      className="lab-cast-landing lab-landing-swap"
+                    >
                       {p ? p.label : "— no options —"}
                     </span>
                   </li>
@@ -1105,7 +1114,14 @@ function DoubleBarreledExercise({ num }: { num: number }) {
                 ? "false-positive"
                 : "correct";
           return (
-            <li key={item.id}>
+            <li
+              key={item.id}
+              style={
+                {
+                  "--verdict-delay": `${Math.min(i * 45, 450)}ms`
+                } as React.CSSProperties
+              }
+            >
               <button
                 type="button"
                 className={`lab-bundled-item ${isFlagged ? "is-flagged" : ""} ${verdict ? `is-${verdict}` : ""}`}
@@ -1942,7 +1958,10 @@ function BucketTinkerExercise({ num }: { num: number }) {
                         ? "✓"
                         : `${fits.length}`}
                   </span>
-                  <span className="lab-bucket-fit-state">
+                  <span
+                    key={`${state}|${fits.map((b) => b.id).join(",")}`}
+                    className="lab-bucket-fit-state lab-landing-swap--still"
+                  >
                     {state === "uncovered"
                       ? "fits no bucket"
                       : bucketLandingText(fits, bucketViewById)}
@@ -2168,7 +2187,10 @@ function ChannelTinkerExercise({ num }: { num: number }) {
                   <span className="lab-channel-cast-arrow" aria-hidden="true">
                     →
                   </span>
-                  <span className="lab-channel-cast-landing">
+                  <span
+                    key={`${landing.state}|${landing.pickedId}`}
+                    className="lab-channel-cast-landing lab-landing-swap"
+                  >
                     <span className="lab-channel-cast-pick">{pickedLabel}</span>
                     <span className="lab-channel-cast-state">
                       {channelStateText[landing.state]}
@@ -2625,10 +2647,26 @@ function ScaleLengthExercise({ num }: { num: number }) {
       </div>
 
       {!hasPredicted && (
-        <p className="lab-scalelen-predict lab-selectable">
-          Pick one to commit your guess. No peeking — the cast and the meters
-          appear after you choose.
-        </p>
+        <>
+          <p className="lab-scalelen-predict lab-selectable">
+            Pick one to commit your guess. No peeking — the cast and the meters
+            appear after you choose.
+          </p>
+          {/* The reveal stage, ghosted: six cast rows and two meters wait
+              behind the commit. Purely decorative, so hidden from AT — the
+              sentence above already says what appears. */}
+          <div className="lab-scalelen-ghost" aria-hidden="true">
+            <div className="lab-scalelen-ghost-rows">
+              {scaleLengthCast.map((v) => (
+                <span key={v.id} className="lab-scalelen-ghost-row" />
+              ))}
+            </div>
+            <div className="lab-scalelen-ghost-meters">
+              <span className="lab-scalelen-ghost-meter" />
+              <span className="lab-scalelen-ghost-meter" />
+            </div>
+          </div>
+        </>
       )}
 
       {hasPredicted && (
@@ -2667,7 +2705,10 @@ function ScaleLengthExercise({ num }: { num: number }) {
                     </span>
                   </span>
                   <span className="lab-scalelen-arrow" aria-hidden="true">→</span>
-                  <span className="lab-scalelen-pick">
+                  <span
+                    key={`${land.label}|${land.ambiguous}`}
+                    className="lab-scalelen-pick lab-landing-swap"
+                  >
                     {land.label}
                     {land.ambiguous && land.altLabel && (
                       <span className="lab-scalelen-flag">
@@ -2857,7 +2898,10 @@ function OatMilkExercise({ num }: { num: number }) {
                 <span className="lab-oat-story lab-selectable"> {v.story}</span>
               </span>
               <span className="lab-oat-arrow" aria-hidden="true">→</span>
-              <span className="lab-oat-pick">
+              <span
+                key={`${land.label}|${land.quality}`}
+                className="lab-oat-pick lab-landing-swap"
+              >
                 {land.label}
                 <span className="lab-oat-tag">
                   {land.quality === "clean"
@@ -3037,6 +3081,10 @@ function FalsePremiseExercise({ num }: { num: number }) {
 
         <div className="lab-console-results">
       <p className="lab-fp-headline lab-selectable" aria-live="polite">
+        <span
+          key={`${f.outcomeNo}|${f.outcomeTotal}|${f.merged}|${f.wronglyScreened}`}
+          className="lab-landing-swap--still"
+        >
         Reads: <strong>{f.outcomeNo} of {f.outcomeTotal}</strong> who reached
         the question say order-ahead didn&rsquo;t save them time
         {f.merged > 0 ? (
@@ -3055,6 +3103,7 @@ function FalsePremiseExercise({ num }: { num: number }) {
             a valid answer — a false negative.
           </span>
         )}
+        </span>
       </p>
 
       <ul className="lab-fp-cast" aria-label="Where each customer lands">
@@ -3083,7 +3132,10 @@ function FalsePremiseExercise({ num }: { num: number }) {
                 <span className="lab-fp-story lab-selectable"> {c.story}</span>
               </span>
               <span className="lab-fp-arrow" aria-hidden="true">→</span>
-              <span className="lab-fp-where">
+              <span
+                key={`${where}|${cls}`}
+                className="lab-fp-where lab-landing-swap"
+              >
                 {where}
                 {l.stage === "outcome" && !l.basis && (
                   <span className="lab-fp-tag">no basis — merged in</span>
@@ -3239,7 +3291,10 @@ function AcquiescenceExercise({ num }: { num: number }) {
                 <span className="lab-acq-story lab-selectable"> {c.story}</span>
               </span>
               <span className="lab-acq-arrow" aria-hidden="true">→</span>
-              <span className="lab-acq-rec">
+              <span
+                key={`${recorded}|${matches}|${flagged}`}
+                className="lab-acq-rec lab-landing-swap"
+              >
                 {recorded}
                 {flagged && <span className="lab-acq-tag">flagged inconsistent</span>}
                 {!matches && !flagged && (
@@ -3493,7 +3548,10 @@ function VerbalLabelsExercise({ num }: { num: number }) {
                 <span className="lab-label-story lab-selectable"> {v.story}</span>
               </span>
               <span className="lab-label-arrow" aria-hidden="true">→</span>
-              <span className="lab-label-pick">
+              <span
+                key={`${land.label}|${land.quality}|${land.note}`}
+                className="lab-label-pick lab-landing-swap"
+              >
                 {land.label}
                 <span className="lab-label-tag">{land.note}</span>
               </span>
@@ -3698,7 +3756,10 @@ function QuantifierExercise({ num }: { num: number }) {
                     <span className="lab-quant-story lab-selectable"> {v.story}</span>
                   </span>
                   <span className="lab-quant-arrow" aria-hidden="true">→</span>
-                  <span className="lab-quant-pick">
+                  <span
+                    key={`${land.label}|${land.quality}`}
+                    className="lab-quant-pick lab-landing-swap"
+                  >
                     {land.label}
                     <span className="lab-quant-tag">{land.note}</span>
                   </span>
@@ -4075,7 +4136,10 @@ function OrderExercise({ num }: { num: number }) {
                 <span className="lab-order-story lab-selectable"> {r.story}</span>
               </span>
               <span className="lab-order-arrow" aria-hidden="true">→</span>
-              <span className="lab-order-pick">
+              <span
+                key={`${land.nominalPick}|${land.nominalQuality}|${land.ordinalQuality}`}
+                className="lab-order-pick lab-landing-swap"
+              >
                 {land.nominalPick}
                 <span className="lab-order-tag">
                   {land.nominalQuality === "primacy"

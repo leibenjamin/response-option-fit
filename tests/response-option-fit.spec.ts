@@ -1396,6 +1396,19 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.emulateMedia({ forcedColors: "none", reducedMotion: "reduce" });
     await page.goto(`${BASE_URL}/`);
     await expect(page.getByTestId("lab-contents")).toBeVisible();
+
+    /* The global reduced-motion rule must collapse every animation to an
+       instant final state. It was once silently lost in a CSS prune while the
+       colophon still claimed it, so lock the actual computed duration in. */
+    const animMs = await page
+      .locator(".lab-exercises > li")
+      .first()
+      .evaluate((el) => {
+        const d = getComputedStyle(el).animationDuration;
+        const v = parseFloat(d);
+        return d.trim().endsWith("ms") ? v : v * 1000;
+      });
+    expect(animMs).toBeLessThanOrEqual(1);
   });
 });
 

@@ -718,6 +718,19 @@ summary:focus-visible {
   max-width: 44ch;
 }
 
+/* The takeaway contract under the subtitle: what a visitor leaves with (the
+   four passes + the copyable checklist, both real). Quiet accent bar so it
+   reads as a promise, not a second subtitle. */
+.lab-route-promise {
+  margin: var(--s-3) 0 0;
+  padding-left: var(--s-3);
+  border-left: 2px solid var(--accent-soft);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 46ch;
+}
+
 /* The hook is the hero's right column: fill the column and drop the
    stand-alone measure it carries when it lays out on its own. The top margin
    drops the card to the headline's baseline so it clears the absolutely
@@ -3245,6 +3258,15 @@ summary:focus-visible {
   color: var(--ink-soft);
 }
 
+/* The verdict sweep: on Check, each item's note and split pills cascade in
+   top-to-bottom like a grading pass (the per-item delay is set inline on the
+   list item). One-shot on mount; the global reduced-motion rule zeroes it. */
+.lab-bundled-note,
+.lab-bundled-split {
+  animation: mo-fade-up var(--mo-2) var(--mo-ease) both;
+  animation-delay: var(--verdict-delay, 0ms);
+}
+
 .lab-bundled-item:hover:not(:disabled),
 .lab-bundled-item:focus-visible:not(:disabled) {
   border-color: var(--accent);
@@ -5330,6 +5352,51 @@ summary:focus-visible {
   line-height: 1.55;
   color: var(--ink-soft);
 }
+
+/* Pre-commit ghost stage: the silhouette of the six cast rows + two meters
+   that the commit will reveal, so the area below the predict prompt reads as
+   a designed stage instead of a void. Decorative only (aria-hidden). */
+.lab-scalelen-ghost {
+  display: grid;
+  gap: var(--s-4);
+  margin-top: var(--s-2);
+}
+.lab-scalelen-ghost-rows {
+  display: grid;
+  gap: 8px;
+}
+.lab-scalelen-ghost-row {
+  height: 12px;
+  border-radius: 999px;
+  border: 1px dashed var(--line-soft);
+  background: var(--paper-2);
+  opacity: 0.75;
+}
+.lab-scalelen-ghost-row:nth-child(2n) {
+  width: 72%;
+}
+.lab-scalelen-ghost-row:nth-child(3n) {
+  width: 86%;
+}
+.lab-scalelen-ghost-meters {
+  display: flex;
+  gap: var(--s-4);
+}
+.lab-scalelen-ghost-meter {
+  flex: 1;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px dashed var(--line-soft);
+  background: var(--paper-2);
+  opacity: 0.75;
+}
+@media (forced-colors: active) {
+  .lab-scalelen-ghost-row,
+  .lab-scalelen-ghost-meter {
+    background: Canvas;
+    border-color: GrayText;
+  }
+}
 .lab-scalelen-reveal {
   margin: 0;
   font-size: 14px;
@@ -6694,6 +6761,57 @@ summary:focus-visible {
       background-color var(--mo-causality) var(--mo-ease),
       border-color var(--mo-causality) var(--mo-ease),
       color var(--mo-causality) var(--mo-ease);
+  }
+}
+
+/* Consequence arrival: each recorded landing is keyed in React by its rendered
+   state, so when a control changes someone's answer the span remounts and this
+   one-shot run marks exactly which rows moved — the row easing above carries
+   the tone; this carries the eye. The --still variant (wash only, no travel)
+   is for surfaces that update continuously while dragging (the age-bucket
+   rows) or live headline sentences, where repeated travel would vibrate. */
+@keyframes mo-landing-swap {
+  from {
+    opacity: 0.2;
+    transform: translateY(5px);
+    background-color: var(--accent-paper);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    background-color: transparent;
+  }
+}
+@keyframes mo-landing-wash {
+  from {
+    background-color: var(--accent-paper);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+.lab-landing-swap {
+  animation: mo-landing-swap var(--mo-reveal) var(--mo-ease) both;
+  border-radius: 4px;
+}
+.lab-landing-swap--still {
+  animation: mo-landing-wash var(--mo-reveal) var(--mo-ease) both;
+  border-radius: 4px;
+}
+
+/* Reduced motion: collapse every animation and transition to its instant
+   final state, app-wide. (Individual no-preference gates above are belt and
+   suspenders; this is the single rule the colophon promises. 0.01ms rather
+   than 0 keeps animation events firing for anything that listens.) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
 }
 
