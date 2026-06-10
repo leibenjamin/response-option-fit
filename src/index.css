@@ -43,6 +43,15 @@
   --route-b: var(--accent);
   --route-c: #7a5a2f;
 
+  /* The four inspection branches, one hue each. Threaded as color-only
+     identity through the exercise eyebrow ticks and sheet edges, then NAMED
+     by the receipts and the closing map (which reuse the same tokens) — so
+     the taxonomy is felt before it is taught, never forward-referenced. */
+  --branch-slot: var(--route-r);
+  --branch-ruler: var(--route-w);
+  --branch-push: var(--accent);
+  --branch-boundary: var(--ink-soft);
+
   /* Per-pattern accents. Used by the subway dots, the knowledge-map cards,
      and the walk-mode ribbon. Hues are chosen to be distinguishable in
      color and to map to existing route tones where possible; each is
@@ -2123,6 +2132,8 @@ summary:focus-visible {
   border-color: var(--accent);
   background: var(--accent-paper);
   color: var(--ink);
+  /* The active-segment indicator bar, like a modern segmented control. */
+  box-shadow: inset 0 -3px 0 0 var(--accent);
 }
 
 .lab-seg.is-on .lab-seg-note {
@@ -2184,7 +2195,7 @@ summary:focus-visible {
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  border: 1px solid currentColor;
+  border: 2px solid var(--lab-dot, currentColor);
   flex: none;
 }
 
@@ -2201,13 +2212,16 @@ summary:focus-visible {
   color: var(--ink);
 }
 
-.lab-point--pos.is-on {
+/* The dots carry their side of the scale at all times — the option bank
+   reads as a structured ruler (positive / middle / negative) even before a
+   point is offered; offering a point fills its dot. */
+.lab-point--pos {
   --lab-dot: var(--route-r);
 }
-.lab-point--mid.is-on {
+.lab-point--mid {
   --lab-dot: var(--ink-mute);
 }
-.lab-point--neg.is-on {
+.lab-point--neg {
   --lab-dot: var(--accent);
 }
 
@@ -2406,6 +2420,8 @@ summary:focus-visible {
   background: var(--route-r);
   border-color: var(--route-r);
   color: var(--paper-card);
+  /* Starts when the class lands — the check stamps itself done. */
+  animation: mo-stamp var(--mo-3) var(--mo-spring) both;
 }
 
 .lab-task.is-done .lab-task-title {
@@ -2582,16 +2598,13 @@ summary:focus-visible {
   margin-bottom: var(--s-1);
 }
 
-/* Cast rows + task rows stagger in once on mount (reduced-motion zeroes it). */
+/* Cast rows + task rows stagger in once on mount (reduced-motion zeroes it).
+   The exercise sections themselves now arrive on first scroll-into-view
+   (see .lab-exercise.is-in), so they no longer pop at page load. */
 .lab-cast > li,
-.lab-task-list > li,
-.lab-exercises > li {
+.lab-task-list > li {
   animation: mo-pop var(--mo-2) var(--mo-ease) both;
 }
-.lab-exercises > li:nth-child(2) { animation-delay: 60ms; }
-.lab-exercises > li:nth-child(3) { animation-delay: 120ms; }
-.lab-exercises > li:nth-child(4) { animation-delay: 180ms; }
-.lab-exercises > li:nth-child(5) { animation-delay: 240ms; }
 .lab-cast > li:nth-child(2),
 .lab-task-list > li:nth-child(2) {
   animation-delay: 55ms;
@@ -2658,6 +2671,43 @@ summary:focus-visible {
   flex-direction: column;
   gap: var(--s-4);
   position: relative;
+  border-top: 3px solid var(--branch-color, var(--line-soft));
+}
+
+/* Branch identity: each exercise carries its inspection-branch hue on the
+   sheet's top edge and the eyebrow tick. Color-only until the receipts and
+   closing map name the branches with the same tokens. */
+.lab-exercise--branch-slot { --branch-color: var(--branch-slot); }
+.lab-exercise--branch-ruler { --branch-color: var(--branch-ruler); }
+.lab-exercise--branch-push { --branch-color: var(--branch-push); }
+.lab-exercise--branch-boundary { --branch-color: var(--branch-boundary); }
+
+.lab-exercise-branchtick {
+  display: inline-block;
+  width: 15px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--branch-color, var(--line));
+  margin-right: 7px;
+  vertical-align: 2px;
+}
+
+/* Arrival: each exercise settles in the first time it is scrolled into
+   view (same pattern, gates, and print guarantee as the closing map). */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .lab-exercise:not(.is-in) {
+    opacity: 0;
+  }
+  .lab-exercise.is-in {
+    animation: mo-fade-up var(--mo-3) var(--mo-ease) both;
+  }
+}
+@media print {
+  .lab-exercise {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
 }
 
 .lab-exercise-head {
@@ -2930,6 +2980,66 @@ summary:focus-visible {
   background: rgba(93, 110, 68, 0.06);
 }
 
+/* A pass rendered as a designed win: ✓ stamp, verdict lead, then body.
+   Arrives with a pop (keyed by its text upstream); the stamp springs in. */
+.lab-pass {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-3);
+  align-items: start;
+  animation: mo-pop var(--mo-2) var(--mo-ease) both;
+}
+.lab-pass-mark {
+  width: 19px;
+  height: 19px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--route-r);
+  color: var(--paper-card);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  animation: mo-stamp var(--mo-3) var(--mo-spring) both;
+}
+.lab-pass-lead {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.lab-pass-rest {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+@keyframes mo-stamp {
+  0% {
+    transform: scale(0.25);
+    opacity: 0;
+  }
+  62% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (forced-colors: active) {
+  .lab-pass-mark {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+  }
+}
+
 .lab-exercise-error {
   margin: 0;
   font-size: 14.5px;
@@ -2991,10 +3101,12 @@ summary:focus-visible {
   border: 1px solid currentColor;
   margin-right: var(--s-2);
 }
-.lab-receipt-branch--slot { color: var(--accent-2); }
-.lab-receipt-branch--ruler { color: var(--route-w); }
-.lab-receipt-branch--push { color: var(--accent); }
-.lab-receipt-branch--boundary { color: var(--ink-soft); }
+/* Receipt chips use the same branch tokens as the exercise sheet edges and
+   the closing-map bars, so the color identity resolves into a named branch. */
+.lab-receipt-branch--slot { color: var(--branch-slot); }
+.lab-receipt-branch--ruler { color: var(--branch-ruler); }
+.lab-receipt-branch--push { color: var(--branch-push); }
+.lab-receipt-branch--boundary { color: var(--branch-boundary); }
 
 .lab-receipt-concepts {
   font-family: var(--font-serif);
@@ -4220,6 +4332,13 @@ summary:focus-visible {
   height: 100%;
   background: var(--ink-mute);
 }
+@media screen and (prefers-reduced-motion: no-preference) {
+  .lab-ledger-meter-fill {
+    transition:
+      width var(--mo-reveal) var(--mo-ease),
+      background-color var(--mo-reveal) var(--mo-ease);
+  }
+}
 .lab-ledger-meter-fill.is-low { width: 30%; background: var(--accent); }
 .lab-ledger-meter-fill.is-medium { width: 65%; background: var(--route-w); }
 .lab-ledger-meter-fill.is-high { width: 100%; background: var(--route-r); }
@@ -4470,10 +4589,10 @@ summary:focus-visible {
   height: 3px;
   background: var(--accent);
 }
-.lab-km-branch--slot::before { background: var(--accent); }
-.lab-km-branch--ruler::before { background: var(--route-w); }
-.lab-km-branch--push::before { background: var(--accent-2); }
-.lab-km-branch--boundary::before { background: var(--ink-soft); }
+.lab-km-branch--slot::before { background: var(--branch-slot); }
+.lab-km-branch--ruler::before { background: var(--branch-ruler); }
+.lab-km-branch--push::before { background: var(--branch-push); }
+.lab-km-branch--boundary::before { background: var(--branch-boundary); }
 
 .lab-km-branch-head {
   display: flex;
@@ -4497,9 +4616,10 @@ summary:focus-visible {
   border-radius: 8px;
   background: var(--accent-paper);
 }
-.lab-km-branch--ruler .lab-km-branch-mark { color: var(--route-w); background: rgba(69, 87, 116, 0.08); }
-.lab-km-branch--push .lab-km-branch-mark { color: var(--accent-2); background: var(--accent-paper); }
-.lab-km-branch--boundary .lab-km-branch-mark { color: var(--ink-soft); background: var(--paper-2); }
+.lab-km-branch--slot .lab-km-branch-mark { color: var(--branch-slot); background: rgba(93, 110, 68, 0.1); }
+.lab-km-branch--ruler .lab-km-branch-mark { color: var(--branch-ruler); background: rgba(69, 87, 116, 0.08); }
+.lab-km-branch--push .lab-km-branch-mark { color: var(--branch-push); background: var(--accent-paper); }
+.lab-km-branch--boundary .lab-km-branch-mark { color: var(--branch-boundary); background: var(--paper-2); }
 
 .lab-km-branch-headtext {
   display: flex;

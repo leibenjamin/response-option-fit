@@ -123,6 +123,7 @@ import {
   type AcqDesign,
   type AgeBucket,
   type ChannelLandingState,
+  type BranchId,
   type CoverageStatus,
   type ExerciseReceipt,
   type FpScreenerId,
@@ -297,7 +298,10 @@ function LabContents() {
             className="lab-contents-progress"
             data-testid="lab-contents-progress"
           >
-            <span className="lab-contents-progress-text">
+            <span
+              key={count}
+              className="lab-contents-progress-text lab-landing-swap--still"
+            >
               {count} / {total} complete
             </span>
             <span className="lab-contents-progress-track" aria-hidden="true">
@@ -685,6 +689,53 @@ function liveLoopProps(num: number) {
   };
 }
 
+/* A completed check's feedback, rendered as a designed win rather than a
+   graded comment: one ✓ stamp (normalized — some data strings carry their
+   own), the verdict sentence as a bold lead, the rest as body. The block is
+   keyed by its text so each new pass arrives with the one-shot entrance. */
+function splitPassLead(text: string): [string, string] {
+  const norm = text.replace(/^\s*✓\s*/, "");
+  const idx = norm.indexOf(". ");
+  /* Verdict-first copy splits into a bold lead + body; a single short
+     sentence IS the verdict; a long unbroken opener stays plain body rather
+     than shouting a paragraph in bold. */
+  if (idx === -1) return norm.length <= 140 ? [norm, ""] : ["", norm];
+  if (idx >= 10 && idx <= 140) {
+    return [norm.slice(0, idx + 1), norm.slice(idx + 2)];
+  }
+  return ["", norm];
+}
+
+function PassText({
+  text,
+  className,
+  testid
+}: {
+  text: string;
+  className?: string;
+  testid?: string;
+}) {
+  const [lead, rest] = splitPassLead(text);
+  return (
+    <p
+      key={text}
+      className={["lab-pass", "lab-selectable", className]
+        .filter(Boolean)
+        .join(" ")}
+      aria-live="polite"
+      data-testid={testid}
+    >
+      <span className="lab-pass-mark" aria-hidden="true">
+        ✓
+      </span>
+      <span className="lab-pass-text">
+        {lead ? <strong className="lab-pass-lead">{lead}</strong> : null}
+        {rest ? <span className="lab-pass-rest">{rest}</span> : null}
+      </span>
+    </p>
+  );
+}
+
 function TaskBand({
   items,
   active,
@@ -730,15 +781,10 @@ function TaskBand({
           )}
         </div>
       ) : allDoneText ? (
-        <p className="lab-task-pass">{allDoneText}</p>
+        <PassText text={allDoneText} className="lab-task-pass" />
       ) : null}
 
-      {passText && (
-        <p className="lab-task-pass" aria-live="polite">
-          <span aria-hidden="true">✓ </span>
-          {passText}
-        </p>
-      )}
+      {passText && <PassText text={passText} className="lab-task-pass" />}
 
       <ol className="lab-task-list" aria-label="Task path">
         {items.map((t, i) => (
@@ -802,6 +848,7 @@ function ScaleBuilderExercise({ num }: { num: number }) {
       issue="Biased frames · missing strong-negatives · no neutral midpoint · primacy"
       decision="whether leadership reads the shop as loved or merely tolerated."
       modifier="scale-builder"
+      branch="ruler"
       verb="tinker"
       nextTeaser="Next: a clean-looking item can still ask two things at once. Don’t use “and” as your detector."
     >
@@ -1087,6 +1134,7 @@ function DoubleBarreledExercise({ num }: { num: number }) {
       issue="Double-barreled · triple-barreled · why “and” isn't the test"
       decision="which part of the service to fix when one score hides two judgments."
       modifier="double-barreled"
+      branch="slot"
       verb="repair"
       nextTeaser="Next: the question wording isn’t the problem. The wrong people are answering it."
     >
@@ -1224,16 +1272,11 @@ function DoubleBarreledExercise({ num }: { num: number }) {
       )}
 
       {flagPassed && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-bundled-pass">
-          ✓ Six flagged: five two-part bundles — two of them with no
-          &ldquo;and&rdquo; at all (the comma in &ldquo;hot, fresh&rdquo; and
-          the verb-plus-adverb in &ldquo;fix… quickly&rdquo;) — and one triple.
-          The two you left alone do say &ldquo;and,&rdquo; but it sits in a
-          program&rsquo;s name and in the people you&rsquo;d recommend us to,
-          not in two things being rated. The word is never the test; two
-          separable judgments is. Miss one and it ships as a single number — a
-          low score with no way to tell which half to fix.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-bundled-pass"
+          text="All six bundles flagged — and neither decoy. Five two-part bundles, two with no “and” at all (the comma in “hot, fresh” and the verb-plus-adverb in “fix… quickly”), plus one triple. The two you left alone do say “and,” but it sits in a program’s name and in the people you’d recommend us to, not in two things being rated. The word is never the test; two separable judgments is. Miss one and it ships as a single number — a low score with no way to tell which half to fix."
+        />
       )}
 
       {flagPassed && (
@@ -1756,6 +1799,7 @@ function BucketTinkerExercise({ num }: { num: number }) {
       issue="Mutually-exclusive boundaries · covering the whole range"
       decision="whether the loyalty offer reaches young adults, mid-career visitors, or older regulars."
       modifier="bucket"
+      branch="slot"
       verb="tinker"
       nextTeaser="Next: completeness changes with the decision. The same audience needs a different option set."
     >
@@ -2036,6 +2080,7 @@ function ChannelTinkerExercise({ num }: { num: number }) {
       issue="Incomplete option sets · the “Other” trap · satisficing · fitting the list to the decision"
       decision="where to spend the ad budget — and which channels look bigger or smaller than they really are."
       modifier="channel"
+      branch="slot"
       verb="tinker"
       nextTeaser="Next: try the standard fix, then catch why it still fails."
     >
@@ -2214,24 +2259,18 @@ function ChannelTinkerExercise({ num }: { num: number }) {
       </div>
 
       {allClean && !allDone && (
-        <p className="lab-exercise-pass" aria-live="polite">
-          ✓ Everyone&rsquo;s on their true channel. Now the owner asks a
-          different question — see the task above.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          text="Everyone’s on their true channel. Now the owner asks a different question — see the task above."
+        />
       )}
 
       {allDone && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-channel-pass">
-          ✓ You built the list two different right ways. For &ldquo;invest per
-          channel,&rdquo; every channel needed its own option and a broad bucket
-          would have destroyed the detail. For &ldquo;online vs offline,&rdquo;
-          that same detail is wasted respondent effort and the broad split is
-          exactly right. The lesson isn&rsquo;t &ldquo;buckets bad&rdquo; or
-          &ldquo;buckets good&rdquo; — it&rsquo;s that the right grain, and even
-          what counts as a &ldquo;complete&rdquo; list, depends on the decision
-          the answers have to serve. (And &ldquo;Other&rdquo; stays an imperfect
-          escape hatch the low-effort visitors won&rsquo;t use either way.)
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-channel-pass"
+          text="You built the list two different right ways. For “invest per channel,” every channel needed its own option and a broad bucket would have destroyed the detail. For “online vs offline,” that same detail is wasted respondent effort and the broad split is exactly right. The lesson isn’t “buckets bad” or “buckets good” — it’s that the right grain, and even what counts as a “complete” list, depends on the decision the answers have to serve. (And “Other” stays an imperfect escape hatch the low-effort visitors won’t use either way.)"
+        />
       )}
 
       <PostReceipt exerciseId="E4" visible={allDone} />
@@ -2255,7 +2294,12 @@ function LedgerMeter({
       <span className="lab-ledger-meter-bar" aria-hidden="true">
         <span className={`lab-ledger-meter-fill is-${level}`} />
       </span>
-      <span className="lab-ledger-meter-value">{level}</span>
+      <span
+        key={level}
+        className="lab-ledger-meter-value lab-landing-swap--still"
+      >
+        {level}
+      </span>
       <span className="lab-ledger-meter-hint">{hint}</span>
     </div>
   );
@@ -2331,6 +2375,7 @@ function ShipReviewExercise({ num }: { num: number }) {
       issue="Putting the four lenses on a real survey · knowing where to stop"
       decision="what’s safe to ship — and what to leave alone."
       modifier="ship-review"
+      branch="boundary"
       verb="review"
     >
       <div className="lab-console lab-console--review" {...liveLoopProps(num)}>
@@ -2521,13 +2566,11 @@ function ShipReviewExercise({ num }: { num: number }) {
       )}
 
       {exercisePassed && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-review-pass">
-          ✓ Signed off. You put all four lenses on a real draft, left the clean
-          question alone, and caught that the send-list problem — real as it is
-          — lives outside what fixing answer choices can do. That last call is
-          the whole point of the closing map below: know which inspection
-          you&rsquo;re running, and where it stops.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-review-pass"
+          text="Signed off. You put all four lenses on a real draft, left the clean question alone, and caught that the send-list problem — real as it is — lives outside what fixing answer choices can do. That last call is the whole point of the closing map below: know which inspection you’re running, and where it stops."
+        />
       )}
 
       <PostReceipt exerciseId="E5" visible={exercisePassed} />
@@ -2580,6 +2623,7 @@ function ScaleLengthExercise({ num }: { num: number }) {
       issue="Scale length / granularity · the 5–7 default · false precision"
       decision="how finely you can rank satisfaction before the numbers stop being real."
       modifier="scale-length"
+      branch="ruler"
       verb="tinker"
       nextTeaser="Next: Neutral is not a junk drawer. Give the non-answers their own homes."
     >
@@ -2749,13 +2793,11 @@ function ScaleLengthExercise({ num }: { num: number }) {
       </div>
 
       {allDone && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-scale-pass">
-          ✓ More points is not more truth. Too few crushed real differences;
-          too many (the 11-point scale) asked for distinctions finer than
-          people can actually feel, so the same person would land on different
-          neighbouring points on a different day. 5 to 7 points is the usual
-          default — match it to the distinction you genuinely need to make.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-scale-pass"
+          text="More points is not more truth. Too few crushed real differences; too many (the 11-point scale) asked for distinctions finer than people can actually feel, so the same person would land on different neighbouring points on a different day. 5 to 7 points is the usual default — match it to the distinction you genuinely need to make."
+        />
       )}
 
       <PostReceipt exerciseId="E6" visible={allDone} />
@@ -2803,6 +2845,7 @@ function OatMilkExercise({ num }: { num: number }) {
       issue="Don't-know · not-applicable · why a neutral is none of these"
       decision="whether oat milk is disliked, unknown, or simply never tried."
       modifier="oat-milk"
+      branch="slot"
       verb="compare"
       nextTeaser="Next: the numbers look tidy in the export. The middle still has no shared meaning."
     >
@@ -2929,13 +2972,11 @@ function OatMilkExercise({ num }: { num: number }) {
 
       {allDone && (
         <div className="lab-oat-done">
-          <p className="lab-exercise-pass lab-selectable" data-testid="lab-oat-pass">
-            ✓ An opt-out didn&rsquo;t weaken the survey — it&rsquo;s what makes
-            the rest of the numbers trustworthy, by keeping people with no view
-            out of the average. And a true Neutral, a &ldquo;Don&rsquo;t
-            know,&rdquo; and a &ldquo;Not applicable&rdquo; are three different
-            states; don&rsquo;t let one quietly stand in for another.
-          </p>
+          <PassText
+            className="lab-exercise-pass"
+            testid="lab-oat-pass"
+            text="The opt-outs didn’t weaken the survey — they made it trustworthy. Keeping people with no view out of the average is what makes the remaining numbers defensible. And a true Neutral, a “Don’t know,” and a “Not applicable” are three different states; don’t let one quietly stand in for another."
+          />
           <dl className="lab-oat-rule lab-selectable" aria-label="Routing rule for non-answers">
             <div className="lab-oat-rule-row">
               <dt>Neutral</dt>
@@ -3009,6 +3050,7 @@ function FalsePremiseExercise({ num }: { num: number }) {
       issue="False-premise items · eligibility screening · the denominator"
       decision="whether order-ahead actually saves time for the people who use it."
       modifier="false-premise"
+      branch="slot"
       verb="gate"
       nextTeaser="Next: make the export safe before analysis starts. One boundary value can put a person in two places."
     >
@@ -3208,17 +3250,11 @@ function FalsePremiseExercise({ num }: { num: number }) {
       </div>
 
       {allDone && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-fp-pass">
-          ✓ A clean-looking Yes/No can sit on a wrong denominator: leave the
-          non-users in and &ldquo;Did order-ahead save you time?&rdquo; blends in
-          people who never opened the feature, so the team reads a muddy adoption
-          number and risks tuning against the wrong denominator. The screen that
-          fits keeps everyone
-          with a real basis and drops everyone without one — &ldquo;owns a
-          phone&rdquo; was too loose, &ldquo;weekly&rdquo; too tight. And asking
-          about the app first turns one undifferentiated &ldquo;didn&rsquo;t use
-          it&rdquo; pile into a discovery-vs-adoption diagnosis.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-fp-pass"
+          text="A clean-looking Yes/No can sit on a wrong denominator. Leave the non-users in and “Did order-ahead save you time?” blends in people who never opened the feature, so the team reads a muddy adoption number and tunes against it. The screen that fits keeps everyone with a real basis and drops everyone without one — “owns a phone” was too loose, “weekly” too tight. And asking about the app first turns one undifferentiated “didn’t use it” pile into a discovery-vs-adoption diagnosis."
+        />
       )}
 
       <PostReceipt exerciseId="E8" visible={allDone} />
@@ -3267,6 +3303,7 @@ function AcquiescenceExercise({ num }: { num: number }) {
       issue="Acquiescence / yea-saying · agree-disagree vs item-specific wording"
       decision="whether customers truly agree, or the format agreed for them."
       modifier="acquiescence"
+      branch="push"
       verb="compare"
       nextTeaser="Next: commit before you peek. How many scale points are enough?"
     >
@@ -3415,17 +3452,11 @@ function AcquiescenceExercise({ num }: { num: number }) {
       )}
 
       {allDone && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-acq-pass">
-          ✓ Under agree/disagree, the customers who felt brushed off still
-          &ldquo;agree the barista was friendly&rdquo; — the report reads
-          all-friendly and the service problem never surfaces. Where you
-          can, swap agree/disagree for item-specific wording: with nothing to nod
-          along to, the acquiescence pull disappears and answers track real
-          views. The real fix isn&rsquo;t catching fakers — it&rsquo;s measuring
-          the intended dimension directly. A reverse-worded check is only a
-          detection patch — useful to flag the easy agreers, but it doesn&rsquo;t
-          measure them, and it taxes everyone else.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-acq-pass"
+          text="Under agree/disagree, the service problem never surfaces. The customers who felt brushed off still “agree the barista was friendly,” so the report reads all-friendly. Where you can, swap agree/disagree for item-specific wording: with nothing to nod along to, the acquiescence pull disappears and answers track real views. The real fix isn’t catching fakers — it’s measuring the intended dimension directly. A reverse-worded check is only a detection patch — useful to flag the easy agreers, but it doesn’t measure them, and it taxes everyone else."
+        />
       )}
 
       <PostReceipt exerciseId="E9" visible={allDone} />
@@ -3485,6 +3516,7 @@ function VerbalLabelsExercise({ num }: { num: number }) {
       issue="Verbal anchors · fully labeled scales · semantic balance"
       decision="how many customers count as satisfied once the middle label does the nudging."
       modifier="labels"
+      branch="ruler"
       verb="label"
       nextTeaser="Next: two people visit four times. The words still disagree."
     >
@@ -3637,14 +3669,11 @@ function VerbalLabelsExercise({ num }: { num: number }) {
       </div>
 
       {allDone && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-label-pass">
-          ✓ The numbers now carry shared meanings, and the words no longer lean
-          positive. What did the work was <strong>semantic balance</strong> —
-          labels spaced evenly enough that respondents recover the same ruler.
-          Full verbal labels are one tool for that, not a law: a scale can anchor
-          only its ends and still be fair, as long as the middle isn’t quietly
-          tilted upward.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-label-pass"
+          text="The numbers now carry shared meanings, and the words no longer lean positive. What did the work was semantic balance — labels spaced evenly enough that respondents recover the same ruler. Full verbal labels are one tool for that, not a law: a scale can anchor only its ends and still be fair, as long as the middle isn’t quietly tilted upward."
+        />
       )}
 
       <PostReceipt exerciseId="E10" visible={allDone} />
@@ -3735,6 +3764,7 @@ function QuantifierExercise({ num }: { num: number }) {
       issue="Vague quantifiers · reference periods · fake precision"
       decision="who counts as an occasional visitor versus a regular."
       modifier="quantifier"
+      branch="ruler"
       verb="anchor"
       nextTeaser="Next: keep the same list and change the mode. The favored answer moves."
     >
@@ -3921,14 +3951,11 @@ function QuantifierExercise({ num }: { num: number }) {
       </div>
 
       {allDone && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-quant-pass">
-          ✓ With &ldquo;Rarely / Sometimes / Often,&rdquo; the owner can&rsquo;t
-          tell an occasional visitor from a regular — the same count can become
-          different words, and the same word can hide different counts. You did
-          not just swap soft words for hard-looking numbers. The repaired item
-          names the reference period, asks for countable ranges, and keeps the
-          precision matched to the decision.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-quant-pass"
+          text="The words were never units. With “Rarely / Sometimes / Often,” the owner can’t tell an occasional visitor from a regular — the same count can become different words, and the same word can hide different counts. You did not just swap soft words for hard-looking numbers. The repaired item names the reference period, asks for countable ranges, and keeps the precision matched to the decision."
+        />
       )}
 
       <PostReceipt exerciseId="E11" visible={allDone} />
@@ -4037,6 +4064,7 @@ function OrderExercise({ num }: { num: number }) {
       issue="Response-order effects · primacy / recency · nominal vs ordinal"
       decision="which answer looks most popular when the list order does the choosing."
       modifier="order"
+      branch="push"
       verb="order"
       nextTeaser="Final review: five draft questions, one clean item, and one real problem you must not over-flag."
     >
@@ -4264,11 +4292,11 @@ function OrderExercise({ num }: { num: number }) {
       </div>
 
       {allDone && (
-        <p className="lab-exercise-pass lab-selectable" data-testid="lab-order-pass">
-          ✓ The fix is list-specific. Rotate unordered answer choices when order
-          would otherwise steer attention; keep ordinal response scales in a
-          meaningful sequence. Randomization is a tool, not a virtue by itself.
-        </p>
+        <PassText
+          className="lab-exercise-pass"
+          testid="lab-order-pass"
+          text="The fix is list-specific. Rotate unordered answer choices when order would otherwise steer attention; keep ordinal response scales in a meaningful sequence. Randomization is a tool, not a virtue by itself."
+        />
       )}
 
       <PostReceipt exerciseId="E12" visible={allDone} />
@@ -4288,6 +4316,7 @@ function ExerciseFrame({
   decision,
   modifier,
   verb,
+  branch,
   nextTeaser,
   children
 }: {
@@ -4299,20 +4328,31 @@ function ExerciseFrame({
   decision?: string;
   modifier: string;
   verb: string;
+  /* The exercise's primary inspection branch. Pre-map it shows only as a
+     color (the eyebrow tick + sheet edge) — quiet visual identity that the
+     receipts and closing map name later, never a forward-referenced term. */
+  branch: BranchId;
   /* Quiet editorial bridge into the next exercise's mystery — the
      between-exercise forward pull (output-04 teaser table). Omitted on the
      capstone, which flows into the closing map. */
   nextTeaser?: string;
   children: React.ReactNode;
 }) {
+  /* Each exercise arrives when first scrolled into view (the closing map
+     already does this); print and reduced-motion render the final state. */
+  const [frameRef, frameInView] = useInView<HTMLElement>();
   return (
     <section
+      ref={frameRef}
       id={`lab-exercise-${num}`}
-      className={`lab-exercise lab-exercise--${modifier}`}
+      className={`lab-exercise lab-exercise--${modifier} lab-exercise--branch-${branch} ${
+        frameInView ? "is-in" : ""
+      }`}
       aria-labelledby={`lab-exercise-${num}-title`}
     >
       <header className="lab-exercise-head">
         <p className="lab-exercise-num">
+          <span className="lab-exercise-branchtick" aria-hidden="true" />
           Exercise {num} <span className="lab-exercise-verb">· {verb}</span>
         </p>
         <h2 className="lab-exercise-title lab-selectable" id={`lab-exercise-${num}-title`}>
