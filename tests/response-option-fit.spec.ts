@@ -398,6 +398,14 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await expect(hook).toContainText("your exact spot");
     await expect(hook).toContainText("recorded answer");
     await expect(hook).toContainText("rounded away");
+    await expect(hook.locator(".lab-hook-axis")).toContainText(
+      "truly rough day"
+    );
+    await expect(hook.locator(".lab-hook-axis")).toContainText(
+      "truly great day"
+    );
+    await expect(readout).toContainText("Your day feels");
+    await expect(readout).not.toContainText("Your exact spot feels");
     await expect(readout).toContainText("honestly mixed");
     await expect(readout).toContainText("Great day");
     await expect(hook).toContainText("2 answer boxes");
@@ -406,19 +414,25 @@ test.describe("Response Option Fit Lab - desktop", () => {
        keyboard and assistive tech. */
     const track = page.getByTestId("lab-hook-track");
     await expect(track).toHaveAttribute("role", "slider");
-    await expect(track).toHaveAttribute("aria-valuetext", /form would record/);
+    await expect(track).toHaveAttribute(
+      "aria-valuetext",
+      /^Your day feels honestly mixed\. The form would record this as Great day\.$/
+    );
     await expect(page.getByTestId("lab-hook-tap-cue")).toBeVisible();
     await track.focus();
     await track.press("Home");
     await expect(track).toHaveAttribute("aria-valuenow", "0");
-    await expect(readout).toContainText("rough");
+    await expect(readout).toContainText("truly rough");
+    await expect(readout).toContainText("Rough day");
+    await expect(readout).toContainText("records it as “Rough day.”");
 
     /* Giving people a middle turns the same placement from a coarse box into a
        finer one — the catchment shrinks. */
     await track.press("End");
     await page.getByTestId("lab-hook-step").click();
     await expect(hook).toContainText("3 answer boxes");
-    await expect(readout).toContainText("Great");
+    await expect(readout).toContainText("truly great");
+    await expect(readout).toContainText("records it as “Great.”");
 
     /* The privacy reassurance is present, and the CTA sends focus into Exercise 1. */
     await expect(page.getByTestId("lab-hook-privacy")).toContainText(

@@ -367,13 +367,13 @@ const HOOK_BOX_LABELS: Record<number, string[]> = {
 /* A plain-language word for a placement on the 0..100 feeling strip — used in
    the readout and, crucially, in the slider's aria-valuetext. */
 function feelWord(feel: number): string {
-  if (feel < 12) return "rough";
+  if (feel < 12) return "truly rough";
   if (feel < 30) return "pretty low";
   if (feel < 44) return "a little off";
   if (feel < 56) return "honestly mixed";
   if (feel < 72) return "decent";
   if (feel < 88) return "good";
-  return "great";
+  return "truly great";
 }
 
 /* Which of n even boxes a placement falls into, and that box's center. The
@@ -525,9 +525,9 @@ function HeroProof() {
           />
         </div>
         <p className="lab-hook-axis" aria-hidden="true">
-          <span>rough day</span>
+          <span>truly rough day</span>
           <span className="lab-hook-axis-hint">feeling scale</span>
-          <span>great day</span>
+          <span>truly great day</span>
         </p>
         <div className="lab-hook-legend" aria-label="Diagram legend">
           <span className="lab-hook-legend-item">
@@ -559,7 +559,7 @@ function HeroProof() {
         aria-live="polite"
         data-testid="lab-hero-headline"
       >
-        Your exact spot feels <strong>{feelWord(feel)}</strong>; the form
+        Your day feels <strong>{feelWord(feel)}</strong>; the form
         records it as{" "}
         <strong className="lab-hook-filed">&ldquo;{recordedLabel}.&rdquo;</strong>{" "}
         {n === 2 ? (
