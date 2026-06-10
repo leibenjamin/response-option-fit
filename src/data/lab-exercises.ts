@@ -669,14 +669,14 @@ export const channelTasks: ChannelTask[] = [
     id: "capture",
     title: "Get everyone onto their real channel",
     brief:
-      "The starter four leave two visitors mis-filed and two gone entirely. Read each story past the obvious keyword — a coworker resharing a post is still Social; a podcast HOST plugging you is Podcast, not “someone mentioned us.” Add options until all seven land on their TRUE channel. (Tempted to just add “Other”? Try it — the low-effort visitors won't bother with the write-in, so they mis-file or skip anyway.)",
+      "The starter four mis-file two visitors and lose two entirely. Read each story past the obvious keyword: a coworker reshare is still Social; a podcast host plug is Podcast. Add structured options until all seven land on their TRUE channel. “Other” alone still costs effort and loses detail.",
     pass: channelAllClean,
     passText:
       "✓ All seven on their true channel — and you had to reason it out, not skim it. Notice what “Other” alone did not do: a write-in is extra effort, and the low-effort visitors declined it, so they mis-filed or skipped. “Other” helps, but it isn't a full repair for a missing option.",
     hint: (offered) => {
       const t = channelTallies(offered);
       if (t.abandoned > 0)
-        return `${t.abandoned} visitor(s) left it blank — no option fits them and they won't write one in. Work out the real channel behind their story and add it.`;
+        return `${t.abandoned} visitor(s) left it blank. Work out the real channel behind their story and add it as a structured option.`;
       if (t.satisficed > 0)
         return `${t.satisficed} visitor(s) mis-filed onto a close-but-wrong option. Whose real channel still isn't offered? Don't trust the obvious keyword — read what actually happened.`;
       if (t.lumped > 0)
@@ -1207,7 +1207,7 @@ export const oatMilkTasks: OatMilkTask[] = [
     id: "off-scale",
     title: "Get the non-answers off the satisfaction scale",
     brief:
-      "Three visitors have no view of the oat milk to give — one has no opinion, two never tried it. Right now they're forced onto Neutral, inflating it. Add the opt-out that gives the no-view visitors somewhere honest to go, so nobody is pushed onto the satisfaction scale who shouldn't be there.",
+      "Three visitors have no oat-milk view: one has no opinion, two never tried it. Add the opt-out that lets no-view visitors leave Neutral, so the satisfaction scale holds only real judgments.",
     pass: (d) => oatMilkPhantomOnScale(d) === 0,
     passText:
       "✓ The satisfaction scale now holds only people with a real view. Notice the headline “% satisfied” just changed — the forced answers were quietly shaping it.",
@@ -1220,7 +1220,7 @@ export const oatMilkTasks: OatMilkTask[] = [
     id: "distinct-opt-outs",
     title: "Keep each opt-out meaning one thing",
     brief:
-      "Look closely at what you just added. A “Don't know” bucket that secretly contains people who NEVER TRIED the drink isn't honest data either — “no opinion” and “never tried” are different states. Add the second opt-out so every option means exactly one thing.",
+      "Inspect that opt-out. A “Don't know” bucket that also holds people who NEVER TRIED the drink is another mixed bucket. Add the second opt-out so every option means exactly one thing.",
     pass: (d) => oatMilkPhantomOnScale(d) === 0 && oatMilkConflation(d) === 0,
     passText:
       "✓ A true Neutral (tried it, felt mid), a “Don't know” (has a basis to judge, no opinion), and a “Not applicable” (no basis at all) are three different states — and now each option holds exactly one of them. An opt-out didn't weaken the survey; it's what makes the rest of the numbers trustworthy.",
@@ -1560,7 +1560,7 @@ export const acqTasks: AcqTask[] = [
     id: "detect",
     title: "Try the textbook fix — then judge it",
     brief:
-      "Agreement reads high — but read the rows: some “Agree, the barista was friendly” answers come from people who felt brushed off or so-so. They tick Agree on anything. The standard move is a reverse-worded check (ask the opposite too, flag anyone who agrees with both). Add it — then decide whether it actually fixed your measurement.",
+      "Agreement reads high, but the rows show some “Agree” answers from brushed-off or so-so visitors who nod along. Add the reverse-worded check, then decide whether flagging easy-agreers actually fixes the friendliness measure.",
     pass: (d, judgedFlagged) => d === "reverse" && judgedFlagged,
     passText:
       "✓ Right call. The check flags the easy-agreers — useful to know — but your friendly number didn't move: their “Agree”s are still in it, two careful respondents had to untangle a double-worded item, and you still don't know what the flagged three actually think. You detected the problem; you didn't measure around it.",

@@ -701,9 +701,40 @@ function TaskBand({
       : null;
 
   return (
-    <div className="lab-taskband" aria-live="polite">
+    <div className="lab-taskband">
       <p className="lab-taskband-key">What to settle</p>
-      <ol className="lab-task-list">
+
+      {active ? (
+        <div className="lab-task-active" aria-live="polite">
+          <p className="lab-task-brief-key">
+            Check {active.index} of {active.total}
+          </p>
+          <p className="lab-task-active-title">{active.title}</p>
+          <p className="lab-task-brief">
+            {active.brief}
+          </p>
+          <p className="lab-task-hint">{active.hint}</p>
+          {nextItem && (
+            <p className="lab-task-next">
+              <span className="lab-task-next-key" aria-hidden="true">
+                Next:
+              </span>
+              {nextItem.title}
+            </p>
+          )}
+        </div>
+      ) : allDoneText ? (
+        <p className="lab-task-pass">{allDoneText}</p>
+      ) : null}
+
+      {passText && (
+        <p className="lab-task-pass" aria-live="polite">
+          <span aria-hidden="true">✓ </span>
+          {passText}
+        </p>
+      )}
+
+      <ol className="lab-task-list" aria-label="Task path">
         {items.map((t, i) => (
           <li
             key={t.id}
@@ -717,46 +748,6 @@ function TaskBand({
           </li>
         ))}
       </ol>
-
-      {passText && (
-        <p className="lab-task-pass" aria-live="polite">
-          <span aria-hidden="true">✓ </span>
-          {passText}
-        </p>
-      )}
-
-      {active ? (
-        <div className="lab-task-active" aria-live="polite">
-          <p className="lab-task-brief">
-            <span className="lab-task-brief-key">
-              Check {active.index} of {active.total}: {active.title}
-            </span>
-            {active.brief}
-          </p>
-          <p className="lab-task-hint">{active.hint}</p>
-          <details className="lab-task-details">
-            <summary>More guidance</summary>
-            <div className="lab-task-details-body">
-              <p>
-                <strong>Full check:</strong> {active.brief}
-              </p>
-              <p>
-                <strong>Live hint:</strong> {active.hint}
-              </p>
-              {nextItem && (
-                <p className="lab-task-next">
-                  <span className="lab-task-next-key" aria-hidden="true">
-                    Then
-                  </span>
-                  {nextItem.title}
-                </p>
-              )}
-            </div>
-          </details>
-        </div>
-      ) : allDoneText ? (
-        <p className="lab-task-pass">{allDoneText}</p>
-      ) : null}
     </div>
   );
 }

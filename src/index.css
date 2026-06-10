@@ -1871,7 +1871,7 @@ summary:focus-visible {
      keep the room to render on one line — three cramped columns at 1024 wrap
      the rows and run TALLER than a clean stack, the opposite of the goal. */
   .lab-console {
-    grid-template-columns: minmax(172px, 0.52fr) minmax(0, 2.35fr);
+    grid-template-columns: minmax(224px, 0.72fr) minmax(0, 2.15fr);
     gap: var(--s-4);
   }
   /* Exception: the scale builder is control-heavy (a tall vertical scale vs a
@@ -1886,6 +1886,9 @@ summary:focus-visible {
   }
 }
 @media (min-width: 1150px) {
+  .lab-console {
+    grid-template-columns: minmax(270px, 0.88fr) minmax(0, 2fr);
+  }
   /* ≥1150: enough width for the full 3-zone — split the work into
      controls | results so the live loop is fully side-by-side. */
   .lab-console-work {
@@ -3880,7 +3883,7 @@ summary:focus-visible {
   gap: var(--s-3);
 }
 .lab-exercise--channel .lab-channel-readout {
-  padding: var(--s-3) var(--s-4);
+  padding: 10px var(--s-3);
   gap: var(--s-2);
 }
 
@@ -4060,10 +4063,10 @@ summary:focus-visible {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
-  padding: 4px 0;
+  padding: 3px 0;
   align-items: baseline;
   border-bottom: 1px solid var(--line-faint);
-  font-size: 12.8px;
+  font-size: 12.6px;
   color: var(--ink-2);
 }
 .lab-channel-cast-row:last-child { border-bottom: 0; }
@@ -4692,11 +4695,12 @@ summary:focus-visible {
   /* A light warm wash keeps the decision strip findable without making every
      exercise feel like the same checklist module. */
   background: var(--accent-wash);
-  padding: var(--s-2);
-  border-radius: 0 10px 10px 0;
+  padding: 10px var(--s-3);
+  border-radius: 0 8px 8px 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 .lab-taskband-key {
@@ -4713,11 +4717,12 @@ summary:focus-visible {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(5.4rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(8.6rem, 1fr));
   gap: 4px;
 }
 .lab-taskband .lab-task {
-  padding: 3px 5px;
+  align-items: flex-start;
+  padding: 4px 5px;
   gap: 5px;
   min-width: 0;
 }
@@ -4725,14 +4730,13 @@ summary:focus-visible {
   width: 17px;
   height: 17px;
   font-size: 9.5px;
+  margin-top: 1px;
 }
 .lab-taskband .lab-task-title {
-  font-size: 12.5px;
-  line-height: 1.15;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: block;
+  font-size: 12.4px;
+  line-height: 1.24;
+  overflow-wrap: anywhere;
 }
 
 .lab-taskband .lab-task.is-active {
@@ -4744,25 +4748,53 @@ summary:focus-visible {
 }
 
 .lab-taskband .lab-task-active {
-  background: var(--paper-card);
-  border: 1px solid var(--accent-soft);
-  padding: var(--s-2);
+  border-top: 1px solid var(--accent-soft);
+  border-bottom: 1px solid var(--line-faint);
+  padding: 6px 0;
+}
+.lab-taskband .lab-task-brief-key {
+  margin: 0;
+  display: block;
+}
+.lab-taskband .lab-task-active-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.24;
+  color: var(--ink);
+  overflow-wrap: anywhere;
 }
 .lab-taskband .lab-task-brief,
-.lab-taskband .lab-task-hint {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.lab-taskband .lab-task-hint,
+.lab-taskband .lab-task-next {
+  display: block;
+  overflow: visible;
+  overflow-wrap: anywhere;
 }
 .lab-taskband .lab-task-brief {
-  -webkit-line-clamp: 2;
+  line-height: 1.42;
 }
 .lab-taskband .lab-task-hint {
-  -webkit-line-clamp: 2;
+  font-size: 12.4px;
+  line-height: 1.42;
+}
+.lab-taskband .lab-task-next {
+  margin-top: var(--s-1);
+  padding-top: var(--s-1);
+  font-size: 12.4px;
+  line-height: 1.35;
+}
+.lab-taskband .lab-task-next-key {
+  margin-right: var(--s-1);
 }
 
 .lab-taskband .lab-task-pass {
   background: rgba(93, 110, 68, 0.1);
+  padding: var(--s-2);
+  border-left-width: 2px;
+  font-size: 12.8px;
+  line-height: 1.42;
 }
 
 /* ─── E4: new landing states + tally chips + satisfice note ─── */

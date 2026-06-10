@@ -15,10 +15,11 @@ scale, repair keyed age-bucket bands, choose an answer set, screen a false
 premise, compare question formats, build a verbal ruler, expose a vague-word
 collision, or classify lists before setting order rules), watch a fixed cast of
 authored respondents flow through, and read the consequence. The active solving
-loop keeps the current task, controls, and primary consequence together, while
-longer guidance and secondary readouts open as shelves. Wrong moves are part of
-the practice — they show what would have shipped. A solved exercise opens a
-source drawer with the real field vocabulary for what you just did, an honest
+loop keeps the current task guidance, controls, and primary consequence
+together, while secondary readouts and deeper context open as shelves. Wrong
+moves are part of the practice — they show what would have shipped. A solved
+exercise opens a source drawer with the real field vocabulary for what you just
+did, an honest
 evidence-strength label, the boundary of what not to overclaim, and named
 sources. A closing
 knowledge map organizes the twelve exercises into four inspection passes (the
@@ -117,10 +118,11 @@ keepsake state; verifies keyboard operation (skip link, the Settings dialog's
 focus trap, contents-rail focus moves, and solving an exercise by keyboard); and
 confirms reduced-motion and forced-colors modes stay readable with no horizontal
 overflow on desktop, mobile, or a 320px reflow viewport. The suite also guards
-the reduced desktop workbench target at 1280x720 and a 1.1 large-text/zoom proxy,
-so task, controls, and primary consequence do not regress into a scroll-heavy
-loop. Every browser-driven test runs in Chromium, Firefox, and WebKit (Safari's
-engine).
+the reduced desktop workbench target at 1280x720, checks that the visible
+`What to settle` task guidance is not clipped across desktop/mobile/reflow
+widths, and runs a 1.1 large-text/zoom proxy so task, controls, and primary
+consequence do not regress into a scroll-heavy loop. Every browser-driven test
+runs in Chromium, Firefox, and WebKit (Safari's engine).
 
 ## Limitations
 

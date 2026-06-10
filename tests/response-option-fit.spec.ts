@@ -465,6 +465,67 @@ test.describe("Response Option Fit Lab - desktop", () => {
     ).toEqual([]);
   });
 
+  test("what-to-settle guidance does not clip visible task text", async ({
+    page
+  }, testInfo) => {
+    testInfo.skip(
+      testInfo.project.name !== "desktop",
+      "responsive clipping guard sets its own viewport sizes"
+    );
+
+    for (const viewport of [
+      { width: 1280, height: 720 },
+      { width: 1440, height: 900 },
+      { width: 390, height: 851 },
+      { width: 320, height: 720 }
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto(`${BASE_URL}/`);
+      await expect(page.locator(".lab-taskband")).toHaveCount(10);
+
+      const clipped = await page.evaluate(() => {
+        const selector = [
+          ".lab-taskband .lab-task-title",
+          ".lab-taskband .lab-task-active-title",
+          ".lab-taskband .lab-task-brief",
+          ".lab-taskband .lab-task-hint"
+        ].join(",");
+
+        return Array.from(document.querySelectorAll<HTMLElement>(selector))
+          .filter((el) => {
+            const style = window.getComputedStyle(el);
+            const rect = el.getBoundingClientRect();
+            if (
+              style.display === "none" ||
+              style.visibility === "hidden" ||
+              rect.width === 0 ||
+              rect.height === 0
+            ) {
+              return false;
+            }
+            return (
+              el.scrollHeight > el.clientHeight + 1 ||
+              el.scrollWidth > el.clientWidth + 1
+            );
+          })
+          .map((el) => {
+            const root = el.closest<HTMLElement>(".lab-exercise");
+            return {
+              exercise: root?.id ?? "unknown",
+              className: el.className.toString(),
+              clientHeight: el.clientHeight,
+              scrollHeight: el.scrollHeight,
+              clientWidth: el.clientWidth,
+              scrollWidth: el.scrollWidth,
+              text: (el.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 100)
+            };
+          });
+      });
+
+      expect(clipped, `${viewport.width}x${viewport.height}`).toEqual([]);
+    }
+  });
+
   test("zoomed desktop exercises do not create page or viewport overflow", async ({
     page
   }, testInfo) => {

@@ -84,10 +84,11 @@ interactive module with:
   problem.
 
 The active work loop is intentionally short enough for a reduced desktop
-viewport: the task, controls, and primary cast consequence are meant to stay in
-view together at 1280x720. Longer explanation, secondary meter readouts, and
-whole-draft context move into shelves or solved-state drawers so the visitor
-does not have to scroll back and forth while deciding.
+viewport: the current task guidance, controls, and primary cast consequence are
+meant to stay in view together at 1280x720. The visible task rail should wrap
+rather than truncate essential check text. Secondary meter readouts,
+whole-draft context, and solved-state source depth move into shelves or drawers
+so the visitor does not have to scroll back and forth while deciding.
 
 ## Voice And Terminology
 
