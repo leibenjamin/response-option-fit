@@ -669,10 +669,10 @@ export const channelTasks: ChannelTask[] = [
     id: "capture",
     title: "Get everyone onto their real channel",
     brief:
-      "The starter four mis-file two visitors and lose two entirely. Read each story past the obvious keyword: a coworker reshare is still Social; a podcast host plug is Podcast. Add structured options until all seven land on their TRUE channel. “Other” alone still costs effort and loses detail.",
+      "The starter four mis-file two visitors and lose two. Read past the obvious keyword, then add the missing real channels. “Other” is not enough: low-effort visitors still skip or pick a near miss.",
     pass: channelAllClean,
     passText:
-      "✓ All seven on their true channel — and you had to reason it out, not skim it. Notice what “Other” alone did not do: a write-in is extra effort, and the low-effort visitors declined it, so they mis-filed or skipped. “Other” helps, but it isn't a full repair for a missing option.",
+      "✓ All seven reached their true channel. You had to infer the channel from the story, not skim for a keyword. “Other” helped only the person willing to write; the low-effort visitors still mis-filed or vanished.",
     hint: (offered) => {
       const t = channelTallies(offered);
       if (t.abandoned > 0)
@@ -690,10 +690,10 @@ export const channelTasks: ChannelTask[] = [
     id: "fit",
     title: "Now fit the list to the decision",
     brief:
-      "Forget per-channel for a moment. The owner is deciding ONE thing: should she shift her ad budget online? She needs online vs offline — nothing finer. Rebuild the answer choices for THAT question, with the least burden on respondents. (The two broad buckets you avoided in Task 1 are waiting on the shelf.)",
+      "New decision: should the owner shift ad budget online? She needs online vs offline, not eight channels. Rebuild for that decision with the least burden. The broad buckets you avoided are now the right grain.",
     pass: (offered) => channelOnlyBroad(offered) && channelAllLumped(offered),
     passText:
-      "✓ Same seven people, a different right answer. In Task 1 every channel had to earn its own option, because the report was per-channel. Here the only question is online vs offline — so the detail is burden, and the broad split you avoided before is now exactly right. Completeness is downstream of the reporting task: there's no universally “complete” list — the right grain is the one the decision needs. (Watch the ledger — detail dropped on purpose; coverage, exclusivity, and burden all stayed healthy.)",
+      "✓ Same seven people, different right answer. Per-channel reporting needed detail; online-vs-offline spending needed the broad split. Completeness is downstream of the decision, not a universal option count.",
     hint: (offered) => {
       if (channelAllLumped(offered) && channelOnlyBroad(offered)) return "Done.";
       if (channelAllClean(offered))
@@ -1405,13 +1405,13 @@ export const fpTasks: FpTask[] = [
     id: "clean",
     title: "Get the denominator honest",
     brief:
-      "Add the one screener that lets only real order-ahead users reach the question. Two of the four are traps — one screens no one out, one screens too many.",
+      "Let only real order-ahead users reach the outcome. Two screeners are traps: one screens no one out, one drops a valid complaint.",
     pass: (a) => {
       const f = fpFunnel(a);
       return f.merged === 0 && f.wronglyScreened === 0;
     },
     passText:
-      "✓ The denominator just got honest. The bare question read “4 of 6 say order-ahead didn't save time”; now it's “1 of 3 who actually used it” — same world, a completely different headline.",
+      "✓ The denominator is honest. The same world moved from “4 of 6 say it did not save time” to “1 of 3 actual users.” The headline changed because the basis changed.",
     hint: (a) => {
       const f = fpFunnel(a);
       if (f.wronglyScreened > 0)
@@ -1425,13 +1425,13 @@ export const fpTasks: FpTask[] = [
     id: "informative",
     title: "Make the drop-outs tell you why",
     brief:
-      "Now split the drop-outs: never installed the app (a discovery problem) vs. has it but never tried order-ahead (adoption)? Add the screener that separates them — order matters.",
+      "Now split the people who fall out: never installed the app, or has it but never tried order-ahead. Add the earlier gate that separates discovery from adoption.",
     pass: (a) => {
       const f = fpFunnel(a);
       return f.merged === 0 && f.wronglyScreened === 0 && a.includes("app") && a.includes("feature");
     },
     passText:
-      "✓ Now the drop-outs aren't one undifferentiated pile: two never installed the app; one has it but hasn't tried order-ahead — so you know whether to fix discovery or adoption. An ordered screener turns who-fell-out into data.",
+      "✓ The drop-outs now diagnose the problem. Two never installed the app; one has it but never tried order-ahead. An ordered screener turns who-fell-out into data.",
     hint: (a) => {
       const f = fpFunnel(a);
       if (f.merged > 0 || f.wronglyScreened > 0)
@@ -1494,9 +1494,9 @@ export const acqDesignStem: Record<AcqDesign, string> = {
   item: "“How friendly was the barista?”  Very unfriendly → Very friendly"
 };
 export const acqDesignNote: Record<AcqDesign, string> = {
-  agree: "Agree/disagree invites agreement. The yea-sayers tick Agree no matter what they actually felt, so two people who found the barista cold (and one who was lukewarm) get recorded as agreeing the barista was friendly. Agreement is inflated before you analyze a thing.",
-  reverse: "The reverse-worded item catches the yea-sayers — they agree with “friendly” AND “unfriendly,” which is a contradiction, so you can flag them as inconsistent. But notice two things: you still don't know what they actually think, and every careful respondent had to stop and parse a second, opposite-worded item. Detection is not measurement — treat it as a deliberate, pretested check, not a free attention test.",
-  item: "There's nothing here to simply agree with — the respondent has to place the barista on a scale of friendliness. The acquiescence pull is gone, and every recorded answer now matches the person's real view."
+  agree: "Agree/disagree invites agreement. The easy-agreeing visitors tick Agree even when the story says brushed off or lukewarm, so agreement is inflated before analysis starts.",
+  reverse: "The reverse-worded item raises style flags: agree with “friendly” and “unfriendly” is a contradiction. But it still does not tell you what those flagged people actually think. Detection is not measurement.",
+  item: "Now there is nothing to simply agree with. The respondent has to place the barista on a friendliness scale, so recorded answers track the real view."
 };
 
 /* Recorded answer per design. For agree/reverse the primary item is the
@@ -1560,10 +1560,10 @@ export const acqTasks: AcqTask[] = [
     id: "detect",
     title: "Try the textbook fix — then judge it",
     brief:
-      "Agreement reads high, but the rows show some “Agree” answers from brushed-off or so-so visitors who nod along. Add the reverse-worded check, then decide whether flagging easy-agreers actually fixes the friendliness measure.",
+      "Agreement reads high, but the rows betray nod-along answers. Add the reverse-worded check, then decide whether flagging easy-agreers actually fixes the friendliness measure.",
     pass: (d, judgedFlagged) => d === "reverse" && judgedFlagged,
     passText:
-      "✓ Right call. The check flags the easy-agreers — useful to know — but your friendly number didn't move: their “Agree”s are still in it, two careful respondents had to untangle a double-worded item, and you still don't know what the flagged three actually think. You detected the problem; you didn't measure around it.",
+      "✓ Right call. The check flags a response style, but the friendliness number did not move and one flagged person genuinely liked the visit. You detected the risk; you did not measure around it.",
     hint: (d, judgedFlagged) =>
       d !== "reverse"
         ? "Switch to the “+ reverse-worded check” design to try the textbook fix."
@@ -1575,10 +1575,10 @@ export const acqTasks: AcqTask[] = [
     id: "measure",
     title: "Now actually measure it",
     brief:
-      "Detection isn't measurement. Of the three designs, pick the one that removes the thing there is to agree with — so a recorded answer has to track the person's real view, not their willingness to nod along.",
+      "Pick the design that removes the thing there is to agree with. A recorded answer should track the person's view, not willingness to nod along.",
     pass: (d) => d === "item" && acqTrackTrueLevel(d) === "high",
     passText:
-      "✓ Every recorded answer now matches the respondent's real view, because there's no statement to nod along to — you asked them to rate, not to agree. That's the durable fix: where you can, replace agree/disagree with item-specific response options. (A reverse-worded check is a detection patch, not a substitute.)",
+      "✓ Every recorded answer now matches the real view. You asked people to rate friendliness instead of agreeing with a statement. Reverse wording can flag style; item-specific wording measures the dimension.",
     hint: (d) =>
       d === "item"
         ? "Answers track true views now."

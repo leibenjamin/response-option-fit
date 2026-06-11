@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ClipboardCopy, Download } from "lucide-react";
 import { useProgress } from "../lib/progress";
 import {
   buildCertificateMarkdown,
@@ -168,7 +169,8 @@ export function LabCertificate() {
               data-testid="lab-cert-copy"
               onClick={handleCopy}
             >
-              Copy as Markdown
+              <ClipboardCopy className="lab-button-icon" size={16} aria-hidden="true" />
+              <span>Copy as Markdown</span>
             </button>
             <button
               type="button"
@@ -176,7 +178,8 @@ export function LabCertificate() {
               data-testid="lab-cert-png"
               onClick={handlePng}
             >
-              Download PNG
+              <Download className="lab-button-icon" size={16} aria-hidden="true" />
+              <span>Download PNG</span>
             </button>
           </div>
         </>

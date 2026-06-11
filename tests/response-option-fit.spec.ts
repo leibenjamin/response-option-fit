@@ -390,6 +390,12 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.goto(`${BASE_URL}/`);
     const hook = page.getByTestId("lab-hero");
     await expect(hook).toBeVisible();
+    await expect(page.getByTestId("settings-button")).toHaveAccessibleName(
+      "Open settings"
+    );
+    await expect(page.getByTestId("settings-button").locator("svg")).toHaveCount(1);
+    await expect(hook.locator(".lab-hook-step svg")).toHaveCount(1);
+    await expect(hook.locator(".lab-hook-cta svg")).toHaveCount(1);
     /* Reads correctly at zero clicks: the default mixed placement is filed onto
        the upper of the two coarse boxes. */
     const readout = page.getByTestId("lab-hero-headline");
@@ -480,7 +486,7 @@ test.describe("Response Option Fit Lab - desktop", () => {
             viewportHeight
           };
         })
-        .filter(Boolean);
+        .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
     });
 
     expect(loops.length).toBe(12);
@@ -634,6 +640,8 @@ test.describe("Response Option Fit Lab - desktop", () => {
     await page.goto(`${BASE_URL}/`);
     const contents = page.getByTestId("lab-contents");
     await expect(contents).toBeVisible();
+    await expect(contents.locator(".lab-contents-list")).not.toBeVisible();
+    await expect(contents.locator(".lab-contents-toggle svg")).toHaveCount(2);
     /* The disclosure is collapsed by default; open it to reach the links. */
     await contents.getByText("Jump to exercise").click();
     /* Twelve exercise links plus the closing-map link. */
@@ -1083,10 +1091,16 @@ test.describe("Response Option Fit Lab - desktop", () => {
 
   test("E9 acquiescence: switching to the reverse-worded check isn't enough — you must judge that it detects without measuring; then item-specific wording is the fix", async ({ page }) => {
     await page.goto(`${BASE_URL}/`);
+    await expect(page.getByTestId("lab-acq-track-count")).toHaveText("4/6");
+    await expect(page.getByTestId("lab-acq-flag-count")).toHaveText("0");
+    await expect(page.getByTestId("lab-acq-mismatch-count")).toHaveText("2");
     /* Task 1: switch to the reverse-worded check — the judgment gate appears,
        and switching alone does NOT pass. */
     await page.getByTestId("lab-acq-design-reverse").click();
     await expect(page.getByTestId("lab-acq-judge")).toBeVisible();
+    await expect(page.getByTestId("lab-acq-track-count")).toHaveText("4/6");
+    await expect(page.getByTestId("lab-acq-flag-count")).toHaveText("3");
+    await expect(page.getByTestId("lab-acq-mismatch-count")).toHaveText("2");
     await expect(page.getByTestId("lab-acq-pass")).toHaveCount(0);
     /* The tempting wrong judgment ("it fixed it") shows a correction and does
        not advance the task. */
@@ -1098,6 +1112,9 @@ test.describe("Response Option Fit Lab - desktop", () => {
     /* Task 2 still pending until item-specific wording. */
     await expect(page.getByTestId("lab-acq-pass")).toHaveCount(0);
     await page.getByTestId("lab-acq-design-item").click();
+    await expect(page.getByTestId("lab-acq-track-count")).toHaveText("6/6");
+    await expect(page.getByTestId("lab-acq-flag-count")).toHaveText("0");
+    await expect(page.getByTestId("lab-acq-mismatch-count")).toHaveText("0");
     await expect(page.getByTestId("lab-acq-pass")).toBeVisible();
     await expect(page.getByTestId("lab-receipt-E9")).toBeVisible();
   });

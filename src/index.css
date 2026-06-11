@@ -129,6 +129,22 @@ button {
   cursor: pointer;
 }/* Visually-hidden utility */
 
+.lab-icon,
+.lab-button-icon {
+  display: block;
+  flex: 0 0 auto;
+}
+
+.lab-button-icon {
+  width: 1em;
+  height: 1em;
+}
+
+button .lab-button-icon,
+button .lab-icon {
+  pointer-events: none;
+}
+
 
 .sr-only {
   position: absolute;
@@ -782,8 +798,9 @@ summary:focus-visible {
   padding: var(--s-5);
   background: var(--paper-card);
   border: 1px solid var(--line);
-  border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(70, 45, 30, 0.07);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(70, 45, 30, 0.08);
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -820,7 +837,7 @@ summary:focus-visible {
 .lab-hook-track {
   position: relative;
   height: 82px;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid var(--line);
   background: linear-gradient(
     90deg,
@@ -1052,6 +1069,10 @@ summary:focus-visible {
   min-height: 44px;
   border-radius: 8px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
 }
 .lab-hook-step:hover,
 .lab-hook-step:focus-visible {
@@ -1089,6 +1110,10 @@ summary:focus-visible {
   min-height: 44px;
   border-radius: 8px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
 }
 .lab-hook-privacy {
   max-width: 34ch;
@@ -1591,7 +1616,7 @@ summary:focus-visible {
   background: var(--paper);
   border-bottom: 1px solid var(--line);
   margin-top: 0;
-  padding-block: var(--s-2);
+  padding-block: var(--s-1);
 }
 .lab-contents-disc {
   margin: 0;
@@ -1601,9 +1626,13 @@ summary:focus-visible {
   cursor: pointer;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: var(--s-2) var(--s-3);
-  padding: var(--s-1) 0;
+  padding: var(--s-1) var(--s-3);
+  background: var(--paper-card);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
   color: var(--ink);
 }
 .lab-contents-summary::-webkit-details-marker {
@@ -1620,12 +1649,13 @@ summary:focus-visible {
   gap: var(--s-2);
 }
 .lab-contents-toggle::before {
-  content: "▸";
-  display: inline-block;
+  content: none;
+}
+.lab-contents-chevron {
   transition: transform 120ms ease;
 }
-.lab-contents-disc[open] .lab-contents-toggle::before {
-  transform: rotate(90deg);
+.lab-contents-disc[open] .lab-contents-chevron {
+  transform: rotate(180deg);
 }
 .lab-contents-here {
   font-family: var(--font-serif);
@@ -1649,6 +1679,7 @@ summary:focus-visible {
   padding: var(--s-1) var(--s-2);
   min-height: 36px;
   border: 1px solid transparent;
+  border-radius: 6px;
   text-decoration: none;
   color: var(--ink-mute);
 }
@@ -1661,9 +1692,13 @@ summary:focus-visible {
   font-family: var(--font-mono);
   font-size: 11px;
   width: auto;
+  min-height: 18px;
   padding-top: 1px;
   text-align: right;
   color: var(--ink-soft);
+  display: inline-grid;
+  place-items: center;
+  justify-self: end;
 }
 .lab-contents-label {
   min-width: 0;
@@ -1723,9 +1758,10 @@ summary:focus-visible {
 }
 .lab-contents-progress-track {
   display: block;
-  height: 4px;
+  height: 6px;
   background: var(--paper-3);
   border: 1px solid var(--line-soft);
+  border-radius: 999px;
   overflow: hidden;
 }
 .lab-contents-progress-fill {
@@ -1774,8 +1810,8 @@ summary:focus-visible {
     font-size: 0;
     flex: none;
   }
-  .lab-contents-toggle::before {
-    font-size: 13px;
+  .lab-contents-toggle > span {
+    font-size: 0;
   }
   .lab-contents-here {
     font-style: normal;
@@ -1801,6 +1837,9 @@ summary:focus-visible {
   .lab-km {
     scroll-margin-top: 52px;
   }
+  .lab-console {
+    scroll-margin-top: 52px;
+  }
 }
 
 /* ─── Closing-map certificate: the completion payoff ─── */
@@ -1810,6 +1849,7 @@ summary:focus-visible {
   background: var(--paper-card);
   border: 1px solid var(--line);
   border-top: 3px solid var(--accent);
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -1885,6 +1925,12 @@ summary:focus-visible {
   background: var(--accent-2);
   border: 1px solid var(--accent-2);
   cursor: pointer;
+  min-height: 44px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
   transition: background 120ms ease;
 }
 .lab-cert-button:hover,
@@ -1945,7 +1991,7 @@ summary:focus-visible {
   grid-template-columns: minmax(0, 1fr);
   gap: var(--s-3);
   align-items: start;
-  scroll-margin-top: 4.25rem;
+  scroll-margin-top: 2.75rem;
 }
 .lab-console:focus {
   outline: none;
@@ -2763,8 +2809,10 @@ summary:focus-visible {
   border: 1px solid var(--line-soft);
   background: var(--paper-card);
   padding: var(--s-6);
-  border-radius: 16px;
-  box-shadow: 0 14px 34px rgba(70, 45, 30, 0.06);
+  border-radius: 8px;
+  box-shadow:
+    inset 4px 0 0 var(--branch-color, var(--line-soft)),
+    0 12px 28px rgba(70, 45, 30, 0.065);
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
@@ -3042,6 +3090,12 @@ summary:focus-visible {
   text-transform: uppercase;
   padding: var(--s-3) var(--s-5);
   cursor: pointer;
+  border-radius: 6px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
 }
 
 .lab-action-button:hover:not(:disabled),
@@ -3096,8 +3150,6 @@ summary:focus-visible {
   color: var(--paper-card);
   display: grid;
   place-items: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
   line-height: 1;
   animation: mo-stamp var(--mo-3) var(--mo-spring) both;
 }
@@ -4160,7 +4212,7 @@ summary:focus-visible {
   border: 1px solid var(--line-faint);
   background: var(--paper-2);
   padding: var(--s-4) var(--s-5);
-  border-radius: 12px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -4204,7 +4256,7 @@ summary:focus-visible {
   border: 1px solid var(--line-soft);
   background: var(--paper-card);
   color: var(--ink-2);
-  padding: var(--s-2) var(--s-3);
+  padding: 6px 10px;
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr);
   gap: var(--s-2);
@@ -4214,6 +4266,13 @@ summary:focus-visible {
   font-size: 13px;
   line-height: 1.2;
   cursor: pointer;
+  min-height: 38px;
+  border-radius: 6px;
+  transition:
+    background-color var(--mo-1) var(--mo-ease),
+    border-color var(--mo-1) var(--mo-ease),
+    color var(--mo-1) var(--mo-ease),
+    transform var(--mo-1) var(--mo-ease);
 }
 
 .lab-channel-chip-mark {
@@ -4221,10 +4280,8 @@ summary:focus-visible {
   place-items: center;
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius: 5px;
   border: 1px solid currentColor;
-  font-family: var(--font-mono);
-  font-size: 11px;
 }
 
 .lab-channel-chip:hover:not(:disabled),
@@ -4310,15 +4367,20 @@ summary:focus-visible {
 
 .lab-channel-tally-line {
   margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(5.8rem, 1fr));
+  gap: var(--s-2);
 }
 
 .lab-channel-tally {
   font-family: var(--font-mono);
   font-size: 12.5px;
   color: var(--ink-soft);
+  background: var(--paper-card);
+  border: 1px solid var(--line-faint);
+  border-left: 4px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 7px;
 }
 
 .lab-channel-tally strong {
@@ -4332,6 +4394,11 @@ summary:focus-visible {
 .lab-channel-tally.is-clean strong { color: var(--route-r); }
 .lab-channel-tally.is-other strong { color: var(--route-w); }
 .lab-channel-tally.is-satisficed strong { color: var(--accent-2); }
+.lab-channel-tally.is-clean { border-left-color: var(--route-r); }
+.lab-channel-tally.is-other,
+.lab-channel-tally.is-lumped { border-left-color: var(--route-w); }
+.lab-channel-tally.is-satisficed,
+.lab-channel-tally.is-abandoned { border-left-color: var(--accent); }
 
 .lab-channel-cast {
   list-style: none;
@@ -4346,11 +4413,22 @@ summary:focus-visible {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
-  padding: 3px 0;
+  padding: 3px 0 3px 8px;
   align-items: baseline;
   border-bottom: 1px solid var(--line-faint);
   font-size: 12.6px;
   color: var(--ink-2);
+  position: relative;
+}
+.lab-channel-cast-row::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: 0;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--line);
 }
 .lab-channel-cast-row:last-child { border-bottom: 0; }
 
@@ -4374,13 +4452,18 @@ summary:focus-visible {
   color: var(--route-r);
   font-weight: 600;
 }
+.lab-channel-cast-row.is-clean::before { background: var(--route-r); }
 .lab-channel-cast-row.is-other .lab-channel-cast-landing {
   color: var(--route-w);
 }
+.lab-channel-cast-row.is-other::before,
+.lab-channel-cast-row.is-lumped::before { background: var(--route-w); }
 .lab-channel-cast-row.is-satisficed .lab-channel-cast-landing {
   color: var(--accent-2);
   font-weight: 600;
 }
+.lab-channel-cast-row.is-satisficed::before,
+.lab-channel-cast-row.is-abandoned::before { background: var(--accent); }
 
 .lab-channel-cast-state {
   font-family: var(--font-mono);
@@ -4783,10 +4866,6 @@ summary:focus-visible {
 }
 .lab-km-node:last-child { border-bottom: 0; }
 
-.lab-km-node-details {
-  /* details element */
-}
-
 .lab-km-node-summary {
   display: flex;
   align-items: center;
@@ -4982,12 +5061,12 @@ summary:focus-visible {
 
 .lab-taskband {
   border: 1px solid var(--accent-soft);
-  border-left: 3px solid var(--accent);
+  border-left: 4px solid var(--accent);
   /* A light warm wash keeps the decision strip findable without making every
      exercise feel like the same checklist module. */
   background: var(--accent-wash);
   padding: 10px var(--s-3);
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -5016,12 +5095,15 @@ summary:focus-visible {
   padding: 4px 5px;
   gap: 5px;
   min-width: 0;
+  border-radius: 5px;
 }
 .lab-taskband .lab-task-mark {
   width: 17px;
   height: 17px;
   font-size: 9.5px;
   margin-top: 1px;
+  display: inline-grid;
+  place-items: center;
 }
 .lab-taskband .lab-task-title {
   display: block;
@@ -5036,12 +5118,14 @@ summary:focus-visible {
      detail, so the band no longer stacks two cards on the wash. */
   background: transparent;
   border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+  padding-left: 8px;
 }
 
 .lab-taskband .lab-task-active {
   border-top: 1px solid var(--accent-soft);
   border-bottom: 1px solid var(--line-faint);
-  padding: 6px 0;
+  padding: 7px 0;
 }
 .lab-taskband .lab-task-brief-key {
   margin: 0;
@@ -5075,9 +5159,16 @@ summary:focus-visible {
   padding-top: var(--s-1);
   font-size: 12.4px;
   line-height: 1.35;
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
 }
 .lab-taskband .lab-task-next-key {
   margin-right: var(--s-1);
+}
+.lab-task-next-icon {
+  color: var(--accent);
+  flex: none;
 }
 
 .lab-taskband .lab-task-pass {
@@ -5172,6 +5263,7 @@ summary:focus-visible {
   border-left: 3px solid var(--ink-mute);
   background: var(--paper);
   padding: var(--s-2) var(--s-3);
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -5231,6 +5323,8 @@ summary:focus-visible {
   gap: 2px;
   padding: var(--s-2) var(--s-3);
   text-align: left;
+  min-height: 44px;
+  border-radius: 6px;
 }
 .lab-review-index-item span {
   font-family: var(--font-mono);
@@ -5290,7 +5384,7 @@ summary:focus-visible {
   padding: var(--s-3) var(--s-4);
   background: var(--paper-2);
   border: 1px solid var(--line-faint);
-  border-radius: 12px;
+  border-radius: 8px;
 }
 .lab-review-tray-key {
   font-family: var(--font-mono);
@@ -5329,6 +5423,7 @@ summary:focus-visible {
   border: 1px solid var(--line);
   background: var(--paper);
   padding: var(--s-3) var(--s-4);
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
@@ -5395,6 +5490,8 @@ summary:focus-visible {
   letter-spacing: 0.04em;
   padding: 6px var(--s-2);
   cursor: pointer;
+  min-height: 44px;
+  border-radius: 6px;
   transition:
     transform var(--mo-1) var(--mo-ease),
     background-color var(--mo-1) var(--mo-ease),
@@ -5415,6 +5512,7 @@ summary:focus-visible {
   margin: 0;
   border-left: 3px solid var(--line);
   padding: var(--s-2) var(--s-3);
+  border-radius: 0 6px 6px 0;
   font-size: 12.5px;
   line-height: 1.4;
   color: var(--ink-2);
@@ -5844,6 +5942,8 @@ summary:focus-visible {
   align-items: center;
   text-align: left;
   cursor: pointer;
+  min-height: 44px;
+  border-radius: 6px;
   transition:
     transform var(--mo-1) var(--mo-ease),
     background-color var(--mo-1) var(--mo-ease),
@@ -5861,11 +5961,19 @@ summary:focus-visible {
   color: var(--ink);
 }
 .lab-fp-screener-mark {
-  font-family: var(--font-mono);
-  font-size: 14px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid currentColor;
+  border-radius: 5px;
+  display: inline-grid;
+  place-items: center;
   color: var(--ink-mute);
 }
-.lab-fp-screener.is-on .lab-fp-screener-mark { color: var(--route-r); }
+.lab-fp-screener.is-on .lab-fp-screener-mark {
+  background: var(--route-r);
+  border-color: var(--route-r);
+  color: var(--paper-card);
+}
 .lab-fp-screener-note {
   margin: var(--s-1) 0 0 calc(22px + var(--s-3));
   font-size: 13px;
@@ -5878,6 +5986,7 @@ summary:focus-visible {
   border-left: 3px solid var(--accent);
   background: var(--accent-paper);
   padding: var(--s-3) var(--s-4);
+  border-radius: 0 8px 8px 0;
   font-size: 14.5px;
   line-height: 1.55;
   color: var(--ink-2);
@@ -5936,10 +6045,17 @@ summary:focus-visible {
   display: grid;
   gap: var(--s-3);
 }
+.lab-fp-stage {
+  border: 1px solid var(--line-faint);
+  border-left: 4px solid var(--route-r);
+  background: var(--paper-card);
+  border-radius: 8px;
+  padding: var(--s-3);
+}
 .lab-fp-stage-head {
-  margin: 0 0 var(--s-1);
+  margin: 0 0 var(--s-2);
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--s-2);
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -5948,14 +6064,21 @@ summary:focus-visible {
   color: var(--ink-mute);
 }
 .lab-fp-stage-count {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--ink-2);
   border-radius: 4px;
+  background: rgba(93, 110, 68, 0.12);
+  border: 1px solid rgba(93, 110, 68, 0.24);
+  padding: 1px 7px;
 }
 .lab-fp-stage--screened {
-  border-top: 1px dashed var(--line-soft);
-  padding-top: var(--s-3);
+  border-left-color: var(--accent);
+  background: var(--accent-wash);
+}
+.lab-fp-stage--screened .lab-fp-stage-count {
+  background: var(--accent-paper);
+  border-color: var(--accent-soft);
 }
 .lab-fp-stage--screened .lab-fp-row {
   opacity: 0.78;
@@ -5981,6 +6104,8 @@ summary:focus-visible {
   padding: var(--s-3);
   text-align: center;
   cursor: pointer;
+  min-height: 44px;
+  border-radius: 6px;
   transition:
     transform var(--mo-1) var(--mo-ease),
     background-color var(--mo-1) var(--mo-ease),
@@ -6011,9 +6136,52 @@ summary:focus-visible {
   border-left: 3px solid var(--accent-soft);
   background: var(--paper-2);
   padding: var(--s-2) var(--s-3);
+  border-radius: 0 6px 6px 0;
   font-size: 13px;
   line-height: 1.4;
   color: var(--ink-2);
+}
+.lab-acq-contrast {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+.lab-acq-contrast-cell {
+  margin: 0;
+  border: 1px solid var(--line-faint);
+  border-left: 4px solid var(--line);
+  background: var(--paper-card);
+  border-radius: 6px;
+  padding: var(--s-2) var(--s-3);
+  min-width: 0;
+}
+.lab-acq-contrast-cell.is-measure { border-left-color: var(--route-r); }
+.lab-acq-contrast-cell.is-alert { border-left-color: var(--route-w); }
+.lab-acq-contrast-cell.is-mismatch { border-left-color: var(--accent); }
+.lab-acq-contrast-value {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ink);
+}
+.lab-acq-contrast-label {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+.lab-acq-contrast--reverse .is-alert {
+  background: var(--accent-wash);
+  border-left-color: var(--accent);
+}
+.lab-acq-contrast--item .is-measure {
+  background: rgba(93, 110, 68, 0.1);
 }
 .lab-acq-cast {
   list-style: none;
@@ -6094,6 +6262,7 @@ summary:focus-visible {
   border-left: 3px solid var(--accent);
   background: var(--paper-card);
   padding: var(--s-3) var(--s-4);
+  border-radius: 0 8px 8px 0;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -6121,6 +6290,8 @@ summary:focus-visible {
   padding: var(--s-2) var(--s-3);
   text-align: left;
   cursor: pointer;
+  min-height: 44px;
+  border-radius: 6px;
   transition:
     transform var(--mo-1) var(--mo-ease),
     border-color var(--mo-1) var(--mo-ease),
@@ -6179,7 +6350,7 @@ summary:focus-visible {
   border: 1px solid var(--line-faint);
   background: var(--paper-2);
   padding: var(--s-3) var(--s-4);
-  border-radius: 12px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -6204,6 +6375,7 @@ summary:focus-visible {
   padding: var(--s-2);
   cursor: pointer;
   overflow-wrap: anywhere;
+  border-radius: 6px;
   transition:
     background-color var(--mo-1) var(--mo-ease),
     border-color var(--mo-1) var(--mo-ease),
@@ -6275,6 +6447,7 @@ summary:focus-visible {
   border-left: 3px solid var(--accent-soft);
   background: var(--paper-2);
   padding: var(--s-2) var(--s-3);
+  border-radius: 0 6px 6px 0;
   font-size: 13.5px;
   line-height: 1.45;
   color: var(--ink-2);
@@ -6303,6 +6476,8 @@ summary:focus-visible {
   padding: var(--s-2);
   text-align: left;
   cursor: pointer;
+  min-height: 44px;
+  border-radius: 6px;
   transition:
     transform var(--mo-1) var(--mo-ease),
     background-color var(--mo-1) var(--mo-ease),
@@ -6375,7 +6550,7 @@ summary:focus-visible {
   border: 1px solid var(--line-faint);
   background: var(--paper-2);
   padding: var(--s-3) var(--s-4);
-  border-radius: 12px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -6434,6 +6609,13 @@ summary:focus-visible {
   text-align: right;
   line-height: 1.1;
 }
+.lab-order-edge-label {
+  display: inline-block;
+  padding: 2px 4px;
+  background: var(--accent-paper);
+  border: 1px solid var(--accent-soft);
+  border-radius: 4px;
+}
 .lab-order-edge-arrow {
   color: var(--accent);
   font-size: 12px;
@@ -6442,6 +6624,7 @@ summary:focus-visible {
 .lab-order-list li.is-edge {
   border-color: var(--accent);
   background: var(--accent-paper);
+  box-shadow: inset 4px 0 0 var(--accent);
 }
 @media screen and (prefers-reduced-motion: no-preference) {
   .lab-order-edge {
@@ -6539,7 +6722,7 @@ summary:focus-visible {
   position: absolute;
   left: 0;
   width: 58px;
-  border-right: 2px solid var(--accent);
+  border-right: 3px solid var(--accent);
   pointer-events: none;
 }
 .lab-quant-bracket::before,
@@ -6570,6 +6753,10 @@ summary:focus-visible {
   text-align: right;
   line-height: 1.15;
   color: var(--accent-2);
+  background: var(--accent-paper);
+  border: 1px solid var(--accent-soft);
+  border-radius: 4px;
+  padding: 2px 3px;
 }
 @media screen and (prefers-reduced-motion: no-preference) {
   .lab-quant-bracket {
@@ -6759,6 +6946,9 @@ summary:focus-visible {
   .lab-fp-screener,
   .lab-acq-judge-btn,
   .lab-acq-design,
+  .lab-acq-contrast-cell,
+  .lab-fp-stage,
+  .lab-channel-tally,
   .lab-label-word,
   .lab-label-slot,
   .lab-quant-design,
@@ -6773,6 +6963,11 @@ summary:focus-visible {
   .lab-quant-row.is-selected,
   .lab-order-kind.is-on,
   .lab-order-btn.is-on { background: Highlight; color: HighlightText; }
+  .lab-fp-screener.is-on .lab-fp-screener-mark {
+    background: Highlight;
+    color: HighlightText;
+    border-color: Highlight;
+  }
 }
 
 
@@ -6831,6 +7026,7 @@ summary:focus-visible {
   .lab-label-words,
   .lab-label-slot-list,
   .lab-channel-shelf-list,
+  .lab-acq-contrast,
   .lab-quant-format .lab-quant-designs,
   .lab-quant-format > div + div .lab-quant-designs,
   .lab-order-kind-buttons {
@@ -6879,6 +7075,13 @@ summary:focus-visible {
   .lab-channel-cast-landing {
     text-align: left;
     padding-top: var(--s-1);
+  }
+  .lab-order-listwrap {
+    padding-left: 54px;
+  }
+  .lab-order-edge {
+    width: 48px;
+    font-size: 7.8px;
   }
   .lab-bucket-row {
     grid-template-columns: 24px minmax(0, 1fr) auto minmax(0, 1fr);

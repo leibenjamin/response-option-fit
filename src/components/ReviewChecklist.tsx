@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ClipboardCopy } from "lucide-react";
 import { buildReviewChecklistMarkdown } from "../lib/certificate";
 
 /* The ungated sibling of the completion certificate: the four inspection passes,
@@ -58,7 +59,8 @@ export function ReviewChecklist() {
           data-testid="lab-checklist-copy"
           onClick={handleCopy}
         >
-          Copy review checklist
+          <ClipboardCopy className="lab-button-icon" size={16} aria-hidden="true" />
+          <span>Copy review checklist</span>
         </button>
       </div>
       {status && (

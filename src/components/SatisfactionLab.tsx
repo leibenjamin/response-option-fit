@@ -6,6 +6,15 @@ import {
   useState,
   type CSSProperties
 } from "react";
+import {
+  ArrowRight,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ListChecks,
+  Plus,
+  RotateCcw
+} from "lucide-react";
 import { AnimatedNumber } from "../lib/motion";
 import { useProgress } from "../lib/progress";
 import { LabCertificate } from "./LabCertificate";
@@ -272,7 +281,7 @@ function LabContents() {
       }}
     >
       <span className="lab-contents-num" aria-hidden="true">
-        {done ? "✓" : num}
+        {done ? <Check className="lab-icon" size={14} strokeWidth={2.4} /> : num}
       </span>
       <span className="lab-contents-label">
         <span className="lab-contents-title">
@@ -290,7 +299,11 @@ function LabContents() {
     <nav className="lab-contents" aria-label="Lab contents" data-testid="lab-contents">
       <details className="lab-contents-disc" ref={detailsRef}>
         <summary className="lab-contents-summary">
-          <span className="lab-contents-toggle">Jump to exercise</span>
+          <span className="lab-contents-toggle">
+            <ListChecks className="lab-icon" size={15} strokeWidth={2} aria-hidden="true" />
+            <span>Jump to exercise</span>
+            <ChevronDown className="lab-contents-chevron" size={14} strokeWidth={2} aria-hidden="true" />
+          </span>
           {/* Visual scroll-spy only — not a live region: announcing the
               current section on every scroll change is noise for a screen
               reader, which already gets position from the headings and the
@@ -443,10 +456,10 @@ function HeroProof() {
   const stepBoxes = () => setStepIdx((i) => (i + 1) % HOOK_BOX_STEPS.length);
   const stepLabel =
     n === 2
-      ? "Add a middle answer →"
+      ? "Add a middle answer"
       : n === 3
-        ? "Add finer answers →"
-        : "Return to two answers ↺";
+        ? "Add finer answers"
+        : "Return to two answers";
 
   const goToExercise = () => {
     const el = document.getElementById("lab-exercise-1");
@@ -584,7 +597,12 @@ function HeroProof() {
           onClick={stepBoxes}
           data-testid="lab-hook-step"
         >
-          {stepLabel}
+          {n === 5 ? (
+            <RotateCcw className="lab-button-icon" size={15} aria-hidden="true" />
+          ) : (
+            <Plus className="lab-button-icon" size={15} aria-hidden="true" />
+          )}
+          <span>{stepLabel}</span>
         </button>
         <span className="lab-hook-count" aria-hidden="true">
           {n} answer boxes
@@ -598,7 +616,8 @@ function HeroProof() {
           data-testid="lab-hero-cta"
           onClick={goToExercise}
         >
-          Start the lab &rarr;
+          <span>Start the lab</span>
+          <ArrowRight className="lab-button-icon" size={15} aria-hidden="true" />
         </button>
         <span className="lab-hook-privacy" data-testid="lab-hook-privacy">
           In-browser only; nothing here is saved or sent.
@@ -753,7 +772,7 @@ function PassText({
       data-testid={testid}
     >
       <span className="lab-pass-mark" aria-hidden="true">
-        ✓
+        <CheckCircle2 className="lab-icon" size={16} strokeWidth={2.4} />
       </span>
       <span className="lab-pass-text">
         {lead ? <strong className="lab-pass-lead">{lead}</strong> : null}
@@ -803,6 +822,7 @@ function TaskBand({
               <span className="lab-task-next-key" aria-hidden="true">
                 Next:
               </span>
+              <ArrowRight className="lab-task-next-icon" size={13} aria-hidden="true" />
               {nextItem.title}
             </p>
           )}
@@ -821,7 +841,7 @@ function TaskBand({
             data-testid={`${testidPrefix}-${t.id}`}
           >
             <span className="lab-task-mark" aria-hidden="true">
-              {t.done ? "✓" : i + 1}
+              {t.done ? <Check className="lab-icon" size={13} strokeWidth={2.5} /> : i + 1}
             </span>
             <span className="lab-task-title">{t.title}</span>
           </li>
@@ -2164,7 +2184,11 @@ function ChannelTinkerExercise({ num }: { num: number }) {
                     onClick={() => toggle(c.id)}
                   >
                     <span className="lab-channel-chip-mark" aria-hidden="true">
-                      {on ? "✓" : "+"}
+                      {on ? (
+                        <Check className="lab-icon" size={13} strokeWidth={2.5} />
+                      ) : (
+                        <Plus className="lab-icon" size={13} strokeWidth={2.3} />
+                      )}
                     </span>
                     <span className="lab-channel-chip-label lab-selectable">
                       {c.label}
@@ -2180,7 +2204,8 @@ function ChannelTinkerExercise({ num }: { num: number }) {
             data-testid="lab-channel-reset"
             onClick={reset}
           >
-            Reset to the starter set
+            <RotateCcw className="lab-button-icon" size={15} aria-hidden="true" />
+            <span>Reset to the starter set</span>
           </button>
         </section>
 
@@ -3133,7 +3158,11 @@ function FalsePremiseExercise({ num }: { num: number }) {
                   onClick={() => toggle(s.id)}
                 >
                   <span className="lab-fp-screener-mark" aria-hidden="true">
-                    {on ? "✓" : "+"}
+                    {on ? (
+                      <Check className="lab-icon" size={14} strokeWidth={2.5} />
+                    ) : (
+                      <Plus className="lab-icon" size={14} strokeWidth={2.3} />
+                    )}
                   </span>
                   <span className="lab-fp-screener-q lab-selectable">
                     {s.label}
@@ -3321,6 +3350,10 @@ function AcquiescenceExercise({ num }: { num: number }) {
   const designs: AcqDesign[] = ["agree", "reverse", "item"];
   const task1Done = completed.includes("detect");
   const flaggedCount = acqCast.filter((c) => acqFlagged(c, designId)).length;
+  const matchingCount = acqCast.filter((c) =>
+    acqMatchesTrue(c, designId)
+  ).length;
+  const mismatchCount = acqCast.length - matchingCount;
   const showJudgment = designId === "reverse" && !task1Done;
 
   return (
@@ -3391,6 +3424,43 @@ function AcquiescenceExercise({ num }: { num: number }) {
       <p className="lab-acq-note lab-selectable" aria-live="polite">
         {acqDesignNote[designId]}
       </p>
+
+      <div
+        className={`lab-acq-contrast lab-acq-contrast--${designId}`}
+        aria-label="Detection versus measurement readout"
+      >
+        <p className="lab-acq-contrast-cell is-measure">
+          <span
+            className="lab-acq-contrast-value"
+            data-testid="lab-acq-track-count"
+          >
+            {matchingCount}/{acqCast.length}
+          </span>
+          <span className="lab-acq-contrast-label">
+            answers track the real view
+          </span>
+        </p>
+        <p className="lab-acq-contrast-cell is-alert">
+          <span
+            className="lab-acq-contrast-value"
+            data-testid="lab-acq-flag-count"
+          >
+            {flaggedCount}
+          </span>
+          <span className="lab-acq-contrast-label">style flags raised</span>
+        </p>
+        <p className="lab-acq-contrast-cell is-mismatch">
+          <span
+            className="lab-acq-contrast-value"
+            data-testid="lab-acq-mismatch-count"
+          >
+            {mismatchCount}
+          </span>
+          <span className="lab-acq-contrast-label">
+            measurement mismatches remain
+          </span>
+        </p>
+      </div>
 
       <ul className="lab-acq-cast" aria-label="Where each respondent lands">
         {acqCast.map((c) => {
