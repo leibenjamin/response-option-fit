@@ -47,24 +47,36 @@ function injectProdSecurityHeaders(): Plugin {
 const DEPLOY_BASE = "./";
 
 // A build-time banner is injected into every bundled JS chunk and CSS asset
-// so each build produces unique content hashes. Without this, two builds from
+// so each build produces unique bytes per file. Without this, two builds from
 // identical source produce byte-identical artifacts; if Cloudflare Pages ever
 // stores a corrupted copy of one of those artifacts, every later dedup-mapped
 // deploy will serve the same corruption forever. The banner is one line per
 // file, gzips down to ~30 bytes, and guarantees CF Pages actually re-uploads
 // on every deploy. Comment syntax `/* ... */` is valid in both JS and CSS.
+//
+// Injection happens in generateBundle, not through `output.banner`: the
+// Vite 8 / Rolldown bundler silently ignored the Rollup-style banner option,
+// which stripped the safeguard from every JS chunk. generateBundle is part of
+// the shared plugin contract both bundlers honor, and the Playwright suite now
+// asserts the banner is the first bytes of every emitted .js/.css asset.
 const BUILD_BANNER = `/*! response-option-fit-lab build ${new Date().toISOString()} */`;
 
-function injectCssBuildBanner(): Plugin {
+function injectBuildBanner(): Plugin {
   return {
-    name: "inject-css-build-banner",
+    name: "inject-build-banner",
     apply: "build",
-    transform(code, id) {
-      const cleanId = id.split("?")[0];
-      if (cleanId.endsWith(".css")) {
-        return { code: `${BUILD_BANNER}\n${code}`, map: null };
+    generateBundle(_options, bundle) {
+      for (const file of Object.values(bundle)) {
+        if (file.type === "chunk" && file.fileName.endsWith(".js")) {
+          file.code = `${BUILD_BANNER}\n${file.code}`;
+        } else if (
+          file.type === "asset" &&
+          file.fileName.endsWith(".css") &&
+          typeof file.source === "string"
+        ) {
+          file.source = `${BUILD_BANNER}\n${file.source}`;
+        }
       }
-      return null;
     }
   };
 }
@@ -75,14 +87,7 @@ export default defineConfig(({ command, isPreview }) => {
 
   return {
     base: appBase,
-    plugins: [react(), injectProdSecurityHeaders(), injectCssBuildBanner()],
-    server: { port: 5173, host: "127.0.0.1", strictPort: true },
-    build: {
-      rollupOptions: {
-        output: {
-          banner: BUILD_BANNER
-        }
-      }
-    }
+    plugins: [react(), injectProdSecurityHeaders(), injectBuildBanner()],
+    server: { port: 5173, host: "127.0.0.1", strictPort: true }
   };
 });

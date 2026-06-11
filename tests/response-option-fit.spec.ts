@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import {
@@ -65,6 +65,29 @@ test("tracked public files avoid local tooling disclosures", () => {
   }
 
   expect(matches).toEqual([]);
+});
+
+/* The production artifact carries two safeguards a bundler or config migration
+   can silently drop — the Vite 8 / Rolldown move ate the JS half of the build
+   banner once already. The banner makes every deploy's bytes unique so
+   Cloudflare Pages cannot dedup-map a possibly-corrupted stored asset forever
+   (see docs/deployment.md), and the meta CSP is the enforced policy for
+   static-host and Pages-origin delivery. `npm test` serves this same dist/
+   through vite preview, so the suite runs against exactly these files. */
+test("the built artifact keeps the per-build banner and the meta CSP", () => {
+  const html = readFileSync("dist/index.html", "utf8");
+  expect(html).toContain('<meta http-equiv="Content-Security-Policy"');
+  expect(html).toContain("default-src 'none'");
+  expect(html).toContain("script-src 'self'");
+
+  const codeAssets = readdirSync("dist/assets").filter(
+    (file) => file.endsWith(".js") || file.endsWith(".css")
+  );
+  expect(codeAssets.length).toBeGreaterThan(0);
+  for (const file of codeAssets) {
+    const head = readFileSync(`dist/assets/${file}`, "utf8").slice(0, 64);
+    expect(head, file).toMatch(/^\/\*! response-option-fit-lab build /);
+  }
 });
 
 /* Solve all twelve exercises on a freshly-loaded lab page, using the same
