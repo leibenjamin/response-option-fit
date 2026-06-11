@@ -81,22 +81,35 @@ no future deploy from the same source can dislodge it. We hit this on
 2026-05-14: a corrupt `index-CucKQuLe.js` blob returned HTTP 500 for three
 consecutive deploys, all dedup-mapped to the same hash.
 
-The defense, in `vite.config.ts`, injects an ISO-timestamp comment into every
-JS chunk and every CSS asset *before content-hashing*:
+The defense, in `vite.config.ts`, prepends an ISO-timestamp comment to every
+emitted JS chunk and CSS asset:
 
 ```ts
 const BUILD_BANNER = `/*! response-option-fit-lab build ${new Date().toISOString()} */`;
 ```
 
-Every build now produces unique content hashes. Cloudflare Pages always
-uploads a fresh blob; dedup-corruption cannot persist. The banner gzips down
-to ~30 bytes per file and is preserved through minification.
+Every build now produces unique bytes for every code asset. Cloudflare Pages
+always uploads a fresh blob; dedup-corruption cannot persist. The banner gzips
+down to ~30 bytes per file.
+
+Injection lives in a single `generateBundle` plugin hook (`injectBuildBanner`),
+which runs after bundling for both `.js` and `.css` outputs. It deliberately
+does **not** use the Rollup-style `build.rollupOptions.output.banner` option:
+when the toolchain moved to Vite 8, the Rolldown bundler silently ignored that
+option and every JS chunk shipped without the banner until the audit caught it.
+`generateBundle` is part of the plugin contract both bundlers honor, and the
+Playwright suite now asserts the banner is the first bytes of every
+`dist/assets/*.js` and `*.css` file, so a future toolchain change cannot drop
+the safeguard silently again. (Because injection happens after Vite computes
+asset filenames, an identical-source rebuild keeps the same hashed filenames
+while the bytes still differ — which is exactly what the dedup safeguard
+needs, and the only difference between such files is the banner comment.)
 
 When a normal deploy lands, the build log should show `Uploaded N files
 (0 already uploaded)` — not `0 files / N already uploaded`. If you see the
-latter, the banner is not running (check that `vite.config.ts` has the
-`build.rollupOptions.output.banner` setting and the `injectCssBuildBanner`
-plugin in the plugins array).
+latter, the banner is not running (check that `vite.config.ts` still has the
+`injectBuildBanner` plugin in the plugins array, and that `npm test` passes —
+the artifact test fails loudly when the banner is missing).
 
 ## Cloudflare Pages dashboard settings
 
@@ -107,7 +120,12 @@ scratch into a clean Pages project, set:
 - **Build command:** `npm run build`
 - **Build output directory:** `/dist`
 - **Root directory:** `/`
-- **Node version:** project defaults work (`nodejs@22.16.0` observed)
+- **Node version:** pinned by the repo's `.nvmrc` (`24`), which the Pages v3
+  build image honors; no dashboard setting needed. (Without the file, the
+  project default was `nodejs@22.16.0` — also new enough for Vite 8, which
+  requires Node `^20.19.0 || >=22.12.0`.) The repo's `.npmrc`
+  (`ignore-scripts=true`) also applies to the Pages install step, so no
+  dependency lifecycle script runs during deploys.
 - **Environment variables:** none required. `VITE_BASE_PATH` is supported as
   an override but should be left unset; the default relative-path build is
   mount-agnostic.
@@ -128,8 +146,9 @@ references are failing to load. Diagnose from outside-in:
    `./assets/index-*.{js,css}` references.
 2. `curl -sI -A "Mozilla/5.0 ... Firefox/121.0" -H "Accept: */*"` each asset
    URL. A 500 from the **Pages origin** (not the Worker) confirms blob
-   corruption — fix by pushing any source change that alters bundle hashes;
-   the build banner does this automatically on every build.
+   corruption — fix by triggering any fresh deploy: the per-build banner makes
+   every code asset's bytes unique, so the corrupted blob is re-uploaded even
+   from unchanged source.
 3. A 404 on the asset URL means manifest mismatch — usually fixed by a fresh
    deploy that re-uploads the index.html and asset set together.
 4. A 200 returning HTML content for an asset URL means CF Pages' SPA fallback
@@ -182,8 +201,10 @@ colophon disclosures (below) back.
 Two consequences worth knowing:
 
 - The beacon is a **third-party request on page load**, so the colophon discloses
-  it — the privacy and materials sections, and the build list at `index.html`
-  line 93. Keep those in sync with whether the beacon is on.
+  it — the privacy section and the CI-tested build list in the accessibility
+  section of `index.html`. That copy is now written to stay truthful in both
+  states ("when enabled … at most the cookieless beacon"), so toggling the
+  token does not require a colophon edit.
 - It is **ad-blocked** for much of this site's technical audience, so the RUM
   numbers undercount; the server-side layer above is the count that captures
   everyone. Treat RUM as the "how fast / Core Web Vitals" view and server-side as

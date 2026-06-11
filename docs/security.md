@@ -23,7 +23,9 @@ The application is a static, client-rendered React app.
   `rofl:v1:` namespace, validates every entry against its schema, and rolls back
   to the prior state if any write fails.
 - No remote fonts, images, or iframes. The only third-party runtime request is
-  the cookieless analytics beacon above.
+  at most the cookieless analytics beacon above — injected by the live mount
+  Worker only; the build under test makes no third-party requests, and the
+  Playwright suite asserts that.
 - Outbound source links use HTTPS and open with `target="_blank"` plus
   `rel="noopener noreferrer"`.
 
@@ -95,30 +97,55 @@ send a referrer.
 
 The Vite dev server is bound to `127.0.0.1:5173` with `strictPort: true`. This
 keeps local development on loopback and avoids exposing the dev server on other
-network interfaces by default.
+network interfaces by default. That binding is the standing mitigation for the
+recurring class of Vite/esbuild dev-server advisories (most recently
+CVE-2026-39365, a source-map path traversal), all of which require the dev
+server to be exposed with `--host`/`server.host` — this project never does
+that. Staying on a supported Vite major (see below) keeps dev-server fixes
+arriving regardless.
 
-## Dependencies
+## Dependencies And Supply Chain
 
-`npm audit --omit=dev` reports no production vulnerabilities: the only runtime
-dependencies are `react` and `react-dom`, and the deployed artifact is static
-HTML/CSS/JS with no bundled server.
+The runtime dependencies are `react`, `react-dom`, and `lucide-react` (icon
+components compiled into the bundle); the deployed artifact is static
+HTML/CSS/JS with no bundled server. The build toolchain is Vite 8 (Rolldown)
+with `@vitejs/plugin-react`, TypeScript, and Playwright, on Node 24 LTS pinned
+by `.nvmrc` (honored locally and by the Cloudflare Pages build image).
 
-The full `npm audit` reports two *moderate, development-only* advisories
-(`esbuild` ≤ 0.24.2, pulled in transitively by `vite`; GHSA-67mh-4wv8-2f99): a
-running esbuild dev server can be made to return source to another local origin.
-This affects `npm run dev` only — esbuild runs at build time and ships nothing to
-production — and is mitigated by the loopback binding above; the source is also
-public (open-source repo), so there is no secret to disclose. The current Vite 5
-line still pins the affected esbuild, so the clean fix is a major Vite upgrade
-rather than a risky transitive `overrides` pin; it is tracked but not forced on a
-static portfolio site.
+As of the 2026-06-11 audit, `npm audit` and an OSV.dev scan of the full
+lockfile both report **zero known vulnerabilities** across all 66 locked
+packages. The two advisories previously documented here — the dev-only esbuild
+CORS issue (GHSA-67mh-4wv8-2f99) and the Vite 5 dev-server path traversal
+(CVE-2026-39365), which had no fix on the 5.x line — were retired by the major
+upgrade to Vite 8: esbuild left the dependency tree entirely, and the Vite 5
+line is no longer in use. The earlier judgment that the major upgrade was
+"tracked but not forced" stopped being right once Vite 5 fell out of the
+security-backport window; the upgrade is now the maintained baseline.
+
+Supply-chain guards, in layers:
+
+- `package-lock.json` resolves every package to `registry.npmjs.org` with a
+  pinned integrity hash; installs use `npm ci`, which fails on any mismatch.
+  During the audit, every locked hash was additionally cross-checked against
+  the registry's published hashes (123/123 matched before the upgrade, and the
+  post-upgrade tree was re-verified by clean-room `npm ci`).
+- `.npmrc` sets `ignore-scripts=true`, so no dependency lifecycle script runs
+  on install — locally or during Pages deploys. Install hooks are the
+  propagation mechanism of the 2025–2026 npm worm campaigns (Shai-Hulud and
+  its successors); this tree needs no install scripts on Linux anyway (only
+  the macOS-only `fsevents` declares any).
+- Playwright browser builds are fetched by an explicit `npx playwright
+  install`, never implicitly.
+- The dependency tree is deliberately small (66 locked packages including all
+  tooling), which keeps the audit surface reviewable.
 
 ## Accessibility And Privacy Review
 
 The public app is designed around these review targets:
 
 - no inline event handlers or inline scripts;
-- only the cookieless analytics beacon loads from a third-party origin;
+- at most the cookieless analytics beacon loads from a third-party origin
+  (live mount only — the tested build loads nothing third-party);
 - external-link target and rel attributes;
 - expected production CSP and header configuration;
 - skip link and live-region behavior;

@@ -74,7 +74,9 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173.
+Open http://localhost:5173. The toolchain targets Node 24 (see `.nvmrc`);
+`.npmrc` disables dependency install scripts as a supply-chain guard, which
+this dependency tree does not need anyway.
 
 ## Build
 
@@ -105,6 +107,8 @@ See [docs/deployment.md](docs/deployment.md) and
 ## Test
 
 ```bash
+npm run build        # the suite serves the built dist/ via vite preview
+npx playwright install   # first run only: fetch the pinned browser builds
 npm test
 ```
 
@@ -144,11 +148,12 @@ interaction, motion, and visual feedback when those make the lab meaningfully
 better. Route-splitting and pruning are tools, not reasons to flatten the
 experience back into dry text.
 
-Current measured production build (2026-06-09):
-entry JavaScript `51.68 KB gzip` plus the lab home route chunk `60.71 KB gzip`,
-CSS `17.09 KB gzip`. The lab home route is code-split and loads on demand. All
-interaction is client-side. The only third-party runtime request is a
-privacy-friendly, cookieless analytics beacon (Cloudflare Web Analytics); see
+Current measured production build (2026-06-11, Vite 8 / Rolldown):
+entry JavaScript `52.23 KB gzip` plus the lab home route chunk `62.16 KB gzip`,
+CSS `19.33 KB gzip`. The lab home route is code-split and loads on demand. All
+interaction is client-side. The only third-party runtime request is at most a
+privacy-friendly, cookieless analytics beacon (Cloudflare Web Analytics) on the
+live mount — none in the tested build; see
 [docs/deployment.md](docs/deployment.md).
 
 ## Privacy Budget
@@ -158,8 +163,8 @@ to:
 
 - Privacy-respecting by default: no ad tech, no cookies for cross-site tracking,
   no third-party origins in the runtime bundle, and no selling of data. Visitor
-  analytics use Cloudflare Web Analytics — cookieless and aggregate (no personal
-  data, no cross-site tracking) — acknowledged in the colophon.
+  analytics are limited to Cloudflare Web Analytics — cookieless and aggregate
+  (no personal data, no cross-site tracking) — acknowledged in the colophon.
 - No PII collected or transmitted under any condition.
 - On-device progress: with Remember on (its default), the exercises you've
   finished and your completion count are kept in `localStorage` so they resume
